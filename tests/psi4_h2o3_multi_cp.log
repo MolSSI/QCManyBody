@@ -1,0 +1,82 @@
+2024-02-12:16:15:56,145 INFO     [psi4.driver.task_planner:175] NOTE: User specified exclusively 'cp' correction, but provided level 1 details
+2024-02-12:16:15:56,145 INFO     [psi4.driver.task_planner:176] NOTE: Removing level mp2/sto-3g
+2024-02-12:16:15:56,145 INFO     [psi4.driver.task_planner:177] NOTE: For total energies, add 'nocp' to bsse_list
+2024-02-12:16:15:56,145 INFO     [psi4.driver.task_planner:238] PLANNING MB:  mc_level_idx=0 packet={'driver': 'energy', 'method': 'scf', 'basis': 'sto-3g', 'keywords': {'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}}
+2024-02-12:16:15:56,145 INFO     [psi4.driver.driver_nbody:954] 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+  // ManyBody Setup: N-Body Levels [1, 2]//
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+
+
+2024-02-12:16:15:56,145 INFO     [psi4.driver.driver_nbody:515]         Number of 1-body computations:     6
+        Number of 2-body computations:     6
+2024-02-12:16:15:56,146 INFO     [psi4.driver.driver_nbody:1016] 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+  //       ManyBody Computations       //
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+
+
+2024-02-12:16:15:56,154 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 9.119928278805013
+2024-02-12:16:15:57,282 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:57,284 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=9.119928278805013
+2024-02-12:16:15:57,408 INFO     [psi4.driver.driver:526] Return energy(): -74.96340208274736
+2024-02-12:16:15:57,411 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 9.116312738955253
+2024-02-12:16:15:57,422 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:57,423 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=9.116312738955253
+2024-02-12:16:15:57,492 INFO     [psi4.driver.driver:526] Return energy(): -74.96354366802744
+2024-02-12:16:15:57,496 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 9.116778471315827
+2024-02-12:16:15:57,506 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:57,507 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=9.116778471315827
+2024-02-12:16:15:57,576 INFO     [psi4.driver.driver:526] Return energy(): -74.96344779296989
+2024-02-12:16:15:57,580 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 9.119928278805013
+2024-02-12:16:15:57,591 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:57,592 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=9.119928278805013
+2024-02-12:16:15:57,744 INFO     [psi4.driver.driver:526] Return energy(): -74.9704206574834
+2024-02-12:16:15:57,748 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 9.116778471315827
+2024-02-12:16:15:57,759 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:57,760 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=9.116778471315827
+2024-02-12:16:15:57,912 INFO     [psi4.driver.driver:526] Return energy(): -74.96989892024986
+2024-02-12:16:15:57,917 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 37.32776662460584
+2024-02-12:16:15:57,927 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:57,929 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=37.32776662460584
+2024-02-12:16:15:58,40 INFO     [psi4.driver.driver:526] Return energy(): -149.9330685899053
+2024-02-12:16:15:58,44 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 37.42087271248122
+2024-02-12:16:15:58,55 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:58,56 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=37.42087271248122
+2024-02-12:16:15:58,167 INFO     [psi4.driver.driver:526] Return energy(): -149.9343815525844
+2024-02-12:16:15:58,171 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 9.116312738955253
+2024-02-12:16:15:58,182 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:58,184 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=9.116312738955253
+2024-02-12:16:15:58,338 INFO     [psi4.driver.driver:526] Return energy(): -74.97068360208628
+2024-02-12:16:15:58,342 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 37.42087271248122
+2024-02-12:16:15:58,352 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:58,354 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=37.42087271248122
+2024-02-12:16:15:58,506 INFO     [psi4.driver.driver:526] Return energy(): -149.9412815239687
+2024-02-12:16:15:58,511 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 37.4153826933059
+2024-02-12:16:15:58,521 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:58,523 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=37.4153826933059
+2024-02-12:16:15:58,676 INFO     [psi4.driver.driver:526] Return energy(): -149.94197668296908
+2024-02-12:16:15:58,680 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 37.32776662460584
+2024-02-12:16:15:58,691 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:58,692 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=37.32776662460584
+2024-02-12:16:15:58,847 INFO     [psi4.driver.driver:526] Return energy(): -149.94054830835654
+2024-02-12:16:15:58,851 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c1 37.4153826933059
+2024-02-12:16:15:58,862 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'CC_TYPE': 'DF', 'DF_BASIS_MP2': 'DEF2-QZVPP-RI', 'function_kwargs': {}}
+2024-02-12:16:15:58,863 INFO     [psi4.driver.driver:523] Compute energy(): method=scf, basis=sto-3g, molecule=h2o_trimer, nre=37.4153826933059
+2024-02-12:16:15:58,972 INFO     [psi4.driver.driver:526] Return energy(): -149.93437187474873
+2024-02-12:16:15:58,976 INFO     [psi4.driver.driver_nbody:1366] 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+  //          ManyBody Results         //
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+
+
+2024-02-12:16:15:58,977 INFO     [psi4.driver.driver_nbody:396] 
+   ==> N-Body: Counterpoise Corrected (CP) energies <==
+
+        n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+                   [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]
+             1     -224.890393543745        0.000000000000        0.000000000000        0.000000000000        0.000000000000
+       RTN   2     -224.892193699400       -0.001800155655       -1.129614727941       -0.001800155655       -1.129614727941
+      FULL   3        N/A                   N/A                   N/A                   N/A                   N/A                 
+
+

@@ -1,0 +1,42 @@
+2024-02-12:14:29:00,107 INFO     [psi4.driver.task_planner:238] PLANNING MB:  mc_level_idx=0 packet={'driver': 'energy', 'method': 'ccsd(t)', 'basis': 'AUG-CC-PVDZ', 'keywords': {'function_kwargs': {}}}
+2024-02-12:14:29:00,108 INFO     [psi4.driver.driver_nbody:954] 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+  // ManyBody Setup: N-Body Levels [1, 2]//
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+
+
+2024-02-12:14:29:00,108 INFO     [psi4.driver.driver_nbody:515]         Number of 1-body computations:     2
+        Number of 2-body computations:     1
+2024-02-12:14:29:00,108 INFO     [psi4.driver.driver_nbody:1016] 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+  //       ManyBody Computations       //
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+
+
+2024-02-12:14:29:00,116 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c2v 0.0
+2024-02-12:14:29:01,347 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'function_kwargs': {}}
+2024-02-12:14:29:01,348 INFO     [psi4.driver.driver:523] Compute energy(): method=ccsd(t), basis=aug-cc-pvdz, molecule=dimer, nre=0.0
+2024-02-12:14:29:01,617 INFO     [psi4.driver.driver:526] Return energy(): -128.71138904852958
+2024-02-12:14:29:01,622 INFO     [psi4.driver.task_base:172] <<< JSON launch ... c2v 0.0
+2024-02-12:14:29:01,633 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'function_kwargs': {}}
+2024-02-12:14:29:01,634 INFO     [psi4.driver.driver:523] Compute energy(): method=ccsd(t), basis=aug-cc-pvdz, molecule=dimer, nre=0.0
+2024-02-12:14:29:01,902 INFO     [psi4.driver.driver:526] Return energy(): -128.7113890485293
+2024-02-12:14:29:01,907 INFO     [psi4.driver.task_base:172] <<< JSON launch ... d2h 17.63924035566667
+2024-02-12:14:29:01,918 INFO     [psi4.driver.task_planner:286] PLANNING Atomic:  keywords={'function_kwargs': {}}
+2024-02-12:14:29:01,919 INFO     [psi4.driver.driver:523] Compute energy(): method=ccsd(t), basis=aug-cc-pvdz, molecule=dimer, nre=17.63924035566667
+2024-02-12:14:29:02,259 INFO     [psi4.driver.driver:526] Return energy(): -257.42275321361643
+2024-02-12:14:29:02,264 INFO     [psi4.driver.driver_nbody:1366] 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+  //          ManyBody Results         //
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+
+
+2024-02-12:14:29:02,264 INFO     [psi4.driver.driver_nbody:396] 
+   ==> N-Body: Counterpoise Corrected (CP) energies <==
+
+        n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+                   [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]
+             1  N/A                         0.000000000000        0.000000000000        0.000000000000        0.000000000000
+  FULL/RTN   2  N/A                         0.000024883442        0.015614595877        0.000024883442        0.015614595877
+
+
