@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import Set, Dict, Tuple, Iterable, Optional, Union, Literal, Mapping, Any
+from typing import Set, Dict, Tuple, Iterable, Union, Literal, Mapping, Any
 
 import numpy as np
 from qcelemental.models import DriverEnum, Molecule
@@ -10,7 +10,7 @@ from qcelemental.models import DriverEnum, Molecule
 from qcmanybody.assemble import _sum_cluster_ptype_data
 from qcmanybody.builder import build_nbody_compute_list
 from qcmanybody.models import BsseEnum, FragBasIndex
-from qcmanybody.utils import delabeler, labeler, shaped_zero, print_nbody_energy
+from qcmanybody.utils import delabeler, labeler, print_nbody_energy
 
 logger = logging.getLogger(__name__)
 
@@ -444,7 +444,7 @@ class ManybodyCalculator:
 
         return results
 
-    def analyze(
+    def _analyze(
             self,
             ptype: DriverEnum,
             component_results: Dict[str, Union[float, np.ndarray]],
@@ -588,3 +588,25 @@ class ManybodyCalculator:
         }
         return nbody_results
 
+    def analyze(
+            self,
+            component_results: Dict[str, Dict[str, Union[float, np.ndarray]]], # component_results[label]['energy'] = 1.23
+    ):
+
+        # reorganize to component_results_inv['energy'][label] = 1.23
+        component_results_inv = {'energy': {}, 'gradient': {}, 'hessian': {}}
+        for label, data in component_results.items():
+                component_results_inv['energy'][label] = data.get('energy', None)
+                component_results_inv['gradient'][label] = data.get('gradient', None)
+                component_results_inv['hessian'][label] = data.get('hessian', None)
+
+        # Actually analyze
+        all_results = {}
+        if all(v is not None for v in component_results_inv['energy'].values()):
+            all_results['energy'] = self._analyze("energy", component_results_inv['energy'])
+        if all(v is not None for v in component_results_inv['gradient'].values()):
+            all_results['gradient'] = self._analyze(DriverEnum.gradient, component_results_inv['gradient'])
+        if all(v is not None for v in component_results_inv['hessian'].values()):
+            all_results['hessian'] = self._analyze(DriverEnum.hessian, component_results_inv['hessian'])
+
+        return all_results
