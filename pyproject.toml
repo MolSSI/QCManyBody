@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "qcmanybody"
+dynamic = ["version"]
+authors = [
+  { name="Benjamin Pritchard", email="bpp4@vt.edu" },
+  { name="Lori A. Burns", email="loriab@gatech.edu" },
+]
+description='QCManybody'
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+]
+dependencies = [
+    "qcelemental",
+    "qcengine",
+]
+
+[project.optional-dependencies]
+tests = [
+    "pytest",
+]
+
+
+[tool.setuptools.package-data]
+
+
+[project.urls]
+"Homepage" = "https://github.com/MolSSI/QCManybody"
+"Bug Tracker" = "https://github.com/MolSSI/QCManybody/issues"
+
+
+[tool.black]
+line-length = 120
+
+
+[tool.setuptools_scm]
+
+
+[tool.versioningit.vcs]
+default-tag = "0.0.99" # useful for CI/shallow clones
