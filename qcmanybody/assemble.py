@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Dict, Union, Set, Any
+from typing import Dict, Union, Set
 
 import numpy as np
 from qcelemental.models import DriverEnum
 
-from .utils import labeler, delabeler
 from .models import FragBasIndex
+from .utils import labeler
 
 
 def _sum_cluster_ptype_data(

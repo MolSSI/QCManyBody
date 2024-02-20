@@ -7,14 +7,13 @@ from qcelemental import constants
 
 
 def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> str:
-    return str(mc_level_lbl) + "_" + json.dumps((frag, bas))
+    return json.dumps([str(mc_level_lbl), frag, bas])
 
 
 def delabeler(item: str) -> Tuple[str, Tuple[int, ...], Tuple[int, ...]]:
     """Transform labels like string "1_((2,), (1, 2))" into tuple (1, (2,), (1, 2))."""
 
-    mc, _, fragbas = item.partition("_")
-    frag, bas = json.loads(fragbas)
+    mc, frag, bas = json.loads(item)
     return str(mc), frag, bas
 
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import Set, Dict, Tuple, Iterable, Union, Literal, Mapping, Any
+from typing import Set, Dict, Tuple, Union, Literal, Mapping, Any, Sequence
 
 import numpy as np
 from qcelemental.models import DriverEnum, Molecule
@@ -15,21 +15,20 @@ from qcmanybody.utils import delabeler, labeler, print_nbody_energy
 logger = logging.getLogger(__name__)
 
 
-class ManybodyCalculator:
+class ManyBodyCalculator:
     def __init__(
         self,
         molecule: Molecule,
-        bsse_type: Iterable[BsseEnum],
+        bsse_type: Sequence[BsseEnum],
         levels: Mapping[Union[int, Literal["supersystem"]], str],
         return_total_data: bool,
     ):
 
         # TODO
         self.embedding_charges = {}
-        self.driver = DriverEnum.energy
 
         self.molecule = molecule
-        self.bsse_type = set(bsse_type)
+        self.bsse_type = bsse_type
         self.return_total_data = return_total_data
         self.nfragments = len(molecule.fragments)
 
@@ -46,18 +45,12 @@ class ManybodyCalculator:
         if len(self.bsse_type) == 0:
             raise ValueError("No BSSE correction specified")
 
-        if BsseEnum.vmfc in self.bsse_type:
-            self.return_bsse_type = "vmfc"
-        elif BsseEnum.cp in self.bsse_type:
-            self.return_bsse_type = "cp"
-        elif BsseEnum.nocp in self.bsse_type:
-            self.return_bsse_type = "nocp"
-        else:
-            raise RuntimeError("Cannot figure out return_bsse_type. Please post this error on github.")
+        self.return_bsse_type = self.bsse_type[0]
 
         ###############################
         # Build nbodies_per_mc_level
         # TODO - use Lori's code
+        # TODO - dict to list of lists to handle non-contiguous levels
         max_level = max(self.levels_no_ss.keys())
 
         if set(range(1, max_level + 1)) != set(self.levels_no_ss.keys()):
@@ -128,9 +121,7 @@ class ManybodyCalculator:
                     # Shift to zero-indexing
                     real_atoms_0 = [x - 1 for x in real_atoms]
                     ghost_atoms_0 = [x - 1 for x in ghost_atoms]
-                    mol = self.molecule.get_fragment(
-                        real_atoms_0, ghost_atoms_0, orient=orient, group_fragments=True
-                    )
+                    mol = self.molecule.get_fragment(real_atoms_0, ghost_atoms_0, orient=orient, group_fragments=True)
 
                     # if self.embedding_charges:
                     #    embedding_frags = list(set(range(1, self.nfragments + 1)) - set(pair[1]))
@@ -257,7 +248,7 @@ class ManybodyCalculator:
                 v for v in compute_dict["nocp"][1] if len(v[1]) == 1
             ]
 
-            if ptype == "energy":
+            if ptype == DriverEnum.energy:
                 monomer_energy_list = [
                     component_results[labeler(mc_level, m[0], m[1])]
                     for m in monomers_in_monomer_basis
@@ -274,6 +265,7 @@ class ManybodyCalculator:
                 )
         else:
             # TODO - fixme
+            # Should be gradient or hessian of zero (size of full molecule)
             monomer_sum = 0.0
 
         nbody_dict = {}
@@ -282,7 +274,7 @@ class ManybodyCalculator:
         if "cp" in self.bsse_type:
             for nb in range(1, nbodies[-1] + 1):
                 if nb == self.nfragments:
-                    if ptype == "energy":
+                    if ptype == DriverEnum.energy:
                         cp_body_dict[nb] = cp_by_level[nb] - bsse
                     else:
                         cp_body_dict[nb][:] = cp_by_level[nb] - bsse
@@ -295,14 +287,14 @@ class ManybodyCalculator:
 
                 if nb == 1:
                     bsse = cp_body_dict[nb] - monomer_sum
-                    if ptype == "energy":
+                    if ptype == DriverEnum.energy:
                         cp_body_dict[nb] = monomer_sum
                     else:
                         cp_body_dict[nb] = monomer_sum.copy()
                 else:
                     cp_body_dict[nb] -= bsse
 
-            if ptype == "energy":
+            if ptype == DriverEnum.energy:
                 print_nbody_energy(
                     cp_body_dict,
                     "Counterpoise Corrected (CP)",
@@ -324,7 +316,7 @@ class ManybodyCalculator:
         if "nocp" in self.bsse_type:
             for nb in range(1, nbodies[-1] + 1):
                 if nb == self.nfragments:
-                    if ptype == "energy":
+                    if ptype == DriverEnum.energy:
                         nocp_body_dict[nb] = nocp_by_level[nb]
                     else:
                         nocp_body_dict[nb][:] = nocp_by_level[nb]
@@ -335,7 +327,7 @@ class ManybodyCalculator:
                     sign = (-1) ** (nb - k)
                     nocp_body_dict[nb] += take_nk * sign * nocp_by_level[k]
 
-            if ptype == "energy":
+            if ptype == DriverEnum.energy:
                 print_nbody_energy(
                     nocp_body_dict,
                     "Non-Counterpoise Corrected (NoCP)",
@@ -361,7 +353,7 @@ class ManybodyCalculator:
         # Compute vmfc
         if "vmfc" in self.bsse_type:
             for nb in nbodies:
-                if ptype == "energy":
+                if ptype == DriverEnum.energy:
                     for k in range(1, nb + 1):
                         vmfc_body_dict[nb] += vmfc_by_level[k]
 
@@ -370,7 +362,7 @@ class ManybodyCalculator:
                         vmfc_body_dict[nb] = vmfc_by_level[nb - 1]
                     vmfc_body_dict[nb] += vmfc_by_level[nb]
 
-            if ptype == "energy":
+            if ptype == DriverEnum.energy:
                 print_nbody_energy(
                     vmfc_body_dict,
                     "Valiron-Mayer Function Counterpoise (VMFC)",
@@ -402,52 +394,48 @@ class ManybodyCalculator:
 
         # Collect specific and generalized returns
         results = {
-            f"cp_{ptype}_body_dict": {f"{nb}cp": j for nb, j in cp_body_dict.items()},
-            f"nocp_{ptype}_body_dict": {
+            f"cp_{ptype.value}_body_dict": {f"{nb}cp": j for nb, j in cp_body_dict.items()},
+            f"nocp_{ptype.value}_body_dict": {
                 f"{nb}nocp": j for nb, j in nocp_body_dict.items()
             },
-            f"vmfc_{ptype}_body_dict": {
+            f"vmfc_{ptype.value}_body_dict": {
                 f"{nb}vmfc": j for nb, j in vmfc_body_dict.items()
             },
         }
 
-        if ptype == "energy":
+        if ptype == DriverEnum.energy:
             results["nbody"] = nbody_dict
 
-        # TODO - not well defined?
-        #return_bsse_type = self.bsse_type[0]
-
-
         if self.return_bsse_type == "cp":
-            results[f"{ptype}_body_dict"] = cp_body_dict
+            results[f"{ptype.value}_body_dict"] = cp_body_dict
         elif self.return_bsse_type == "nocp":
-            results[f"{ptype}_body_dict"] = nocp_body_dict
+            results[f"{ptype.value}_body_dict"] = nocp_body_dict
         elif self.return_bsse_type == "vmfc":
-            results[f"{ptype}_body_dict"] = vmfc_body_dict
+            results[f"{ptype.value}_body_dict"] = vmfc_body_dict
         else:
             raise RuntimeError(
                 "N-Body Wrapper: Invalid return type. Should never be here, please post this error on github."
             )
 
-        if ptype == "energy":
-            piece = results[f"{ptype}_body_dict"][max_nbody]
+        if ptype == DriverEnum.energy:
+            piece = results[f"{ptype.value}_body_dict"][max_nbody]
         else:
-            piece = results[f"{ptype}_body_dict"][max_nbody].copy()
+            piece = results[f"{ptype.value}_body_dict"][max_nbody].copy()
 
         if self.return_total_data:
-            results[f"ret_{ptype}"] = piece
+            results[f"ret_{ptype.value}"] = piece
         else:
-            results[f"ret_{ptype}"] = piece
-            results[f"ret_{ptype}"] -= results[f"{ptype}_body_dict"][1]
+            results[f"ret_{ptype.value}"] = piece
+            results[f"ret_{ptype.value}"] -= results[f"{ptype.value}_body_dict"][1]
 
-        results["ret_ptype"] = results[f"ret_{ptype}"]
+        results["ret_ptype"] = results[f"ret_{ptype.value}"]
 
         return results
 
     def _analyze(
             self,
             ptype: DriverEnum,
-            component_results: Dict[str, Union[float, np.ndarray]],
+            component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],
     ):
 
         natoms = len(self.molecule.symbols)
@@ -456,6 +444,7 @@ class ManybodyCalculator:
         energy_result, gradient_result, hessian_result = 0, None, None
         energy_body_contribution = {b: {} for b in self.bsse_type}
         energy_body_dict = {b: {} for b in self.bsse_type}
+        mc_results = {}
         if ptype in [DriverEnum.gradient, DriverEnum.hessian]:
             gradient_result = np.zeros((natoms, 3))
         if ptype == DriverEnum.hessian:
@@ -469,8 +458,15 @@ class ManybodyCalculator:
 
             nbody_list2 = self.nbodies_per_mc_level[label]
 
-            cresults = {k: v for k, v in component_results.items() if delabeler(k)[0] == label}
-            results = self._assemble_nbody_components(ptype, cresults)
+            cresults = {k: {k2: v2 for k2, v2 in v.items() if delabeler(k2)[0] == label} for k, v in component_results.items()}
+            results = self._assemble_nbody_components(DriverEnum.energy, cresults["energy"])
+
+            if ptype in [DriverEnum.gradient, DriverEnum.hessian]:
+                results.update(self._assemble_nbody_components(DriverEnum.gradient, cresults["gradient"]))
+            if ptype == DriverEnum.hessian:
+                results.update(self._assemble_nbody_components(DriverEnum.hessian, cresults["hessian"]))
+
+            mc_results[label] = results
 
             for n in nbody_list2[::-1]:
                 energy_bsse_dict = {b: 0 for b in self.bsse_type}
@@ -488,18 +484,18 @@ class ManybodyCalculator:
                                     ]
                         )
 
-                    if ptype == "hessian":
-                        hessian_result += sign * results[f"{ptype}_body_dict"][m]
+                    if ptype == DriverEnum.hessian:
+                        hessian_result += sign * results[f"hessian_body_dict"][m]
                         gradient_result += sign * results["gradient_body_dict"][m]
                         if n == 1:
-                            hessian1 = results[f"{ptype}_body_dict"][n]
+                            hessian1 = results[f"hessian_body_dict"][n]
                             gradient1 = results["gradient_body_dict"][n]
 
-                    elif ptype == "gradient":
-                        gradient_result += sign * results[f"{ptype}_body_dict"][m]
+                    elif ptype == DriverEnum.gradient:
+                        gradient_result += sign * results[f"gradient_body_dict"][m]
                         # Keep 1-body contribution to compute interaction data
                         if n == 1:
-                            gradient1 = results[f"{ptype}_body_dict"][n]
+                            gradient1 = results[f"gradient_body_dict"][n]
 
                 energy_result += energy_bsse_dict[self.return_bsse_type]
                 for b in self.bsse_type:
@@ -534,20 +530,20 @@ class ManybodyCalculator:
                         - components["energy_body_dict"][self.max_nbody]
                 )
 
-            if ptype == "hessian":
+            if ptype == DriverEnum.hessian:
                 gradient_result += (
                         supersystem_result.extras.qcvars["CURRENT GRADIENT"]
                         - components["gradient_body_dict"][self.max_nbody]
                 )
                 hessian_result += (
                         supersystem_result.return_result
-                        - components[f"{ptype}_body_dict"][self.max_nbody]
+                        - components[f"{ptype.value}_body_dict"][self.max_nbody]
                 )
 
-            elif ptype == "gradient":
+            elif ptype == DriverEnum.gradient:
                 gradient_result += (
                         np.array(supersystem_result.return_result).reshape((-1, 3))
-                        - components[f"{ptype}_body_dict"][self.max_nbody]
+                        - components[f"{ptype.value}_body_dict"][self.max_nbody]
                 )
 
         for b in self.bsse_type:
@@ -574,7 +570,7 @@ class ManybodyCalculator:
             energy_result -= energy_body_dict[self.return_bsse_type][1]
             if ptype in ["gradient", "hessian"]:
                 gradient_result -= gradient1
-            if ptype == "hessian":
+            if ptype == DriverEnum.hessian:
                 hessian_result -= hessian1
 
         energy_body_dict = {
@@ -585,6 +581,7 @@ class ManybodyCalculator:
             "ret_energy": energy_result,
             "ret_ptype": locals()[ptype + "_result"],
             "energy_body_dict": energy_body_dict,
+            "mc_results": mc_results,
         }
         return nbody_results
 
@@ -603,10 +600,13 @@ class ManybodyCalculator:
         # Actually analyze
         all_results = {}
         if all(v is not None for v in component_results_inv['energy'].values()):
-            all_results['energy'] = self._analyze("energy", component_results_inv['energy'])
+            r = self._analyze(DriverEnum.energy, component_results_inv)
+            all_results.update(r)
         if all(v is not None for v in component_results_inv['gradient'].values()):
-            all_results['gradient'] = self._analyze(DriverEnum.gradient, component_results_inv['gradient'])
+            r = self._analyze(DriverEnum.gradient, component_results_inv)
+            all_results.update(r)
         if all(v is not None for v in component_results_inv['hessian'].values()):
-            all_results['hessian'] = self._analyze(DriverEnum.hessian, component_results_inv['hessian'])
+            r = self._analyze(DriverEnum.hessian, component_results_inv)
+            all_results.update(r)
 
         return all_results
