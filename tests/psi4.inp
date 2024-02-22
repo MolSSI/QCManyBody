@@ -1,0 +1,23 @@
+#! Example potential energy surface scan and CP-correction for Ne2
+
+molecule h2o_trimer {
+O      -2.76373224  -1.24377706  -0.15444566 
+H      -1.12357791  -2.06227970  -0.05243799 
+H      -3.80792362  -2.08705525   1.06090407 
+--
+O       2.46924614  -1.75437739  -0.17092884 
+H       3.76368260  -2.21425403   1.00846104 
+H       2.30598330   0.07098445  -0.03942473 
+--
+O       0.29127930   3.00875625   0.20308515 
+H      -1.21253048   1.95820900   0.10303324 
+H       0.10002049   4.24958115  -1.10222079 
+units bohr
+}
+
+levels = {1: 'mp2/sto-3g', 2: 'b3lyp/sto-3g', "supersystem": 'scf/sto-3g'}
+set cc_type df
+set df_basis_mp2 def2-qzvpp-ri
+
+energy('', molecule=h2o_trimer, bsse_type = ['cp', 'nocp', 'vmfc'], return_total_data=True, levels=levels)
+print(variables())

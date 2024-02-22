@@ -7,7 +7,7 @@ import gzip
 import qcengine as qcng
 from qcelemental.models import AtomicInput, AtomicResult
 
-from qcmanybody.manybody import Molecule, ManybodyCalculator
+from qcmanybody.manybody import Molecule, ManyBodyCalculator
 from qcmanybody.models import BsseEnum
 
 cache_dir = "/tmp/qcmanybodycache"
@@ -23,7 +23,7 @@ specs = {
 mol = Molecule(symbols=["Ne", "Ne"], fragments=[[0], [1]], geometry=[0.0, 0.0, -2.834589188186742, 0.0, 0.0, 2.834589188186742])
 levels = {1: "default", 2: "default"}
 
-mc = ManybodyCalculator(mol, [BsseEnum.cp], levels, False)
+mc = ManyBodyCalculator(mol, [BsseEnum.cp], levels, False)
 print("COMPUTE MAP", mc.compute_map)
 
 component_results = {'energy': {}, 'gradient': {}, 'hessian': {}}

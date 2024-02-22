@@ -31,18 +31,9 @@ specs = {
             "keywords": {"cc_type": "df", "df_basis_mp2": "def2-qzvpp-ri"},
         },
     },
-    "mp2": {
-        "program": "psi4",
-        "specification": {
-            "driver": driver,
-            "model": {"method": "mp2", "basis": "sto-3g"},
-            "keywords": {"cc_type": "df", "df_basis_mp2": "def2-qzvpp-ri"},
-        },
-    },
 }
 
-levels = {2: "scf", 1: "mp2"}
-
+levels = {2: "scf"}
 
 nbody_results = run_qcengine(mol, levels, specs, [BsseEnum.nocp], True)
 pprint(nbody_results)
