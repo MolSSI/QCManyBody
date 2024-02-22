@@ -23,6 +23,7 @@ def run_qcengine(
 
     computation_count = {}
     for chem, label, imol in mc.iterate_molecules(True):
+        print(label)
         inp = AtomicInput(molecule=imol, **specifications[chem]['specification'])
 
         _, real, bas = delabeler(label)

@@ -159,7 +159,14 @@ class ManyBodyCalculator:
             )
 
         # get the range of nbodies and the required calculations for this level
+        bsse_type = self.bsse_type
+        return_bsse_type = self.return_bsse_type
         nbodies = self.nbodies_per_mc_level[mc_level]
+        if 'supersystem' in nbodies:
+            nbodies = list(range(1, self.max_nbody+1))
+            bsse_type = [BsseEnum.nocp]
+            return_bsse_type = BsseEnum.nocp
+
         max_nbody = nbodies[-1] # TODO - or max()?
         compute_dict = self.compute_map[mc_level]
 
@@ -271,7 +278,7 @@ class ManyBodyCalculator:
         nbody_dict = {}
 
         # Compute cp
-        if "cp" in self.bsse_type:
+        if BsseEnum.cp in bsse_type:
             for nb in range(1, nbodies[-1] + 1):
                 if nb == self.nfragments:
                     if ptype == DriverEnum.energy:
@@ -313,7 +320,7 @@ class ManyBodyCalculator:
                     nbody_dict[f"CP-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY"] = cp_body_dict[nb]
 
         # Compute nocp
-        if "nocp" in self.bsse_type:
+        if BsseEnum.nocp in bsse_type:
             for nb in range(1, nbodies[-1] + 1):
                 if nb == self.nfragments:
                     if ptype == DriverEnum.energy:
@@ -351,7 +358,7 @@ class ManyBodyCalculator:
                     )
 
         # Compute vmfc
-        if "vmfc" in self.bsse_type:
+        if BsseEnum.vmfc in bsse_type:
             for nb in nbodies:
                 if ptype == DriverEnum.energy:
                     for k in range(1, nb + 1):
@@ -406,11 +413,11 @@ class ManyBodyCalculator:
         if ptype == DriverEnum.energy:
             results["nbody"] = nbody_dict
 
-        if self.return_bsse_type == "cp":
+        if return_bsse_type == "cp":
             results[f"{ptype.value}_body_dict"] = cp_body_dict
-        elif self.return_bsse_type == "nocp":
+        elif return_bsse_type == "nocp":
             results[f"{ptype.value}_body_dict"] = nocp_body_dict
-        elif self.return_bsse_type == "vmfc":
+        elif return_bsse_type == "vmfc":
             results[f"{ptype.value}_body_dict"] = vmfc_body_dict
         else:
             raise RuntimeError(
@@ -503,48 +510,43 @@ class ManyBodyCalculator:
 
         if self.has_supersystem:
             # Get the MC label for supersystem tasks
-            supersystem_mc_level = self.levels.get('supersystem', None)
+            supersystem_mc_level = self.levels['supersystem']
 
             # Super system recovers higher order effects at a lower level
             frag_range = tuple(range(1, self.nfragments + 1))
+            ss_label = labeler(supersystem_mc_level, frag_range, frag_range)
 
-            supersystem_result = component_results[labeler(supersystem_mc_level, frag_range, frag_range)]
+            supersystem_results = {
+                'energy': component_results['energy'].get(ss_label, None),
+                'gradient': component_results['gradient'].get(ss_label, None),
+                'hessian': component_results['hessian'].get(ss_label, None),
+            }
 
-            max_nbody = max(self.levels_no_ss.keys())
-            print("FOUND SUPERSYSTEM", supersystem_result)
+            ss_cresults = {k: {k2: v2 for k2, v2 in v.items() if delabeler(k2)[0] == supersystem_mc_level} for k, v in component_results.items()}
+            ss_results = self._assemble_nbody_components(DriverEnum.energy, ss_cresults["energy"])
+
+            if ptype in [DriverEnum.gradient, DriverEnum.hessian]:
+                ss_results.update(self._assemble_nbody_components(DriverEnum.gradient, ss_cresults["gradient"]))
+            if ptype == DriverEnum.hessian:
+                ss_results.update(self._assemble_nbody_components(DriverEnum.hessian, ss_cresults["hessian"]))
+
+            mc_results[supersystem_mc_level] = ss_results
 
             # Compute components at supersystem level of theory
-            self.nbodies_per_mc_level.append(levels)
-            component_result = {
-                k: v for k, v in self.task_list.items() if k.startswith(str(sup_level))
-            }
-            components = self.prepare_results(results=component_result, client=client)
+            energy_result += supersystem_results['energy'] - ss_results["energy_body_dict"][self.max_nbody]
 
-            energy_result += (
-                    supersystem_result.properties.return_energy
-                    - components["energy_body_dict"][self.max_nbody]
-            )
             for b in self.bsse_type:
-                energy_body_contribution[b][self.molecule.nfragments()] = (
-                        supersystem_result.properties.return_energy
-                        - components["energy_body_dict"][self.max_nbody]
-                )
+                energy_body_contribution[b][self.nfragments] = supersystem_results['energy'] - ss_results["energy_body_dict"][self.max_nbody]
+
+            if ptype == DriverEnum.gradient:
+                gradient_result += np.array(supersystem_results['gradient'].reshape((-1, 3))) - ss_results[f"gradient_body_dict"][self.max_nbody]
 
             if ptype == DriverEnum.hessian:
                 gradient_result += (
-                        supersystem_result.extras.qcvars["CURRENT GRADIENT"]
-                        - components["gradient_body_dict"][self.max_nbody]
-                )
-                hessian_result += (
-                        supersystem_result.return_result
-                        - components[f"{ptype.value}_body_dict"][self.max_nbody]
-                )
+                        supersystem_results['gradient'].reshape((-1, 3))) - ss_results["gradient_body_dict"][self.max_nbody]
 
-            elif ptype == DriverEnum.gradient:
-                gradient_result += (
-                        np.array(supersystem_result.return_result).reshape((-1, 3))
-                        - components[f"{ptype.value}_body_dict"][self.max_nbody]
-                )
+                hessian_result += supersystem_results['hessian'] - ss_results[f"hessian_body_dict"][self.max_nbody]
+
 
         for b in self.bsse_type:
             for n in energy_body_contribution[b]:

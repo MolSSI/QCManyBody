@@ -113,7 +113,9 @@ def build_nbody_compute_list(
     if include_supersystem:
         # Add supersystem info to the compute list (nocp only)
         for nb in range(1, supersystem_max_nbody + 1):
+            cp_compute_list.setdefault(nb, set())
             nocp_compute_list.setdefault(nb, set())
+            vmfc_compute_list.setdefault(nb, set())
             for sublevel in range(1, nb + 1):
                 for x in itertools.combinations(fragment_range, sublevel):
                     nocp_compute_list[nb].add((x, x))
