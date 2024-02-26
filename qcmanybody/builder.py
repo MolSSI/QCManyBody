@@ -72,9 +72,7 @@ def build_nbody_compute_list(
     cp_compute_list = {x: set() for x in nbodies}
     nocp_compute_list = {x: set() for x in nbodies}
     vmfc_compute_list = {x: set() for x in nbodies}
-    vmfc_level_list = {
-        x: set() for x in nbodies
-    }  # Need to sum something slightly different
+    vmfc_level_list = {x: set() for x in nbodies}  # Need to sum something slightly different
 
     # Verify proper passing of bsse_type. already validated in Computer
     bsse_type_remainder = set(bsse_type) - {e.value for e in BsseEnum}
@@ -122,9 +120,7 @@ def build_nbody_compute_list(
 
         # Add the total supersystem (nfragments@nfragments)
         nocp_compute_list.setdefault(nfragments, set())
-        nocp_compute_list[nfragments].add(
-            (tuple(fragment_range), tuple(fragment_range))
-        )
+        nocp_compute_list[nfragments].add((tuple(fragment_range), tuple(fragment_range)))
 
     # Build a comprehensive compute range
     # * do not use list length to count number of {nb}-body computations
@@ -148,10 +144,7 @@ def build_nbody_compute_list(
                 if len(item[0]) == nb:
                     compute_list_count[nb].add(item)
         info = "\n".join(
-            [
-                f"        Number of {nb}-body computations:     {len(compute_list_count[nb])}"
-                for nb in nbodies
-            ]
+            [f"        Number of {nb}-body computations:     {len(compute_list_count[nb])}" for nb in nbodies]
         )
         logger.info(info)
 

@@ -111,6 +111,4 @@ def _sum_cluster_ptype_data(
         return ret
 
     else:
-        raise KeyError(
-            "ptype can only be energy, gradient, or hessian. How did you end up here?"
-        )
+        raise KeyError("ptype can only be energy, gradient, or hessian. How did you end up here?")

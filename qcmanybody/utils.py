@@ -73,3 +73,26 @@ def print_nbody_energy(
 
     info += "\n"
     print(info)
+
+
+def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False):
+    previous_e = body_dict[1]
+    tot_e = previous_e != 0.0
+    nbody_range = list(body_dict)
+    nbody_range.sort()
+    res = {}
+    if embedding:
+        return res
+
+    if tot_e:
+        res[f"{bsse}-CORRECTED TOTAL ENERGY"] = body_dict[max_nbody]
+    res[f"{bsse}-CORRECTED INTERACTION ENERGY"] = body_dict[max_nbody] - body_dict[1]
+
+    for nb in range(2, max(nbody_range) + 1):
+        res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+        res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY"] = body_dict[nb] - body_dict[nb - 1]
+    if tot_e:
+        for nb in nbody_range:
+            res[f"{bsse}-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY"] = body_dict[nb]
+
+    return res

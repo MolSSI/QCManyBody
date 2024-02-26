@@ -15,8 +15,15 @@ H       0.10002049   4.24958115  -1.10222079
 units bohr
 }
 
-levels = {2: 'scf/sto-3g', 1: 'mp2/sto-3g'}
+levels = {1: 'scf/sto-3g', 2: 'scf/sto-3g', 3: 'scf/sto-3g'}
 set cc_type df
 set df_basis_mp2 def2-qzvpp-ri
 
-ecp = energy('', molecule=h2o_trimer, bsse_type = 'nocp', return_total_data=True, levels=levels)
+energy('', molecule=h2o_trimer, bsse_type = ['cp', 'nocp', 'vmfc'], return_total_data=True, levels=levels)
+
+from qcportal.serialization import serialize
+d = {k: v.np if isinstance(v, Matrix) else v for k,v in variables().items()}
+with open("h2o_trimer_single.json", "wb") as f:
+    f.write(serialize(d, 'json'))
+
+print_variables()

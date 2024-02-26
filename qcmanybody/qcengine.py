@@ -10,11 +10,11 @@ from qcmanybody.utils import delabeler
 
 
 def run_qcengine(
-        molecule: Molecule,
-        levels: Mapping[Union[int, Literal["supersystem"]], str],
-        specifications: Mapping[str, Mapping[str, Any]],
-        bsse_type: Iterable[BsseEnum],
-        return_total_data: bool,
+    molecule: Molecule,
+    levels: Mapping[Union[int, Literal["supersystem"]], str],
+    specifications: Mapping[str, Mapping[str, Any]],
+    bsse_type: Iterable[BsseEnum],
+    return_total_data: bool,
 ):
 
     mc = ManyBodyCalculator(molecule, bsse_type, levels, return_total_data)
@@ -24,7 +24,7 @@ def run_qcengine(
     computation_count = {}
     for chem, label, imol in mc.iterate_molecules(True):
         print(label)
-        inp = AtomicInput(molecule=imol, **specifications[chem]['specification'])
+        inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
 
         _, real, bas = delabeler(label)
         computation_count.setdefault(len(real), 0)
@@ -37,14 +37,12 @@ def run_qcengine(
             raise RuntimeError("Calculation did not succeed! Error:\n" + result.error.error_message)
 
         component_results[label] = {
-            'energy': result.properties.return_energy,
-            'gradient': result.properties.return_gradient,
-            'hessian': result.properties.return_hessian
+            "energy": result.properties.return_energy,
+            "gradient": result.properties.return_gradient,
+            "hessian": result.properties.return_hessian,
         }
-
 
     print("COMPUTATION COUNTS")
     pprint(computation_count)
-
 
     return mc.analyze(component_results)
