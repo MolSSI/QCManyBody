@@ -143,10 +143,9 @@ def build_nbody_compute_list(
             for item in nbset:
                 if len(item[0]) == nb:
                     compute_list_count[nb].add(item)
-        info = "\n".join(
-            [f"        Number of {nb}-body computations:     {len(compute_list_count[nb])}" for nb in nbodies]
-        )
-        logger.info(info)
+
+    info = "\n".join([f"        Number of {nb}-body computations:     {len(compute_list_count[nb])}" for nb in nbodies])
+    logger.info(info)
 
     compute_dict = {
         "all": compute_list,
