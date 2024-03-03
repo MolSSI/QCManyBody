@@ -1,12 +1,9 @@
 from __future__ import annotations
 
 import itertools
-import logging
 from typing import Iterable, Union, Literal, Optional, Dict, Set
 
 from qcmanybody.models import BsseEnum, FragBasIndex
-
-logger = logging.getLogger(__name__)
 
 
 def build_nbody_compute_list(
@@ -143,9 +140,6 @@ def build_nbody_compute_list(
             for item in nbset:
                 if len(item[0]) == nb:
                     compute_list_count[nb].add(item)
-
-    info = "\n".join([f"        Number of {nb}-body computations:     {len(compute_list_count[nb])}" for nb in nbodies])
-    logger.info(info)
 
     compute_dict = {
         "all": compute_list,

@@ -23,7 +23,6 @@ class ManyBodyCalculator:
         levels: Mapping[Union[int, Literal["supersystem"]], str],
         return_total_data: bool,
     ):
-
         # TODO
         self.embedding_charges = {}
 
@@ -76,7 +75,6 @@ class ManyBodyCalculator:
 
     @property
     def compute_map(self) -> Dict[str, Dict[str, Dict[int, Set[FragBasIndex]]]]:
-
         if self.mc_compute_dict is not None:
             return self.mc_compute_dict
 
@@ -104,7 +102,6 @@ class ManyBodyCalculator:
         done_molecules = set()
 
         for mc, compute_dict in self.compute_map.items():
-
             # TODO - this is a bit of a hack. Lots of duplication when reaching higher nbody
             for compute_list in compute_dict["all"].values():
                 for real_atoms, basis_atoms in compute_list:
@@ -354,7 +351,6 @@ class ManyBodyCalculator:
         ptype: DriverEnum,
         component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],
     ):
-
         natoms = len(self.molecule.symbols)
 
         # Initialize with zeros
@@ -371,7 +367,6 @@ class ManyBodyCalculator:
         sorted_nbodies = [(k, v) for k, v in self.nbodies_per_mc_level.items() if v != ["supersystem"]]
         sorted_nbodies = sorted(sorted_nbodies, reverse=True, key=lambda x: x[1])
         for label, nbody_list in sorted_nbodies:
-
             cresults = {
                 k: {k2: v2 for k2, v2 in v.items() if delabeler(k2)[0] == label} for k, v in component_results.items()
             }
@@ -488,7 +483,6 @@ class ManyBodyCalculator:
         self,
         component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],  # component_results[label]['energy'] = 1.23
     ):
-
         # reorganize to component_results_inv['energy'][label] = 1.23
         component_results_inv = {"energy": {}, "gradient": {}, "hessian": {}}
         for label, data in component_results.items():
