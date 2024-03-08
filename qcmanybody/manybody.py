@@ -5,12 +5,22 @@ import math
 from typing import Set, Dict, Tuple, Union, Literal, Mapping, Any, Sequence
 
 import numpy as np
-from qcelemental.models import DriverEnum, Molecule
+from qcelemental.models import Molecule
 
-from qcmanybody.assemble import _sum_cluster_ptype_data
+from qcmanybody.assemble import sum_cluster_data
 from qcmanybody.builder import build_nbody_compute_list
 from qcmanybody.models import BsseEnum, FragBasIndex
-from qcmanybody.utils import delabeler, labeler, print_nbody_energy, collect_vars
+from qcmanybody.utils import (
+    delabeler,
+    labeler,
+    print_nbody_energy,
+    collect_vars,
+    zeros_like,
+    all_same_shape,
+    copy_value,
+    expand_hessian,
+    expand_gradient,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +79,16 @@ class ManyBodyCalculator:
         # To be built on the fly
         self.mc_compute_dict = None
 
+        # Build size and slices dictionaries
+        self.fragment_size_dict = {}
+        self.fragment_slice_dict = {}
+        iat = 0
+        for ifr in range(1, self.nfragments + 1):
+            nat = len(self.molecule.fragments[ifr - 1])
+            self.fragment_size_dict[ifr] = nat
+            self.fragment_slice_dict[ifr] = slice(iat, iat + nat)
+            iat += nat
+
     @property
     def has_supersystem(self) -> bool:
         return "supersystem" in self.levels
@@ -92,6 +112,12 @@ class ManyBodyCalculator:
             )
 
         return self.mc_compute_dict
+
+    def expand_gradient(self, grad: np.ndarray, bas: Tuple[int, ...]) -> np.ndarray:
+        return expand_gradient(grad, bas, self.fragment_size_dict, self.fragment_slice_dict)
+
+    def expand_hessian(self, hess: np.ndarray, bas: Tuple[int, ...]) -> np.ndarray:
+        return expand_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict)
 
     def iterate_molecules(self, orient: bool = True) -> Tuple[str, str, Molecule]:
         """Iterate over all the molecules needed for the computation.
@@ -129,7 +155,7 @@ class ManyBodyCalculator:
 
     def _assemble_nbody_components(
         self,
-        ptype: DriverEnum,
+        property_label: str,
         component_results: Dict[str, Union[float, np.ndarray]],
     ) -> Dict[str, Any]:
         """Assembles N-body components for a single derivative level and a single model chemistry level
@@ -148,7 +174,6 @@ class ManyBodyCalculator:
             raise RuntimeError(f"Model chemistry {mc_level} not found in {self.mc_levels}")
 
         # get the range of nbodies and the required calculations for this level
-        # HACKY
         bsse_type = self.bsse_type
         return_bsse_type = self.return_bsse_type
         nbodies = self.nbodies_per_mc_level[mc_level]
@@ -157,45 +182,24 @@ class ManyBodyCalculator:
             bsse_type = [BsseEnum.nocp]
             return_bsse_type = BsseEnum.nocp
 
-        max_nbody = nbodies[-1]  # TODO - or max()?
+        max_nbody = max(nbodies)
         compute_dict = self.compute_map[mc_level]
 
-        # Build size and slices dictionaries
-        fragment_size_dict = {}
-        fragment_slice_dict = {}
-        iat = 0
-        for ifr in range(1, self.nfragments + 1):
-            nat = len(self.molecule.fragments[ifr - 1])
-            fragment_size_dict[ifr] = nat
-            fragment_slice_dict[ifr] = slice(iat, iat + nat)
-            iat += nat
+        if not all_same_shape(component_results.values()):
+            raise ValueError("All values in data dictionary must have the same shape.")
+
+        # Use first data value to determine shape
+        first_key = next(iter(component_results.keys()))
+        property_template = zeros_like(component_results[first_key])
 
         # Final dictionaries
-        if ptype == DriverEnum.energy:
-            cp_by_level = {n: 0.0 for n in range(1, nbodies[-1] + 1)}
-            nocp_by_level = {n: 0.0 for n in range(1, nbodies[-1] + 1)}
-            vmfc_by_level = {n: 0.0 for n in range(1, nbodies[-1] + 1)}
+        cp_by_level = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
+        nocp_by_level = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
+        vmfc_by_level = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
 
-            cp_body_dict = {n: 0.0 for n in range(1, nbodies[-1] + 1)}
-            nocp_body_dict = {n: 0.0 for n in range(1, nbodies[-1] + 1)}
-            vmfc_body_dict = {n: 0.0 for n in range(1, nbodies[-1] + 1)}
-
-        else:
-            nat = sum(fragment_size_dict.values())
-            if ptype == DriverEnum.gradient:
-                arr_shape = (nat, 3)
-            elif ptype == DriverEnum.hessian:
-                arr_shape = (nat * 3, nat * 3)
-            else:
-                raise ValueError(f"Invalid ptype {ptype}")
-
-            cp_by_level = {n: np.zeros(arr_shape) for n in range(1, nbodies[-1] + 1)}
-            nocp_by_level = {n: np.zeros(arr_shape) for n in range(1, nbodies[-1] + 1)}
-            vmfc_by_level = {n: np.zeros(arr_shape) for n in range(1, nbodies[-1] + 1)}
-
-            cp_body_dict = {n: np.zeros(arr_shape) for n in range(1, nbodies[-1] + 1)}
-            nocp_body_dict = {n: np.zeros(arr_shape) for n in range(1, nbodies[-1] + 1)}
-            vmfc_body_dict = {n: np.zeros(arr_shape) for n in range(1, nbodies[-1] + 1)}
+        cp_body_dict = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
+        nocp_body_dict = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
+        vmfc_body_dict = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
 
         # Sum up all of the levels
         # * compute_dict[bt][nb] holds all the computations needed to compute nb
@@ -211,65 +215,25 @@ class ManyBodyCalculator:
                 nocp_compute_list[len(w[0])].add(w)
 
         for nb in range(1, nbodies[-1] + 1):
-            cp_by_level[nb] = _sum_cluster_ptype_data(
-                ptype,
-                component_results,
-                cp_compute_list[nb],
-                fragment_slice_dict,
-                fragment_size_dict,
-                mc_level,
-            )
-            nocp_by_level[nb] = _sum_cluster_ptype_data(
-                ptype,
-                component_results,
-                nocp_compute_list[nb],
-                fragment_slice_dict,
-                fragment_size_dict,
-                mc_level,
-            )
+            cp_by_level[nb] = sum_cluster_data(component_results, cp_compute_list[nb], mc_level)
+            nocp_by_level[nb] = sum_cluster_data(component_results, nocp_compute_list[nb], mc_level)
             if nb in compute_dict["vmfc_levels"]:
-                vmfc_by_level[nb] = _sum_cluster_ptype_data(
-                    ptype,
-                    component_results,
-                    compute_dict["vmfc_levels"][nb],
-                    fragment_slice_dict,
-                    fragment_size_dict,
-                    mc_level,
-                    vmfc=True,
-                    nb=nb,
+                vmfc_by_level[nb] = sum_cluster_data(
+                    component_results, compute_dict["vmfc_levels"][nb], mc_level, vmfc=True, nb=nb
                 )
 
         # Extract data for monomers in monomer basis for CP total data
         if 1 in nbodies:
             monomers_in_monomer_basis = [v for v in compute_dict["nocp"][1] if len(v[1]) == 1]
-
-            if ptype == DriverEnum.energy:
-                monomer_energy_list = [
-                    component_results[labeler(mc_level, m[0], m[1])] for m in monomers_in_monomer_basis
-                ]
-                monomer_sum = sum(monomer_energy_list)
-            else:
-                monomer_sum = _sum_cluster_ptype_data(
-                    ptype,
-                    component_results,
-                    set(monomers_in_monomer_basis),
-                    fragment_slice_dict,
-                    fragment_size_dict,
-                    mc_level,
-                )
+            monomer_sum = sum_cluster_data(component_results, set(monomers_in_monomer_basis), mc_level)
         else:
-            # TODO - fixme
-            # Should be gradient or hessian of zero (size of full molecule)
-            monomer_sum = 0.0
+            monomer_sum = copy_value(property_template)
 
         # Compute cp
         if BsseEnum.cp in bsse_type:
             for nb in range(1, nbodies[-1] + 1):
                 if nb == self.nfragments:
-                    if ptype == DriverEnum.energy:
-                        cp_body_dict[nb] = cp_by_level[nb] - bsse
-                    else:
-                        cp_body_dict[nb][:] = cp_by_level[nb] - bsse
+                    cp_body_dict[nb] = cp_by_level[nb] - bsse
                     continue
 
                 for k in range(1, nb + 1):
@@ -279,10 +243,7 @@ class ManyBodyCalculator:
 
                 if nb == 1:
                     bsse = cp_body_dict[nb] - monomer_sum
-                    if ptype == DriverEnum.energy:
-                        cp_body_dict[nb] = monomer_sum
-                    else:
-                        cp_body_dict[nb] = monomer_sum.copy()
+                    cp_body_dict[nb] = copy_value(monomer_sum)
                 else:
                     cp_body_dict[nb] -= bsse
 
@@ -290,10 +251,7 @@ class ManyBodyCalculator:
         if BsseEnum.nocp in bsse_type:
             for nb in range(1, nbodies[-1] + 1):
                 if nb == self.nfragments:
-                    if ptype == DriverEnum.energy:
-                        nocp_body_dict[nb] = nocp_by_level[nb]
-                    else:
-                        nocp_body_dict[nb][:] = nocp_by_level[nb]
+                    nocp_body_dict[nb] = nocp_by_level[nb]
                     continue
 
                 for k in range(1, nb + 1):
@@ -304,110 +262,78 @@ class ManyBodyCalculator:
         # Compute vmfc
         if BsseEnum.vmfc in bsse_type:
             for nb in nbodies:
-                if ptype == DriverEnum.energy:
-                    for k in range(1, nb + 1):
-                        vmfc_body_dict[nb] += vmfc_by_level[k]
+                for k in range(1, nb + 1):
+                    vmfc_body_dict[nb] += vmfc_by_level[k]
 
-                else:
-                    if nb > 1:
-                        vmfc_body_dict[nb] = vmfc_by_level[nb - 1]
-                    vmfc_body_dict[nb] += vmfc_by_level[nb]
+                # TODO - below was used for gradient/hessian?
+                # if nb > 1:
+                #    vmfc_body_dict[nb] = vmfc_by_level[nb - 1]
+                # vmfc_body_dict[nb] += vmfc_by_level[nb]
 
         # Collect specific and generalized returns
         results = {
-            f"cp_{ptype.value}_body_dict": {f"{nb}cp": j for nb, j in cp_body_dict.items()},
-            f"nocp_{ptype.value}_body_dict": {f"{nb}nocp": j for nb, j in nocp_body_dict.items()},
-            f"vmfc_{ptype.value}_body_dict": {f"{nb}vmfc": j for nb, j in vmfc_body_dict.items()},
+            f"cp_{property_label}_body_dict": cp_body_dict,
+            f"nocp_{property_label}_body_dict": nocp_body_dict,
+            f"vmfc_{property_label}_body_dict": vmfc_body_dict,
         }
 
-        if return_bsse_type == "cp":
-            results[f"{ptype.value}_body_dict"] = cp_body_dict
-        elif return_bsse_type == "nocp":
-            results[f"{ptype.value}_body_dict"] = nocp_body_dict
-        elif return_bsse_type == "vmfc":
-            results[f"{ptype.value}_body_dict"] = vmfc_body_dict
-        else:
-            raise RuntimeError(
-                "N-Body Wrapper: Invalid return type. Should never be here, please post this error on github."
-            )
+        # Overall return body dict & value for this property
+        results[f"{property_label}_body_dict"] = results[f"{return_bsse_type.value}_{property_label}_body_dict"]
+        results[f"ret_{property_label}"] = copy_value(results[f"{property_label}_body_dict"][max_nbody])
 
-        if ptype == DriverEnum.energy:
-            piece = results[f"{ptype.value}_body_dict"][max_nbody]
-        else:
-            piece = results[f"{ptype.value}_body_dict"][max_nbody].copy()
-
-        if self.return_total_data:
-            results[f"ret_{ptype.value}"] = piece
-        else:
-            results[f"ret_{ptype.value}"] = piece
-            results[f"ret_{ptype.value}"] -= results[f"{ptype.value}_body_dict"][1]
-
-        results["ret_ptype"] = results[f"ret_{ptype.value}"]
+        if not self.return_total_data:
+            results[f"ret_{property_label}"] -= results[f"{property_label}_body_dict"][1]
 
         return results
 
     def _analyze(
         self,
-        ptype: DriverEnum,
-        component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],
+        property_label: str,
+        property_results: Dict[str, Union[float, np.ndarray]],  # Label to results
     ):
-        natoms = len(self.molecule.symbols)
-
         # Initialize with zeros
-        energy_result, gradient_result, hessian_result = 0, None, None
-        energy_body_contribution = {b: {} for b in self.bsse_type}
-        energy_body_dict = {b: {} for b in self.bsse_type}
+        if not all_same_shape(property_results.values()):
+            raise ValueError("All values in data dictionary must have the same shape.")
+
+        # Use first data value to determine shape
+        first_key = next(iter(property_results.keys()))
+
+        # Zeros, but with the same shape as the property we are calculating
+        property_template = zeros_like(property_results[first_key])
+
+        property_result = copy_value(property_template)
+        property_body_dict = {b.value: {} for b in self.bsse_type}
+        property_body_contribution = {b.value: {} for b in self.bsse_type}
+
+        # results per model chemistry
         mc_results = {}
-        if ptype in [DriverEnum.gradient, DriverEnum.hessian]:
-            gradient_result = np.zeros((natoms, 3))
-        if ptype == DriverEnum.hessian:
-            hessian_result = np.zeros((natoms * 3, natoms * 3))
 
         # sort by nbody level, ignore supersystem
         sorted_nbodies = [(k, v) for k, v in self.nbodies_per_mc_level.items() if v != ["supersystem"]]
         sorted_nbodies = sorted(sorted_nbodies, reverse=True, key=lambda x: x[1])
-        for label, nbody_list in sorted_nbodies:
-            cresults = {
-                k: {k2: v2 for k2, v2 in v.items() if delabeler(k2)[0] == label} for k, v in component_results.items()
-            }
-            results = self._assemble_nbody_components(DriverEnum.energy, cresults["energy"])
-
-            if ptype in [DriverEnum.gradient, DriverEnum.hessian]:
-                results.update(self._assemble_nbody_components(DriverEnum.gradient, cresults["gradient"]))
-            if ptype == DriverEnum.hessian:
-                results.update(self._assemble_nbody_components(DriverEnum.hessian, cresults["hessian"]))
-
-            mc_results[label] = results
+        for mc_label, nbody_list in sorted_nbodies:
+            # filter to only one model chemistry
+            filtered_results = {k: v for k, v in property_results.items() if delabeler(k)[0] == mc_label}
+            nb_component_results = self._assemble_nbody_components(property_label, filtered_results)
+            mc_results[mc_label] = nb_component_results
 
             for n in nbody_list[::-1]:
-                energy_bsse_dict = {b: 0 for b in self.bsse_type}
+                property_bsse_dict = {b.value: copy_value(property_template) for b in self.bsse_type}
 
                 for m in range(n - 1, n + 1):
                     if m == 0:
                         continue
+
                     # Subtract the (n-1)-body contribution from the n-body contribution to get the n-body effect
                     sign = (-1) ** (1 - m // n)
                     for b in self.bsse_type:
-                        energy_bsse_dict[b] += (
-                            sign * results["%s_energy_body_dict" % b.lower()]["%i%s" % (m, b.lower())]
+                        property_bsse_dict[b.value] += (
+                            sign * mc_results[mc_label][f"{b.value}_{property_label}_body_dict"][m]
                         )
 
-                    if ptype == DriverEnum.hessian:
-                        hessian_result += sign * results[f"hessian_body_dict"][m]
-                        gradient_result += sign * results["gradient_body_dict"][m]
-                        if n == 1:
-                            hessian1 = results[f"hessian_body_dict"][n]
-                            gradient1 = results["gradient_body_dict"][n]
-
-                    elif ptype == DriverEnum.gradient:
-                        gradient_result += sign * results[f"gradient_body_dict"][m]
-                        # Keep 1-body contribution to compute interaction data
-                        if n == 1:
-                            gradient1 = results[f"gradient_body_dict"][n]
-
-                energy_result += energy_bsse_dict[self.return_bsse_type]
+                property_result += property_bsse_dict[self.return_bsse_type]
                 for b in self.bsse_type:
-                    energy_body_contribution[b][n] = energy_bsse_dict[b]
+                    property_body_contribution[b.value][n] = property_bsse_dict[b.value]
 
         if self.has_supersystem:
             # Get the MC label for supersystem tasks
@@ -415,91 +341,74 @@ class ManyBodyCalculator:
 
             # Super system recovers higher order effects at a lower level
             frag_range = tuple(range(1, self.nfragments + 1))
-            ss_label = labeler(supersystem_mc_level, frag_range, frag_range)
 
-            supersystem_results = {
-                "energy": component_results["energy"].get(ss_label, None),
-                "gradient": component_results["gradient"].get(ss_label, None),
-                "hessian": component_results["hessian"].get(ss_label, None),
-            }
-
-            ss_cresults = {
-                k: {k2: v2 for k2, v2 in v.items() if delabeler(k2)[0] == supersystem_mc_level}
-                for k, v in component_results.items()
-            }
-            ss_results = self._assemble_nbody_components(DriverEnum.energy, ss_cresults["energy"])
-
-            if ptype in [DriverEnum.gradient, DriverEnum.hessian]:
-                ss_results.update(self._assemble_nbody_components(DriverEnum.gradient, ss_cresults["gradient"]))
-            if ptype == DriverEnum.hessian:
-                ss_results.update(self._assemble_nbody_components(DriverEnum.hessian, ss_cresults["hessian"]))
-
-            mc_results[supersystem_mc_level] = ss_results
+            ss_cresults = {k: v for k, v in property_results.items() if delabeler(k)[0] == supersystem_mc_level}
+            ss_component_results = self._assemble_nbody_components(property_label, ss_cresults)
+            mc_results[supersystem_mc_level] = ss_component_results
 
             # Compute components at supersystem level of theory
-            energy_result += supersystem_results["energy"] - ss_results["energy_body_dict"][self.max_nbody]
+            ss_label = labeler(supersystem_mc_level, frag_range, frag_range)
+            supersystem_result = property_results[ss_label]
+            property_result += supersystem_result - ss_component_results[f"{property_label}_body_dict"][self.max_nbody]
 
             for b in self.bsse_type:
-                energy_body_contribution[b][self.nfragments] = (
-                    supersystem_results["energy"] - ss_results["energy_body_dict"][self.max_nbody]
+                property_body_contribution[b][self.nfragments] = (
+                    supersystem_result - ss_component_results[f"{property_label}_body_dict"][self.max_nbody]
                 )
-
-            if ptype == DriverEnum.gradient:
-                gradient_result += (
-                    np.array(supersystem_results["gradient"].reshape((-1, 3)))
-                    - ss_results[f"gradient_body_dict"][self.max_nbody]
-                )
-
-            if ptype == DriverEnum.hessian:
-                gradient_result += (supersystem_results["gradient"].reshape((-1, 3))) - ss_results[
-                    "gradient_body_dict"
-                ][self.max_nbody]
-
-                hessian_result += supersystem_results["hessian"] - ss_results[f"hessian_body_dict"][self.max_nbody]
 
         for b in self.bsse_type:
-            for n in energy_body_contribution[b]:
-                energy_body_dict[b][n] = sum(
-                    [energy_body_contribution[b][i] for i in range(1, n + 1) if i in energy_body_contribution[b]]
+            bstr = b.value
+            for n in property_body_contribution[bstr]:
+                property_body_dict[bstr][n] = sum(
+                    [
+                        property_body_contribution[bstr][i]
+                        for i in range(1, n + 1)
+                        if i in property_body_contribution[bstr]
+                    ]
                 )
 
         if not self.return_total_data:
             # Remove monomer contribution for interaction data
-            energy_result -= energy_body_dict[self.return_bsse_type][1]
-            if ptype in ["gradient", "hessian"]:
-                gradient_result -= gradient1
-            if ptype == DriverEnum.hessian:
-                hessian_result -= hessian1
+            property_result -= property_body_dict[self.return_bsse_type][1]
 
         nbody_results = {
-            "ret_energy": energy_result,
-            "ret_ptype": locals()[ptype + "_result"],
-            "energy_body_dict": energy_body_dict,
+            f"ret_{property_label}": property_result,
+            f"{property_label}_body_dict": property_body_dict,
             "mc_results": mc_results,
         }
         return nbody_results
 
     def analyze(
         self,
-        component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],  # component_results[label]['energy'] = 1.23
+        component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],  # component_results[label][property] = 1.23
     ):
-        # reorganize to component_results_inv['energy'][label] = 1.23
-        component_results_inv = {"energy": {}, "gradient": {}, "hessian": {}}
-        for label, data in component_results.items():
-            component_results_inv["energy"][label] = data.get("energy", None)
-            component_results_inv["gradient"][label] = data.get("gradient", None)
-            component_results_inv["hessian"][label] = data.get("hessian", None)
+
+        # All properties that were passed to us
+        available_properties = set()
+        for property_data in component_results.values():
+            available_properties.update(property_data.keys())
+
+        # reorganize to component_results_inv[property][label] = 1.23
+        component_results_inv = {k: {} for k in available_properties}
+
+        for cluster_label, property_data in component_results.items():
+            for property_label, property_value in property_data.items():
+                component_results_inv[property_label][cluster_label] = property_value
+
+        # Remove any missing data
+        component_results_inv = {k: v for k, v in component_results_inv.items() if v}
 
         # Actually analyze
         all_results = {}
-        if all(v is not None for v in component_results_inv["energy"].values()):
-            r = self._analyze(DriverEnum.energy, component_results_inv)
-            all_results.update(r)
-        if all(v is not None for v in component_results_inv["gradient"].values()):
-            r = self._analyze(DriverEnum.gradient, component_results_inv)
-            all_results.update(r)
-        if all(v is not None for v in component_results_inv["hessian"].values()):
-            r = self._analyze(DriverEnum.hessian, component_results_inv)
+
+        for property_label, property_results in component_results_inv.items():
+            # Expand gradient and hessian
+            if property_label == "gradient":
+                property_results = {k: self.expand_gradient(v, delabeler(k)[2]) for k, v in property_results.items()}
+            if property_label == "hessian":
+                property_results = {k: self.expand_hessian(v, delabeler(k)[2]) for k, v in property_results.items()}
+
+            r = self._analyze(property_label, property_results)
             all_results.update(r)
 
         # Analyze the total results
@@ -522,6 +431,8 @@ class ManyBodyCalculator:
 
         all_results["results"] = nbody_dict
 
+        # Make dictionary with "1cp", "2cp", etc
         ebd = all_results["energy_body_dict"]
         all_results["energy_body_dict"] = {str(k) + b: v for b in ebd for k, v in ebd[b].items()}
+
         return all_results

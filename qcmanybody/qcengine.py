@@ -36,11 +36,16 @@ def run_qcengine(
             print(result.error.error_message)
             raise RuntimeError("Calculation did not succeed! Error:\n" + result.error.error_message)
 
-        component_results[label] = {
-            "energy": result.properties.return_energy,
-            "gradient": result.properties.return_gradient,
-            "hessian": result.properties.return_hessian,
-        }
+        # pull out stuff
+        props = {"energy", "gradient", "hessian"}
+
+        component_results[label] = {}
+
+        for p in props:
+            if hasattr(result.properties, f"return_{p}"):
+                v = getattr(result.properties, f"return_{p}")
+                if v is not None:
+                    component_results[label][p] = v
 
     print("COMPUTATION COUNTS")
     pprint(computation_count)

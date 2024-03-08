@@ -1,9 +1,86 @@
 from __future__ import annotations
 
 import json
+from typing import Tuple, Dict, Union, Iterable
+
 import numpy as np
-from typing import Tuple, Dict
 from qcelemental import constants
+
+
+def zeros_like(x: Union[float, np.ndarray]) -> Union[int, float, np.ndarray]:
+    if isinstance(x, float):
+        return 0.0
+    else:
+        return np.zeros_like(x)
+
+
+def copy_value(x: Union[float, np.ndarray]) -> Union[int, float, np.ndarray]:
+    if isinstance(x, float):
+        return x
+    else:
+        return np.copy(x)
+
+
+def all_same_shape(it: Iterable[Union[float, np.ndarray]]) -> bool:
+    """Check if all elements of an iterable have the same shape."""
+
+    it = iter(it)
+    try:
+        first = next(it)
+    except StopIteration:
+        return True
+    if isinstance(first, float):
+        return all(isinstance(x, float) for x in it)
+    elif isinstance(first, np.ndarray):
+        return all(x.shape == first.shape for x in it)
+    else:
+        raise TypeError(f"Expected float or np.ndarray, got {type(first)}")
+
+
+def expand_gradient(
+    grad: np.ndarray, bas: Tuple[int, ...], fragment_size_dict: Dict[int, int], fragment_slice_dict: Dict[int, slice]
+) -> np.ndarray:
+    """
+    Expands a gradient calculated for a cluster to the full system
+    """
+
+    nat = sum(fragment_size_dict.values())
+    ret = np.zeros((nat, 3))
+    start = 0
+    for ifr in bas:
+        end = start + fragment_size_dict[ifr]
+        ret[fragment_slice_dict[ifr]] = grad[start:end]
+        start += fragment_size_dict[ifr]
+
+    return ret
+
+
+def expand_hessian(
+    hess: np.ndarray, bas: Tuple[int, ...], fragment_size_dict: Dict[int, int], fragment_slice_dict: Dict[int, slice]
+) -> np.ndarray:
+    """
+    Expands a hessian calculated for a cluster to the full system
+    """
+
+    nat = sum(fragment_size_dict.values())
+    ret = np.zeros((nat * 3, nat * 3))
+
+    # Build up start and end slices
+    abs_start, rel_start = 0, 0
+    abs_slices, rel_slices = [], []
+    for ifr in bas:
+        rel_end = rel_start + 3 * fragment_size_dict[ifr]
+        rel_slices.append(slice(rel_start, rel_end))
+        rel_start += 3 * fragment_size_dict[ifr]
+
+        tmp_slice = fragment_slice_dict[ifr]
+        abs_slices.append(slice(tmp_slice.start * 3, tmp_slice.stop * 3))
+
+    for abs_sl1, rel_sl1 in zip(abs_slices, rel_slices):
+        for abs_sl2, rel_sl2 in zip(abs_slices, rel_slices):
+            ret[abs_sl1, abs_sl2] = hess[rel_sl1, rel_sl2]
+
+    return ret
 
 
 def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> str:
@@ -15,19 +92,6 @@ def delabeler(item: str) -> Tuple[str, Tuple[int, ...], Tuple[int, ...]]:
 
     mc, frag, bas = json.loads(item)
     return str(mc), frag, bas
-
-
-def shaped_zero(der: int, nat: int):
-    if der == 0:
-        return 0.0
-    elif der == 1:
-        arr_shape = (nat, 3)
-        return np.zeros(arr_shape)
-    elif der == 2:
-        arr_shape = (nat * 3, nat * 3)
-        return np.zeros(arr_shape)
-    else:
-        raise ValueError(f"Invalid derivative level {der}")
 
 
 def print_nbody_energy(
