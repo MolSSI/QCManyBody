@@ -119,7 +119,7 @@ class ManyBodyCalculator:
     def expand_hessian(self, hess: np.ndarray, bas: Tuple[int, ...]) -> np.ndarray:
         return expand_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict)
 
-    def iterate_molecules(self, orient: bool = True) -> Tuple[str, str, Molecule]:
+    def iterate_molecules(self) -> Tuple[str, str, Molecule]:
         """Iterate over all the molecules needed for the computation.
 
         Yields model chemistry, label, and molecule.
@@ -140,7 +140,8 @@ class ManyBodyCalculator:
                     # Shift to zero-indexing
                     real_atoms_0 = [x - 1 for x in real_atoms]
                     ghost_atoms_0 = [x - 1 for x in ghost_atoms]
-                    mol = self.molecule.get_fragment(real_atoms_0, ghost_atoms_0, orient=orient, group_fragments=True)
+                    mol = self.molecule.get_fragment(real_atoms_0, ghost_atoms_0, orient=False, group_fragments=False)
+                    mol = mol.copy(update={"fix_com": True, "fix_orientation": True})
 
                     # if self.embedding_charges:
                     #    embedding_frags = list(set(range(1, self.nfragments + 1)) - set(pair[1]))

@@ -22,7 +22,7 @@ def run_qcengine(
     component_results = {}
 
     computation_count = {}
-    for chem, label, imol in mc.iterate_molecules(True):
+    for chem, label, imol in mc.iterate_molecules():
         print(label)
         inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
 
