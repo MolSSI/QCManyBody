@@ -263,13 +263,18 @@ class ManyBodyCalculator:
         # Compute vmfc
         if BsseEnum.vmfc in bsse_type:
             for nb in nbodies:
-                for k in range(1, nb + 1):
-                    vmfc_body_dict[nb] += vmfc_by_level[k]
+                # TODO I think this is correct for all properties...
+                # for k in range(1, nb + 1):
+                #    vmfc_body_dict[nb] += vmfc_by_level[k]
 
-                # TODO - below was used for gradient/hessian?
-                # if nb > 1:
-                #    vmfc_body_dict[nb] = vmfc_by_level[nb - 1]
-                # vmfc_body_dict[nb] += vmfc_by_level[nb]
+                # TODO - but below was used for gradient/hessian in psi4?
+                if property_label == "energy":
+                    for k in range(1, nb + 1):
+                        vmfc_body_dict[nb] += vmfc_by_level[k]
+                else:
+                    if nb > 1:
+                        vmfc_body_dict[nb] = vmfc_by_level[nb - 1]
+                    vmfc_body_dict[nb] += vmfc_by_level[nb]
 
         # Collect specific and generalized returns
         results = {
