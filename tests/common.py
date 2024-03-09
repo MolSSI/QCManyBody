@@ -86,6 +86,22 @@ specifications = {
             "keywords": {"cc_type": "df", "df_basis_mp2": "def2-qzvpp-ri"},
         },
     },
+    "h_scf_atz": {
+        "program": "psi4",
+        "specification": {
+            "driver": "hessian",
+            "model": {"method": "hf", "basis": "aug-cc-pvtz"},
+            "keywords": {"cc_type": "df", "df_basis_mp2": "def2-qzvpp-ri"},
+        },
+    },
+    "h_scf_adz": {
+        "program": "psi4",
+        "specification": {
+            "driver": "hessian",
+            "model": {"method": "hf", "basis": "aug-cc-pvdz"},
+            "keywords": {"cc_type": "df", "df_basis_mp2": "def2-qzvpp-ri"},
+        },
+    },
     "h_b3lyp": {
         "program": "psi4",
         "specification": {

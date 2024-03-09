@@ -320,6 +320,10 @@ class ManyBodyCalculator:
         for mc_label, nbody_list in sorted_nbodies:
             # filter to only one model chemistry
             filtered_results = {k: v for k, v in property_results.items() if delabeler(k)[0] == mc_label}
+
+            if not filtered_results:
+                raise RuntimeError(f"No data found for model chemistry {mc_label}")
+
             nb_component_results = self._assemble_nbody_components(property_label, filtered_results)
             mc_results[mc_label] = nb_component_results
 

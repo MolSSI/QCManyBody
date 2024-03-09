@@ -9,7 +9,7 @@ from qcmanybody.models import BsseEnum
 from qcmanybody.utils import delabeler
 
 
-def run_qcengine(
+def run_qcengine_base(
     molecule: Molecule,
     levels: Mapping[Union[int, Literal["supersystem"]], str],
     specifications: Mapping[str, Mapping[str, Any]],
@@ -44,10 +44,20 @@ def run_qcengine(
         for p in props:
             if hasattr(result.properties, f"return_{p}"):
                 v = getattr(result.properties, f"return_{p}")
+                # print(f"  {label} {p}: {v}")
                 if v is not None:
                     component_results[label][p] = v
 
-    print("COMPUTATION COUNTS")
-    pprint(computation_count)
+    return mc, component_results
 
+
+def run_qcengine(
+    molecule: Molecule,
+    levels: Mapping[Union[int, Literal["supersystem"]], str],
+    specifications: Mapping[str, Mapping[str, Any]],
+    bsse_type: Iterable[BsseEnum],
+    return_total_data: bool,
+):
+
+    mc, component_results = run_qcengine_base(molecule, levels, specifications, bsse_type, return_total_data)
     return mc.analyze(component_results)
