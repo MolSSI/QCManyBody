@@ -15,9 +15,10 @@ from qcmanybody.utils import (
     labeler,
     print_nbody_energy,
     collect_vars,
-    zeros_like,
-    all_same_shape,
     copy_value,
+    find_shape,
+    shaped_zero,
+    all_same_shape,
     expand_hessian,
     expand_gradient,
 )
@@ -191,16 +192,16 @@ class ManyBodyCalculator:
 
         # Use first data value to determine shape
         first_key = next(iter(component_results.keys()))
-        property_template = zeros_like(component_results[first_key])
+        property_shape = find_shape(component_results[first_key])
 
         # Final dictionaries
-        cp_by_level = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
-        nocp_by_level = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
-        vmfc_by_level = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
+        cp_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
+        nocp_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
+        vmfc_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
 
-        cp_body_dict = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
-        nocp_body_dict = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
-        vmfc_body_dict = {n: copy_value(property_template) for n in range(1, nbodies[-1] + 1)}
+        cp_body_dict = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
+        nocp_body_dict = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
+        vmfc_body_dict = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
 
         # Sum up all of the levels
         # * compute_dict[bt][nb] holds all the computations needed to compute nb
@@ -228,7 +229,7 @@ class ManyBodyCalculator:
             monomers_in_monomer_basis = [v for v in compute_dict["nocp"][1] if len(v[1]) == 1]
             monomer_sum = sum_cluster_data(component_results, set(monomers_in_monomer_basis), mc_level)
         else:
-            monomer_sum = copy_value(property_template)
+            monomer_sum = shaped_zero(property_shape)
 
         # Compute cp
         if BsseEnum.cp in bsse_type:
@@ -303,11 +304,9 @@ class ManyBodyCalculator:
 
         # Use first data value to determine shape
         first_key = next(iter(property_results.keys()))
+        property_shape = find_shape(property_results[first_key])
 
-        # Zeros, but with the same shape as the property we are calculating
-        property_template = zeros_like(property_results[first_key])
-
-        property_result = copy_value(property_template)
+        property_result = shaped_zero(property_shape)
         property_body_dict = {b.value: {} for b in self.bsse_type}
         property_body_contribution = {b.value: {} for b in self.bsse_type}
 
@@ -328,7 +327,7 @@ class ManyBodyCalculator:
             mc_results[mc_label] = nb_component_results
 
             for n in nbody_list[::-1]:
-                property_bsse_dict = {b.value: copy_value(property_template) for b in self.bsse_type}
+                property_bsse_dict = {b.value: shaped_zero(property_shape) for b in self.bsse_type}
 
                 for m in range(n - 1, n + 1):
                     if m == 0:

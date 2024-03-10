@@ -7,11 +7,18 @@ import numpy as np
 from qcelemental import constants
 
 
-def zeros_like(x: Union[float, np.ndarray]) -> Union[int, float, np.ndarray]:
+def find_shape(x: Union[float, np.ndarray]) -> Tuple[int, ...]:
     if isinstance(x, float):
+        return (1,)
+    else:
+        return x.shape
+
+
+def shaped_zero(shape: Tuple[int, ...]) -> Union[float, np.ndarray]:
+    if shape == (1,):
         return 0.0
     else:
-        return np.zeros_like(x)
+        return np.zeros(shape)
 
 
 def copy_value(x: Union[float, np.ndarray]) -> Union[int, float, np.ndarray]:

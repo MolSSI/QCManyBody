@@ -5,7 +5,7 @@ from typing import Dict, Union, Set
 import numpy as np
 
 from .models import FragBasIndex
-from .utils import labeler, zeros_like, all_same_shape
+from .utils import labeler, shaped_zero, find_shape, all_same_shape
 
 
 def sum_cluster_data(
@@ -22,7 +22,8 @@ def sum_cluster_data(
         raise ValueError("All values in data dictionary must have the same shape.")
 
     first_key = next(iter(data))
-    ret = zeros_like(data[first_key])
+    shape = find_shape(data[first_key])
+    ret = shaped_zero(shape)
 
     for frag, bas in compute_list:
         ene = data[labeler(mc_level_lbl, frag, bas)]
