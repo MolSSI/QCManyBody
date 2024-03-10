@@ -74,6 +74,7 @@ def generate_component_data(mol, levels, specifications, bsse_type, return_total
 
 def compare_results(qcmb_results, ref_results, levels):
     import pprint
+
     print("*" * 80)
     pprint.pprint(qcmb_results)
     print("-" * 80)

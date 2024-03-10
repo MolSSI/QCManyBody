@@ -1,4 +1,4 @@
-from util import generate_component_data
+from utils import generate_component_data
 from common import mol_h2o_3, specifications
 
 # Generates test data from component
