@@ -38,7 +38,7 @@ class ManyBodyCalculator:
         self.embedding_charges = {}
 
         self.molecule = molecule
-        self.bsse_type = bsse_type
+        self.bsse_type = [BsseEnum(x) for x in bsse_type]
         self.return_total_data = return_total_data
         self.nfragments = len(molecule.fragments)
 
