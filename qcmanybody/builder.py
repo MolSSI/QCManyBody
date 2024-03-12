@@ -87,7 +87,7 @@ def build_nbody_compute_list(
                     for x in itertools.combinations(fragment_range, sublevel):
                         cp_compute_list[nb].add((x, basis_tuple))
 
-    if "nocp" in bsse_type or return_total_data:
+    if "nocp" in bsse_type:
         # Everything in monomer basis
         for nb in nbodies:
             for sublevel in range(1, nb + 1):
@@ -104,6 +104,12 @@ def build_nbody_compute_list(
                         combo_tuple = (x, basis_tuple)
                         vmfc_compute_list[nb].add(combo_tuple)
                         vmfc_level_list[len(basis_tuple)].add(combo_tuple)
+
+    if return_total_data and 1 in nbodies:
+        # Monomers in monomer basis
+        nocp_compute_list.setdefault(1, set())
+        for frag in range(1, nfragments + 1):
+            nocp_compute_list[1].add(((frag,), (frag,)))
 
     if include_supersystem:
         # Add supersystem info to the compute list (nocp only)
