@@ -19,15 +19,13 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-          - conda-env: psi
+          - label: Py-min
             python-version: "3.8"
-            label: Psi4-1.5
             runs-on: ubuntu-latest
             pytest: ""
 
-          - conda-env: psi-nightly
+          - label: Py-max
             python-version: "3.12"
-            label: Psi4-1.6
             runs-on: ubuntu-latest
             pytest: ""
             #pytest: "-k 'not (hes2 or qchem)'"
@@ -48,12 +46,17 @@ jobs:
             - conda-forge
             - nodefaults
           dependencies:
+            # Build
             - setuptools
             - setuptools-scm
+            # Core
             - python
             - qcengine
+            # Testing
             - pytest
             - zstandard
+            - pytest-cov
+            - codecov
           EOF
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             :

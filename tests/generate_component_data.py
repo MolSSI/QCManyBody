@@ -2,7 +2,7 @@ from common import mol_h2o_3, specifications
 from utils import generate_component_data
 
 # Generates test data from component
-# This does not genreate reference data, but the outputs of the individual calculations
+# This does not generate reference data, but the outputs of the individual calculations
 # that would go into a QCManybody analysis. This is so you don't need to run full
 # computations to test
 

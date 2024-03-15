@@ -8,7 +8,7 @@ name = "qcmanybody"
 dynamic = ["version"]
 authors = [
   { name="Benjamin Pritchard", email="bpp4@vt.edu" },
-  { name="Lori A. Burns", email="loriab@gatech.edu" },
+  { name="Lori A. Burns", email="lori.burns@gmail.com" },
 ]
 description='QCManybody'
 readme = "README.md"
@@ -28,6 +28,7 @@ dependencies = [
 [project.optional-dependencies]
 tests = [
     "pytest",
+    "zstandard",
 ]
 
 
