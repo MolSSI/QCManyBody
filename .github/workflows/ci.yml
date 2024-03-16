@@ -120,7 +120,7 @@ jobs:
       matrix:
         cfg:
           - label: MkDocs
-            python-version: 3.10
+            python-version: "3.10"
             runs-on: ubuntu-latest
 
     name: "🐍 ${{ matrix.cfg.python-version }} • ${{ matrix.cfg.label }}"
