@@ -217,7 +217,7 @@ def test_mbe_level_fails(mbe_data, kws, errmsg):
     mbe_data["specification"]["keywords"] = kws
 
     # v2: with pytest.raises(Exception):
-    with pytest.raises(pydantic.ValidationError) as e:
+    with pytest.raises((pydantic.ValidationError, pydantic.v1.ValidationError)) as e:
         input_model = ManyBodyInput(**mbe_data)
         ManyBodyComputerQCNG.from_qcschema(input_model)
 
@@ -240,7 +240,7 @@ def test_mbe_bsse_type(mbe_data, kws, ans):
     mbe_data["specification"]["keywords"] = kws
 
     if ans == "error":
-        with pytest.raises(pydantic.ValidationError) as e:
+        with pytest.raises((pydantic.ValidationError, pydantic.v1.ValidationError)) as e:
             input_model = ManyBodyInput(**mbe_data)
 
         assert "not a valid enumeration member; permitted: 'nocp', 'cp', 'vmfc'" in str(e.value)
@@ -264,7 +264,7 @@ def test_mbe_sie(mbe_data, kws, ans):
 
     if isinstance(ans, str):
         input_model = ManyBodyInput(**mbe_data)
-        with pytest.raises(pydantic.error_wrappers.ValidationError) as e:
+        with pytest.raises((pydantic.ValidationError, pydantic.v1.ValidationError)) as e:
             comp_model = ManyBodyComputerQCNG.from_qcschema(input_model)
 
         assert ans in str(e.value)
