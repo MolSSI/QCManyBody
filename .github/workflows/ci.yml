@@ -52,6 +52,7 @@ jobs:
             # Core
             - python
             - qcengine
+            - pydantic
             # Testing
             - pytest
             - zstandard
@@ -60,6 +61,9 @@ jobs:
           EOF
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             :
+            if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
+                sed -i "s;pydantic;pydantic=1;g" export.yaml
+            fi
           fi
           # model sed for L/W
           #   sed -i "s;;;g" export.yaml
