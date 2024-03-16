@@ -1,0 +1,19 @@
+coverage:
+  ignore:
+    - tests/component_data
+    - tests/ref_data
+  status:
+    project:
+      default:
+        informational: true
+    #patch: false  # turn off
+    patch:
+      default:
+        informational: true
+        #threshold: 80%
+#comment: false  # turn off entirely for PR
+comment:
+  layout: "header"
+  require_changes: false
+  branches: null
+  behavior: once
