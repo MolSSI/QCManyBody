@@ -1,19 +1,60 @@
 site_name: QCManyBody Docs
+site_url: https://molssi.github.io/QCManyBody/
+
+repo_name: MolSSI/QCManyBody
+repo_url: https://github.com/MolSSI/QCManyBody
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2024 QCManyBody Developers
 
 theme:
-  name: "material"
+  name: material
+  logo: logo.png
+  favicon: logo.png
+  features:
+    - navigation.tabs
+
+  palette:
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: custom
+    #accent: pink
+    toggle:
+      icon: material/lightbulb-outline
+      name: "Switch to dark mode"
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: custom
+    toggle:
+      icon: material/lightbulb
+      name: "Switch to light mode"
+
+extra_css:
+  - stylesheets/extra.css
 
 plugins:
+- search
 - mkdocstrings:
     default_handler: python
     handlers:
       python:
+        paths: [.]
         options:
           docstring_style: numpy
+          allow_inspection: true
+        import:
+        - https://docs.python.org/3.12/objects.inv
+        - https://numpy.org/doc/stable/objects.inv
+        - https://docs.scipy.org/doc/scipy/objects.inv
+        - https://matplotlib.org/stable/objects.inv
+        - https://molssi.github.io/QCElemental/objects.inv
+        - https://molssi.github.io/QCEngine/objects.inv
+        - https://molssi.github.io/QCFractal/objects.inv
 
 nav:
   - QCManyBody Docs: index.md
   - tutorials.md
+  - API Documentation: api.md
   - How-To Guides: how-to-guides.md
   - reference.md
   - explanation.md
