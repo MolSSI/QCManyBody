@@ -1,0 +1,2 @@
+::: qcmanybody.ManyBodyCalculator
+
