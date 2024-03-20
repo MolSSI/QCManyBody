@@ -25,6 +25,6 @@ def test_h2o_trimer_multi(levels, component_file, ref_file):
     component_results = load_component_data(component_file)
     ref_data = load_ref_data(ref_file)
 
-    mc = ManyBodyCalculator(mol_h2o_3, [BsseEnum.cp, BsseEnum.nocp, BsseEnum.vmfc], levels, True)
+    mc = ManyBodyCalculator(mol_h2o_3, [BsseEnum.cp, BsseEnum.nocp, BsseEnum.vmfc], levels, True, False)
     nbody_results = mc.analyze(component_results)
     compare_results(nbody_results, ref_data, levels)
