@@ -33,6 +33,7 @@ class ManyBodyCalculator:
         bsse_type: Sequence[BsseEnum],
         levels: Mapping[Union[int, Literal["supersystem"]], str],
         return_total_data: bool,
+        supersystem_ie_only: bool,
     ):
         # TODO
         self.embedding_charges = {}
@@ -40,6 +41,7 @@ class ManyBodyCalculator:
         self.molecule = molecule
         self.bsse_type = [BsseEnum(x) for x in bsse_type]
         self.return_total_data = return_total_data
+        self.supersystem_ie_only = supersystem_ie_only
         self.nfragments = len(molecule.fragments)
 
         self.levels = levels
@@ -61,6 +63,8 @@ class ManyBodyCalculator:
         # Build nbodies_per_mc_level
         # TODO - use Lori's code
         # TODO - dict to list of lists to handle non-contiguous levels
+        # TODO multilevel and supersystem_ie_only=T not allowed together
+        # TODO supersystem in levels is not to be trusted -- nfrag only and skips levels
         max_level = max(self.levels_no_ss.keys())
 
         if set(range(1, max_level + 1)) != set(self.levels_no_ss.keys()):
@@ -109,6 +113,7 @@ class ManyBodyCalculator:
                 self.nfragments,
                 nbodies,
                 self.return_total_data,
+                self.supersystem_ie_only,
                 self.max_nbody,
             )
 
@@ -435,7 +440,7 @@ class ManyBodyCalculator:
 
             if not self.has_supersystem:  # skipped levels?
                 nbody_dict.update(
-                    collect_vars(b.upper(), all_results["energy_body_dict"][b], self.max_nbody, is_embedded)
+                    collect_vars(b.upper(), all_results["energy_body_dict"][b], self.max_nbody, is_embedded, self.supersystem_ie_only)
                 )
 
         all_results["results"] = nbody_dict

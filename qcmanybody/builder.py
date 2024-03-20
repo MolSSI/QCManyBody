@@ -11,6 +11,7 @@ def build_nbody_compute_list(
     nfragments: int,
     nbodies: Iterable[Union[int, Literal["supersystem"]]],
     return_total_data: bool,
+    supersystem_ie_only: bool,
     supersystem_max_nbody: Optional[int] = None,
 ) -> Dict[str, Dict[int, Set[FragBasIndex]]]:
     """Generates lists of N-Body computations needed for requested BSSE treatments.
@@ -27,6 +28,8 @@ def build_nbody_compute_list(
     return_total_data
         Whether the total data (True; energy/gradient/Hessian) of the molecular system has been requested,
         as opposed to interaction data (False).
+    supersystem_ie_only
+        ????
 
     Returns
     -------
@@ -81,18 +84,28 @@ def build_nbody_compute_list(
         # Everything is in full n-mer basis
         basis_tuple = tuple(fragment_range)
 
-        for nb in nbodies:
-            if nb > 1:
-                for sublevel in range(1, nb + 1):
-                    for x in itertools.combinations(fragment_range, sublevel):
-                        cp_compute_list[nb].add((x, basis_tuple))
+        if supersystem_ie_only:
+            for sublevel in [1, nfragments]:
+                for x in itertools.combinations(fragment_range, sublevel):
+                    cp_compute_list[nfragments].add((x, basis_tuple))
+        else:
+            for nb in nbodies:
+                if nb > 1:
+                    for sublevel in range(1, nb + 1):
+                        for x in itertools.combinations(fragment_range, sublevel):
+                            cp_compute_list[nb].add((x, basis_tuple))
 
     if "nocp" in bsse_type:
         # Everything in monomer basis
-        for nb in nbodies:
-            for sublevel in range(1, nb + 1):
+        if supersystem_ie_only:
+            for sublevel in [1, nfragments]:
                 for x in itertools.combinations(fragment_range, sublevel):
-                    nocp_compute_list[nb].add((x, x))
+                    nocp_compute_list[nfragments].add((x, x))
+        else:
+            for nb in nbodies:
+                for sublevel in range(1, nb + 1):
+                    for x in itertools.combinations(fragment_range, sublevel):
+                        nocp_compute_list[nb].add((x, x))
 
     if "vmfc" in bsse_type:
         # Like a CP for all combinations of pairs or greater

@@ -237,6 +237,10 @@ def test_mbe_bsse_type(mbe_data, kws, ans):
     pytest.param({"supersystem_ie_only": False}, False),
     pytest.param({"max_nbody": 1, "supersystem_ie_only": True},
         "Cannot skip intermediate n-body jobs when max_nbody=1 != nfragments"),
+    pytest.param({"bsse_type": "vmFC", "supersystem_ie_only": True},
+        "Cannot skip intermediate n-body jobs when VMFC in bsse_type"),
+    pytest.param({"bsse_type": ["cp", "Vmfc"], "supersystem_ie_only": True},
+        "Cannot skip intermediate n-body jobs when VMFC in bsse_type"),
 ])
 def test_mbe_sie(mbe_data, kws, ans):
     mbe_data["specification"]["keywords"] = kws

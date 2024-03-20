@@ -146,7 +146,7 @@ def print_nbody_energy(
     print(info)
 
 
-def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False):
+def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False, supersystem_ie_only: bool = False):
     previous_e = body_dict[1]
     tot_e = previous_e != 0.0
     nbody_range = list(body_dict)
@@ -159,11 +159,32 @@ def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False):
         res[f"{bsse}-CORRECTED TOTAL ENERGY"] = body_dict[max_nbody]
     res[f"{bsse}-CORRECTED INTERACTION ENERGY"] = body_dict[max_nbody] - body_dict[1]
 
-    for nb in range(2, max(nbody_range) + 1):
-        res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
-        res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY"] = body_dict[nb] - body_dict[nb - 1]
-    if tot_e:
-        for nb in nbody_range:
-            res[f"{bsse}-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY"] = body_dict[nb]
+    if supersystem_ie_only:
+        nfr = nbody_range[-1]
+        for nb in [nfr]:
+            res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+            if nb == 2:
+                res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY"] = body_dict[nb] - body_dict[nb - 1]
+        if tot_e:
+            for nb in [1, nfr]:
+                res[f"{bsse}-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY"] = body_dict[nb]
+    else:
+        for nb in range(2, max(nbody_range) + 1):
+            res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY"] = body_dict[nb] - body_dict[nb - 1]
+        if tot_e:
+            for nb in nbody_range:
+                res[f"{bsse}-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY"] = body_dict[nb]
 
     return res
+
+
+def provenance_stamp(routine: str) -> Dict[str, str]:
+    """Return dictionary satisfying QCSchema,
+    https://github.com/MolSSI/QCSchema/blob/master/qcschema/dev/definitions.py#L23-L41
+    with QCManyBody's credentials for creator and version. The
+    generating routine's name is passed in through `routine`.
+
+    """
+    import qcmanybody
+    return {"creator": "QCManyBody", "version": qcmanybody.__version__, "routine": routine}
