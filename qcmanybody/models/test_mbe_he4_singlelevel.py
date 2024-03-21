@@ -89,7 +89,7 @@ he4_refs_df = {
     }
 
 sumdict = {
-    "4b-all": {
+    "4b_all": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
@@ -97,79 +97,79 @@ sumdict = {
         "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-nocp-rtd-sio": {
+    "4b_nocp_rtd_sio": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-nocp-sio": {
+    "4b_nocp_sio": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-cp-rtd-sio": {
+    "4b_cp_rtd_sio": {
         "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-cp-sio": {
+    "4b_cp_sio": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-nocp-rtd": {
+    "4b_nocp_rtd": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-nocp": {
+    "4b_nocp": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-cp-rtd": {
+    "4b_cp_rtd": {
         "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "4b-cp": {
+    "4b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
-    "3b-nocp-rtd": {
+    "3b_nocp_rtd": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
     },
-    "3b-nocp": {
+    "3b_nocp": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
     },
-    "3b-cp-rtd": {
+    "3b_cp_rtd": {
         "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
     },
-    "3b-cp": {
+    "3b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
     },
-    "2b-nocp-rtd": {
+    "2b_nocp_rtd": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
     },
-    "2b-nocp": {
+    "2b_nocp": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
     },
-    "2b-cp-rtd": {
+    "2b_cp_rtd": {
         "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
     },
-    "2b-cp": {
+    "2b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
     },
-    "1b-nocp-rtd": {
+    "1b_nocp_rtd": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "zero",  #"NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
     },
-    "1b-nocp": {
+    "1b_nocp": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "zero",  #"NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
     },
-    "1b-cp-rtd": {
+    "1b_cp_rtd": {
         "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         "CP-CORRECTED INTERACTION ENERGY": "zero",  #"CP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
     },
-    "1b-cp": {
+    "1b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "zero",  #"CP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
     },
 # TODO table defines the general qcvar as 0 even if 1-body qcvar not available. continue?
@@ -183,11 +183,11 @@ def he_tetramer():
 
 
 @pytest.mark.parametrize("program,basis,keywords", [
-    pytest.param("cfour", "aug-pvdz", {"frozen_core": False}, id="cfour-conv", marks=using("cfour")),
-    pytest.param("gamess", "accd", {"contrl__ispher": 1, "mp2__nacore": 0}, id="gamess-conv", marks=using("gamess")),
-    pytest.param("nwchem", "aug-cc-pvdz", {"basis__spherical": True, "scf__thresh": 1.0e-8, "mp2__freeze": False}, id="nwchem-conv", marks=using("nwchem")),
-    pytest.param("psi4", "aug-cc-pvdz", {"e_convergence": 1.e-10, "d_convergence": 1.e-10, "scf_type": "pk", "mp2_type": "conv"}, id="psi4-conv", marks=using("psi4")),
-    pytest.param("psi4", "aug-cc-pvdz", {"e_convergence": 1.e-10, "d_convergence": 1.e-10}, id="psi4-df", marks=using("psi4")),
+    pytest.param("cfour", "aug-pvdz", {"frozen_core": False}, id="cfour_conv", marks=using("cfour")),
+    pytest.param("gamess", "accd", {"contrl__ispher": 1, "mp2__nacore": 0}, id="gamess_conv", marks=using("gamess")),
+    pytest.param("nwchem", "aug-cc-pvdz", {"basis__spherical": True, "scf__thresh": 1.0e-8, "mp2__freeze": False}, id="nwchem_conv", marks=using("nwchem")),
+    pytest.param("psi4", "aug-cc-pvdz", {"e_convergence": 1.e-10, "d_convergence": 1.e-10, "scf_type": "pk", "mp2_type": "conv"}, id="psi4_conv", marks=using("psi4")),
+    pytest.param("psi4", "aug-cc-pvdz", {"e_convergence": 1.e-10, "d_convergence": 1.e-10}, id="psi4_df", marks=using("psi4")),
 ])
 @pytest.mark.parametrize("mbe_keywords,anskey,bodykeys,calcinfo_nmbe", [
     pytest.param(
@@ -195,129 +195,129 @@ def he_tetramer():
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv],
         65,
-        id="4b-all"),
+        id="4b_all"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "supersystem_ie_only": True},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k))],
         5,
-        id="4b-nocp-rtd-sio"),
+        id="4b_nocp_rtd_sio"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "supersystem_ie_only": True},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k))],
         5,
-        id="4b-nocp-sio"),
+        id="4b_nocp_sio"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "supersystem_ie_only": True},
         "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k))],
         9,
-        id="4b-cp-rtd-sio"),
+        id="4b_cp_rtd_sio"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False, "supersystem_ie_only": True},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k) and "TOTAL ENERGY" not in k)],
         5,
-        id="4b-cp-sio"),
+        id="4b_cp_sio"),
 ## TODO add vmfc. 3b nmbe=50
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-"))],
         15,
-        id="4b-nocp-rtd"),
+        id="4b_nocp_rtd"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-"))],
         15,
-        id="4b-nocp"),
+        id="4b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True},
         "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-"))],
         19,
-        id="4b-cp-rtd"),
+        id="4b_cp_rtd"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and "TOTAL ENERGY" not in k)],
         15,
-        id="4b-cp"),
+        id="4b_cp"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 3},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("4-BODY" not in k))],
         14,
-        id="3b-nocp-rtd"),
+        id="3b_nocp_rtd"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 3},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and "4-BODY" not in k)],
         14,
-        id="3b-nocp"),
+        id="3b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "max_nbody": 3},
         "CP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and "4-BODY" not in k)],
         18,  # bugfix: was 28
-        id="3b-cp-rtd"),
+        id="3b_cp_rtd"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False, "max_nbody": 3},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and "4-BODY" not in k and "TOTAL ENERGY" not in k)],
         14,
-        id="3b-cp"),
+        id="3b_cp"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 2},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
         10,
-        id="2b-nocp-rtd"),
+        id="2b_nocp_rtd"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 2},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
         10,
-        id="2b-nocp"),
+        id="2b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "max_nbody": 2},
         "CP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
         14,
-        id="2b-cp-rtd"),
+        id="2b_cp_rtd"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False, "max_nbody": 2},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("4-BODY" not in k) and ("3-BODY" not in k) and "TOTAL ENERGY" not in k)],
         10,
-        id="2b-cp"),
+        id="2b_cp"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 1},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("1-BODY" in k))],
         4,
-        id="1b-nocp-rtd"),
+        id="1b_nocp_rtd"),
 # TODO fix 1b for rtd=F
 #    pytest.param(
 #        {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 1},
 #        "NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
 #        [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("1-BODY" in k))],
 #        10,
-#        id="1b-nocp"),
+#        id="1b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "max_nbody": 1},
         "CP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("1-BODY" in k))],
         4,
-        id="1b-cp-rtd"),
+        id="1b_cp_rtd"),
 #    pytest.param(
 #        {"bsse_type": "cp", "return_total_data": False, "max_nbody": 1},
 #        "CP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
 #        [k for k in he4_refs_conv if (k.startswith("CP-") and ("1-BODY" in k) and "TOTAL ENERGY" not in k)],
 #        4,
-#        id="1b-cp"),
+#        id="1b_cp"),
 ])
 def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodykeys, calcinfo_nmbe, he_tetramer, request):
     #! MP2/aug-cc-pvDZ many body energies of an arbitrary Helium complex,
@@ -330,7 +330,7 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     if program == "gamess":
         with pytest.raises(ValueError) as exe:
             # qcng: qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
-            qcng_compute_procedure(mbe_model) #, "manybody", raise_error=True)
+            ManyBodyComputerQCNG.from_qcschema_ben(mbe_model)
         assert "GAMESS+QCEngine can't handle ghost atoms yet" in str(exe.value)
         pytest.xfail("GAMESS can't do ghosts")
 
@@ -341,26 +341,27 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     pprint.pprint(ret.dict(), width=200)
 
     _inner = request.node.name.split("[")[1].split("]")[0]
-    kwdsln, progln = "-".join(_inner.split("-")[:-2]), "-".join(_inner.split("-")[-2:])
-    refs = he4_refs_df if progln == "psi4-df" else he4_refs_conv
+    kwdsln, progln = _inner.split("-")
+    refs = he4_refs_df if progln == "psi4_df" else he4_refs_conv
     ans = refs[anskey]
+    atol = 1.0e-8
 
     for qcv, ref in refs.items():
         skp = skprop(qcv)
         if qcv in bodykeys:
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=1.0e-8, label=f"[a] qcvars {qcv}")
-            assert compare_values(ref, getattr(ret.properties, skp), atol=1.0e-8, label=f"[b] skprop {skp}")
+            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[a] qcvars {qcv}")
+            assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[b] skprop {skp}")
         else:
             assert qcv not in ret.extras["qcvars"]["nbody"], f"[z] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
-    for qcv in sumdict["4b-all"]:
+    for qcv in sumdict["4b_all"]:
         skp = skprop(qcv)
         if qcv in sumdict[kwdsln]:
             refkey = sumdict[kwdsln][qcv]
             ref = 0.0 if refkey == "zero" else refs[refkey]
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=1.0e-8, label=f"[c] qcvars {qcv}")
-            assert compare_values(ref, getattr(ret.properties, skp), atol=1.0e-8, label=f"[d] skprop {skp}")
+            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[c] qcvars {qcv}")
+            assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[d] skprop {skp}")
         else:
             assert qcv not in ret.extras["qcvars"]["nbody"], f"[y] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
@@ -369,7 +370,7 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
         "CURRENT ENERGY": ans,
     }.items():
         skp = skprop(qcv)
-        assert compare_values(ref, ret.extras["qcvars"][qcv], atol=1.0e-8, label=f"[e] qcvars {qcv}")
-        assert compare_values(ref, getattr(ret.properties, skp), atol=1.0e-8, label=f"[f] skprop {skp}")
-    assert compare_values(ans, ret.return_result, atol=1.0e-8, label=f"[g] ret")
+        assert compare_values(ref, ret.extras["qcvars"][qcv], atol=atol, label=f"[e] qcvars {qcv}")
+        assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] skprop {skp}")
+    assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
     assert ret.properties.calcinfo_nmbe == calcinfo_nmbe, f"{ret.properties.calcinfo_nmbe=} != {calcinfo_nmbe}"
