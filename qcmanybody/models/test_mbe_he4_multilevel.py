@@ -12,7 +12,7 @@ from qcmanybody.models.manybody_v1 import AtomicSpecification, ManyBodyKeywords,
 from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
 
 import qcengine as qcng
-from qcengine.testing import using
+from .addons import using
 
 def skprop(qcvar):
     # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
@@ -353,9 +353,9 @@ def he_tetramer():
     pytest.param({4: "nwc-hf", 3: "nwc-mp2", 1: "nwc-ccsd"}, id="121-nwchem_pure", marks=using("nwchem")),
     pytest.param({4: "p4-hf", 3: "p4-mp2", 1: "p4-ccsd"}, id="121-psi4_pure", marks=using("psi4")),
 
-    pytest.param({4: "p4-hf", 3: "c4-mp2", 1: "c4-ccsd"}, id="121-cfour_psi4", marks=[using("cfour"), using("psi4")]),
-    pytest.param({4: "nwc-hf", 3: "nwc-mp2", 1: "p4-ccsd"}, id="121-nwchem_psi4", marks=[using("nwchem"), using("psi4")]),
-    pytest.param({4: "c4-hf", 3: "nwc-mp2", 1: "p4-ccsd"}, id="121-cfour_nwchem_psi4", marks=[using("cfour"), using("nwchem"), using("psi4")]),
+    pytest.param({4: "p4-hf", 3: "c4-mp2", 1: "c4-ccsd"}, id="121-cfour_psi4", marks=[*using("cfour"), *using("psi4")]),
+    pytest.param({4: "nwc-hf", 3: "nwc-mp2", 1: "p4-ccsd"}, id="121-nwchem_psi4", marks=[*using("nwchem"), *using("psi4")]),
+    pytest.param({4: "c4-hf", 3: "nwc-mp2", 1: "p4-ccsd"}, id="121-cfour_nwchem_psi4", marks=[*using("cfour"), *using("nwchem"), *using("psi4")]),
 
     # pattern 22
     pytest.param({4: "c4-mp2", 2: "c4-ccsd"}, id="22-cfour_pure", marks=using("cfour")),

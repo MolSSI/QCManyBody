@@ -379,6 +379,11 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         )
         nb_per_mc = computer_model.nbodies_per_mc_level
 
+        print("\n<<<  (ZZ 1) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben  >>>")
+        # v2: pprint.pprint(computer_model.model_dump(), width=200)
+        pprint.pprint(computer_model.dict(), width=200)
+        print(f"nbodies_per_mc_level={nb_per_mc}")
+
         comp_levels = {}
         for mc_level_idx, mtd in enumerate(computer_model.levels.values()):
             for lvl1 in nb_per_mc[mc_level_idx]:
@@ -401,6 +406,9 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             computer_model.supersystem_ie_only,
         )
 
+        print("\n<<<  (ZZ 2) QCManyBody module ManyBodyCalculator  >>>")
+        print(dir(calculator_cls))
+
         component_results = {}
 
         for chem, label, imol in calculator_cls.iterate_molecules():
@@ -421,11 +429,18 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             for p in props:
                 if hasattr(result.properties, f"return_{p}"):
                     v = getattr(result.properties, f"return_{p}")
+                    # print(f"  {label} {p}: {v}")
                     if v is not None:
                         component_results[label][p] = v
 
+        print("\n<<<  (ZZ 2) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben component_results  >>>")
+        pprint.pprint(component_results, width=200)
+
+        print("start to analyze")
         analyze_back = calculator_cls.analyze(component_results)
         analyze_back["nbody_number"] = len(component_results)
+        print("\n<<<  (ZZ 3) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben analyze_back  >>>")
+        pprint.pprint(analyze_back, width=200)
 
         return computer_model.get_results(external_results=analyze_back)
 
