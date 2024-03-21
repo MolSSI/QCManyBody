@@ -1025,13 +1025,19 @@
 <span class="normal">444</span>
 <span class="normal">445</span>
 <span class="normal">446</span>
-<span class="normal">447</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecule</span><span class="p">,</span>
         <span class="n">bsse_type</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">BsseEnum</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]],</span> <span class="nb">str</span><span class="p">],</span>
         <span class="n">return_total_data</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># TODO</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">embedding_charges</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1039,6 +1045,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="n">molecule</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">BsseEnum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_total_data</span> <span class="o">=</span> <span class="n">return_total_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span> <span class="o">=</span> <span class="n">supersystem_ie_only</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">molecule</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">levels</span>
@@ -1060,6 +1067,8 @@
         <span class="c1"># Build nbodies_per_mc_level</span>
         <span class="c1"># TODO - use Lori&#39;s code</span>
         <span class="c1"># TODO - dict to list of lists to handle non-contiguous levels</span>
+        <span class="c1"># TODO multilevel and supersystem_ie_only=T not allowed together</span>
+        <span class="c1"># TODO supersystem in levels is not to be trusted -- nfrag only and skips levels</span>
         <span class="n">max_level</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_no_ss</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
         <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_no_ss</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
@@ -1108,6 +1117,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span><span class="p">,</span>
                 <span class="n">nbodies</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">return_total_data</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -1434,7 +1444,7 @@
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span><span class="p">:</span>  <span class="c1"># skipped levels?</span>
                 <span class="n">nbody_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                    <span class="n">collect_vars</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">][</span><span class="n">b</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span> <span class="n">is_embedded</span><span class="p">)</span>
+                    <span class="n">collect_vars</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">][</span><span class="n">b</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span> <span class="n">is_embedded</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">)</span>
                 <span class="p">)</span>
 
         <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nbody_dict</span>
@@ -1477,12 +1487,7 @@
 
           <details class="quote">
             <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
@@ -1510,7 +1515,12 @@
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]:</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate over all the molecules needed for the computation.</span>
 
 <span class="sd">    Yields model chemistry, label, and molecule.</span>
