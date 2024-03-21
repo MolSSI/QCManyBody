@@ -27,8 +27,7 @@ jobs:
           - label: Py-max
             python-version: "3.12"
             runs-on: ubuntu-latest
-            pytest: ""
-            #pytest: "-k 'not (hes2 or qchem)'"
+            pytest: "-k 'not (he4 and all)'"
 
     name: "🐍 ${{ matrix.cfg.python-version }} • ${{ matrix.cfg.label }} • ${{ matrix.cfg.runs-on }}"
     runs-on: ${{ matrix.cfg.runs-on }}
@@ -58,11 +57,16 @@ jobs:
             - zstandard
             - pytest-cov
             - codecov
+            # Testing CMS
+            - nwchem
+            - networkx
           EOF
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             :
             if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
                 sed -i "s;pydantic;pydantic=1;g" export.yaml
+                sed -i "s;- nwchem;#- nwchem;g" export.yaml
+                sed -i "s;- networkx;#- networkx;g" export.yaml
             fi
           fi
           # model sed for L/W
@@ -105,7 +109,7 @@ jobs:
 
     - name: PyTest
       run: |
-        pytest -rws -v ${{ matrix.cfg.pytest }} --cov=qcmanybody --color=yes --cov-report=xml qcmanybody/ tests/
+        pytest -rws -v ${{ matrix.cfg.pytest }} --cov=qcmanybody --color=yes --cov-report=xml --durations 50 --durations-min 5 qcmanybody/ tests/
 
     - name: CodeCov
       uses: codecov/codecov-action@v3

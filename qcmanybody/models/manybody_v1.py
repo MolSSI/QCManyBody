@@ -130,7 +130,8 @@ class ManyBodyKeywords(ProtoModel):
             "{max_nbody}-BODY`` will be available depending on ``return_total_data``; and ``{max_nbody}-BODY "
             "CONTRIBUTION TO {driver}`` won't be available (except for dimers). This keyword produces no savings for a "
             "two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body "
-            "subsystems can be skipped with ``supersystem_ie_only=True``."
+            "subsystems can be skipped with ``supersystem_ie_only=True`` Do not use with ``vmfc`` in ``bsse_type``; it "
+            "is not implemented as ``cp`` is equivalent."
     )
 
     # v2: @field_validator("bsse_type", mode="before")
