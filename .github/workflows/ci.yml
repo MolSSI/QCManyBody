@@ -58,13 +58,15 @@ jobs:
             - pytest-cov
             - codecov
             # Testing CMS
-            - nwchem
-            - networkx
+            - psi4
+            #- nwchem  # lands on different he4 soln
+            #- networkx
           EOF
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             :
             if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
                 sed -i "s;pydantic;pydantic=1;g" export.yaml
+                sed -i "s;- psi4;#- psi4;g" export.yaml
                 sed -i "s;- nwchem;#- nwchem;g" export.yaml
                 sed -i "s;- networkx;#- networkx;g" export.yaml
             fi
