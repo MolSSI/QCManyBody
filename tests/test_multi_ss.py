@@ -4,8 +4,8 @@ import pytest
 
 from qcmanybody import ManyBodyCalculator
 from qcmanybody.models import BsseEnum
-from .common import mol_h2o_3
-from .utils import load_ref_data, compare_results, load_component_data
+from common import mol_h2o_3
+from utils import load_ref_data, compare_results, load_component_data
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
