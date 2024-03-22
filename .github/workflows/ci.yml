@@ -113,7 +113,7 @@ jobs:
       run: |
         pytest -rws -v ${{ matrix.cfg.pytest }} --color=yes \
             --cov=qcmanybody --cov-report=xml \
-            --durations 50 --durations-min 5 .
+            --durations 50 --durations-min 5
 
     - name: CodeCov
       uses: codecov/codecov-action@v3
