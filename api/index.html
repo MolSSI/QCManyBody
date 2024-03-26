@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.10ba22f1.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1030,7 +1030,14 @@
 <span class="normal">449</span>
 <span class="normal">450</span>
 <span class="normal">451</span>
-<span class="normal">452</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecule</span><span class="p">,</span>
@@ -1174,8 +1181,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># which level are we assembling?</span>
-        <span class="n">delabled</span> <span class="o">=</span> <span class="p">[</span><span class="n">delabeler</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">component_results</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-        <span class="n">mc_level_labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">delabled</span><span class="p">}</span>
+        <span class="n">delabeled</span> <span class="o">=</span> <span class="p">[</span><span class="n">delabeler</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">component_results</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="n">mc_level_labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">delabeled</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mc_level_labels</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Multiple model chemistries passed into _assemble_nbody_components: </span><span class="si">{</span><span class="n">mc_level_labels</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1330,7 +1337,14 @@
             <span class="n">filtered_results</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">property_results</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">delabeler</span><span class="p">(</span><span class="n">k</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">mc_label</span><span class="p">}</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">filtered_results</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data found for model chemistry </span><span class="si">{</span><span class="n">mc_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nbody_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="c1"># Note A.2: Note A.1 holds, but for the special case of CP-only</span>
+                    <span class="c1">#   and rtd=False and multilevel with a separate level for</span>
+                    <span class="c1">#   1-body, the skipped tasks run afoul of sanity checks, so</span>
+                    <span class="c1">#   we&#39;ll add a dummy result.</span>
+                    <span class="n">filtered_results</span> <span class="o">=</span> <span class="p">{</span><span class="n">labeler</span><span class="p">(</span><span class="n">mc_label</span><span class="p">,</span> <span class="p">[</span><span class="mi">1000</span><span class="p">],</span> <span class="p">[</span><span class="mi">1000</span><span class="p">]):</span> <span class="n">shaped_zero</span><span class="p">(</span><span class="n">property_shape</span><span class="p">)}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data found for model chemistry </span><span class="si">{</span><span class="n">mc_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="n">nb_component_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_assemble_nbody_components</span><span class="p">(</span><span class="n">property_label</span><span class="p">,</span> <span class="n">filtered_results</span><span class="p">)</span>
             <span class="n">mc_results</span><span class="p">[</span><span class="n">mc_label</span><span class="p">]</span> <span class="o">=</span> <span class="n">nb_component_results</span>
