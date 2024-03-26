@@ -81,7 +81,7 @@ def build_nbody_compute_list(
 
     # Build up compute sets
     if "cp" in bsse_type:
-        # Everything is in full n-mer basis
+        # Everything is in counterpoise/nfr-mer basis
         basis_tuple = tuple(fragment_range)
 
         if supersystem_ie_only:
@@ -90,13 +90,18 @@ def build_nbody_compute_list(
                     cp_compute_list[nfragments].add((x, basis_tuple))
         else:
             for nb in nbodies:
+                # Note A.1: nb=1 is skipped because the nfr-mer-basis monomer
+                #   contributions cancel at 1-body. These skipped tasks will be
+                #   ordered anyways if higher bodies are requested. Monomers for
+                #   the purpose of total energies use monomer basis, not these
+                #   skipped tasks. See coordinating Note A.2 .
                 if nb > 1:
                     for sublevel in range(1, nb + 1):
                         for x in itertools.combinations(fragment_range, sublevel):
                             cp_compute_list[nb].add((x, basis_tuple))
 
     if "nocp" in bsse_type:
-        # Everything in monomer basis
+        # Everything in natural/n-mer basis
         if supersystem_ie_only:
             for sublevel in [1, nfragments]:
                 for x in itertools.combinations(fragment_range, sublevel):
@@ -121,8 +126,8 @@ def build_nbody_compute_list(
     if return_total_data and 1 in nbodies:
         # Monomers in monomer basis
         nocp_compute_list.setdefault(1, set())
-        for frag in range(1, nfragments + 1):
-            nocp_compute_list[1].add(((frag,), (frag,)))
+        for ifr in fragment_range:
+            nocp_compute_list[1].add(((ifr,), (ifr,)))
 
     if include_supersystem:
         # Add supersystem info to the compute list (nocp only)

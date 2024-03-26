@@ -170,8 +170,8 @@ class ManyBodyCalculator:
         """
 
         # which level are we assembling?
-        delabled = [delabeler(k) for k in component_results.keys()]
-        mc_level_labels = {x[0] for x in delabled}
+        delabeled = [delabeler(k) for k in component_results.keys()]
+        mc_level_labels = {x[0] for x in delabeled}
 
         if len(mc_level_labels) != 1:
             raise RuntimeError(f"Multiple model chemistries passed into _assemble_nbody_components: {mc_level_labels}")
@@ -326,7 +326,14 @@ class ManyBodyCalculator:
             filtered_results = {k: v for k, v in property_results.items() if delabeler(k)[0] == mc_label}
 
             if not filtered_results:
-                raise RuntimeError(f"No data found for model chemistry {mc_label}")
+                if nbody_list == [1]:
+                    # Note A.2: Note A.1 holds, but for the special case of CP-only
+                    #   and rtd=False and multilevel with a separate level for
+                    #   1-body, the skipped tasks run afoul of sanity checks, so
+                    #   we'll add a dummy result.
+                    filtered_results = {labeler(mc_label, [1000], [1000]): shaped_zero(property_shape)}
+                else:
+                    raise RuntimeError(f"No data found for model chemistry {mc_label}")
 
             nb_component_results = self._assemble_nbody_components(property_label, filtered_results)
             mc_results[mc_label] = nb_component_results
