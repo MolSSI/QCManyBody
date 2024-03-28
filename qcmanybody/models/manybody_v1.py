@@ -130,8 +130,8 @@ class ManyBodyKeywords(ProtoModel):
             "{max_nbody}-BODY`` will be available depending on ``return_total_data``; and ``{max_nbody}-BODY "
             "CONTRIBUTION TO {driver}`` won't be available (except for dimers). This keyword produces no savings for a "
             "two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body "
-            "subsystems can be skipped with ``supersystem_ie_only=True`` Do not use with ``vmfc`` in ``bsse_type``; it "
-            "is not implemented as ``cp`` is equivalent."
+            "subsystems can be skipped with ``supersystem_ie_only=True`` Do not use with ``vmfc`` in ``bsse_type``"
+            "as it cannot produce savings."
     )
 
     # v2: @field_validator("bsse_type", mode="before")
@@ -342,13 +342,13 @@ for singular in ["energy", "gradient", "Hessian"]:
                 json_schema_extra=jse,
             ))
 
-    # CP-CORRECTED INTERATION ENERGY THROUGH {nb}-BODY
-    for nb in range(2, MAX_NBODY):
+    # CP-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY
+    for nb in range(1, MAX_NBODY):
         mbprop[f"cp_corrected_interaction_{egh}_through_{nb}_body"] = (
             Optional[typ],
             Field(
                 None,
-                description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} with cp treatment. Available when when cp in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
+                description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} with cp treatment. Available when when cp in bsse_type & max_nbody>={nb}{availability_of_derivative}. The 1-body quantity is zero by definition.",
                 json_schema_extra=jse,
             ))
 
@@ -393,12 +393,12 @@ for singular in ["energy", "gradient", "Hessian"]:
             ))
 
     # NOCP-CORRECTED INTERATION ENERGY THROUGH {nb}-BODY
-    for nb in range(2, MAX_NBODY):
+    for nb in range(1, MAX_NBODY):
         mbprop[f"nocp_corrected_interaction_{egh}_through_{nb}_body"] = (
             Optional[typ],
             Field(
                 None,
-                description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} without cp treatment. Available when when nocp in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
+                description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} without cp treatment. Available when when nocp in bsse_type & max_nbody>={nb}{availability_of_derivative}. The 1-body quantity is zero by definition.",
                 json_schema_extra=jse,
             ))
 
@@ -446,12 +446,12 @@ for singular in ["energy", "gradient", "Hessian"]:
             ))
 
     # VMFC-CORRECTED INTERATION ENERGY THROUGH {nb}-BODY
-    for nb in range(2, MAX_NBODY):
+    for nb in range(1, MAX_NBODY):
         mbprop[f"vmfc_corrected_interaction_{egh}_through_{nb}_body"] = (
             Optional[typ],
             Field(
                 None,
-                description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} w/ vmfc treatment. Available when when vmfc in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
+                description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} w/ vmfc treatment. Available when when vmfc in bsse_type & max_nbody>={nb}{availability_of_derivative}. The 1-body quantity is zero by definition.",
                 json_schema_extra=jse,
             ))
 
