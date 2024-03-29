@@ -103,6 +103,11 @@ sumdict = {
         "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
+    "4b_cpvmfc": {
+        "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+    },
     "4b_nocp_rtd_sio": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
@@ -201,6 +206,13 @@ def he_tetramer():
         [k for k in he4_refs_conv],
         65,
         id="4b_all"),
+    pytest.param(
+        {"bsse_type": ["cp", "vmfc"]},
+        "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        [k for k in he4_refs_conv if ((k.startswith("CP-") and ("TOTAL" not in k)) or (k.startswith("VMFC-")))],
+        # TODO: when vmfc active, nocp always available up to max_nbody. cp available if max_nbody=nfr. activate?
+        65,
+        id="4b_cpvmfc"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "supersystem_ie_only": True},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",

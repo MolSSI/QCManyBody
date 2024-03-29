@@ -426,6 +426,9 @@ class ManyBodyCalculator:
         # Remove any missing data
         component_results_inv = {k: v for k, v in component_results_inv.items() if v}
         if not component_results_inv:
+            # Note B: Rarely, "no results" is expected, like for CP-only,
+            #   rtd=False, and max_nbody=1. We'll add a dummy entry so
+            #   processing can continue.
             component_results_inv["energy"] = {'["dummy", [1000], [1000]]': 0.0}
 
         # Actually analyze
