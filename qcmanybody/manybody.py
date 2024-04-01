@@ -200,6 +200,13 @@ class ManyBodyCalculator:
         property_shape = find_shape(component_results[first_key])
 
         # Final dictionaries
+        # * {bsse_type}_by_level is filled by sum_cluster_data to contain for NOCP
+        #   & CP the summed total energies (or other property) of each nb-body. That is:
+        #   * NOCP: {1: 1b@1b,    2: 2b@2b,      ..., max_nbody: max_nbody-b@max_nbody-b} and
+        #   * CP:   {1: 1b@nfr-b, 2: 2b@nfr-b,   ..., max_nbody: max_nbody-b@nfr-b}.
+        #   VMFC bookkeeping is different. For key 1 it contains the summed 1b total energies.
+        #   But for higher keys, it contains each nb-body (non-additive) contribution to the energy.
+        #   * VMFC: {1: 1b@1b,    2: 2b contrib, ..., max_nbody: max_nbody-b contrib}
         cp_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
         nocp_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
         vmfc_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
@@ -312,8 +319,8 @@ class ManyBodyCalculator:
         property_shape = find_shape(property_results[first_key])
 
         property_result = shaped_zero(property_shape)
-        property_body_dict = {b.value: {} for b in self.bsse_type}
-        property_body_contribution = {b.value: {} for b in self.bsse_type}
+        property_body_dict = {bt.value: {} for bt in self.bsse_type}
+        property_body_contribution = {bt.value: {} for bt in self.bsse_type}
 
         # results per model chemistry
         mc_results = {}
@@ -339,7 +346,7 @@ class ManyBodyCalculator:
             mc_results[mc_label] = nb_component_results
 
             for n in nbody_list[::-1]:
-                property_bsse_dict = {b.value: shaped_zero(property_shape) for b in self.bsse_type}
+                property_bsse_dict = {bt.value: shaped_zero(property_shape) for bt in self.bsse_type}
 
                 for m in range(n - 1, n + 1):
                     if m == 0:
@@ -347,14 +354,14 @@ class ManyBodyCalculator:
 
                     # Subtract the (n-1)-body contribution from the n-body contribution to get the n-body effect
                     sign = (-1) ** (1 - m // n)
-                    for b in self.bsse_type:
-                        property_bsse_dict[b.value] += (
-                            sign * mc_results[mc_label][f"{b.value}_{property_label}_body_dict"][m]
+                    for bt in self.bsse_type:
+                        property_bsse_dict[bt.value] += (
+                            sign * mc_results[mc_label][f"{bt.value}_{property_label}_body_dict"][m]
                         )
 
                 property_result += property_bsse_dict[self.return_bsse_type]
-                for b in self.bsse_type:
-                    property_body_contribution[b.value][n] = property_bsse_dict[b.value]
+                for bt in self.bsse_type:
+                    property_body_contribution[bt.value][n] = property_bsse_dict[bt.value]
 
         if self.has_supersystem:
             # Get the MC label for supersystem tasks
@@ -372,13 +379,13 @@ class ManyBodyCalculator:
             supersystem_result = property_results[ss_label]
             property_result += supersystem_result - ss_component_results[f"{property_label}_body_dict"][self.max_nbody]
 
-            for b in self.bsse_type:
-                property_body_contribution[b][self.nfragments] = (
+            for bt in self.bsse_type:
+                property_body_contribution[bt][self.nfragments] = (
                     supersystem_result - ss_component_results[f"{property_label}_body_dict"][self.max_nbody]
                 )
 
-        for b in self.bsse_type:
-            bstr = b.value
+        for bt in self.bsse_type:
+            bstr = bt.value
             for n in property_body_contribution[bstr]:
                 property_body_dict[bstr][n] = sum(
                     [
@@ -418,6 +425,11 @@ class ManyBodyCalculator:
 
         # Remove any missing data
         component_results_inv = {k: v for k, v in component_results_inv.items() if v}
+        if not component_results_inv:
+            # Note B: Rarely, "no results" is expected, like for CP-only,
+            #   rtd=False, and max_nbody=1. We'll add a dummy entry so
+            #   processing can continue.
+            component_results_inv["energy"] = {'["dummy", [1000], [1000]]': 0.0}
 
         # Actually analyze
         all_results = {}
@@ -437,23 +449,23 @@ class ManyBodyCalculator:
 
         is_embedded = bool(self.embedding_charges)
 
-        for b in self.bsse_type:
+        for bt in self.bsse_type:
             print_nbody_energy(
-                all_results["energy_body_dict"][b],
-                f"{b.upper()}-corrected multilevel many-body expansion",
+                all_results["energy_body_dict"][bt],
+                f"{bt.upper()}-corrected multilevel many-body expansion",
                 self.nfragments,
                 is_embedded,
             )
 
             if not self.has_supersystem:  # skipped levels?
                 nbody_dict.update(
-                    collect_vars(b.upper(), all_results["energy_body_dict"][b], self.max_nbody, is_embedded, self.supersystem_ie_only)
+                    collect_vars(bt.upper(), all_results["energy_body_dict"][bt], self.max_nbody, is_embedded, self.supersystem_ie_only)
                 )
 
         all_results["results"] = nbody_dict
 
         # Make dictionary with "1cp", "2cp", etc
         ebd = all_results["energy_body_dict"]
-        all_results["energy_body_dict"] = {str(k) + b: v for b in ebd for k, v in ebd[b].items()}
+        all_results["energy_body_dict"] = {str(k) + bt: v for bt in ebd for k, v in ebd[bt].items()}
 
         return all_results

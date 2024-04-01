@@ -158,6 +158,7 @@ def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False, super
     if tot_e:
         res[f"{bsse}-CORRECTED TOTAL ENERGY"] = body_dict[max_nbody]
     res[f"{bsse}-CORRECTED INTERACTION ENERGY"] = body_dict[max_nbody] - body_dict[1]
+    res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH 1-BODY"] = 0.0
 
     if supersystem_ie_only:
         nfr = nbody_range[-1]
