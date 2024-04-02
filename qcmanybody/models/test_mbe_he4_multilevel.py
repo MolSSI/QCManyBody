@@ -297,12 +297,28 @@ sumdict_multi = {
         "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
     },
     "2b_vmfc_rtd": {
+        "121": {
         "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        },
+        "22": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        },
     },
     "2b_vmfc": {
+        "121": {
         "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",  # TODO remove?
         "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        },
+        "22": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        },
     },
 }
 sumdict.update(sumdict_multi)
@@ -480,7 +496,7 @@ def he_tetramer():
          "22": 14},  # 10hi + 4hi(nocp)
         id="2b_cp_rtd"),
     pytest.param(
-        {"bsse_type": "cp", "return_total_data": False, "max_nbody": 2},
+        {"bsse_type": "ssfc", "return_total_data": False, "max_nbody": 2},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("4-BODY" not in k) and ("3-BODY" not in k) and "TOTAL ENERGY" not in k)],
         {"121": 10,  # 10md vs. 10 for single-level,
@@ -489,14 +505,17 @@ def he_tetramer():
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 2},
         "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
-        [k for k in he4_refs_conv if (k.startswith("VMFC-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
+        # "22" at 2-body is effectively single-level so nocp enabled ...
+        {"121": [k for k in he4_refs_conv if (k.startswith("VMFC-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
+         "22": [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("4-BODY" not in k) and ("3-BODY" not in k))]},
         {"121": 22,  # 4hi + 18+28md + 15lo vs. 65 for single-level
          "22": 22},  # 4+18hi + 28+15lo
         id="2b_vmfc_rtd"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 2},
         "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
-        [k for k in he4_refs_conv if (k.startswith("VMFC-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
+        {"121": [k for k in he4_refs_conv if (k.startswith("VMFC-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
+         "22": [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("4-BODY" not in k) and ("3-BODY" not in k))]},
         {"121": 22, # TODO could be 18  # 0+18hi = 18
          "22": 22}, # TODO could be 18  # 18hi = 18
         id="2b_vmfc"),
@@ -585,11 +604,13 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, calcinfo_nmbe, 
     refs = he4_refs_conv_multilevel_631g[pattern]
     ans = refs[anskey]
     ref_nmbe = calcinfo_nmbe[pattern]
+    ref_bodykeys = bodykeys[pattern] if pattern in bodykeys else bodykeys
+    ref_sumdict = sumdict[kwdsln][pattern] if pattern in sumdict[kwdsln] else sumdict[kwdsln]
     atol = 2.5e-8
 
     for qcv, ref in refs.items():
         skp = skprop(qcv)
-        if qcv in bodykeys:
+        if qcv in ref_bodykeys:
             assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[a] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[b] skprop {skp}")
         else:
@@ -598,8 +619,8 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, calcinfo_nmbe, 
 
     for qcv in sumdict["4b_all"]:
         skp = skprop(qcv)
-        if qcv in sumdict[kwdsln]:
-            ref = refs[sumdict[kwdsln][qcv]]
+        if qcv in ref_sumdict:
+            ref = refs[ref_sumdict[qcv]]
             assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[c] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[d] skprop {skp}")
         else:
