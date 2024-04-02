@@ -57,6 +57,13 @@ class ManyBodyCalculator:
         if len(self.bsse_type) == 0:
             raise ValueError("No BSSE correction specified")
 
+        if BsseEnum.vmfc in self.bsse_type and len(set(self.levels.values())) == 1:
+            # For single-modelchem VMFC, NOCP & sometimes CP are produced for free
+            if BsseEnum.nocp not in self.bsse_type:
+                self.bsse_type.append(BsseEnum.nocp)
+            if BsseEnum.cp not in self.bsse_type and self.max_nbody == self.nfragments:
+                self.bsse_type.append(BsseEnum.cp)
+
         self.return_bsse_type = self.bsse_type[0]
 
         ###############################

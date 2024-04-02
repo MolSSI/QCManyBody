@@ -475,11 +475,17 @@ for singular in ["energy", "gradient", "Hessian"]:
             ))
 
 
+class ProtoModelSkipDefaults(ProtoModel):
+
+    class Config(ProtoModel.Config):
+        serialize_skip_defaults = True
+        force_skip_defaults = True
+
+
 ManyBodyResultProperties = create_model(
     "ManyBodyResultProperties",
-    #__config__=ConfigDict(title='abc'),
     #__doc__=manybodyresultproperties_doc,  # needs later pydantic
-    __base__=ProtoModel,
+    __base__=ProtoModelSkipDefaults,
     **mbprop,
 )
 

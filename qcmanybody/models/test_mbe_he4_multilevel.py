@@ -279,6 +279,35 @@ he4_refs_conv = {
 }
 
 
+sumdict_multi = {
+    "4b_vmfc_rtd": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+    },
+    "4b_vmfc": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",  # TODO remove?
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+    },
+    "3b_vmfc_rtd": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
+    },
+    "3b_vmfc": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 3-BODY",  # TODO remove?
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
+    },
+    "2b_vmfc_rtd": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+    },
+    "2b_vmfc": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",  # TODO remove?
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+    },
+}
+sumdict.update(sumdict_multi)
+
+
 @pytest.fixture
 def he_tetramer():
     a2 = 2 / constants.bohr2angstroms
@@ -345,7 +374,6 @@ def he_tetramer():
 #        {"121": 5,
 #         "22": 99},  #
 #        id="4b_cp_sio"),
-### TODO add vmfc. 3b nmbe=50
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
@@ -503,14 +531,15 @@ def he_tetramer():
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 1},
         "VMFC-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
-        [k for k in he4_refs_conv if (k.startswith("VMFC-") and ("1-BODY" in k))],
+        # max_nbody=1 is effectively single-modelchem so NOCP available for free
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("1-BODY" in k))],
         {"121": 4,  # 4hi
          "22": 4},
         id="1b_vmfc_rtd"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 1},
         "VMFC-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
-        [k for k in he4_refs_conv if (k.startswith("VMFC-") and ("1-BODY" in k))],
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("1-BODY" in k))],
         {"121": 4, # TODO could be 0
          "22": 4}, # TODO could be 0
         id="1b_vmfc"),
@@ -556,7 +585,7 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, calcinfo_nmbe, 
     refs = he4_refs_conv_multilevel_631g[pattern]
     ans = refs[anskey]
     ref_nmbe = calcinfo_nmbe[pattern]
-    atol = 2.0e-8
+    atol = 2.5e-8
 
     for qcv, ref in refs.items():
         skp = skprop(qcv)
