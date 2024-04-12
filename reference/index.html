@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.16">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
     
     
       
@@ -499,6 +499,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qcmanybody.ManyBodyCalculator.analyze" class="md-nav__link">
+    <span class="md-ellipsis">
+      analyze
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qcmanybody.ManyBodyCalculator.iterate_molecules" class="md-nav__link">
     <span class="md-ellipsis">
       iterate_molecules
@@ -572,6 +581,15 @@
   <a href="#qcmanybody.ManyBodyCalculator" class="md-nav__link">
     <span class="md-ellipsis">
       ManyBodyCalculator
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qcmanybody.ManyBodyCalculator.analyze" class="md-nav__link">
+    <span class="md-ellipsis">
+      analyze
     </span>
   </a>
   
@@ -1073,7 +1091,30 @@ reference for the technical implementation of the
 <span class="normal">468</span>
 <span class="normal">469</span>
 <span class="normal">470</span>
-<span class="normal">471</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecule</span><span class="p">,</span>
@@ -1103,6 +1144,13 @@ reference for the technical implementation of the
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No BSSE correction specified&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">BsseEnum</span><span class="o">.</span><span class="n">vmfc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># For single-modelchem VMFC, NOCP &amp; sometimes CP are produced for free</span>
+            <span class="k">if</span> <span class="n">BsseEnum</span><span class="o">.</span><span class="n">nocp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BsseEnum</span><span class="o">.</span><span class="n">nocp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">BsseEnum</span><span class="o">.</span><span class="n">cp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BsseEnum</span><span class="o">.</span><span class="n">cp</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">return_bsse_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -1323,18 +1371,8 @@ reference for the technical implementation of the
         <span class="c1"># Compute vmfc</span>
         <span class="k">if</span> <span class="n">BsseEnum</span><span class="o">.</span><span class="n">vmfc</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbodies</span><span class="p">:</span>
-                <span class="c1"># TODO I think this is correct for all properties...</span>
-                <span class="c1"># for k in range(1, nb + 1):</span>
-                <span class="c1">#    vmfc_body_dict[nb] += vmfc_by_level[k]</span>
-
-                <span class="c1"># TODO - but below was used for gradient/hessian in psi4?</span>
-                <span class="k">if</span> <span class="n">property_label</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nb</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                        <span class="n">vmfc_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vmfc_by_level</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">nb</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="n">vmfc_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmfc_by_level</span><span class="p">[</span><span class="n">nb</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-                    <span class="n">vmfc_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vmfc_by_level</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nb</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">vmfc_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vmfc_by_level</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
         <span class="c1"># Collect specific and generalized returns</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
@@ -1455,8 +1493,34 @@ reference for the technical implementation of the
 
     <span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">component_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]],</span>  <span class="c1"># component_results[label][property] = 1.23</span>
+        <span class="n">component_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]],</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        component_results</span>
+<span class="sd">            Nested dictionary with results from all individual molecular system</span>
+<span class="sd">            calculations, including all subsystem/basis combinations, all model</span>
+<span class="sd">            chemistries, and all properties (e.g., e/g/h).</span>
+
+<span class="sd">            For example, the below is the format for a nocp gradient run on a</span>
+<span class="sd">            helium dimer with 1-body at CCSD and 2-body at MP2. The outer string</span>
+<span class="sd">            key can be generated with the ``qcmanybody.utils.labeler`` function.</span>
+<span class="sd">            The inner string key is any property; QCManyBody presently knows how</span>
+<span class="sd">            to process energy/gradient/Hessian.</span>
+
+<span class="sd">            {&#39;[&quot;ccsd&quot;, [1], [1]]&#39;: {&#39;energy&#39;: -2.87, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">             &#39;[&quot;ccsd&quot;, [2], [2]]&#39;: {&#39;energy&#39;: -2.87, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">             &#39;[&quot;mp2&quot;, [1], [1]]&#39;: {&#39;energy&#39;: -2.86, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">             &#39;[&quot;mp2&quot;, [2], [2]]&#39;: {&#39;energy&#39;: -2.86, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">             &#39;[&quot;mp2&quot;, [1, 2], [1, 2]]&#39;: {&#39;energy&#39;: -5.73, &#39;gradient&#39;: array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># All properties that were passed to us</span>
         <span class="n">available_properties</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1536,6 +1600,252 @@ reference for the technical implementation of the
 
 
 
+<h2 id="qcmanybody.ManyBodyCalculator.analyze" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">analyze</span><span class="p">(</span><span class="n">component_results</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>component_results</code></td>
+          <td>
+                <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3.12/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3.12/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3.12/library/typing.html#typing.Union">Union</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/functions.html#float">float</a>, <a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a>]]]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Nested dictionary with results from all individual molecular system
+calculations, including all subsystem/basis combinations, all model
+chemistries, and all properties (e.g., e/g/h).</p>
+<p>For example, the below is the format for a nocp gradient run on a
+helium dimer with 1-body at CCSD and 2-body at MP2. The outer string
+key can be generated with the <code>qcmanybody.utils.labeler</code> function.
+The inner string key is any property; QCManyBody presently knows how
+to process energy/gradient/Hessian.</p>
+<p>{'["ccsd", [1], [1]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
+ '["ccsd", [2], [2]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
+ '["mp2", [1], [1]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
+ '["mp2", [2], [2]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
+ '["mp2", [1, 2], [1, 2]]': {'energy': -5.73, 'gradient': array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},
+}</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="return" open>
+  <summary>Return</summary>
+  
+</details>
+          <details class="quote">
+            <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">component_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]],</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    component_results</span>
+<span class="sd">        Nested dictionary with results from all individual molecular system</span>
+<span class="sd">        calculations, including all subsystem/basis combinations, all model</span>
+<span class="sd">        chemistries, and all properties (e.g., e/g/h).</span>
+
+<span class="sd">        For example, the below is the format for a nocp gradient run on a</span>
+<span class="sd">        helium dimer with 1-body at CCSD and 2-body at MP2. The outer string</span>
+<span class="sd">        key can be generated with the ``qcmanybody.utils.labeler`` function.</span>
+<span class="sd">        The inner string key is any property; QCManyBody presently knows how</span>
+<span class="sd">        to process energy/gradient/Hessian.</span>
+
+<span class="sd">        {&#39;[&quot;ccsd&quot;, [1], [1]]&#39;: {&#39;energy&#39;: -2.87, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">         &#39;[&quot;ccsd&quot;, [2], [2]]&#39;: {&#39;energy&#39;: -2.87, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">         &#39;[&quot;mp2&quot;, [1], [1]]&#39;: {&#39;energy&#39;: -2.86, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">         &#39;[&quot;mp2&quot;, [2], [2]]&#39;: {&#39;energy&#39;: -2.86, &#39;gradient&#39;: array([[0., 0., 0.]])},</span>
+<span class="sd">         &#39;[&quot;mp2&quot;, [1, 2], [1, 2]]&#39;: {&#39;energy&#39;: -5.73, &#39;gradient&#39;: array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># All properties that were passed to us</span>
+    <span class="n">available_properties</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">property_data</span> <span class="ow">in</span> <span class="n">component_results</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">available_properties</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">property_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="c1"># reorganize to component_results_inv[property][label] = 1.23</span>
+    <span class="n">component_results_inv</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">{}</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">available_properties</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">cluster_label</span><span class="p">,</span> <span class="n">property_data</span> <span class="ow">in</span> <span class="n">component_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">property_label</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">property_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">component_results_inv</span><span class="p">[</span><span class="n">property_label</span><span class="p">][</span><span class="n">cluster_label</span><span class="p">]</span> <span class="o">=</span> <span class="n">property_value</span>
+
+    <span class="c1"># Remove any missing data</span>
+    <span class="n">component_results_inv</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">component_results_inv</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">component_results_inv</span><span class="p">:</span>
+        <span class="c1"># Note B: Rarely, &quot;no results&quot; is expected, like for CP-only,</span>
+        <span class="c1">#   rtd=False, and max_nbody=1. We&#39;ll add a dummy entry so</span>
+        <span class="c1">#   processing can continue.</span>
+        <span class="n">component_results_inv</span><span class="p">[</span><span class="s2">&quot;energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;[&quot;dummy&quot;, [1000], [1000]]&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+
+    <span class="c1"># Actually analyze</span>
+    <span class="n">all_results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">property_label</span><span class="p">,</span> <span class="n">property_results</span> <span class="ow">in</span> <span class="n">component_results_inv</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Expand gradient and hessian</span>
+        <span class="k">if</span> <span class="n">property_label</span> <span class="o">==</span> <span class="s2">&quot;gradient&quot;</span><span class="p">:</span>
+            <span class="n">property_results</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">expand_gradient</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">delabeler</span><span class="p">(</span><span class="n">k</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">property_results</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="n">property_label</span> <span class="o">==</span> <span class="s2">&quot;hessian&quot;</span><span class="p">:</span>
+            <span class="n">property_results</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">expand_hessian</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">delabeler</span><span class="p">(</span><span class="n">k</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">property_results</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze</span><span class="p">(</span><span class="n">property_label</span><span class="p">,</span> <span class="n">property_results</span><span class="p">)</span>
+        <span class="n">all_results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="c1"># Analyze the total results</span>
+    <span class="n">nbody_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">is_embedded</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding_charges</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">:</span>
+        <span class="n">print_nbody_energy</span><span class="p">(</span>
+            <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">-corrected multilevel many-body expansion&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span><span class="p">,</span>
+            <span class="n">is_embedded</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span><span class="p">:</span>  <span class="c1"># skipped levels?</span>
+            <span class="n">nbody_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">collect_vars</span><span class="p">(</span><span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span> <span class="n">is_embedded</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nbody_dict</span>
+
+    <span class="c1"># Make dictionary with &quot;1cp&quot;, &quot;2cp&quot;, etc</span>
+    <span class="n">ebd</span> <span class="o">=</span> <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">]</span>
+    <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="n">bt</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="n">ebd</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ebd</span><span class="p">[</span><span class="n">bt</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="k">return</span> <span class="n">all_results</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
 <h2 id="qcmanybody.ManyBodyCalculator.iterate_molecules" class="doc doc-heading">
           <code class="highlight language-python"><span class="n">iterate_molecules</span><span class="p">()</span></code>
 
@@ -1549,14 +1859,7 @@ reference for the technical implementation of the
 
           <details class="quote">
             <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
@@ -1582,7 +1885,14 @@ reference for the technical implementation of the
 <span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
-<span class="normal">161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]:</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate over all the molecules needed for the computation.</span>
 
 <span class="sd">    Yields model chemistry, label, and molecule.</span>
@@ -2165,7 +2475,7 @@ subdict and among subdicts.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.bd41221c.min.js"></script>
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
       
     
   </body>
