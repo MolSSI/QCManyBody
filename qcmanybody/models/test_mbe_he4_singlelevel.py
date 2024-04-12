@@ -11,7 +11,7 @@ from qcmanybody.models.manybody_v1 import AtomicSpecification, ManyBodyKeywords,
 from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
 
 import qcengine as qcng
-from .addons import using
+from addons import using
 
 def skprop(qcvar):
     # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
@@ -104,9 +104,18 @@ sumdict = {
         "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
     "4b_cpvmfc": {
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+    },
+    "4b_nocpcp": {
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
     "4b_nocp_rtd_sio": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
@@ -138,6 +147,22 @@ sumdict = {
     "4b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
     },
+    "4b_vmfc_rtd": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+    },
+    "4b_vmfc": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",  # TODO remove?
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        "CP-CORRECTED TOTAL ENERGY": "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+    },
     "3b_nocp_rtd": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
@@ -152,6 +177,18 @@ sumdict = {
     },
     "3b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
+    },
+    "3b_vmfc_rtd": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
+    },
+    "3b_vmfc": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 3-BODY",  # TODO remove?
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
     },
     "2b_nocp_rtd": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
@@ -168,6 +205,18 @@ sumdict = {
     "2b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
     },
+    "2b_vmfc_rtd": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+    },
+    "2b_vmfc": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",  # TODO remove?
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+    },
     "1b_nocp_rtd": {
         "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
@@ -182,6 +231,18 @@ sumdict = {
     },
     "1b_cp": {
         "CP-CORRECTED INTERACTION ENERGY": "CP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
+    },
+    "1b_vmfc_rtd": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
+    },
+    "1b_vmfc": {
+        "VMFC-CORRECTED TOTAL ENERGY": "VMFC-CORRECTED TOTAL ENERGY THROUGH 1-BODY",  # TODO remove?
+        "VMFC-CORRECTED INTERACTION ENERGY": "VMFC-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
+        "NOCP-CORRECTED TOTAL ENERGY": "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
+        "NOCP-CORRECTED INTERACTION ENERGY": "NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
     },
 }
 
@@ -209,7 +270,7 @@ def he_tetramer():
     pytest.param(
         {"bsse_type": ["cp", "vmfc"]},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
-        [k for k in he4_refs_conv if ((k.startswith("CP-") and ("TOTAL" not in k)) or (k.startswith("VMFC-")))],
+        [k for k in he4_refs_conv], # if ((k.startswith("CP-") and ("TOTAL" not in k)) or (k.startswith("VMFC-")))],
         # TODO: when vmfc active, nocp always available up to max_nbody. cp available if max_nbody=nfr. activate?
         65,
         id="4b_cpvmfc"),
@@ -237,7 +298,6 @@ def he_tetramer():
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k) and "TOTAL ENERGY" not in k)],
         5,
         id="4b_cp_sio"),
-## TODO add vmfc. 3b nmbe=50
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
@@ -263,6 +323,18 @@ def he_tetramer():
         15,
         id="4b_cp"),
     pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": True},
+        "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
+        [k for k in he4_refs_conv],  # vmfc brings nocp & cp for free
+        65,
+        id="4b_vmfc_rtd"),
+    pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": False},
+        "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
+        [k for k in he4_refs_conv],
+        65,  # TODO 61 in reach
+        id="4b_vmfc"),
+    pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 3},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("4-BODY" not in k))],
@@ -286,6 +358,18 @@ def he_tetramer():
         [k for k in he4_refs_conv if (k.startswith("CP-") and "4-BODY" not in k and "TOTAL ENERGY" not in k)],
         14,
         id="3b_cp"),
+    pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 3},
+        "VMFC-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and "4-BODY" not in k)],
+        50,
+        id="3b_vmfc_rtd"),
+    pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 3},
+        "VMFC-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and "4-BODY" not in k)], # and "TOTAL ENERGY" not in k)],
+        50,  # TODO 46 in reach,
+        id="3b_vmfc"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 2},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
@@ -311,12 +395,23 @@ def he_tetramer():
         10,
         id="2b_cp"),
     pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 2},
+        "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("4-BODY" not in k) and ("3-BODY" not in k))],
+        22,
+        id="2b_vmfc_rtd"),
+    pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 2},
+        "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("4-BODY" not in k) and ("3-BODY" not in k))], # and "TOTAL ENERGY" not in k)],
+        22,  # TODO 18 in reach
+        id="2b_vmfc"),
+    pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 1},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("1-BODY" in k))],
         4,
         id="1b_nocp_rtd"),
-# TODO fix 1b for rtd=F
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 1},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
@@ -334,8 +429,19 @@ def he_tetramer():
         "CP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("1-BODY" in k) and "TOTAL ENERGY" not in k)],
         0,
-#        4,
         id="1b_cp"),
+    pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 1},
+        "VMFC-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("1-BODY" in k))],
+        4,
+        id="1b_vmfc_rtd"),
+    pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 1},
+        "VMFC-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
+        [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("1-BODY" in k))],
+        4,  # maybe TODO this could be 0 but rtd hasn't be used to winnow vmfc
+        id="1b_vmfc"),
 ])
 def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodykeys, calcinfo_nmbe, he_tetramer, request):
     #! MP2/aug-cc-pvDZ many body energies of an arbitrary Helium complex,

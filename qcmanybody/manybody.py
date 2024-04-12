@@ -57,6 +57,13 @@ class ManyBodyCalculator:
         if len(self.bsse_type) == 0:
             raise ValueError("No BSSE correction specified")
 
+        if BsseEnum.vmfc in self.bsse_type and len(set(self.levels.values())) == 1:
+            # For single-modelchem VMFC, NOCP & sometimes CP are produced for free
+            if BsseEnum.nocp not in self.bsse_type:
+                self.bsse_type.append(BsseEnum.nocp)
+            if BsseEnum.cp not in self.bsse_type and self.max_nbody == self.nfragments:
+                self.bsse_type.append(BsseEnum.cp)
+
         self.return_bsse_type = self.bsse_type[0]
 
         ###############################
@@ -276,18 +283,8 @@ class ManyBodyCalculator:
         # Compute vmfc
         if BsseEnum.vmfc in bsse_type:
             for nb in nbodies:
-                # TODO I think this is correct for all properties...
-                # for k in range(1, nb + 1):
-                #    vmfc_body_dict[nb] += vmfc_by_level[k]
-
-                # TODO - but below was used for gradient/hessian in psi4?
-                if property_label == "energy":
-                    for k in range(1, nb + 1):
-                        vmfc_body_dict[nb] += vmfc_by_level[k]
-                else:
-                    if nb > 1:
-                        vmfc_body_dict[nb] = vmfc_by_level[nb - 1]
-                    vmfc_body_dict[nb] += vmfc_by_level[nb]
+                for k in range(1, nb + 1):
+                    vmfc_body_dict[nb] += vmfc_by_level[k]
 
         # Collect specific and generalized returns
         results = {
@@ -408,8 +405,34 @@ class ManyBodyCalculator:
 
     def analyze(
         self,
-        component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],  # component_results[label][property] = 1.23
+        component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],
     ):
+        """
+
+        Parameters
+        ----------
+        component_results
+            Nested dictionary with results from all individual molecular system
+            calculations, including all subsystem/basis combinations, all model
+            chemistries, and all properties (e.g., e/g/h).
+
+            For example, the below is the format for a nocp gradient run on a
+            helium dimer with 1-body at CCSD and 2-body at MP2. The outer string
+            key can be generated with the ``qcmanybody.utils.labeler`` function.
+            The inner string key is any property; QCManyBody presently knows how
+            to process energy/gradient/Hessian.
+
+            {'["ccsd", [1], [1]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
+             '["ccsd", [2], [2]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
+             '["mp2", [1], [1]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
+             '["mp2", [2], [2]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
+             '["mp2", [1, 2], [1, 2]]': {'energy': -5.73, 'gradient': array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},
+            }
+
+        Return
+        ------
+
+        """
 
         # All properties that were passed to us
         available_properties = set()
