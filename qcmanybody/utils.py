@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Tuple, Dict, Union, Iterable
+from typing import Dict, Mapping, Tuple, Union, Iterable
 
 import numpy as np
 from qcelemental import constants
@@ -91,6 +91,24 @@ def expand_hessian(
 
 
 def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> str:
+    """Form label from model chemistry id and fragment and basis indices.
+
+    Parameters
+    ----------
+    mc_level_lbl
+        Key identifying the model chemistry. May be `"(auto)"`. Often the
+        ManyBodyInput.specification.specification keys.
+    frag
+        1-indexed list of fragments active in the supersystem.
+    bas
+        1-indexed list of fragments with active basis sets in the supersystem.
+        All those in *frag* plus any ghost.
+
+    Returns
+    -------
+    str
+        JSON string from inputs: `labeler("mp2",(1), (1, 2))` returns `'["mp2", 1, [1, 2]]'`.
+    """
     return json.dumps([str(mc_level_lbl), frag, bas])
 
 
@@ -148,7 +166,8 @@ def print_nbody_energy(
 
 def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False, supersystem_ie_only: bool = False):
     previous_e = body_dict[1]
-    tot_e = previous_e != 0.0
+    property_shape = find_shape(previous_e)
+    tot_e = bool(np.count_nonzero(previous_e))
     nbody_range = list(body_dict)
     nbody_range.sort()
     res = {}
@@ -156,26 +175,26 @@ def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False, super
         return res
 
     if tot_e:
-        res[f"{bsse}-CORRECTED TOTAL ENERGY"] = body_dict[max_nbody]
-    res[f"{bsse}-CORRECTED INTERACTION ENERGY"] = body_dict[max_nbody] - body_dict[1]
-    res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH 1-BODY"] = 0.0
+        res[f"{bsse}-CORRECTED TOTAL {prop}"] = body_dict[max_nbody]
+    res[f"{bsse}-CORRECTED INTERACTION {prop}"] = body_dict[max_nbody] - body_dict[1]
+    res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH 1-BODY"] = shaped_zero(property_shape)
 
     if supersystem_ie_only:
         nfr = nbody_range[-1]
         for nb in [nfr]:
-            res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
             if nb == 2:
-                res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY"] = body_dict[nb] - body_dict[nb - 1]
+                res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[nb - 1]
         if tot_e:
             for nb in [1, nfr]:
-                res[f"{bsse}-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY"] = body_dict[nb]
+                res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
     else:
         for nb in range(2, max(nbody_range) + 1):
-            res[f"{bsse}-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
-            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY"] = body_dict[nb] - body_dict[nb - 1]
+            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[nb - 1]
         if tot_e:
             for nb in nbody_range:
-                res[f"{bsse}-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY"] = body_dict[nb]
+                res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
 
     return res
 

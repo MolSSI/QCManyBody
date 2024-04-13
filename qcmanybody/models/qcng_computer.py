@@ -21,7 +21,7 @@ except ImportError:
 
 from qcelemental.models import FailedOperation, Molecule, DriverEnum, ProtoModel, AtomicResult, AtomicInput
 import qcengine as qcng
-from .manybody_v1 import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
+from .manybody_pydv1 import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
 from qcmanybody import ManyBodyCalculator
 from qcmanybody.utils import delabeler, provenance_stamp
 

@@ -1,1 +1,8 @@
-from .manybody_v1 import BsseEnum, FragBasIndex
+from .manybody_pydv1 import (
+    BsseEnum,
+    FragBasIndex,
+    ManyBodyInput,
+    ManyBodyKeywords,
+    ManyBodyResult,
+    ManyBodyResultProperties,
+)

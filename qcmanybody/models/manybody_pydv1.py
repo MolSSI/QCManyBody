@@ -516,6 +516,13 @@ class ManyBodyResult(SuccessfulResultBase):
         "all results regardless of if they failed or succeeded by checking `result.success`.",
     )
     properties: ManyBodyResultProperties = Field(..., description=str(ManyBodyResultProperties.__doc__))
+    component_data: Dict[str, Dict[str, Union[float, Array[float]]]] = Field(
+        ...,
+        description="The total e/g/H/property result for each species computed.",
+#    component_results
+#        Dictionary with keys "mc_(frag, bas)" and values e/g/H computed component results according to *ptype*.
+
+    )
     return_result: Union[float, Array[float], Dict[str, Any]] = Field(
         ...,
         description="The primary return specified by the :attr:`~qcelemental.models.AtomicInput.driver` field. Scalar if energy; array if gradient or hessian; dictionary with property keys if properties.",

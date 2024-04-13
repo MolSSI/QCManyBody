@@ -7,7 +7,7 @@ from qcelemental.models import Molecule
 # v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcelemental.testing import compare_values
 
-from qcmanybody.models.manybody_v1 import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
+from qcmanybody.models.manybody_pydv1 import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
 
 import qcengine as qcng
