@@ -845,6 +845,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                 #'molecule': self.molecule,
                 # v2: 'properties': {**atprop.model_dump(), **properties},
                 'properties': {**atprop.dict(), **properties},
+                'component_data': {},  # TODO: fill this :-)
                 'provenance': provenance_stamp(__name__),
                 'extras': {
                     'qcvars': qcvars,
