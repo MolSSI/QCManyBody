@@ -99,9 +99,9 @@ def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> s
         Key identifying the model chemistry. May be `"(auto)"`. Often the
         ManyBodyInput.specification.specification keys.
     frag
-        1-indexed list of fragments active in the supersystem.
+        List of 1-indexed fragments active in the supersystem.
     bas
-        1-indexed list of fragments with active basis sets in the supersystem.
+        List of 1-indexed fragments with active basis sets in the supersystem.
         All those in *frag* plus any ghost.
 
     Returns
@@ -164,7 +164,35 @@ def print_nbody_energy(
     print(info)
 
 
-def collect_vars(bsse, body_dict, max_nbody: int, embedding: bool = False, supersystem_ie_only: bool = False):
+def collect_vars(
+        bsse: str,
+        prop: str,
+        body_dict: Mapping[int, Union[float, np.ndarray]],
+        max_nbody: int,
+        embedding: bool = False,
+        supersystem_ie_only: bool = False,
+    ) -> Dict:
+    """From *body_dict*, construct QCVariables.
+
+    Parameters
+    ----------
+    bsse
+        Uppercase label for a single many-body treatment, generally a value of BsseEnum.
+    prop
+        Uppercase label for a single property, generally a value of DriverEnum.
+    body_dict
+        Dictionary of minimal per-body info already specialized for property *prop* and treatment *bsse*. May contain either total data or interaction data, both cummulative not additive, from 1-body to max_nbody-body (see also *supersystem_ie_only*). Interaction data signaled by zero float or array for 1-body. May contain multiple model chemistry levels.
+    max_nbody
+        _description_
+    embedding, optional
+        Is charge embedding enabled, by default False?
+    supersystem_ie_only, optional
+        Is data available in *body_dict* only for 1-body (possibly zero) and nfr-body levels? By default False: data is available for consecutive levels, up to max_nbody-body.
+
+    Returns
+    -------
+        _description_. Empty return if *embedding* enabled.
+    """
     previous_e = body_dict[1]
     property_shape = find_shape(previous_e)
     tot_e = bool(np.count_nonzero(previous_e))
