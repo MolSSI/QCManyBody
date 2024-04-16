@@ -44,32 +44,94 @@ def all_same_shape(it: Iterable[Union[float, np.ndarray]]) -> bool:
         raise TypeError(f"Expected float or np.ndarray, got {type(first)}")
 
 
-def expand_gradient(
-    grad: np.ndarray, bas: Tuple[int, ...], fragment_size_dict: Dict[int, int], fragment_slice_dict: Dict[int, slice]
+def resize_gradient(
+    grad: np.ndarray,
+    bas: Tuple[int, ...], 
+    fragment_size_dict: Dict[int, int], 
+    fragment_slice_dict: Dict[int, slice], 
+    *, 
+    reverse: bool = False,
 ) -> np.ndarray:
-    """
-    Expands a gradient calculated for a cluster to the full system
-    """
+    """Pads or extracts a gradient array between subsystem and full supersystem sizes.
 
-    nat = sum(fragment_size_dict.values())
+    Parameters
+    ----------
+    grad
+        Gradient matrix of natural size for *bas*, (3 * <nat in bas>, 3).
+        If `reverse=True`, gradient matrix of supersystem size, (3 * <nat of all fragments>, 3).
+    bas
+        1-indexed fragments active in *grad*.
+        If `reverse=True`, 1-indexed fragments to be extracted from *grad*.
+    fragment_size_dict
+        Dictionary containing the number of atoms of each 1-indexed fragment.
+        For He--HOOH--Me cluster, `{1: 1, 2: 4, 3: 5}`.
+    fragment_slice_dict
+        Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.
+        For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.
+    reverse
+        If True, contract *grad* from supersystem size and shape that which is natural for *bas*.
+
+    Returns
+    -------
+        Gradient array padded with zeros to supersystem size, (3 * <nat of supersystem>, 3).
+        If reverse=True, gradient array extracted to natural size, (3 * <nat in bas>, 3).
+
+    """
+    if reverse:
+        nat = sum(fragment_size_dict[ifr] for ifr in bas)
+    else:
+        nat = sum(fragment_size_dict.values())
     ret = np.zeros((nat, 3))
+
     start = 0
     for ifr in bas:
         end = start + fragment_size_dict[ifr]
-        ret[fragment_slice_dict[ifr]] = grad[start:end]
+        if reverse:
+            ret[start:end] = grad[fragment_slice_dict[ifr]]
+        else:
+            ret[fragment_slice_dict[ifr]] = grad[start:end]
         start += fragment_size_dict[ifr]
 
     return ret
 
 
-def expand_hessian(
-    hess: np.ndarray, bas: Tuple[int, ...], fragment_size_dict: Dict[int, int], fragment_slice_dict: Dict[int, slice]
+def resize_hessian(
+    hess: np.ndarray,
+    bas: Tuple[int, ...],
+    fragment_size_dict: Dict[int, int],
+    fragment_slice_dict: Dict[int, slice],
+    *,
+    reverse: bool = False,
 ) -> np.ndarray:
-    """
-    Expands a hessian calculated for a cluster to the full system
-    """
+    """Pads or extracts a Hessian array between subsystem and full supersystem sizes.
 
-    nat = sum(fragment_size_dict.values())
+    Parameters
+    ----------
+    grad
+        Hessian matrix of natural size for *bas*, (3 * <nat in bas>, 3 * <nat in bas>).
+        If `reverse=True`, Hessian matrix of supersystem size, (3 * <nat of all fragments>, 3 * <nat of all fragments>).
+    bas
+        1-indexed fragments active in *hess*.
+        If `reverse=True`, 1-indexed fragments to be extracted from *hess*.
+    fragment_size_dict
+        Dictionary containing the number of atoms of each 1-indexed fragment.
+        For He--HOOH--Me cluster, `{1: 1, 2: 4, 3: 5}`.
+    fragment_slice_dict
+        Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.
+        For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.
+    reverse
+        If True, contract *hess* from supersystem size and shape that which is natural for *bas*.
+
+    Returns
+    -------
+        Hessian array padded with zeros to supersystem size, (3 * <nat of supersystem>, 3 * <nat of supersystem>).
+        If reverse=True, Hessian array extracted to natural size, (3 * <nat in bas>, 3 * <nat in bas>).
+
+    """
+    if reverse:
+        nat = sum(fragment_size_dict[ifr] for ifr in bas)
+    else:
+        nat = sum(fragment_size_dict.values())
     ret = np.zeros((nat * 3, nat * 3))
 
     # Build up start and end slices
@@ -85,7 +147,10 @@ def expand_hessian(
 
     for abs_sl1, rel_sl1 in zip(abs_slices, rel_slices):
         for abs_sl2, rel_sl2 in zip(abs_slices, rel_slices):
-            ret[abs_sl1, abs_sl2] = hess[rel_sl1, rel_sl2]
+            if reverse:
+                ret[rel_sl1, rel_sl2] = hess[abs_sl1, abs_sl2]
+            else:
+                ret[abs_sl1, abs_sl2] = hess[rel_sl1, rel_sl2]
 
     return ret
 

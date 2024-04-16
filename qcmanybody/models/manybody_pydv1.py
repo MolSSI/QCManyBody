@@ -13,7 +13,7 @@ from qcelemental.models.types import Array
 #from .basemodels import ExtendedConfigDict, ProtoModel
 from qcelemental.models.common_models import Model
 from qcelemental.models.molecule import Molecule
-from qcelemental.models.results import AtomicResultProtocols
+from qcelemental.models.results import AtomicResultProperties, AtomicResultProtocols
 from qcelemental.models import DriverEnum, ProtoModel, Provenance
 
 
@@ -516,11 +516,9 @@ class ManyBodyResult(SuccessfulResultBase):
         "all results regardless of if they failed or succeeded by checking `result.success`.",
     )
     properties: ManyBodyResultProperties = Field(..., description=str(ManyBodyResultProperties.__doc__))
-    component_data: Dict[str, Dict[str, Union[float, Array[float]]]] = Field(
+    component_properties: Dict[str, AtomicResultProperties] = Field(
         ...,
-        description="The total e/g/H/property result for each species computed.",
-#    component_results
-#        Dictionary with keys "mc_(frag, bas)" and values e/g/H computed component results according to *ptype*.
+        description="The total e/g/H/property results for each species computed. Keys contain modelchem, real and ghost information (e.g., `'[\"(auto)\", [2], [1, 2, 3]]'`). Array values, if present, are sized and shaped for the full supersystem.",
 
     )
     return_result: Union[float, Array[float], Dict[str, Any]] = Field(

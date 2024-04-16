@@ -20,8 +20,8 @@ from qcmanybody.utils import (
     find_shape,
     shaped_zero,
     all_same_shape,
-    expand_hessian,
-    expand_gradient,
+    resize_hessian,
+    resize_gradient,
 )
 
 logger = logging.getLogger(__name__)
@@ -127,11 +127,11 @@ class ManyBodyCalculator:
 
         return self.mc_compute_dict
 
-    def expand_gradient(self, grad: np.ndarray, bas: Tuple[int, ...]) -> np.ndarray:
-        return expand_gradient(grad, bas, self.fragment_size_dict, self.fragment_slice_dict)
+    def resize_gradient(self, grad: np.ndarray, bas: Tuple[int, ...], *, reverse: bool = False) -> np.ndarray:
+        return resize_gradient(grad, bas, self.fragment_size_dict, self.fragment_slice_dict, reverse=reverse)
 
-    def expand_hessian(self, hess: np.ndarray, bas: Tuple[int, ...]) -> np.ndarray:
-        return expand_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict)
+    def resize_hessian(self, hess: np.ndarray, bas: Tuple[int, ...], *, reverse: bool = False) -> np.ndarray:
+        return resize_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict, reverse=reverse)
 
     def iterate_molecules(self) -> Tuple[str, str, Molecule]:
         """Iterate over all the molecules needed for the computation.
@@ -470,25 +470,22 @@ class ManyBodyCalculator:
 
         # Actually analyze
         is_embedded = bool(self.embedding_charges)
-        component_results_qq = defaultdict(dict)
+        component_properties = defaultdict(dict)
         all_results = {}
         nbody_dict = {}
 #        all_results["energy_body_dict"] = {"cp": {1: 0.0}}
 
         for property_label, property_results in component_results_inv.items():
-            for k, v in property_results.items():
-                # TODO before or after expansion?
-                component_results_qq[k][property_label] = v
             # Expand gradient and hessian
             if property_label == "gradient":
-                property_results = {k: self.expand_gradient(v, delabeler(k)[2]) for k, v in property_results.items()}
+                property_results = {k: self.resize_gradient(v, delabeler(k)[2]) for k, v in property_results.items()}
             if property_label == "hessian":
-                property_results = {k: self.expand_hessian(v, delabeler(k)[2]) for k, v in property_results.items()}
+                property_results = {k: self.resize_hessian(v, delabeler(k)[2]) for k, v in property_results.items()}
 
             r = self._analyze(property_label, property_results)
-            # TODO before or after?
-            #for k, v in property_results.items():
-            #    component_results_qq[k][property_label] = v
+            for k, v in property_results.items():
+                component_properties[k]["calcinfo_natom"] = len(self.molecule.symbols)
+                component_properties[k][f"return_{property_label}"] = v
             all_results.update(r)
 
         for bt in self.bsse_type:
@@ -514,7 +511,7 @@ class ManyBodyCalculator:
                     )
 
         all_results["results"] = nbody_dict
-        all_results["component_data"] = component_results_qq
+        all_results["component_properties"] = component_properties
 
         # Make dictionary with "1cp", "2cp", etc
         ebd = all_results["energy_body_dict"]
