@@ -518,7 +518,7 @@ class ManyBodyResult(SuccessfulResultBase):
     properties: ManyBodyResultProperties = Field(..., description=str(ManyBodyResultProperties.__doc__))
     component_properties: Dict[str, AtomicResultProperties] = Field(
         ...,
-        description="The total e/g/H/property results for each species computed. Keys contain modelchem, real and ghost information (e.g., `'[\"(auto)\", [2], [1, 2, 3]]'`). Array values, if present, are sized and shaped for the full supersystem.",
+        description="The key results for each subsystem species computed. Keys contain modelchem, real and ghost information (e.g., `'[\"(auto)\", [2], [1, 2, 3]]'`). Values are total e/g/H/property results. Array values, if present, are sized and shaped for the full supersystem.",
 
     )
     return_result: Union[float, Array[float], Dict[str, Any]] = Field(

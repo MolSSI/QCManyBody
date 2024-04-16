@@ -18,6 +18,12 @@ def skprop(qcvar):
     return qcvars_to_manybodyproperties[qcvar]
 
 
+he4_refs_species = {
+    "NO": ('[\"(auto)\", [1, 2, 4], [1, 2, 4]]', -8.644153798224503),
+    "CP": ('[\"(auto)\", [1, 2, 4], [1, 2, 3, 4]]', -8.64425850181438),
+    "VM": ('[\"(auto)\", [1, 4], [1, 2, 4]]', -5.765439283351071),
+}
+
 he4_refs_conv = {
         "CP-CORRECTED TOTAL ENERGY THROUGH 1-BODY":           -11.530668717083888,
         "CP-CORRECTED TOTAL ENERGY THROUGH 2-BODY":           -11.522467757090013,
@@ -489,6 +495,10 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
         else:
             assert qcv not in ret.extras["qcvars"]["nbody"], f"[y] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
+
+    if "3b" in kwdsln and not progln.endswith("df"):
+        k, v = he4_refs_species[anskey[:2]]
+        assert compare_values(v, ret.component_properties[k].return_energy, atol=atol, label=f"[h] species {k}")
 
     for qcv, ref in {
         "CURRENT ENERGY": ans,

@@ -741,6 +741,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             ret_ptype = ret_energy if self.driver == "energy" else external_results.pop(f"ret_{self.driver.name}")
             ret_gradient = external_results.pop("ret_gradient", None)
             nbody_number = external_results.pop("nbody_number")
+            component_properties = external_results.pop("component_properties")
 
         # load QCVariables
         qcvars = {
@@ -845,11 +846,10 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                 #'molecule': self.molecule,
                 # v2: 'properties': {**atprop.model_dump(), **properties},
                 'properties': {**atprop.dict(), **properties},
-                'component_data': {},  # TODO: fill this :-)
+                'component_properties': component_properties,
                 'provenance': provenance_stamp(__name__),
                 'extras': {
                     'qcvars': qcvars,
-#                    'component_results': component_results,
                 },
                 'return_result': ret_ptype,
                 'success': True,
