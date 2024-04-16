@@ -21,7 +21,7 @@ except ImportError:
 
 from qcelemental.models import FailedOperation, Molecule, DriverEnum, ProtoModel, AtomicResult, AtomicInput
 import qcengine as qcng
-from .manybody_v1 import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
+from .manybody_pydv1 import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
 from qcmanybody import ManyBodyCalculator
 from qcmanybody.utils import delabeler, provenance_stamp
 
@@ -741,6 +741,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             ret_ptype = ret_energy if self.driver == "energy" else external_results.pop(f"ret_{self.driver.name}")
             ret_gradient = external_results.pop("ret_gradient", None)
             nbody_number = external_results.pop("nbody_number")
+            component_properties = external_results.pop("component_properties")
 
         # load QCVariables
         qcvars = {
@@ -845,10 +846,10 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                 #'molecule': self.molecule,
                 # v2: 'properties': {**atprop.model_dump(), **properties},
                 'properties': {**atprop.dict(), **properties},
+                'component_properties': component_properties,
                 'provenance': provenance_stamp(__name__),
                 'extras': {
                     'qcvars': qcvars,
-#                    'component_results': component_results,
                 },
                 'return_result': ret_ptype,
                 'success': True,

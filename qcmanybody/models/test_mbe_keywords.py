@@ -9,7 +9,7 @@ except ImportError:
     from pydantic import ValidationError
 
 from qcelemental.models import DriverEnum, Molecule
-from qcmanybody.models.manybody_v1 import BsseEnum, ManyBodyInput
+from qcmanybody.models.manybody_pydv1 import BsseEnum, ManyBodyInput
 
 import qcengine as qcng
 

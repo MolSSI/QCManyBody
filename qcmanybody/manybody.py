@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
+from collections import defaultdict
 from typing import Set, Dict, Tuple, Union, Literal, Mapping, Any, Sequence
 
 import numpy as np
@@ -19,8 +20,8 @@ from qcmanybody.utils import (
     find_shape,
     shaped_zero,
     all_same_shape,
-    expand_hessian,
-    expand_gradient,
+    resize_hessian,
+    resize_gradient,
 )
 
 logger = logging.getLogger(__name__)
@@ -126,11 +127,11 @@ class ManyBodyCalculator:
 
         return self.mc_compute_dict
 
-    def expand_gradient(self, grad: np.ndarray, bas: Tuple[int, ...]) -> np.ndarray:
-        return expand_gradient(grad, bas, self.fragment_size_dict, self.fragment_slice_dict)
+    def resize_gradient(self, grad: np.ndarray, bas: Tuple[int, ...], *, reverse: bool = False) -> np.ndarray:
+        return resize_gradient(grad, bas, self.fragment_size_dict, self.fragment_slice_dict, reverse=reverse)
 
-    def expand_hessian(self, hess: np.ndarray, bas: Tuple[int, ...]) -> np.ndarray:
-        return expand_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict)
+    def resize_hessian(self, hess: np.ndarray, bas: Tuple[int, ...], *, reverse: bool = False) -> np.ndarray:
+        return resize_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict, reverse=reverse)
 
     def iterate_molecules(self) -> Tuple[str, str, Molecule]:
         """Iterate over all the molecules needed for the computation.
@@ -206,7 +207,7 @@ class ManyBodyCalculator:
         first_key = next(iter(component_results.keys()))
         property_shape = find_shape(component_results[first_key])
 
-        # Final dictionaries
+        # Accumulation dictionaries
         # * {bsse_type}_by_level is filled by sum_cluster_data to contain for NOCP
         #   & CP the summed total energies (or other property) of each nb-body. That is:
         #   * NOCP: {1: 1b@1b,    2: 2b@2b,      ..., max_nbody: max_nbody-b@max_nbody-b} and
@@ -218,6 +219,17 @@ class ManyBodyCalculator:
         nocp_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
         vmfc_by_level = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
 
+        # * {bsse_type}_body_dict is usually filled with total energies (or other property).
+        #   Multiple model chemistry levels may be involved.
+        #   Generally, all consecutive keys between 1 and max_nbody will be present in the body_dict,
+        #   but if supersystem_ie_only=T, only 1b and nfr-b are present, or if "supersystem" in levels, ???
+        #   * TOT: {1: 1b@1b, 2: 2b tot prop with bsse_type treatment, ..., max_nbody: max_nbody-b tot prop with bsse_type treatment}
+        #   If 1b@1b (monomers in monomer basis) aren't available, which can happen when return_total_data=F
+        #   and 1b@1b aren't otherwise needed, body_dict contains interaction energies (or other property).
+        #   * IE: {1: shaped_zero, 2: 2b interaction prop using bsse_type, ..., max_nbody: max_nbody-b interaction prop using bsse_type}
+        #   For both TOT and IE cases, body_dict values are cummulative, not additive. For TOT, total,
+        #   interaction, and contribution data in ManyBodyResultProperties can be computed in
+        #   collect_vars. For IE, interaction and contribution data can be computed.
         cp_body_dict = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
         nocp_body_dict = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
         vmfc_body_dict = {n: shaped_zero(property_shape) for n in range(1, nbodies[-1] + 1)}
@@ -321,6 +333,7 @@ class ManyBodyCalculator:
 
         # results per model chemistry
         mc_results = {}
+        species_results = {}
 
         # sort by nbody level, ignore supersystem
         sorted_nbodies = [(k, v) for k, v in self.nbodies_per_mc_level.items() if v != ["supersystem"]]
@@ -435,7 +448,8 @@ class ManyBodyCalculator:
         """
 
         # All properties that were passed to us
-        available_properties = set()
+        # * seed with "energy" so free/no-op jobs can process
+        available_properties = set(["energy"])
         for property_data in component_results.values():
             available_properties.update(property_data.keys())
 
@@ -455,22 +469,24 @@ class ManyBodyCalculator:
             component_results_inv["energy"] = {'["dummy", [1000], [1000]]': 0.0}
 
         # Actually analyze
+        is_embedded = bool(self.embedding_charges)
+        component_properties = defaultdict(dict)
         all_results = {}
+        nbody_dict = {}
+#        all_results["energy_body_dict"] = {"cp": {1: 0.0}}
 
         for property_label, property_results in component_results_inv.items():
             # Expand gradient and hessian
             if property_label == "gradient":
-                property_results = {k: self.expand_gradient(v, delabeler(k)[2]) for k, v in property_results.items()}
+                property_results = {k: self.resize_gradient(v, delabeler(k)[2]) for k, v in property_results.items()}
             if property_label == "hessian":
-                property_results = {k: self.expand_hessian(v, delabeler(k)[2]) for k, v in property_results.items()}
+                property_results = {k: self.resize_hessian(v, delabeler(k)[2]) for k, v in property_results.items()}
 
             r = self._analyze(property_label, property_results)
+            for k, v in property_results.items():
+                component_properties[k]["calcinfo_natom"] = len(self.molecule.symbols)
+                component_properties[k][f"return_{property_label}"] = v
             all_results.update(r)
-
-        # Analyze the total results
-        nbody_dict = {}
-
-        is_embedded = bool(self.embedding_charges)
 
         for bt in self.bsse_type:
             print_nbody_energy(
@@ -480,12 +496,22 @@ class ManyBodyCalculator:
                 is_embedded,
             )
 
-            if not self.has_supersystem:  # skipped levels?
-                nbody_dict.update(
-                    collect_vars(bt.upper(), all_results["energy_body_dict"][bt], self.max_nbody, is_embedded, self.supersystem_ie_only)
-                )
+        for property_label in available_properties:
+            for bt in self.bsse_type:
+                if not self.has_supersystem:  # skipped levels?
+                    nbody_dict.update(
+                        collect_vars(
+                            bt.upper(),
+                            property_label.upper(),
+                            all_results[f"{property_label}_body_dict"][bt],
+                            self.max_nbody,
+                            is_embedded,
+                            self.supersystem_ie_only,
+                        )
+                    )
 
         all_results["results"] = nbody_dict
+        all_results["component_properties"] = component_properties
 
         # Make dictionary with "1cp", "2cp", etc
         ebd = all_results["energy_body_dict"]
