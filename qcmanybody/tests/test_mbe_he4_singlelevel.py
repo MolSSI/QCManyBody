@@ -11,7 +11,7 @@ from qcmanybody.models.manybody_pydv1 import AtomicSpecification, ManyBodyKeywor
 from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
 
 import qcengine as qcng
-from addons import using
+from .addons import using
 
 def skprop(qcvar):
     # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
