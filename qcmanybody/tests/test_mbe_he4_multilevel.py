@@ -13,7 +13,7 @@ from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_many
 
 import qcengine as qcng
 from .addons import using
-from .test_mbe_he4_singlelevel import sumdict
+from .test_mbe_he4_singlelevel import sumdict as sumdict_single
 
 def skprop(qcvar):
     # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
@@ -321,6 +321,7 @@ sumdict_multi = {
         },
     },
 }
+sumdict = copy.deepcopy(sumdict_single)
 sumdict.update(sumdict_multi)
 
 
