@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
-from typing import Dict, Mapping, Tuple, Union, Iterable
+from typing import Dict, Mapping, Set, Tuple, Union, Iterable
 
 import numpy as np
 from qcelemental import constants
+
+from qcmanybody.models import FragBasIndex
 
 
 def find_shape(x: Union[float, np.ndarray]) -> Tuple[int, ...]:
@@ -151,6 +153,62 @@ def resize_hessian(
                 ret[rel_sl1, rel_sl2] = hess[abs_sl1, abs_sl2]
             else:
                 ret[abs_sl1, abs_sl2] = hess[rel_sl1, rel_sl2]
+
+    return ret
+
+
+def sum_cluster_data(
+    data: Dict[str, Union[float, np.ndarray]],
+    compute_list: Set[FragBasIndex],
+    mc_level_lbl: str,
+    vmfc: bool = False,
+    nb: int = 0,
+) -> Union[float, np.ndarray]:
+    """Sum (direct or alternate weight by n-body) like data from
+
+    Parameters
+    ----------
+    data
+        Dictionary containing computed property (e/g/H/etc.) for each subsystem/component computation.
+    compute_list
+        A list of (frag, bas) tuples notating all the required computations for the desired sum.
+    mc_level_lbl
+        User label for what modelchem level results should be pulled out of *data*.
+    vmfc, optional
+        Is this a vmfc calculation, by default False?
+    nb, optional
+        1-indexed n-body level only used when `vmfc=True`, by default 0.
+
+    Returns
+    -------
+    Scalar or array containing summed energy, gradient, Hessian, or other result.
+    Usually (nocp or cp; `vmfc=False`), compute_list defines all fragments of a given number of
+    active fragments and active basis fragments, so the return is the 3b@3b sum, for example.
+    Other times (`vmfc=True`), compute list defines all fragments of a given number of active basis
+    fragments. Then alternating weighting is applied so if `nb=3`, the return is the quantity
+    (3b@3b sum - 2b@3b sum + 1b@3b sum), for example.
+
+    Raises
+    ------
+    ValueError
+        If the shapes of all the `data` values aren't the same. No summing energies with gradients.
+    """
+    sign = 1
+
+    if not all_same_shape(data.values()):
+        raise ValueError("All values in data dictionary must have the same shape.")
+
+    first_key = next(iter(data))
+    shape = find_shape(data[first_key])
+    ret = shaped_zero(shape)
+
+    for frag, bas in compute_list:
+        egh = data[labeler(mc_level_lbl, frag, bas)]
+
+        if vmfc:
+            sign = (-1) ** (nb - len(frag))
+
+        ret += sign * egh
 
     return ret
 

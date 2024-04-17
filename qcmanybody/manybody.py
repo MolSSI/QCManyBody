@@ -3,12 +3,11 @@ from __future__ import annotations
 import logging
 import math
 from collections import defaultdict
-from typing import Set, Dict, Tuple, Union, Literal, Mapping, Any, Sequence
+from typing import Iterable, Set, Dict, Tuple, Union, Literal, Mapping, Any, Sequence
 
 import numpy as np
 from qcelemental.models import Molecule
 
-from qcmanybody.assemble import sum_cluster_data
 from qcmanybody.builder import build_nbody_compute_list
 from qcmanybody.models import BsseEnum, FragBasIndex
 from qcmanybody.utils import (
@@ -22,6 +21,7 @@ from qcmanybody.utils import (
     all_same_shape,
     resize_hessian,
     resize_gradient,
+    sum_cluster_data,
 )
 
 logger = logging.getLogger(__name__)
@@ -92,7 +92,10 @@ class ManyBodyCalculator:
         # To be built on the fly
         self.mc_compute_dict = None
 
-        # Build size and slices dictionaries
+        if not np.array_equal(np.concatenate(self.molecule.fragments), np.arange(len(self.molecule.symbols))):
+            raise ValueError("""QCManyBody: non-contiguous fragments could be implemented but aren't at present""")
+
+        # Build size and slices dictionaries. Assumes fragments are contiguous
         self.fragment_size_dict = {}
         self.fragment_slice_dict = {}
         iat = 0
@@ -133,7 +136,7 @@ class ManyBodyCalculator:
     def resize_hessian(self, hess: np.ndarray, bas: Tuple[int, ...], *, reverse: bool = False) -> np.ndarray:
         return resize_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict, reverse=reverse)
 
-    def iterate_molecules(self) -> Tuple[str, str, Molecule]:
+    def iterate_molecules(self) -> Iterable[Tuple[str, str, Molecule]]:
         """Iterate over all the molecules needed for the computation.
 
         Yields model chemistry, label, and molecule.

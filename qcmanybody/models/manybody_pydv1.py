@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum, IntEnum
-from typing import Any, Dict, List, Optional, Literal, Tuple, Union
+from typing import Any, Dict, List, Optional, Literal, Tuple, Union, TYPE_CHECKING
 
 # v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
 try:
@@ -481,10 +481,13 @@ class ProtoModelSkipDefaults(ProtoModel):
         serialize_skip_defaults = True
         force_skip_defaults = True
 
-
-ManyBodyResultProperties = create_model(
+if TYPE_CHECKING:
+    ManyBodyResultProperties = ProtoModelSkipDefaults
+else:
+    # if/else suppresses a warning about using dynamically generated class as Field type in ManyBodyResults
+    ManyBodyResultProperties = create_model(
     "ManyBodyResultProperties",
-    #__doc__=manybodyresultproperties_doc,  # needs later pydantic
+    __doc__=manybodyresultproperties_doc,  # needs later pydantic
     __base__=ProtoModelSkipDefaults,
     **mbprop,
 )
