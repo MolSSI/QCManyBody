@@ -8,6 +8,7 @@ try:
 except ImportError:
     from pydantic import ValidationError
 
+import qcelemental
 from qcelemental.models import DriverEnum, Molecule
 from qcmanybody.models.manybody_pydv1 import BsseEnum, ManyBodyInput
 
@@ -15,6 +16,7 @@ import qcengine as qcng
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputerQCNG
 from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG
+from qcmanybody import ManyBodyCalculator
 
 
 @pytest.fixture(scope="function")
@@ -257,4 +259,20 @@ def test_mbe_sie(mbe_data, kws, ans):
     comp_model = ManyBodyComputerQCNG.from_qcschema(input_model)
 
     assert comp_model.supersystem_ie_only == ans
+
+
+def test_noncontiguous_fragments_ordinary():
+    with pytest.raises(qcelemental.exceptions.ValidationError) as e:
+        Molecule(symbols=["H", "Ne", "Cl"], geometry=[0, 0, 0, 2, 0, 0, 0, 2, 0], fragments=[[0, 2], [1]])
+
+    assert "QCElemental would need to reorder atoms to accommodate non-contiguous fragments" in str(e.value)
+
+
+def test_noncontiguous_fragments_evaded():
+    neon_in_hcl = Molecule(symbols=["H", "Ne", "Cl"], geometry=[0, 0, 0, 2, 0, 0, 0, 2, 0], fragments=[[0, 2], [1]], validated=True)
+
+    with pytest.raises(ValueError) as e:
+        ManyBodyCalculator(neon_in_hcl, ["cp"], {2: "mp2", 1: "mp2"}, False, False)
+
+    assert "QCManyBody: non-contiguous fragments could be implemented but aren't at present" in str(e.value)
 
