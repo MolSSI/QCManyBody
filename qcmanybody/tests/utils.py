@@ -62,7 +62,7 @@ def load_component_data(file_base):
 
 
 def generate_component_data(mol, levels, specifications, bsse_type, return_total_data, out_filename):
-    from qcmanybody.qcengine import run_qcengine_base
+    from qcmanybody.qcengine_helper import run_qcengine_base
 
     mc, component_results = run_qcengine_base(mol, levels, specifications, bsse_type, return_total_data)
 

@@ -487,7 +487,7 @@ else:
     # if/else suppresses a warning about using dynamically generated class as Field type in ManyBodyResults
     ManyBodyResultProperties = create_model(
     "ManyBodyResultProperties",
-    __doc__=manybodyresultproperties_doc,  # needs later pydantic
+    #__doc__=manybodyresultproperties_doc,  # needs later pydantic
     __base__=ProtoModelSkipDefaults,
     **mbprop,
 )
