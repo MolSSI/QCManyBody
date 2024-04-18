@@ -187,6 +187,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         description=ManyBodyKeywords.__fields__["supersystem_ie_only"].field_info.description,
     )
     task_list: Dict[str, Any] = {}  #MBETaskComputers] = {}
+    #qcmb_calculator: Optional[Any] = None
 
     # TODO @computed_field(description="Number of distinct fragments comprising full molecular supersystem.")
     @property
@@ -368,7 +369,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         return sio
 
     @classmethod
-    def from_qcschema_ben(cls, input_model: ManyBodyInput):
+    def from_qcschema_ben(cls, input_model: ManyBodyInput, build_tasks: bool = True):
 
         computer_model = cls(
             molecule=input_model.molecule,
@@ -406,8 +407,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             computer_model.supersystem_ie_only,
         )
 
-        print("\n<<<  (ZZ 2) QCManyBody module ManyBodyCalculator  >>>")
-        print(dir(calculator_cls))
+        if not build_tasks:
+            return calculator_cls
 
         component_results = {}
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from typing import Iterable, Set, Dict, Tuple, Union, Literal, Mapping, Any, Sequence
 
 import numpy as np
@@ -129,6 +129,43 @@ class ManyBodyCalculator:
             )
 
         return self.mc_compute_dict
+
+    def format_calc_plan(self, sset: str = "all") -> Tuple[str, Dict[str, Dict[int, int]]]:
+        """Formulate per-modelchem and per-body job count data and summary text.
+
+        Parameters
+        ----------
+        sset
+            Among {"all", "nocp", "cp", "vmfc_compute"}, which data structure to return.
+
+        Returns
+        -------
+        info
+            A text summary with per- model chemistry and per- n-body-level job counts.
+        Dict[str, Dict[int, int]]
+            Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.
+        """
+        # Rearrange compute_list from key nb having values (species) to compute all of that nb
+        #   to key nb having values counting that nb.
+        compute_list_count = {}
+        for mc, compute_dict in self.compute_map.items():
+            compute_list_count[mc] = {}
+            for sub in compute_dict:  # all, nocp, cp, vmfc
+                all_calcs = set().union(*compute_dict[sub].values())
+                compute_list_count[mc][sub] = Counter([len(frag) for (frag, _) in all_calcs])
+
+        info = []
+        for mc, counter in compute_list_count.items():
+            all_counter = counter["all"]
+            info.append(f"    Model chemistry \"{mc}\" (???):    {sum(all_counter.values())}")
+            for nb, count in sorted(all_counter.items()):
+                other_counts = [f"{sub}: {counter[sub][nb]}" for sub in ["nocp", "cp", "vmfc_compute"]]
+                info.append(f"        Number of {nb}-body computations: {count:6} ({', '.join(other_counts)})")
+            info.append("")
+        info = "\n".join(info)
+
+        logger.info(info)
+        return info, {mc: dsset[sset] for mc, dsset in compute_list_count.items()}
 
     def resize_gradient(self, grad: np.ndarray, bas: Tuple[int, ...], *, reverse: bool = False) -> np.ndarray:
         return resize_gradient(grad, bas, self.fragment_size_dict, self.fragment_slice_dict, reverse=reverse)
@@ -476,6 +513,7 @@ class ManyBodyCalculator:
         component_properties = defaultdict(dict)
         all_results = {}
         nbody_dict = {}
+        stdout = ""
 #        all_results["energy_body_dict"] = {"cp": {1: 0.0}}
 
         for property_label, property_results in component_results_inv.items():
@@ -492,9 +530,9 @@ class ManyBodyCalculator:
             all_results.update(r)
 
         for bt in self.bsse_type:
-            print_nbody_energy(
+            stdout += print_nbody_energy(
                 all_results["energy_body_dict"][bt],
-                f"{bt.upper()}-corrected multilevel many-body expansion",
+                f"{bt.formal()} ({bt.abbr()})",
                 self.nfragments,
                 is_embedded,
             )
@@ -519,5 +557,6 @@ class ManyBodyCalculator:
         # Make dictionary with "1cp", "2cp", etc
         ebd = all_results["energy_body_dict"]
         all_results["energy_body_dict"] = {str(k) + bt: v for bt in ebd for k, v in ebd[bt].items()}
+        all_results["stdout"] = stdout
 
         return all_results

@@ -243,11 +243,11 @@ def delabeler(item: str) -> Tuple[str, Tuple[int, ...], Tuple[int, ...]]:
 
 
 def print_nbody_energy(
-    energy_body_dict: Dict[int, float],
+    energy_body_dict: Mapping[int, float],
     header: str,
     nfragments: int,
     embedding: bool = False,
-):
+) -> str:
     """Format output string for user for a single bsse_type. Prints to output and logger.
     Called repeatedly by assemble_nbody_component."""
 
@@ -285,6 +285,7 @@ def print_nbody_energy(
 
     info += "\n"
     print(info)
+    return info
 
 
 def collect_vars(

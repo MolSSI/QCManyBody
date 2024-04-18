@@ -68,6 +68,20 @@ class BsseEnum(str, Enum):
     vmfc = "vmfc"  # Valiron-Mayer function counterpoise
     ssfc = "cp"
 
+    def formal(self):
+        return {
+            "nocp": "Non-Counterpoise Corrected",
+            "cp": "Counterpoise Corrected",
+            "vmfc": "Valiron-Mayer Function Counterpoise",
+        }[self]
+
+    def abbr(self):
+        return {
+            "nocp": "NoCP",
+            "cp": "CP",
+            "vmfc": "VMFC",
+        }[self]
+
 
 FragBasIndex = Tuple[Tuple[int], Tuple[int]]
 

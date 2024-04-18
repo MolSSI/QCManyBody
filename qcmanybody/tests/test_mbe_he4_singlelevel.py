@@ -5,7 +5,7 @@ import pytest
 from qcelemental import constants
 from qcelemental.models import Molecule
 # v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
-from qcelemental.testing import compare_values
+from qcelemental.testing import compare_values, compare_recursive
 
 from qcmanybody.models.manybody_pydv1 import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
@@ -508,3 +508,45 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
         assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] skprop {skp}")
     assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
     assert ret.properties.calcinfo_nmbe == ref_nmbe, f"{ret.properties.calcinfo_nmbe=} != {ref_nmbe}"
+
+
+@pytest.mark.parametrize("mbe_keywords,ref_count", [
+    pytest.param(
+        {"bsse_type": ["nocp", "cp", "vmfc"]},
+        # 65,
+        {"all": {"(auto)": {4: 1, 3: 8, 2: 24, 1: 32}},
+         "cp": {"(auto)": {4: 1, 3: 4, 2: 6, 1: 4}},  # other 4 1b req'd are in nocp
+         "nocp": {"(auto)": {4: 1, 3: 4, 2: 6, 1: 4}},
+         "vmfc_compute": {"(auto)": {4: 1, 3: 8, 2: 24, 1: 32}},
+         },
+        id="4b_all"),
+    pytest.param(
+        {"bsse_type": "cp", "return_total_data": True, "max_nbody": 3},
+        # 18,
+        {"all": {"(auto)": {1: 8, 2: 6, 3: 4}},
+         "cp": {"(auto)": {1: 4, 2: 6, 3: 4}},
+         "nocp": {"(auto)": {1: 4}},
+         "vmfc_compute": {"(auto)": {}},
+        },
+        id="3b_cp_rtd"),
+    pytest.param(
+        {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 3},
+        # 50,
+        {"all": {"(auto)": {1: 28, 2: 18, 3: 4}},
+         "cp": {"(auto)": {}},
+         "nocp": {"(auto)": {1: 4, 2: 6, 3: 4}},  # free with vmfc
+         "vmfc_compute": {"(auto)": {1: 28, 2: 18, 3: 4}},
+        },
+        id="3b_vmfc"),
+])
+def test_count_he4_single(mbe_keywords, ref_count, he_tetramer):
+    atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": "mybas"}, program="myqc", driver="energy")
+    mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
+
+    ret = ManyBodyComputerQCNG.from_qcschema_ben(mbe_model, build_tasks=False)
+
+    text, dcount = ret.format_calc_plan()
+    assert compare_recursive(ref_count["all"], dcount, atol=1.e-6)
+    for sset in ["all", "cp", "nocp", "vmfc_compute"]:
+        text, dcount = ret.format_calc_plan(sset)
+        assert compare_recursive(ref_count[sset], dcount, atol=1.e-6)
