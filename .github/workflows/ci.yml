@@ -113,7 +113,9 @@ jobs:
             --color=yes --durations 50 --durations-min 20
 
     - name: CodeCov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
+      env:
+        CODECOV_TOKEN: ${{ secrets.QCMB_CODECOV_TOKEN }}
 
   release_docs:
     needs: [build]
