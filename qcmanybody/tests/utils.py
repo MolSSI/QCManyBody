@@ -1,10 +1,14 @@
 import json
 import math
 import os
+from typing import Mapping, Union, Literal, Any, Iterable
 
 import numpy
+import qcengine as qcng
 import zstandard
+from qcelemental.models import Molecule, AtomicInput
 
+from qcmanybody import ManyBodyCalculator, delabeler
 from qcmanybody.models import BsseEnum
 
 _my_dir = os.path.dirname(os.path.realpath(__file__))
@@ -62,9 +66,7 @@ def load_component_data(file_base):
 
 
 def generate_component_data(mol, levels, specifications, bsse_type, return_total_data, out_filename):
-    from qcmanybody.qcengine_helper import run_qcengine_base
-
-    mc, component_results = run_qcengine_base(mol, levels, specifications, bsse_type, return_total_data)
+    mc, component_results = run_qcengine(mol, levels, specifications, bsse_type, return_total_data)
 
     component_results = jsonify(component_results)
     filepath = os.path.join(_my_dir, "component_data", out_filename + ".json.zst")
@@ -154,3 +156,45 @@ def compare_results(qcmb_results, ref_results, levels):
                     res[f"{bstr}-CORRECTED {l}-BODY CONTRIBUTION TO ENERGY"],
                     ref_results[f"{bstr}-CORRECTED {l}-BODY CONTRIBUTION TO ENERGY"],
                 )
+
+
+def run_qcengine(
+    molecule: Molecule,
+    levels: Mapping[Union[int, Literal["supersystem"]], str],
+    specifications: Mapping[str, Mapping[str, Any]],
+    bsse_type: Iterable[BsseEnum],
+    return_total_data: bool,
+):
+
+    mc = ManyBodyCalculator(molecule, bsse_type, levels, return_total_data)
+
+    component_results = {}
+
+    computation_count = {}
+    for chem, label, imol in mc.iterate_molecules():
+        print(label)
+        inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
+
+        _, real, bas = delabeler(label)
+        computation_count.setdefault(len(real), 0)
+        computation_count[len(real)] += 1
+
+        result = qcng.compute(inp, specifications[chem]["program"])
+
+        if not result.success:
+            print(result.error.error_message)
+            raise RuntimeError("Calculation did not succeed! Error:\n" + result.error.error_message)
+
+        # pull out stuff
+        props = {"energy", "gradient", "hessian"}
+
+        component_results[label] = {}
+
+        for p in props:
+            if hasattr(result.properties, f"return_{p}"):
+                v = getattr(result.properties, f"return_{p}")
+                # print(f"  {label} {p}: {v}")
+                if v is not None:
+                    component_results[label][p] = v
+
+    return mc, component_results
