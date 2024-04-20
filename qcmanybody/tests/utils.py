@@ -65,8 +65,8 @@ def load_component_data(file_base):
         return unjsonify(json.load(f))
 
 
-def generate_component_data(mol, levels, specifications, bsse_type, return_total_data, out_filename):
-    mc, component_results = run_qcengine(mol, levels, specifications, bsse_type, return_total_data)
+def generate_component_data(mol, levels, specifications, bsse_type, return_total_data, out_filename, supsersytem_ie_only=False):
+    mc, component_results = run_qcengine(mol, levels, specifications, bsse_type, return_total_data, supsersytem_ie_only)
 
     component_results = jsonify(component_results)
     filepath = os.path.join(_my_dir, "component_data", out_filename + ".json.zst")
@@ -164,9 +164,10 @@ def run_qcengine(
     specifications: Mapping[str, Mapping[str, Any]],
     bsse_type: Iterable[BsseEnum],
     return_total_data: bool,
+    supersystem_ie_only: bool
 ):
 
-    mc = ManyBodyCalculator(molecule, bsse_type, levels, return_total_data)
+    mc = ManyBodyCalculator(molecule, bsse_type, levels, return_total_data, supersystem_ie_only)
 
     component_results = {}
 
