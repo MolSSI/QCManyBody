@@ -452,7 +452,7 @@ class ManyBodyCalculator:
 
         # All properties that were passed to us
         # * seed with "energy" so free/no-op jobs can process
-        available_properties = set(["energy"])
+        available_properties: Set[str] = {"energy"}
         for property_data in component_results.values():
             available_properties.update(property_data.keys())
 

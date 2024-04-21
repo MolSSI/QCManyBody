@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import itertools
-from typing import Iterable, Union, Literal, Optional, Dict, Set
+from typing import Iterable, Union, Literal, Optional, Dict, Set, List
 
 from qcmanybody.models import BsseEnum, FragBasIndex
 
@@ -29,7 +29,10 @@ def build_nbody_compute_list(
         Whether the total data (True; energy/gradient/Hessian) of the molecular system has been requested,
         as opposed to interaction data (False).
     supersystem_ie_only
-        ????
+        Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) "
+        analysis, thereby omitting intermediate-body calculations.
+    supersystem_max_nbody
+        Maximum n-body to use for a supersystem calculation. Must be specified if "supersystem" is in `nbodies`
 
     Returns
     -------
@@ -62,8 +65,8 @@ def build_nbody_compute_list(
             raise ValueError("supersystem_max_nbody must be provided if 'supersystem' contains nbodies")
 
         include_supersystem = True
-        nbodies = list(nbodies)
-        nbodies.remove("supersystem")
+
+    nbodies: List[int] = [x for x in nbodies if x != "supersystem"]
 
     # What levels do we need?
     fragment_range = range(1, nfragments + 1)
