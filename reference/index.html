@@ -1567,7 +1567,7 @@ reference for the technical implementation of the
 
         <span class="c1"># All properties that were passed to us</span>
         <span class="c1"># * seed with &quot;energy&quot; so free/no-op jobs can process</span>
-        <span class="n">available_properties</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s2">&quot;energy&quot;</span><span class="p">])</span>
+        <span class="n">available_properties</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;energy&quot;</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">property_data</span> <span class="ow">in</span> <span class="n">component_results</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">available_properties</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">property_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
@@ -1848,7 +1848,7 @@ to process energy/gradient/Hessian.</p>
 
         <span class="c1"># All properties that were passed to us</span>
         <span class="c1"># * seed with &quot;energy&quot; so free/no-op jobs can process</span>
-        <span class="n">available_properties</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s2">&quot;energy&quot;</span><span class="p">])</span>
+        <span class="n">available_properties</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;energy&quot;</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">property_data</span> <span class="ow">in</span> <span class="n">component_results</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">available_properties</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">property_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
@@ -2112,11 +2112,26 @@ as opposed to interaction data (False).</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>????</p>
+              <p>Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) "
+analysis, thereby omitting intermediate-body calculations.</p>
             </div>
           </td>
           <td>
               <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>supersystem_max_nbody</code></td>
+          <td>
+                <code><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3.12/library/typing.html#typing.Optional">Optional</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/functions.html#int">int</a>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Maximum n-body to use for a supersystem calculation. Must be specified if "supersystem" is in <code>nbodies</code></p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
           </td>
         </tr>
     </tbody>
@@ -2332,7 +2347,10 @@ subdict and among subdicts.</p>
 <span class="normal">172</span>
 <span class="normal">173</span>
 <span class="normal">174</span>
-<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_nbody_compute_list</span><span class="p">(</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_nbody_compute_list</span><span class="p">(</span>
     <span class="n">bsse_type</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">BsseEnum</span><span class="p">],</span>
     <span class="n">nfragments</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">nbodies</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]]],</span>
@@ -2355,7 +2373,10 @@ subdict and among subdicts.</p>
 <span class="sd">        Whether the total data (True; energy/gradient/Hessian) of the molecular system has been requested,</span>
 <span class="sd">        as opposed to interaction data (False).</span>
 <span class="sd">    supersystem_ie_only</span>
-<span class="sd">        ????</span>
+<span class="sd">        Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) &quot;</span>
+<span class="sd">        analysis, thereby omitting intermediate-body calculations.</span>
+<span class="sd">    supersystem_max_nbody</span>
+<span class="sd">        Maximum n-body to use for a supersystem calculation. Must be specified if &quot;supersystem&quot; is in `nbodies`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2388,8 +2409,8 @@ subdict and among subdicts.</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;supersystem_max_nbody must be provided if &#39;supersystem&#39; contains nbodies&quot;</span><span class="p">)</span>
 
         <span class="n">include_supersystem</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">nbodies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nbodies</span><span class="p">)</span>
-        <span class="n">nbodies</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;supersystem&quot;</span><span class="p">)</span>
+
+    <span class="n">nbodies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nbodies</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;supersystem&quot;</span><span class="p">]</span>
 
     <span class="c1"># What levels do we need?</span>
     <span class="n">fragment_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nfragments</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
