@@ -1,4 +1,4 @@
-site_name: QCManyBody Docs
+site_name: QCManyBody Documentation
 site_url: https://molssi.github.io/QCManyBody/
 
 repo_name: MolSSI/QCManyBody
@@ -52,10 +52,9 @@ plugins:
         - https://molssi.github.io/QCFractal/objects.inv
 
 nav:
-  - QCManyBody Docs: index.md
-  - tutorials.md
-  - API Documentation: api.md
+  - Home: index.md
+  - high-level-interface.md
+  - core-interface.md
   - How-To Guides: how-to-guides.md
-  - reference.md
-  - explanation.md
+  - API Documentation: api.md
 
