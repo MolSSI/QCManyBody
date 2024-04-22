@@ -8,11 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://molssi.github.io/QCManyBody/explanation/">
+        <link rel="canonical" href="https://molssi.github.io/QCManyBody/core-interface/">
       
       
-        <link rel="prev" href="../reference/">
+        <link rel="prev" href="../high-level-interface/">
       
+      
+        <link rel="next" href="../how-to-guides/">
       
       
       <link rel="icon" href="../logo.png">
@@ -20,7 +22,7 @@
     
     
       
-        <title>Explanation - QCManyBody Docs</title>
+        <title>Core Interface - QCManyBody Documentation</title>
       
     
     
@@ -75,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#core-interface" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="QCManyBody Docs" class="md-header__button md-logo" aria-label="QCManyBody Docs" data-md-component="logo">
+    <a href=".." title="QCManyBody Documentation" class="md-header__button md-logo" aria-label="QCManyBody Documentation" data-md-component="logo">
       
   <img src="../logo.png" alt="logo">
 
@@ -98,13 +105,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            QCManyBody Docs
+            QCManyBody Documentation
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Explanation
+              Core Interface
             
           </span>
         </div>
@@ -216,7 +223,7 @@
   
     
   
-  QCManyBody Docs
+  Home
 
       </a>
     </li>
@@ -228,12 +235,12 @@
   
   
     <li class="md-tabs__item">
-      <a href="../tutorials/" class="md-tabs__link">
+      <a href="../high-level-interface/" class="md-tabs__link">
         
   
     
   
-  Tutorials
+  High-Level Interface
 
       </a>
     </li>
@@ -243,14 +250,16 @@
         
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../api/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
     
   
-  API Documentation
+  Core Interface
 
       </a>
     </li>
@@ -279,31 +288,12 @@
   
   
     <li class="md-tabs__item">
-      <a href="../reference/" class="md-tabs__link">
+      <a href="../api/" class="md-tabs__link">
         
   
     
   
-  Reference
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
-    
-  
-  Explanation
+  API Documentation
 
       </a>
     </li>
@@ -332,12 +322,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="QCManyBody Docs" class="md-nav__button md-logo" aria-label="QCManyBody Docs" data-md-component="logo">
+    <a href=".." title="QCManyBody Documentation" class="md-nav__button md-logo" aria-label="QCManyBody Documentation" data-md-component="logo">
       
   <img src="../logo.png" alt="logo">
 
     </a>
-    QCManyBody Docs
+    QCManyBody Documentation
   </label>
   
     <div class="md-nav__source">
@@ -365,7 +355,7 @@
         
   
   <span class="md-ellipsis">
-    QCManyBody Docs
+    Home
   </span>
   
 
@@ -381,11 +371,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/" class="md-nav__link">
+      <a href="../high-level-interface/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Tutorials
+    High-Level Interface
   </span>
   
 
@@ -398,18 +388,91 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Core Interface
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    API Documentation
+    Core Interface
   </span>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-core-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the core interface
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using the core interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#results-dictionary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results dictionary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -441,43 +504,15 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
+      <a href="../api/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Reference
+    API Documentation
   </span>
   
 
       </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Explanation
-  </span>
-  
-
-      </a>
-      
     </li>
   
 
@@ -499,6 +534,49 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-core-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the core interface
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using the core interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#results-dictionary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results dictionary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -516,25 +594,87 @@
   
 
 
-  <h1>Explanation</h1>
+<h1 id="core-interface">Core Interface</h1>
+<p>The core interface of QCManyBody is designed to allow for more flexibility in how the calculations are run.
+The primary responsibilities of the core interface are:</p>
+<ol>
+<li>Given a molecule and desired levels of MBE, return the fragments and levels that must be computed for each fragment</li>
+<li>Given a dictionary of the results of those computations, analyze those results and calculate the desired manybody properties</li>
+</ol>
+<p>Note that the user is expected to run the calculations themselves, and the core interface does not provide any tools for
+running the calculations.</p>
+<h2 id="using-the-core-interface">Using the core interface</h2>
+<p>The core interface is accessed through the <a class="autorefs autorefs-internal" href="../api/#qcmanybody.ManyBodyCalculator"><code>ManyBodyCalculator</code></a>
+class.</p>
+<p>The first step is to create a molecule. This molecule is a QCElemental molecule object, and must contain fragments.</p>
+<pre><code class="language-python">import qcmanybody as qcmb
+import qcelemental as qcel
 
-<p>This part of the project documentation focuses on an
-<strong>understanding-oriented</strong> approach. You'll get a
-chance to read about the background of the project,
-as well as reasoning about how it was implemented.</p>
-<blockquote>
-<p><strong>Note:</strong> Expand this section by considering the
-following points:</p>
-</blockquote>
-<ul>
-<li>Give context and background on your library</li>
-<li>Explain why you created it</li>
-<li>Provide multiple examples and approaches of how
-    to work with it</li>
-<li>Help the reader make connections</li>
-<li>Avoid writing instructions or technical descriptions
-    here</li>
-</ul>
+# Create a molecule with 3 hydrogen atoms, each as its own fragment
+mol = qcel.models.Molecule(symbols=['h', 'h', 'h'],
+                           geometry=[[0,0,0],[0,0,2],[0,0,4]],
+                           fragments=[[0], [1], [2]])
+</code></pre>
+<p>Next, create a <code>ManyBodyCalculator</code> object. This object is constructed using the molecule,
+the desired BSSE correction, levels of MBE, and other options of the MBE.</p>
+<pre><code class="language-python">mbc = qcmb.ManyBodyCalculator(
+    molecule=mol,
+    bsse_type=['cp'],
+    levels={1: 'mp2/aug-cc-pvtz', 2: 'b3lyp/def2-svp', 3: 'hf/sto-3g'},
+    return_total_data=True,
+    supersystem_ie_only=False
+)
+</code></pre>
+<p>The <code>levels</code> option is a dictionary that specifies the n-body level as a key, then an arbitrary
+string as the description of the calculation to be performed at the n-body level. This string is
+termed the 'model chemistry' is completely arbitrary; it only has meaning to the user, and the user is expected to map these strings
+to some meaningful definition of a calculation.</p>
+<p><strong>Note</strong>: The core interface is less flexible than the high-level interface when it comes to the <code>levels</code> option.
+    In the core interface, all levels must be accounted for (that is, keys must go from 1 to the maximum
+    nbody you would like to calculate). All levels must be present even if the model chemistry
+    is the same for all levels.</p>
+<p>For a complete discussion of the other options available in the <code>ManyBodyCalculator</code> object, see the
+<a href="../keywords/">keywords discussion</a>
+the <a class="autorefs autorefs-internal" href="../api/#qcmanybody.ManyBodyCalculator"><code>ManyBodyCalculator API documentation</code></a>.</p>
+<p>The next step is to obtain the calculations to be run from the <code>ManyBodyCalculator</code> object.
+This is done with a python generator function <code>iterate_molecules</code> that returns
+a tuple. This tuple contains</p>
+<ol>
+<li>The string describing the calculation to be run (the model chemistry string, as defined in the <code>levels</code> dictionary)</li>
+<li>A label for the calculation. This label is opaque to the user but used to identify the calculation when analyzing the results.</li>
+<li>A <code>Molecule</code> object that contains the cluster of fragments to be computed.</li>
+</ol>
+<pre><code class="language-python">calculation_results = {}
+for model_chemistry, label, mol_cluster in mbc.iterate_molecules():
+    calculation_results[label] = run_calculation(mol_cluster, model_chemistry)
+</code></pre>
+<p>Note that it is entirely up to the user to run the calculation somehow - this level of interface
+does not provide any tools for running the calculations.</p>
+<h3 id="results-dictionary">Results dictionary</h3>
+<p>The data returned from the calculations is expected to be stored in a nested dictionary.
+The level is the opaque label as given from the <code>QCManyBodyCalculator</code>.
+The second level is the name of the property.</p>
+<pre><code class="language-python">calculation_results = {
+    'label1': {
+        'energy': -1.0,
+        'gradient': [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]],
+    },
+    'label2': {
+        'energy': -2.0,
+        'gradient': [[4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
+    },
+    'label3': {
+        'energy': -3.0,
+        'gradient': [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
+    },
+}
+</code></pre>
+<h3 id="analysis">Analysis</h3>
+<p>This result dictionary is all that is needed to perform the final analysis and calculation
+of the MBE properties.</p>
+<pre><code class="language-python">final_results = mbc.analyze(calculation_results)
+</code></pre>
+<p>For a discussion about what the results contain, see the <a href="../results/">results documentation</a>.</p>
 
 
 

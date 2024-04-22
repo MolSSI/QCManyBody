@@ -8,13 +8,9 @@
       
       
       
-        <link rel="canonical" href="https://molssi.github.io/QCManyBody/how-to-guides/">
+        <link rel="canonical" href="https://molssi.github.io/QCManyBody/keywords/">
       
       
-        <link rel="prev" href="../core-interface/">
-      
-      
-        <link rel="next" href="../api/">
       
       
       <link rel="icon" href="../logo.png">
@@ -22,7 +18,7 @@
     
     
       
-        <title>How-To Guides - QCManyBody Documentation</title>
+        <title>Keywords and options - QCManyBody Documentation</title>
       
     
     
@@ -77,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#keywords-and-options" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -106,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              How-To Guides
+              Keywords and options
             
           </span>
         </div>
@@ -262,11 +263,9 @@
         
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../how-to-guides/" class="md-tabs__link">
         
   
     
@@ -403,17 +402,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../how-to-guides/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -422,7 +414,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -464,6 +455,91 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Required">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#molecule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Molecule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bsse_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      bsse_type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#levels-and-max_nbody" class="md-nav__link">
+    <span class="md-ellipsis">
+      levels and max_nbody
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keywords-and-options_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keywords and Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Keywords and Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#return_total_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      return_total_data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supersystem_ie_only" class="md-nav__link">
+    <span class="md-ellipsis">
+      supersystem_ie_only
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -481,9 +557,30 @@
   
 
 
-  <h1>How-To Guides</h1>
-
-
+<h1 id="keywords-and-options">Keywords and options</h1>
+<h2 id="required">Required</h2>
+<h3 id="molecule">Molecule</h3>
+<h3 id="bsse_type">bsse_type</h3>
+<h3 id="levels-and-max_nbody">levels and max_nbody</h3>
+<h2 id="keywords-and-options_1">Keywords and Options</h2>
+<p>Both the high-level interface and core interface share the same terminology with respect to options</p>
+<h3 id="return_total_data">return_total_data</h3>
+<p>When set to true, the manybody calculation will return the total data (energy/gradient/hessian/property) of the system.
+If not, the return will only contain interaction data.</p>
+<p>Note that the calculation of counterpoise corrected total properties implies the calculation of the energies of monomers
+in the monomer basis, hence specifying <code>return_total_data = True</code> may carry out more computations than.
+For some properties such as gradients and hessians, <code>return_total_data = False</code> is rarely useful.</p>
+<h3 id="supersystem_ie_only">supersystem_ie_only</h3>
+<p>Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE)
+analysis, thereby omitting intermediate-body calculations. When false, each n-body level
+in the MBE up through <code>max_nbody</code> will be computed. When true (only allowed for <code>max_nbody = nfragments</code>),
+only compute enough for the overall interaction/total energy: max_nbody-body and 1-body.</p>
+<p>When true, properties <code>INTERACTION {driver} THROUGH {max_nbody}-BODY</code> will always be available;
+<code>TOTAL {driver} THROUGH {max_nbody}-BODY</code> will be available depending on <code>return_total_data</code>; and
+<code>{max_nbody}-BODY CONTRIBUTION TO {driver}</code> won't be available (except for dimers).</p>
+<p>This keyword produces no savings for a two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body
+subsystems can be skipped with <code>supersystem_ie_only=True</code> Do not use with <code>vmfc</code> in <code>bsse_type</code>
+as it cannot produce savings.</p>
 
 
 
