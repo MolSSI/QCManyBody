@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Dict, Mapping, Set, Tuple, Union, Iterable
+from typing import Dict, Mapping, Set, Tuple, Union, Iterable, Optional
 
 import numpy as np
 from qcelemental import constants
@@ -246,20 +246,44 @@ def print_nbody_energy(
     energy_body_dict: Mapping[int, float],
     header: str,
     nfragments: int,
-    embedding: bool = False,
+    embedding: bool,
+    supersystem_ie_only: bool,
+    supersystem_beyond: Optional[int]
 ) -> str:
-    """Format output string for user for a single bsse_type. Prints to output and logger.
-    Called repeatedly by assemble_nbody_component."""
+    """Format summary string for energies of a single bsse_type. Logs and returns output.
 
+    Parameters
+    ----------
+    energy_body_dict
+        Input data.
+    header
+        Specialization for table title.
+    nfragments
+        Number of lines in table is number of fragments.
+    embedding, optional
+        Whether charge embedding present suppress printing, usually False
+    supersystem_ie_only
+        Whether only 1-body and nfragments-body levels are available, usually False.
+    supersystem_beyond
+        If not None, the number of nbody-levels computed by MBE explicitly. Beyond this gets supersystem SS label.
+
+    Returns
+    -------
+        A text table Hartrees and kcal/mol
+    """
     info = f"""\n   ==> N-Body: {header} energies <==\n\n"""
-    info += f"""  {"n-Body":>12}     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy\n"""
-    info += f"""                   [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]\n"""
+    info += f"""     {"n-Body":>12}     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy\n"""
+    info += f"""                      [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]\n"""
     previous_e = energy_body_dict[1]
     tot_e = previous_e != 0.0
     nbody_range = list(energy_body_dict)
+    if supersystem_ie_only:
+        nbody_range = [1, nfragments]
     nbody_range.sort()
     for nb in range(1, nfragments + 1):
         lbl = []
+        if supersystem_beyond and nb > supersystem_beyond:
+            lbl.append("SS")
         if nb == nfragments:
             lbl.append("FULL")
         if nb == max(nbody_range):
@@ -275,13 +299,19 @@ def print_nbody_energy(
             else:
                 int_e = energy_body_dict[nb] - energy_body_dict[1]
                 int_e_kcal = int_e * constants.hartree2kcalmol
-            if tot_e:
-                info += f"""  {lbl:>8} {nb:3}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+            if supersystem_ie_only and nb == nfragments:
+                if tot_e:
+                    info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
+                else:
+                    info += f"""  {lbl:>11} {nb:3}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
             else:
-                info += f"""  {lbl:>8} {nb:3}  {"N/A":20}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                if tot_e:
+                    info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                else:
+                    info += f"""  {lbl:>11} {nb:3}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
             previous_e = energy_body_dict[nb]
         else:
-            info += f"""  {lbl:>8} {nb:3}        {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}\n"""
+            info += f"""  {lbl:>11} {nb:3}        {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}\n"""
 
     info += "\n"
     print(info)
@@ -295,6 +325,7 @@ def collect_vars(
         max_nbody: int,
         embedding: bool = False,
         supersystem_ie_only: bool = False,
+        has_supersystem: bool = False,
     ) -> Dict:
     """From *body_dict*, construct QCVariables.
 
@@ -312,7 +343,8 @@ def collect_vars(
         Is charge embedding enabled, by default False?
     supersystem_ie_only, optional
         Is data available in *body_dict* only for 1-body (possibly zero) and nfr-body levels? By default False: data is available for consecutive levels, up to max_nbody-body.
-
+    has_supersystem
+        Whether contributions higher than max_nbody are a summary correction.
     Returns
     -------
         _description_. Empty return if *embedding* enabled.
@@ -339,6 +371,19 @@ def collect_vars(
                 res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[nb - 1]
         if tot_e:
             for nb in [1, nfr]:
+                res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
+    elif has_supersystem:
+        nfr = nbody_range[-1]
+        res[f"{bsse}-CORRECTED INTERACTION {prop}"] = body_dict[nfr] - body_dict[1]  # reset
+        for nb in range(2, max_nbody + 1):
+            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[nb - 1]
+        for nb in [nfr]:
+            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[max_nbody]
+        if tot_e:
+            res[f"{bsse}-CORRECTED TOTAL {prop}"] = body_dict[nfr]  # reset
+            for nb in nbody_range:
                 res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
     else:
         for nb in range(2, max(nbody_range) + 1):

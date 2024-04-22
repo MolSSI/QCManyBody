@@ -535,21 +535,23 @@ class ManyBodyCalculator:
                 f"{bt.formal()} ({bt.abbr()})",
                 self.nfragments,
                 is_embedded,
+                self.supersystem_ie_only,
+                self.max_nbody if self.has_supersystem else None,
             )
 
         for property_label in available_properties:
             for bt in self.bsse_type:
-                if not self.has_supersystem:  # skipped levels?
-                    nbody_dict.update(
-                        collect_vars(
-                            bt.upper(),
-                            property_label.upper(),
-                            all_results[f"{property_label}_body_dict"][bt],
-                            self.max_nbody,
-                            is_embedded,
-                            self.supersystem_ie_only,
-                        )
+                nbody_dict.update(
+                    collect_vars(
+                        bt.upper(),
+                        property_label.upper(),
+                        all_results[f"{property_label}_body_dict"][bt],
+                        self.max_nbody,
+                        is_embedded,
+                        self.supersystem_ie_only,
+                        self.has_supersystem,
                     )
+                )
 
         all_results["results"] = nbody_dict
         all_results["component_properties"] = component_properties

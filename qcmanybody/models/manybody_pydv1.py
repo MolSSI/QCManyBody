@@ -118,7 +118,8 @@ class ManyBodyKeywords(ProtoModel):
         # definitive description. appended in Computer
         description="Dictionary of different levels of theory for different levels of expansion. Note that the primary "
             "method_string is not used when this keyword is given. ``supersystem`` computes all higher order n-body "
-            "effects up to the number of fragments. A method fills in for any lower unlisted nbody levels. Note that if "
+            "effects up to the number of fragments; this higher-order correction uses the nocp basis, regardless of "
+            "bsse_type. A method fills in for any lower unlisted nbody levels. Note that if "
             "both this and max_nbody are provided, they must be consistent. Examples: "
             "SUPERSYSTEM definition suspect"
             "* {1: 'ccsd(t)', 2: 'mp2', 'supersystem': 'scf'} "

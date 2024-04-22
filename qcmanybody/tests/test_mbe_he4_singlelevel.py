@@ -1,3 +1,4 @@
+import re
 import pprint
 
 import pytest
@@ -99,6 +100,142 @@ he4_refs_df = {
         "VMFC-CORRECTED 3-BODY CONTRIBUTION TO ENERGY":       -0.000236937325,
         "VMFC-CORRECTED 4-BODY CONTRIBUTION TO ENERGY":        0.000063528063,
     }
+
+sumstr = {
+    "dfcp4b_tot": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+-11.5307519\d+        0.0000000\d+        0.00000\d+        0.0000000\d+        0.0000000\d+
+^\s+2\s+-11.5224035\d+        0.0083483\d+        5.23867\d+        0.0083483\d+        5.2386764\d+
+^\s+3\s+-11.5226401\d+        0.0081117\d+        5.09021\d+       -0.0002365\d+       -0.1484610\d+
+^\s+FULL/RTN\s+4\s+-11.5225766\d+        0.0081753\d+        5.13007\d+        0.0000635\d+        0.0398644\d+
+""",
+    "cp4b_tot": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+3\s+-11.5227028\d+        0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+FULL/RTN\s+4      -11.5226398\d+        0.0080288\d+        5.03\d+        0.0000629\d+        0.03\d+
+""",
+    "cp4b_tot_sio": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+^\s+FULL/RTN\s+4\s+-11.5226398\d+        0.0080288\d+        5.03\d+\s+N/A\s+N/A\s*
+""",
+    "cp4b_ie": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+3\s+N/A\s+0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+FULL/RTN\s+4\s+N/A\s+0.0080288\d+        5.03\d+        0.0000629\d+        0.03\d+
+""",
+   "cp4b_ie_sio": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+^\s+FULL/RTN\s+4\s+N/A\s+0.0080288\d+        5.03\d+\s+N/A\s+N/A\s*
+""",
+    "nocp4b_tot": r"""
+   ==> N-Body: Non-Counterpoise Corrected \(NoCP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+-11.5228512\d+        0.0078175\d+        4.90\d+        0.0078175\d+        4.90\d+
+^\s+3\s+-11.5230952\d+        0.0075734\d+        4.75\d+       -0.0002440\d+       -0.15\d+
+^\s+FULL/RTN\s+4      -11.5230380\d+        0.0076306\d+        4.78\d+        0.0000571\d+        0.03\d+
+""",
+    "vmfc4b_tot": r"""
+   ==> N-Body: Valiron-Mayer Function Counterpoise \(VMFC\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+-11.5224489\d+        0.0082197\d+        5.15\d+        0.0082197\d+        5.15\d+
+^\s+3\s+-11.5226845\d+        0.0079841\d+        5.01\d+       -0.0002356\d+       -0.14\d+
+^\s+FULL/RTN\s+4\s+-11.5226215\d+        0.0080471\d+        5.04\d+        0.0000629\d+        0.03\d+
+""",
+    "cp3b_tot": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+RTN\s+3\s+-11.5227028\d+        0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+FULL\s+4\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
+""",
+    "cp3b_ie": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+RTN\s+3\s+N/A\s+0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+FULL\s+4\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+""",
+    "cp2b_tot": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+RTN\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+3\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
+^\s+FULL\s+4\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
+""",
+    "cp2b_ie": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+RTN\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+^\s+FULL\s+4\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+""",
+    "cp1b_tot": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+RTN\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
+^\s+3\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
+^\s+FULL\s+4\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
+""",
+    "cp1b_ie": r"""
+   ==> N-Body: Counterpoise Corrected \(CP\) energies <==
+
+^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
+^\s+RTN\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+2\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+^\s+FULL\s+4\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
+""",
+}
+
+
+ 
 
 sumdict = {
     "4b_all": {
@@ -261,16 +398,17 @@ def he_tetramer():
 
 @pytest.mark.parametrize("program,basis,keywords", [
     pytest.param("cfour", "aug-pvdz", {"frozen_core": False}, id="cfour_conv", marks=using("cfour")),
-    pytest.param("gamess", "accd", {"contrl__ispher": 1, "mp2__nacore": 0}, id="gamess_conv", marks=using("gamess")),
     pytest.param("nwchem", "aug-cc-pvdz", {"basis__spherical": True, "scf__thresh": 1.0e-8, "mp2__freeze": False}, id="nwchem_conv", marks=using("nwchem")),
     pytest.param("psi4", "aug-cc-pvdz", {"e_convergence": 1.e-10, "d_convergence": 1.e-10, "scf_type": "pk", "mp2_type": "conv"}, id="psi4_conv", marks=using("psi4")),
     pytest.param("psi4", "aug-cc-pvdz", {"e_convergence": 1.e-10, "d_convergence": 1.e-10}, id="psi4_df", marks=using("psi4")),
+    # only good for nocp pytest.param("gamess", "accd", {"contrl__ispher": 1, "mp2__nacore": 0}, id="gamess_conv", marks=using("gamess")),
 ])
-@pytest.mark.parametrize("mbe_keywords,anskey,bodykeys,calcinfo_nmbe", [
+@pytest.mark.parametrize("mbe_keywords,anskey,bodykeys,outstrs,calcinfo_nmbe", [
     pytest.param(
         {"bsse_type": ["nocp", "cp", "vmfc"]},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv],
+        ["nocp4b_tot", "cp4b_tot", "vmfc4b_tot"],
         65,
         id="4b_all"),
     pytest.param(
@@ -278,191 +416,213 @@ def he_tetramer():
         "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv], # if ((k.startswith("CP-") and ("TOTAL" not in k)) or (k.startswith("VMFC-")))],
         # TODO: when vmfc active, nocp always available up to max_nbody. cp available if max_nbody=nfr. activate?
+        ["cp4b_tot", "vmfc4b_tot"],
         65,
         id="4b_cpvmfc"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "supersystem_ie_only": True},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k))],
+        None,
         5,
         id="4b_nocp_rtd_sio"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "supersystem_ie_only": True},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k))],
+        None,
         5,
         id="4b_nocp_sio"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "supersystem_ie_only": True},
         "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k))],
+        ["cp4b_tot_sio"],
         9,
         id="4b_cp_rtd_sio"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False, "supersystem_ie_only": True},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("THROUGH 4-BODY" in k or "THROUGH 1-BODY" in k) and "TOTAL ENERGY" not in k)],
+        ["cp4b_ie_sio"],
         5,
         id="4b_cp_sio"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-"))],
+        ["nocp4b_tot"],
         15,
         id="4b_nocp_rtd"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-"))],
+        ["nocp4b_tot"],
         15,
         id="4b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True},
         "CP-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-"))],
+        ["cp4b_tot"],
         19,
         id="4b_cp_rtd"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and "TOTAL ENERGY" not in k)],
+        ["cp4b_ie"],
         15,
         id="4b_cp"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": True},
         "VMFC-CORRECTED TOTAL ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv],  # vmfc brings nocp & cp for free
+        ["vmfc4b_tot"],
         65,
         id="4b_vmfc_rtd"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": False},
         "VMFC-CORRECTED INTERACTION ENERGY THROUGH 4-BODY",
         [k for k in he4_refs_conv],
+        ["vmfc4b_tot"],
         65,  # TODO 61 in reach
         id="4b_vmfc"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 3},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("4-BODY" not in k))],
+        None,
         14,
         id="3b_nocp_rtd"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 3},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and "4-BODY" not in k)],
+        None,
         14,
         id="3b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "max_nbody": 3},
         "CP-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and "4-BODY" not in k)],
+        ["cp3b_tot"],
         18,  # bugfix: was 28
         id="3b_cp_rtd"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False, "max_nbody": 3},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and "4-BODY" not in k and "TOTAL ENERGY" not in k)],
+        ["cp3b_ie"],
         14,
         id="3b_cp"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 3},
         "VMFC-CORRECTED TOTAL ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and "4-BODY" not in k)],
+        None,
         50,
         id="3b_vmfc_rtd"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 3},
         "VMFC-CORRECTED INTERACTION ENERGY THROUGH 3-BODY",
         [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and "4-BODY" not in k)], # and "TOTAL ENERGY" not in k)],
+        None,
         50,  # TODO 46 in reach,
         id="3b_vmfc"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 2},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
+        None,
         10,
         id="2b_nocp_rtd"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 2},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
+        None,
         10,
         id="2b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "max_nbody": 2},
         "CP-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("4-BODY" not in k) and ("3-BODY" not in k))],
+        ["cp2b_tot"],
         14,
         id="2b_cp_rtd"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False, "max_nbody": 2},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("4-BODY" not in k) and ("3-BODY" not in k) and "TOTAL ENERGY" not in k)],
+        ["cp2b_ie"],
         10,
         id="2b_cp"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 2},
         "VMFC-CORRECTED TOTAL ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("4-BODY" not in k) and ("3-BODY" not in k))],
+        None,
         22,
         id="2b_vmfc_rtd"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 2},
         "VMFC-CORRECTED INTERACTION ENERGY THROUGH 2-BODY",
         [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("4-BODY" not in k) and ("3-BODY" not in k))], # and "TOTAL ENERGY" not in k)],
+        None,
         22,  # TODO 18 in reach
         id="2b_vmfc"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": True, "max_nbody": 1},
         "NOCP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("1-BODY" in k))],
+        None,
         4,
         id="1b_nocp_rtd"),
     pytest.param(
         {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 1},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("1-BODY" in k))],
+        None, 
         4,  # maybe TODO this could be 0 but rtd hasn't be used to winnow nocp
         id="1b_nocp"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": True, "max_nbody": 1},
         "CP-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("1-BODY" in k))],
+        ["cp1b_tot"],
         4,
         id="1b_cp_rtd"),
     pytest.param(
         {"bsse_type": "cp", "return_total_data": False, "max_nbody": 1},
         "CP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("CP-") and ("1-BODY" in k) and "TOTAL ENERGY" not in k)],
+        ["cp1b_ie"],
         0,
         id="1b_cp"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": True, "max_nbody": 1},
         "VMFC-CORRECTED TOTAL ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("1-BODY" in k))],
+        None,
         4,
         id="1b_vmfc_rtd"),
     pytest.param(
         {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 1},
         "VMFC-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if ((k.startswith("VMFC-") or k.startswith("NOCP-")) and ("1-BODY" in k))],
+        None,
         4,  # maybe TODO this could be 0 but rtd hasn't be used to winnow vmfc
         id="1b_vmfc"),
 ])
-def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodykeys, calcinfo_nmbe, he_tetramer, request):
+def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodykeys, outstrs, calcinfo_nmbe, he_tetramer, request):
     #! MP2/aug-cc-pvDZ many body energies of an arbitrary Helium complex,
     #   addressing 4-body formulas
     # e, wfn = energy('MP2/aug-cc-pVDZ', molecule=he_tetramer, ...)
 
     atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": basis}, program=program, driver="energy", keywords=keywords)
     mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
-
-    if program == "gamess":
-        with pytest.raises(ValueError) as exe:
-            # qcng: qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
-            ManyBodyComputerQCNG.from_qcschema_ben(mbe_model)
-        assert "GAMESS+QCEngine can't handle ghost atoms yet" in str(exe.value)
-        pytest.xfail("GAMESS can't do ghosts")
 
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
     ret = ManyBodyComputerQCNG.from_qcschema_ben(mbe_model)
@@ -507,7 +667,12 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
         assert compare_values(ref, ret.extras["qcvars"][qcv], atol=atol, label=f"[e] qcvars {qcv}")
         assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] skprop {skp}")
     assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
-    assert ret.properties.calcinfo_nmbe == ref_nmbe, f"{ret.properties.calcinfo_nmbe=} != {ref_nmbe}"
+
+    assert ret.properties.calcinfo_nmbe == ref_nmbe, f"[i] {ret.properties.calcinfo_nmbe=} != {ref_nmbe}"
+
+    if outstrs and progln != "psi4_df":
+        for stdoutkey in outstrs:
+            assert re.search(sumstr[stdoutkey], ret.stdout, re.MULTILINE), f"[j] N-Body pattern not found: {sumstr[stdoutkey]}"
 
 
 @pytest.mark.parametrize("mbe_keywords,ref_count", [
