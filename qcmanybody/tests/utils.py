@@ -129,6 +129,10 @@ def compare_results(qcmb_results, ref_results, levels):
     if not res:
         return
 
+    if not f"NOCP-CORRECTED TOTAL ENERGY" in ref_results:
+        # Psi4 used during the bootstrapping tests does not have data for multi+ss
+        return
+
     for b in list(BsseEnum):
         bstr = b.value.upper()
 
