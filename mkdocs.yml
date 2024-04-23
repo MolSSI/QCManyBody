@@ -60,7 +60,6 @@ plugins:
           - https://molssi.github.io/QCFractal/objects.inv
 
 markdown_extensions:
-  - tables
   - mdantic_v1
 
 nav:
