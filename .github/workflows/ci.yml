@@ -157,6 +157,7 @@ jobs:
             - mkdocs
             - mkdocs-material
             - mkdocstrings-python
+            - tabulate
           EOF
           cat export.yaml
 
