@@ -42,19 +42,31 @@ plugins:
         options:
           docstring_style: numpy
           allow_inspection: true
+          members_order: source
+          separate_signature: true
+          filters: ["!^_"]
+          docstring_options:
+            ignore_init_summary: true
+          merge_init_into_class: true
+          show_signature_annotations: true
+          signature_crossrefs: true
         import:
-        - https://docs.python.org/3.12/objects.inv
-        - https://numpy.org/doc/stable/objects.inv
-        - https://docs.scipy.org/doc/scipy/objects.inv
-        - https://matplotlib.org/stable/objects.inv
-        - https://molssi.github.io/QCElemental/objects.inv
-        - https://molssi.github.io/QCEngine/objects.inv
-        - https://molssi.github.io/QCFractal/objects.inv
+          - https://docs.python.org/3/objects.inv
+          - https://numpy.org/doc/stable/objects.inv
+          - https://docs.scipy.org/doc/scipy/objects.inv
+          - https://matplotlib.org/stable/objects.inv
+          - https://molssi.github.io/QCElemental/objects.inv
+          - https://molssi.github.io/QCEngine/objects.inv
+          - https://molssi.github.io/QCFractal/objects.inv
+
+markdown_extensions:
+  - mdantic_v1
 
 nav:
   - Home: index.md
   - high-level-interface.md
   - core-interface.md
+  - QCSchema: qcschema.md
   - How-To Guides: how-to-guides.md
   - API Documentation: api.md
 
