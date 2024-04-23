@@ -35,10 +35,9 @@ class ManyBodyCalculator:
         levels: Mapping[Union[int, Literal["supersystem"]], str],
         return_total_data: bool,
         supersystem_ie_only: bool,
+        embedding_charges: Mapping[int, Sequence[float]],
     ):
-        # TODO
-        self.embedding_charges = {}
-
+        self.embedding_charges = embedding_charges
         self.molecule = molecule
         self.bsse_type = [BsseEnum(x) for x in bsse_type]
         self.return_total_data = return_total_data
@@ -197,13 +196,13 @@ class ManyBodyCalculator:
                     mol = self.molecule.get_fragment(real_atoms_0, ghost_atoms_0, orient=False, group_fragments=False)
                     mol = mol.copy(update={"fix_com": True, "fix_orientation": True})
 
-                    # if self.embedding_charges:
-                    #    embedding_frags = list(set(range(1, self.nfragments + 1)) - set(pair[1]))
-                    #    charges = []
-                    #    for frag in embedding_frags:
-                    #        positions = self.molecule.extract_subsets(frag).geometry().np.tolist()
-                    #        charges.extend([[chg, i] for i, chg in zip(positions, self.embedding_charges[frag])])
-                    #    data['keywords']['function_kwargs'].update({'external_potentials': charges})
+                    if self.embedding_charges:
+                        embedding_frags = list(set(range(1, self.nfragments + 1)) - set(basis_atoms))
+                        charges = []
+                        for ifr in embedding_frags:
+                            positions = self.molecule.get_fragment(ifr-1).geometry.tolist()
+                            charges.extend([[chg, i] for i, chg in zip(positions, self.embedding_charges[ifr])])
+                        mol.extras["embedding_charges"] = charges
 
                     done_molecules.add(label)
                     yield mc, label, mol
