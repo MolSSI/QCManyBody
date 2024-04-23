@@ -187,6 +187,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         description=ManyBodyKeywords.__fields__["supersystem_ie_only"].field_info.description,
     )
     task_list: Dict[str, Any] = {}  #MBETaskComputers] = {}
+    #qcmb_calculator: Optional[Any] = None
 
     # TODO @computed_field(description="Number of distinct fragments comprising full molecular supersystem.")
     @property
@@ -368,7 +369,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         return sio
 
     @classmethod
-    def from_qcschema_ben(cls, input_model: ManyBodyInput):
+    def from_qcschema_ben(cls, input_model: ManyBodyInput, build_tasks: bool = True):
 
         computer_model = cls(
             molecule=input_model.molecule,
@@ -387,7 +388,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         comp_levels = {}
         for mc_level_idx, mtd in enumerate(computer_model.levels.values()):
             for lvl1 in nb_per_mc[mc_level_idx]:
-                comp_levels[int(lvl1)] = mtd
+                key = "supersystem" if lvl1 == "supersystem" else int(lvl1)
+                comp_levels[key] = mtd
 
         specifications = {}
         for mtd, spec in computer_model.input_data.specification.specification.items():
@@ -406,8 +408,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             computer_model.supersystem_ie_only,
         )
 
-        print("\n<<<  (ZZ 2) QCManyBody module ManyBodyCalculator  >>>")
-        print(dir(calculator_cls))
+        if not build_tasks:
+            return calculator_cls
 
         component_results = {}
 
@@ -742,6 +744,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             ret_gradient = external_results.pop("ret_gradient", None)
             nbody_number = external_results.pop("nbody_number")
             component_properties = external_results.pop("component_properties")
+            stdout = external_results.pop("stdout")
+
 
         # load QCVariables
         qcvars = {
@@ -852,6 +856,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                     'qcvars': qcvars,
                 },
                 'return_result': ret_ptype,
+                "stdout": stdout,
                 'success': True,
             })
 

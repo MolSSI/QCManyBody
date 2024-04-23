@@ -120,6 +120,7 @@ def build_nbody_compute_list(
         for nb in nbodies:
             for cp_combos in itertools.combinations(fragment_range, nb):
                 basis_tuple = tuple(cp_combos)
+                # TODO vmfc_compute_list and vmfc_level_list are identical, so consolidate
                 for interior_nbody in range(1, nb + 1):
                     for x in itertools.combinations(cp_combos, interior_nbody):
                         combo_tuple = (x, basis_tuple)
@@ -158,15 +159,6 @@ def build_nbody_compute_list(
         for nb, lst in nocp_compute_list.items():
             compute_list.setdefault(nb, set())
             compute_list[nb] |= lst
-
-    # Rearrange compute_list from key nb having values to compute all of that nb
-    #   to key nb including values of that nb. Use for counting.
-    compute_list_count = {x: set() for x in nbodies}
-    for nb in nbodies:
-        for nbset in compute_list.values():
-            for item in nbset:
-                if len(item[0]) == nb:
-                    compute_list_count[nb].add(item)
 
     compute_dict = {
         "all": compute_list,

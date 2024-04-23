@@ -191,7 +191,7 @@ def test_mbe_level_5mer(mbe_data, kws, ans):
     pytest.param({"max_nbody": -1}, "should be between 1 and 3"),
     pytest.param({"max_nbody": 4}, "should be between 1 and 3"),
     # fails on v1 b/c val 2 coerced to a str  pytest.param({"levels": {1: 2, 3: "mp2", 2: "ccsd"}}, "asdf"),  # `1: 2 is old syntax and doesn't pass typing
-    pytest.param({"max_nbody": 1, "supersystem_ie_only": True}, "Cannot skip intermediate n-body jobs")
+    pytest.param({"max_nbody": 1, "supersystem_ie_only": True}, "Cannot skip intermediate n-body jobs"),
     # [3, supersystem]
 ])
 def test_mbe_level_fails(mbe_data, kws, errmsg):
@@ -202,7 +202,7 @@ def test_mbe_level_fails(mbe_data, kws, errmsg):
         input_model = ManyBodyInput(**mbe_data)
         ManyBodyComputerQCNG.from_qcschema(input_model)
 
-    assert errmsg in str(e.value)
+    assert errmsg in str(e.value), e.value
 
 
 @pytest.mark.parametrize("kws,ans", [
