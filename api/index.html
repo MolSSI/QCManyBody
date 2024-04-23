@@ -489,6 +489,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qcmanybody.ManyBodyCalculator.format_calc_plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      format_calc_plan
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qcmanybody.ManyBodyCalculator.iterate_molecules" class="md-nav__link">
     <span class="md-ellipsis">
       iterate_molecules
@@ -542,6 +551,15 @@
   <a href="#qcmanybody.ManyBodyCalculator.analyze" class="md-nav__link">
     <span class="md-ellipsis">
       analyze
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qcmanybody.ManyBodyCalculator.format_calc_plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      format_calc_plan
     </span>
   </a>
   
@@ -1079,7 +1097,48 @@
 <span class="normal">520</span>
 <span class="normal">521</span>
 <span class="normal">522</span>
-<span class="normal">523</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ManyBodyCalculator</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecule</span><span class="p">,</span>
@@ -1181,6 +1240,43 @@
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mc_compute_dict</span>
+
+    <span class="k">def</span> <span class="nf">format_calc_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formulate per-modelchem and per-body job count data and summary text.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sset</span>
+<span class="sd">            Among {&quot;all&quot;, &quot;nocp&quot;, &quot;cp&quot;, &quot;vmfc_compute&quot;}, which data structure to return.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        info</span>
+<span class="sd">            A text summary with per- model chemistry and per- n-body-level job counts.</span>
+<span class="sd">        Dict[str, Dict[int, int]]</span>
+<span class="sd">            Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Rearrange compute_list from key nb having values (species) to compute all of that nb</span>
+        <span class="c1">#   to key nb having values counting that nb.</span>
+        <span class="n">compute_list_count</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">compute_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">compute_list_count</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">compute_dict</span><span class="p">:</span>  <span class="c1"># all, nocp, cp, vmfc</span>
+                <span class="n">all_calcs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">compute_dict</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="n">compute_list_count</span><span class="p">[</span><span class="n">mc</span><span class="p">][</span><span class="n">sub</span><span class="p">]</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">all_calcs</span><span class="p">])</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">counter</span> <span class="ow">in</span> <span class="n">compute_list_count</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">all_counter</span> <span class="o">=</span> <span class="n">counter</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Model chemistry </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">mc</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> (???):    </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">all_counter</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">nb</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_counter</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="n">other_counts</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sub</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">counter</span><span class="p">[</span><span class="n">sub</span><span class="p">][</span><span class="n">nb</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;nocp&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">,</span> <span class="s2">&quot;vmfc_compute&quot;</span><span class="p">]]</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Number of </span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body computations: </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">other_counts</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span><span class="p">,</span> <span class="p">{</span><span class="n">mc</span><span class="p">:</span> <span class="n">dsset</span><span class="p">[</span><span class="n">sset</span><span class="p">]</span> <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">dsset</span> <span class="ow">in</span> <span class="n">compute_list_count</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
     <span class="k">def</span> <span class="nf">resize_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grad</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">resize_gradient</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">bas</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragment_size_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragment_slice_dict</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">)</span>
@@ -1528,6 +1624,7 @@
         <span class="n">component_properties</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
         <span class="n">all_results</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">nbody_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">stdout</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 <span class="c1">#        all_results[&quot;energy_body_dict&quot;] = {&quot;cp&quot;: {1: 0.0}}</span>
 
         <span class="k">for</span> <span class="n">property_label</span><span class="p">,</span> <span class="n">property_results</span> <span class="ow">in</span> <span class="n">component_results_inv</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1544,26 +1641,28 @@
             <span class="n">all_results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">:</span>
-            <span class="n">print_nbody_energy</span><span class="p">(</span>
+            <span class="n">stdout</span> <span class="o">+=</span> <span class="n">print_nbody_energy</span><span class="p">(</span>
                 <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">-corrected multilevel many-body expansion&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">formal</span><span class="p">()</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">abbr</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span><span class="p">,</span>
                 <span class="n">is_embedded</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">property_label</span> <span class="ow">in</span> <span class="n">available_properties</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span><span class="p">:</span>  <span class="c1"># skipped levels?</span>
-                    <span class="n">nbody_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                        <span class="n">collect_vars</span><span class="p">(</span>
-                            <span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
-                            <span class="n">property_label</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
-                            <span class="n">all_results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">property_label</span><span class="si">}</span><span class="s2">_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span>
-                            <span class="n">is_embedded</span><span class="p">,</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
-                        <span class="p">)</span>
+                <span class="n">nbody_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="n">collect_vars</span><span class="p">(</span>
+                        <span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                        <span class="n">property_label</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                        <span class="n">all_results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">property_label</span><span class="si">}</span><span class="s2">_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span>
+                        <span class="n">is_embedded</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span><span class="p">,</span>
                     <span class="p">)</span>
+                <span class="p">)</span>
 
         <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nbody_dict</span>
         <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;component_properties&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">component_properties</span>
@@ -1571,6 +1670,7 @@
         <span class="c1"># Make dictionary with &quot;1cp&quot;, &quot;2cp&quot;, etc</span>
         <span class="n">ebd</span> <span class="o">=</span> <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">]</span>
         <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="n">bt</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="n">ebd</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ebd</span><span class="p">[</span><span class="n">bt</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;stdout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stdout</span>
 
         <span class="k">return</span> <span class="n">all_results</span>
 </code></pre></div></td></tr></table></div>
@@ -1651,44 +1751,7 @@ to process energy/gradient/Hessian.</p>
 </details>
           <details class="quote">
             <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span>
-<span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span>
-<span class="normal">451</span>
-<span class="normal">452</span>
-<span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
-<span class="normal">459</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">459</span>
 <span class="normal">460</span>
 <span class="normal">461</span>
 <span class="normal">462</span>
@@ -1752,7 +1815,48 @@ to process energy/gradient/Hessian.</p>
 <span class="normal">520</span>
 <span class="normal">521</span>
 <span class="normal">522</span>
-<span class="normal">523</span></pre></div></td><td class="code"><div><pre><span></span><code>    <span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span></pre></div></td><td class="code"><div><pre><span></span><code>    <span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">component_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]],</span>
     <span class="p">):</span>
@@ -1809,6 +1913,7 @@ to process energy/gradient/Hessian.</p>
         <span class="n">component_properties</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
         <span class="n">all_results</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">nbody_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">stdout</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 <span class="c1">#        all_results[&quot;energy_body_dict&quot;] = {&quot;cp&quot;: {1: 0.0}}</span>
 
         <span class="k">for</span> <span class="n">property_label</span><span class="p">,</span> <span class="n">property_results</span> <span class="ow">in</span> <span class="n">component_results_inv</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1825,26 +1930,28 @@ to process energy/gradient/Hessian.</p>
             <span class="n">all_results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">:</span>
-            <span class="n">print_nbody_energy</span><span class="p">(</span>
+            <span class="n">stdout</span> <span class="o">+=</span> <span class="n">print_nbody_energy</span><span class="p">(</span>
                 <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">-corrected multilevel many-body expansion&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">formal</span><span class="p">()</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">abbr</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span><span class="p">,</span>
                 <span class="n">is_embedded</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">property_label</span> <span class="ow">in</span> <span class="n">available_properties</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsse_type</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span><span class="p">:</span>  <span class="c1"># skipped levels?</span>
-                    <span class="n">nbody_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                        <span class="n">collect_vars</span><span class="p">(</span>
-                            <span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
-                            <span class="n">property_label</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
-                            <span class="n">all_results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">property_label</span><span class="si">}</span><span class="s2">_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span>
-                            <span class="n">is_embedded</span><span class="p">,</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
-                        <span class="p">)</span>
+                <span class="n">nbody_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="n">collect_vars</span><span class="p">(</span>
+                        <span class="n">bt</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                        <span class="n">property_label</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                        <span class="n">all_results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">property_label</span><span class="si">}</span><span class="s2">_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span><span class="p">,</span>
+                        <span class="n">is_embedded</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span><span class="p">,</span>
                     <span class="p">)</span>
+                <span class="p">)</span>
 
         <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nbody_dict</span>
         <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;component_properties&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">component_properties</span>
@@ -1852,6 +1959,7 @@ to process energy/gradient/Hessian.</p>
         <span class="c1"># Make dictionary with &quot;1cp&quot;, &quot;2cp&quot;, etc</span>
         <span class="n">ebd</span> <span class="o">=</span> <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">]</span>
         <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="n">bt</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="n">ebd</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ebd</span><span class="p">[</span><span class="n">bt</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;stdout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stdout</span>
 
         <span class="k">return</span> <span class="n">all_results</span>
 </code></pre></div></td></tr></table></div>
@@ -1865,20 +1973,89 @@ to process energy/gradient/Hessian.</p>
 
 
 
-<h2 id="qcmanybody.ManyBodyCalculator.iterate_molecules" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">iterate_molecules</span><span class="p">()</span></code>
+<h2 id="qcmanybody.ManyBodyCalculator.format_calc_plan" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">format_calc_plan</span><span class="p">(</span><span class="n">sset</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span></code>
 
 </h2>
 
 
   <div class="doc doc-contents ">
   
-      <p>Iterate over all the molecules needed for the computation.</p>
-<p>Yields model chemistry, label, and molecule.</p>
+      <p>Formulate per-modelchem and per-body job count data and summary text.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>sset</code></td>
+          <td>
+                <code><a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/stdtypes.html#str">str</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Among {"all", "nocp", "cp", "vmfc_compute"}, which data structure to return.</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;all&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code>info</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A text summary with per- model chemistry and per- n-body-level job counts.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3.12/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3.12/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/functions.html#int">int</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3.12/library/functions.html#int">int</a>]]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
           <details class="quote">
             <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
@@ -1907,11 +2084,100 @@ to process energy/gradient/Hessian.</p>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]]:</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">format_calc_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Formulate per-modelchem and per-body job count data and summary text.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sset</span>
+<span class="sd">        Among {&quot;all&quot;, &quot;nocp&quot;, &quot;cp&quot;, &quot;vmfc_compute&quot;}, which data structure to return.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    info</span>
+<span class="sd">        A text summary with per- model chemistry and per- n-body-level job counts.</span>
+<span class="sd">    Dict[str, Dict[int, int]]</span>
+<span class="sd">        Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Rearrange compute_list from key nb having values (species) to compute all of that nb</span>
+    <span class="c1">#   to key nb having values counting that nb.</span>
+    <span class="n">compute_list_count</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">compute_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">compute_list_count</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">compute_dict</span><span class="p">:</span>  <span class="c1"># all, nocp, cp, vmfc</span>
+            <span class="n">all_calcs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">compute_dict</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">compute_list_count</span><span class="p">[</span><span class="n">mc</span><span class="p">][</span><span class="n">sub</span><span class="p">]</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">all_calcs</span><span class="p">])</span>
+
+    <span class="n">info</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">counter</span> <span class="ow">in</span> <span class="n">compute_list_count</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">all_counter</span> <span class="o">=</span> <span class="n">counter</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Model chemistry </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">mc</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> (???):    </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">all_counter</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">nb</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_counter</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">other_counts</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sub</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">counter</span><span class="p">[</span><span class="n">sub</span><span class="p">][</span><span class="n">nb</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;nocp&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">,</span> <span class="s2">&quot;vmfc_compute&quot;</span><span class="p">]]</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Number of </span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body computations: </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">other_counts</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">info</span><span class="p">,</span> <span class="p">{</span><span class="n">mc</span><span class="p">:</span> <span class="n">dsset</span><span class="p">[</span><span class="n">sset</span><span class="p">]</span> <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">dsset</span> <span class="ow">in</span> <span class="n">compute_list_count</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="qcmanybody.ManyBodyCalculator.iterate_molecules" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">iterate_molecules</span><span class="p">()</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Iterate over all the molecules needed for the computation.</p>
+<p>Yields model chemistry, label, and molecule.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate over all the molecules needed for the computation.</span>
 
 <span class="sd">    Yields model chemistry, label, and molecule.</span>
