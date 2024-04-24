@@ -58,7 +58,7 @@ jobs:
             - pytest-cov
             - codecov
             # Testing CMS
-            - psi4
+            - psi4=1.9.1
             #- nwchem  # lands on different he4 soln
             #- networkx
           EOF
@@ -106,6 +106,17 @@ jobs:
       run: |
         pip install -e .
         # python -m pip install . --no-deps  # gives no codecov beyond tests
+
+    - name: Configure QCEngine
+      run: |
+        cat > qcengine.yaml <<EOF
+        all:
+          hostname_pattern: "*"
+          memory: 2
+          ncores: 2
+        EOF
+        cat qcengine.yaml
+        qcengine info
 
     - name: PyTest
       run: |
