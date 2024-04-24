@@ -11,6 +11,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://molssi.github.io/QCManyBody/changelog/</loc>
+         <lastmod>2024-04-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://molssi.github.io/QCManyBody/core-interface/</loc>
          <lastmod>2024-04-24</lastmod>
          <changefreq>daily</changefreq>
