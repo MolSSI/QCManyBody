@@ -1,7 +1,7 @@
 coverage:
   ignore:
-    - tests/component_data
-    - tests/ref_data
+    - qcmanybody/tests/component_data
+    - qcmanybody/tests/ref_data
   status:
     project:
       default:
