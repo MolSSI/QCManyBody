@@ -39,7 +39,6 @@ docs = [
 
 
 [tool.setuptools.package-data]
-"*" = ["pytest.ini"]
 
 
 [project.urls]
