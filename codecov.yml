@@ -2,6 +2,7 @@ coverage:
   ignore:
     - qcmanybody/tests/component_data
     - qcmanybody/tests/ref_data
+    - qcmanybody/tests/generate_component_data.py
   status:
     project:
       default:
