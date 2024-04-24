@@ -1,18 +1,71 @@
 
+<!-- ====  Inputs  ================================================================= -->
 
-$pydantic: qcmanybody.models.manybody_pydv1.AtomicSpecification
+::: qcmanybody.models.BsseEnum
 
-
-$pydantic: qcmanybody.models.manybody_pydv1.ManyBodyInput
-
-### ManyBodyKeywords
-
-
-Pydantic models are simply classes which inherit from `BaseModel` and define fields as annotated attributes.
 
 ::: qcmanybody.models.ManyBodyKeywords
     options:
         show_root_heading: true
+
+$pydantic: qcmanybody.models.manybody_pydv1.ManyBodyKeywords
+
+
+::: qcmanybody.models.manybody_pydv1.ManyBodySpecification
+    options:
+        show_root_heading: true
+
+$pydantic: qcmanybody.models.manybody_pydv1.ManyBodySpecification
+
+
+::: qcmanybody.models.ManyBodyInput
+    options:
+        show_root_heading: true
+
+$pydantic: qcmanybody.models.manybody_pydv1.ManyBodyInput
+
+
+<!-- ====  Protocols  ============================================================== -->
+
+<!--
+::: qcmanybody.models.manybody_pydv1.ManyBodyProtocolEnum
+
+
+::: qcmanybody.models.manybody_pydv1.ManyBodyProtocols
+    options:
+        show_root_heading: true
+
+$pydantic: qcmanybody.models.manybody_pydv1.ManyBodyProtocols
+-->
+
+
+<!-- ====  Properties/Outputs  ===================================================== -->
+
+::: qcmanybody.models.ManyBodyResultProperties
+    options:
+        show_root_heading: true
+
+$pydantic: qcmanybody.models.ManyBodyResultProperties
+
+
+::: qcmanybody.models.ManyBodyResult
+    options:
+        show_root_heading: true
+
+$pydantic: qcmanybody.models.ManyBodyResult
+
+
+<!-- ====  Misc.  ================================================================== -->
+
+<!-- $pydantic: qcmanybody.models.manybody_pydv1.AtomicSpecification -->
+<!--
+AtomicSpecification
+ResultsBase
+SuccessfulResultBase
+-->
+
+<!--
+    options:
         merge_init_into_class: false
         group_by_category: false
         # explicit members list so we can set order and include `__init__` easily
@@ -35,6 +88,7 @@ Pydantic models are simply classes which inherit from `BaseModel` and define fie
           - model_validate
           - model_validate_json
           - copy
+-->
 
 ::: qcmanybody.resize_gradient
     options:
