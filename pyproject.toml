@@ -10,7 +10,7 @@ authors = [
   { name="Benjamin Pritchard", email="bpp4@vt.edu" },
   { name="Lori A. Burns", email="lori.burns@gmail.com" },
 ]
-description='QCManybody'
+description='QCManyBody'
 readme = "README.md"
 license = { file="LICENSE" }
 requires-python = ">=3.8"
@@ -34,6 +34,7 @@ docs = [
     "mkdocs",
     "mkdocs-material",
     "mkdocstrings[python]",
+    "tabulate",
 ]
 
 
@@ -41,8 +42,8 @@ docs = [
 
 
 [project.urls]
-"Homepage" = "https://github.com/MolSSI/QCManybody"
-"Bug Tracker" = "https://github.com/MolSSI/QCManybody/issues"
+"Homepage" = "https://github.com/MolSSI/QCManyBody"
+"Bug Tracker" = "https://github.com/MolSSI/QCManyBody/issues"
 
 
 [tool.black]
@@ -54,3 +55,21 @@ line-length = 120
 
 [tool.versioningit.vcs]
 default-tag = "0.0.99" # useful for CI/shallow clones
+
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--import-mode=importlib"
+pythonpath = [
+    "tests",
+]
+testpaths = [
+    "tests",
+]
+markers = [
+    "addon: tests require external non-required software",
+
+    "cfour: tests using CFOUR software; skip if unavailable",
+    "nwchem: tests using classic NWChem software; skip if unavailable",
+    "psi4: tests using Psi4 software; skip if unavailable",
+]
