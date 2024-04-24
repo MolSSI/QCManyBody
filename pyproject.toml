@@ -10,7 +10,7 @@ authors = [
   { name="Benjamin Pritchard", email="bpp4@vt.edu" },
   { name="Lori A. Burns", email="lori.burns@gmail.com" },
 ]
-description='QCManybody'
+description='QCManyBody'
 readme = "README.md"
 license = { file="LICENSE" }
 requires-python = ">=3.8"
@@ -34,15 +34,17 @@ docs = [
     "mkdocs",
     "mkdocs-material",
     "mkdocstrings[python]",
+    "tabulate",
 ]
 
 
 [tool.setuptools.package-data]
+"*" = ["pytest.ini"]
 
 
 [project.urls]
-"Homepage" = "https://github.com/MolSSI/QCManybody"
-"Bug Tracker" = "https://github.com/MolSSI/QCManybody/issues"
+"Homepage" = "https://github.com/MolSSI/QCManyBody"
+"Bug Tracker" = "https://github.com/MolSSI/QCManyBody/issues"
 
 
 [tool.black]
