@@ -7,8 +7,8 @@ import numpy as np
 from qcelemental.models import Molecule
 from qcelemental.testing import compare_values
 
-from qcmanybody.models.manybody_pydv1 import ManyBodyKeywords, ManyBodyInput
-from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
+from qcmanybody.models import ManyBodyKeywords, ManyBodyInput
+from qcmanybody.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
 
 from .addons import uusing
 

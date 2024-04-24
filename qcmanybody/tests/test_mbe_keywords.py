@@ -10,12 +10,12 @@ except ImportError:
 
 import qcelemental
 from qcelemental.models import DriverEnum, Molecule
-from qcmanybody.models.manybody_pydv1 import BsseEnum, ManyBodyInput
+from qcmanybody.models import BsseEnum, ManyBodyInput
 
 import qcengine as qcng
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputerQCNG
-from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG
+from qcmanybody.qcng_computer import ManyBodyComputerQCNG
 from qcmanybody import ManyBodyCalculator
 
 

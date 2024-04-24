@@ -8,8 +8,8 @@ from qcelemental.models import Molecule
 # v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcelemental.testing import compare_values, compare_recursive
 
-from qcmanybody.models.manybody_pydv1 import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
-from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
+from qcmanybody.models import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
+from qcmanybody.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
 
 import qcengine as qcng
 from .addons import using

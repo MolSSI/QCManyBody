@@ -21,9 +21,9 @@ except ImportError:
 
 from qcelemental.models import FailedOperation, Molecule, DriverEnum, ProtoModel, AtomicResult, AtomicInput
 import qcengine as qcng
-from .manybody_pydv1 import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
 from qcmanybody import ManyBodyCalculator
 from qcmanybody.utils import delabeler, provenance_stamp
+from qcmanybody.models import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
 
 
 class BaseComputerQCNG(ProtoModel):
@@ -430,7 +430,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                     raise RuntimeError(f"Don't know how to handle external charges in {specifications[chem]['program']}")
 
             _, real, bas = delabeler(label)
-            result = qcng.compute(inp, specifications[chem]["program"])
+            result = qcng.compute(inp, specifications[chem]["program"], task_config={"memory": 2})
 
             if not result.success:
                 print(result.error.error_message)
