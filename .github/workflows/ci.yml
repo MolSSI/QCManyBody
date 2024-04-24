@@ -58,7 +58,7 @@ jobs:
             - pytest-cov
             - codecov
             # Testing CMS
-            - psi4
+            - psi4=1.9.1
             #- nwchem  # lands on different he4 soln
             #- networkx
           EOF
