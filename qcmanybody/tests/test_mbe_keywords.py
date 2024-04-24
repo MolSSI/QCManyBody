@@ -272,7 +272,7 @@ def test_noncontiguous_fragments_evaded():
     neon_in_hcl = Molecule(symbols=["H", "Ne", "Cl"], geometry=[0, 0, 0, 2, 0, 0, 0, 2, 0], fragments=[[0, 2], [1]], validated=True)
 
     with pytest.raises(ValueError) as e:
-        ManyBodyCalculator(neon_in_hcl, ["cp"], {2: "mp2", 1: "mp2"}, False, False)
+        ManyBodyCalculator(neon_in_hcl, ["cp"], {2: "mp2", 1: "mp2"}, False, False, None)
 
     assert "QCManyBody: non-contiguous fragments could be implemented but aren't at present" in str(e.value)
 

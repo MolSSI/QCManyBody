@@ -212,10 +212,12 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     @classmethod
     # v2: def set_embedding_charges(cls, v: Any, info: FieldValidationInfo) -> Dict[int, List[float]]:
     def set_embedding_charges(cls, v, values): # -> Dict[int, List[float]]:
+        print(f"hit embedding_charges validator with {v}", end="")
         # v2: if len(v) != info.data["nfragments"]:
-        if len(v) != values["nfragments"]:
-            raise ValueError("embedding_charges dict should have entries for each 1-indexed fragment.")
+        if len(v) != len(values["molecule"].fragments):
+            raise ValueError(f"embedding_charges dict should have entries for each 1-indexed fragment ({len(values['molecule'].fragments)}).")
 
+        print(f" ... setting embedding_charges={v}")
         return v
 
     # v2: @field_validator("return_total_data")
@@ -397,6 +399,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             specifications[mtd] = {}
             specifications[mtd]["program"] = spec.pop("program")
             specifications[mtd]["specification"] = spec
+            specifications[mtd]["specification"]["driver"] = computer_model.driver  # overrides atomic driver with mb driver
             specifications[mtd]["specification"].pop("schema_name", None)
             specifications[mtd]["specification"].pop("protocols", None)
 
@@ -406,6 +409,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             comp_levels,
             computer_model.return_total_data,
             computer_model.supersystem_ie_only,
+            computer_model.embedding_charges,
         )
 
         if not build_tasks:
@@ -415,6 +419,15 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 
         for chem, label, imol in calculator_cls.iterate_molecules():
             inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
+
+            if imol.extras.get("embedding_charges"):  # or test on self.embedding_charges ?
+                if specifications[chem]["program"] == "psi4":
+                    charges = imol.extras["embedding_charges"]
+                    fkw = inp.keywords.get("function_kwargs", {})
+                    fkw.update({"external_potentials": charges})
+                    inp.keywords["function_kwargs"] = fkw
+                else:
+                    raise RuntimeError(f"Don't know how to handle external charges in {specifications[chem]['program']}")
 
             _, real, bas = delabeler(label)
             result = qcng.compute(inp, specifications[chem]["program"])

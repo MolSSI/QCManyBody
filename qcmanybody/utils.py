@@ -306,7 +306,10 @@ def print_nbody_energy(
                     info += f"""  {lbl:>11} {nb:3}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
             else:
                 if tot_e:
-                    info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                    if embedding:
+                        info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}        {"N/A":20}  {"N/A":14}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                    else:
+                        info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
                 else:
                     info += f"""  {lbl:>11} {nb:3}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
             previous_e = energy_body_dict[nb]
@@ -355,8 +358,6 @@ def collect_vars(
     nbody_range = list(body_dict)
     nbody_range.sort()
     res = {}
-    if embedding:
-        return res
 
     if tot_e:
         res[f"{bsse}-CORRECTED TOTAL {prop}"] = body_dict[max_nbody]
@@ -392,6 +393,9 @@ def collect_vars(
         if tot_e:
             for nb in nbody_range:
                 res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
+
+    if embedding:
+        res = {k: v for k, v in res.items() if "INTERACTION" not in k}
 
     return res
 

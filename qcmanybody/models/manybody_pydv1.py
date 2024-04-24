@@ -99,6 +99,8 @@ class ManyBodyKeywords(ProtoModel):
         {},
         description="Atom-centered point charges to be used on molecule fragments whose basis sets are not included in "
             "the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment.",
+            # TODO embedding charges should sum to fragment charge, right? enforce?
+            # TODO embedding charges irrelevant to CP (basis sets always present)?
         json_schema_extra={
             "shape": ["nfr", "<varies: nat in ifr>"],
         },

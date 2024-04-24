@@ -1,7 +1,7 @@
 import json
 import math
 import os
-from typing import Mapping, Union, Literal, Any, Iterable
+from typing import Mapping, Union, Literal, Any, Iterable, Optional
 
 import numpy
 import qcengine as qcng
@@ -168,10 +168,11 @@ def run_qcengine(
     specifications: Mapping[str, Mapping[str, Any]],
     bsse_type: Iterable[BsseEnum],
     return_total_data: bool,
-    supersystem_ie_only: bool
+    supersystem_ie_only: bool,
+    embedding_charges: Optional[Mapping[int, list]],
 ):
 
-    mc = ManyBodyCalculator(molecule, bsse_type, levels, return_total_data, supersystem_ie_only)
+    mc = ManyBodyCalculator(molecule, bsse_type, levels, return_total_data, supersystem_ie_only, embedding_charges)
 
     component_results = {}
 
