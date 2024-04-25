@@ -5,8 +5,19 @@ package-independent way.
 
 ## Installation
 
-Currently, the package is only available on [GitHub](https://github.com/MolSSI/QCManyBody). To install directly
-from GitHub, use the following command:
+QCManyBody is available from [PyPI](https://pypi.org/project/qcmanybody) and from
+[conda-forge](https://anaconda.org/conda-forge/qcmanybody).
+
+```bash
+# Installation from PyPI
+pip install qcmanybody
+
+# Installation from conda-forge
+conda install -c conda-forge qcmanybody
+```
+
+To install the latest development version directly from
+[GitHub](https://github.com/MolSSI/QCManyBody), you can use the following command:
 
 ```bash
 pip install git+https://github.com/MolSSI/QCManyBody.git
