@@ -5,8 +5,19 @@ package-independent way.
 
 ## Installation
 
-Currently, the package is only available on [GitHub](https://github.com/MolSSI/QCManyBody). To install directly
-from GitHub, use the following command:
+QCManyBody is available from [PyPI](https://pypi.org/project/qcmanybody) and from
+[conda-forge](https://anaconda.org/conda-forge/qcmanybody).
+
+```bash
+# Installation from PyPI
+pip install qcmanybody
+
+# Installation from conda-forge
+conda install -c conda-forge qcmanybody
+```
+
+To install the latest development version directly from
+[GitHub](https://github.com/MolSSI/QCManyBody), you can use the following command:
 
 ```bash
 pip install git+https://github.com/MolSSI/QCManyBody.git
@@ -19,13 +30,13 @@ provides complete information about the calculation, including the full specific
 manybody calculation. This is designed to work with [QCEngine](https://github.com/MolSSI/QCEngine) or other packages
 that implement the [QCSchema](https://github.com/MolSSI/QCSchema).
 
-For more information, see (High-level interface)(high-level-interface.md).
+For more information, see [High-level interface](high-level-interface.md).
 
 QCManyBody also has a core low-level interface that allows for more flexibility in how the calculations are run. This
 interface generally takes a molecule and an arbitrary definition of quantum chemistry specifications, and expects
 the user to run them themselves.
 
-For more information, see (Core interface)(core-interface.md).
+For more information, see [Core interface](core-interface.md).
 
 ## Table of Contents
 

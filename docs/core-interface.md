@@ -15,7 +15,9 @@ running the calculations.
 The core interface is accessed through the [`ManyBodyCalculator`][qcmanybody.manybody.ManyBodyCalculator]
 class.
 
-The first step is to create a molecule. This molecule is a QCElemental molecule object, and must contain fragments.
+The first step is to create a molecule. This molecule is a
+[QCElemental molecule object](https://molssi.github.io/QCElemental/model_molecule.html), and must contain fragments.
+(see also: [moleule input](keywords.md#molecule))
 
 ```python
 import qcmanybody as qcmb
@@ -42,10 +44,10 @@ mbc = qcmb.ManyBodyCalculator(
 
 The `levels` option is a dictionary that specifies the n-body level as a key, then an arbitrary
 string as the description of the calculation to be performed at the n-body level. This string is
-termed the 'model chemistry' is completely arbitrary; it only has meaning to the user, and the user is expected to map these strings
-to some meaningful definition of a calculation.
+termed the 'model chemistry' is completely arbitrary; it only has meaning to the user, and the user is expected to
+map these strings to some meaningful definition of a calculation.
 
-**Note**: The core interface is less flexible than the high-level interface when it comes to the `levels` option.
+**Note:** The core interface is less flexible than the high-level interface when it comes to the `levels` option.
     In the core interface, all levels must be accounted for (that is, keys must go from 1 to the maximum
     nbody you would like to calculate). All levels must be present even if the model chemistry
     is the same for all levels.
