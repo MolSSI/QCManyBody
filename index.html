@@ -621,8 +621,16 @@
 <p>QCManyBody is a python package for running quantum chemistry manybody expansions and interaction calculations in a
 package-independent way.</p>
 <h2 id="installation">Installation</h2>
-<p>Currently, the package is only available on <a href="https://github.com/MolSSI/QCManyBody">GitHub</a>. To install directly
-from GitHub, use the following command:</p>
+<p>QCManyBody is available from <a href="https://pypi.org/project/qcmanybody">PyPI</a> and from
+<a href="https://anaconda.org/conda-forge/qcmanybody">conda-forge</a>.</p>
+<pre><code class="language-bash"># Installation from PyPI
+pip install qcmanybody
+
+# Installation from conda-forge
+conda install -c conda-forge qcmanybody
+</code></pre>
+<p>To install the latest development version directly from
+<a href="https://github.com/MolSSI/QCManyBody">GitHub</a>, you can use the following command:</p>
 <pre><code class="language-bash">pip install git+https://github.com/MolSSI/QCManyBody.git
 </code></pre>
 <h2 id="package-overview">Package Overview</h2>
@@ -630,11 +638,11 @@ from GitHub, use the following command:</p>
 provides complete information about the calculation, including the full specification (method, basis set, etc.) of the
 manybody calculation. This is designed to work with <a href="https://github.com/MolSSI/QCEngine">QCEngine</a> or other packages
 that implement the <a href="https://github.com/MolSSI/QCSchema">QCSchema</a>.</p>
-<p>For more information, see (High-level interface)(high-level-interface.md).</p>
+<p>For more information, see <a href="high-level-interface/">High-level interface</a>.</p>
 <p>QCManyBody also has a core low-level interface that allows for more flexibility in how the calculations are run. This
 interface generally takes a molecule and an arbitrary definition of quantum chemistry specifications, and expects
 the user to run them themselves.</p>
-<p>For more information, see (Core interface)(core-interface.md).</p>
+<p>For more information, see <a href="core-interface/">Core interface</a>.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
 <li><a href="keywords/">Common Keywords and Options</a></li>
