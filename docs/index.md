@@ -19,13 +19,13 @@ provides complete information about the calculation, including the full specific
 manybody calculation. This is designed to work with [QCEngine](https://github.com/MolSSI/QCEngine) or other packages
 that implement the [QCSchema](https://github.com/MolSSI/QCSchema).
 
-For more information, see (High-level interface)(high-level-interface.md).
+For more information, see [High-level interface](high-level-interface.md).
 
 QCManyBody also has a core low-level interface that allows for more flexibility in how the calculations are run. This
 interface generally takes a molecule and an arbitrary definition of quantum chemistry specifications, and expects
 the user to run them themselves.
 
-For more information, see (Core interface)(core-interface.md).
+For more information, see [Core interface](core-interface.md).
 
 ## Table of Contents
 
