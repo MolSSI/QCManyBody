@@ -2,27 +2,29 @@
 <!-- ====  Inputs  ================================================================= -->
 
 ::: qcmanybody.models.BsseEnum
+    options:
+        show_root_heading: true
 
 
 ::: qcmanybody.models.ManyBodyKeywords
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_pydv1.ManyBodyKeywords
+$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyKeywords
 
 
-::: qcmanybody.models.manybody_pydv1.ManyBodySpecification
+::: qcmanybody.models.ManyBodySpecification
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_pydv1.ManyBodySpecification
+$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodySpecification
 
 
 ::: qcmanybody.models.ManyBodyInput
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_pydv1.ManyBodyInput
+$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyInput
 
 
 <!-- ====  Protocols  ============================================================== -->
@@ -31,15 +33,26 @@ $pydantic: qcmanybody.models.manybody_pydv1.ManyBodyInput
 ::: qcmanybody.models.manybody_pydv1.ManyBodyProtocolEnum
 
 
-::: qcmanybody.models.manybody_pydv1.ManyBodyProtocols
+::: qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_pydv1.ManyBodyProtocols
+$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols
 -->
 
 
 <!-- ====  Properties/Outputs  ===================================================== -->
+
+!!! note
+
+    The properties model is generated dynamically based on a constant
+    ``MAX_NBODY``. To not overload the docs table, this is set to 5, which
+    covers full calculations on tetramers. To use a larger
+    ``ManyBodyKeywords.max_nbody``, reset this value.
+
+        import qcmanybody as qcmb
+        qcmb.models.MAX_NBODY = 8
+
 
 ::: qcmanybody.models.ManyBodyResultProperties
     options:
@@ -89,8 +102,4 @@ SuccessfulResultBase
           - model_validate_json
           - copy
 -->
-
-::: qcmanybody.resize_gradient
-    options:
-        show_root_heading: true
 

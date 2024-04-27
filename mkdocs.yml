@@ -61,6 +61,9 @@ plugins:
 
 markdown_extensions:
   - mdantic_v1
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 
 nav:
   - Home: index.md
