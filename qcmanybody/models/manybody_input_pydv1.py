@@ -58,6 +58,34 @@ class SuccessfulResultBase(ResultBase):
     success: Literal[True] = Field(True, description="Always `True` for a successful result")
 
 
+# ====  Protocols  ==============================================================
+
+class ManyBodyProtocolEnum(str, Enum):
+    """
+    Which atomic evaluations to keep in a many body evaluation.
+    """
+
+    all = "all"
+    all_real = "all_real"
+    largest_body = "largest_body"
+    none = "none"
+
+
+class ManyBodyProtocols(ProtoModel):
+    """
+    Protocols regarding the manipulation of a ManyBody output data.
+    """
+
+    atomics: ManyBodyProtocolEnum = Field(
+        ManyBodyProtocolEnum.all,
+        description=str(ManyBodyProtocolEnum.__doc__),
+    )
+
+    # v2: model_config = ExtendedConfigDict(force_skip_defaults=True)
+    class Config:
+        force_skip_defaults = True
+
+
 # ====  Inputs  =================================================================
 
 class BsseEnum(str, Enum):
@@ -166,6 +194,7 @@ class ManyBodyKeywords(ProtoModel):
 
 
 class ManyBodySpecification(ProtoModel):
+    """Combining the what (ManyBodyKeywords) with the how (AtomicSpecification)."""
 
     schema_name: Literal["qcschema_manybodyspecification"] = "qcschema_manybodyspecification"
     #provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
@@ -194,6 +223,7 @@ class ManyBodySpecification(ProtoModel):
 
 
 class ManyBodyInput(ProtoModel):
+    """Combining the what and how (ManyBodySpecification) with the who (Molecule)."""
 
     schema_name: Literal["qcschema_manybodyinput"] = "qcschema_manybodyinput"
     #provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
@@ -206,31 +236,3 @@ class ManyBodyInput(ProtoModel):
         description="Target molecule for many-body expansion (MBE) or interaction energy (IE) analysis.",
     )
     #protocols
-
-
-# ====  Protocols  ==============================================================
-
-class ManyBodyProtocolEnum(str, Enum):
-    """
-    Which atomic evaluations to keep in a many body evaluation.
-    """
-
-    all = "all"
-    all_real = "all_real"
-    largest_body = "largest_body"
-    none = "none"
-
-
-class ManyBodyProtocols(ProtoModel):
-    """
-    Protocols regarding the manipulation of a ManyBody output data.
-    """
-
-    atomics: ManyBodyProtocolEnum = Field(
-        ManyBodyProtocolEnum.all,
-        description=str(ManyBodyProtocolEnum.__doc__),
-    )
-
-    # v2: model_config = ExtendedConfigDict(force_skip_defaults=True)
-    class Config:
-        force_skip_defaults = True
