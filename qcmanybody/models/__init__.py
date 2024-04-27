@@ -4,6 +4,7 @@ from .manybody_input_pydv1 import (
     FragBasIndex,
     ManyBodyInput,
     ManyBodyKeywords,
+    ManyBodySpecification,
 )
 from .manybody_output_pydv1 import (
     ManyBodyResult,

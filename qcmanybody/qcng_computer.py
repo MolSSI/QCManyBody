@@ -534,34 +534,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         pp.pprint(qcvars)
 
         for qcv, val in qcvars.items():
-            if isinstance(val, dict):
-                if qcv in [
-#            #"energies",  # retired
-#            #"ptype",     # retired
-#            "intermediates",
-#            "intermediates_energy",  #"intermediates2",
-#            "intermediates_gradient",  #"intermediates_ptype",
-#            "intermediates_hessian",  #"intermediates_ptype",
-#            "energy_body_dict",
-#            "gradient_body_dict",  # ptype_body_dict
-#            "hessian_body_dict",  # ptype_body_dict
-#            "nbody",
-#            "cp_energy_body_dict",
-#            "nocp_energy_body_dict",
-#            "vmfc_energy_body_dict",
-#            "cp_gradient_body_dict",
-#            "nocp_gradient_body_dict",
-#            "vmfc_gradient_body_dict",
-#            "cp_hessian_body_dict",
-#            "nocp_hessian_body_dict",
-#            "vmfc_hessian_body_dict",
-                ]:
-                    for qcv2, val2 in val.items():
-#                        try:
-                            qcvars[str(qcv2)] = val2
-#                        except ValidationError:
-#                            obj.set_variable(f"{self.driver.name} {qcv2}", val2)
-            else:
+            if not isinstance(val, dict):
                 qcvars[qcv] = val
 
         # v2: component_results = self.model_dump()['task_list']  # TODO when/where include the indiv outputs
@@ -591,23 +564,6 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 #        logger.debug('\nNBODY QCSchema:\n' + pp.pformat(nbody_model.model_dump()))
 
         return nbody_model
-
-
-
-
-
-def lab_delabeler(item: str, return_obj: bool = False) -> Union[Tuple[str, str, str], Tuple[int, Tuple[int], Tuple[int]]]:
-    """Transform labels like string "1_((2,), (1, 2))" into string tuple ("1", "2", "1, 2") or
-    object tuple (1, (2,), (1, 2)).
-
-    """
-    mc, _, fragbas = item.partition("_")
-    frag, bas = literal_eval(fragbas)
-
-    if return_obj:
-        return int(mc), frag, bas
-    else:
-        return mc, ", ".join(map(str, frag)), ", ".join(map(str, bas))
 
 
 qcvars_to_manybodyproperties = {}
