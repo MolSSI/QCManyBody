@@ -488,7 +488,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#qcmanybody.models.manybody_pydv1.ManyBodySpecification" class="md-nav__link">
+  <a href="#qcmanybody.models.ManyBodySpecification" class="md-nav__link">
     <span class="md-ellipsis">
       ManyBodySpecification
     </span>
@@ -518,15 +518,6 @@
   <a href="#qcmanybody.models.ManyBodyResult" class="md-nav__link">
     <span class="md-ellipsis">
       ManyBodyResult
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#qcmanybody.resize_gradient" class="md-nav__link">
-    <span class="md-ellipsis">
-      resize_gradient
     </span>
   </a>
   
@@ -623,7 +614,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#qcmanybody.models.manybody_pydv1.ManyBodySpecification" class="md-nav__link">
+  <a href="#qcmanybody.models.ManyBodySpecification" class="md-nav__link">
     <span class="md-ellipsis">
       ManyBodySpecification
     </span>
@@ -658,15 +649,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#qcmanybody.resize_gradient" class="md-nav__link">
-    <span class="md-ellipsis">
-      resize_gradient
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -695,7 +677,13 @@
 
 
 
-<a id="qcmanybody.models.BsseEnum"></a>
+<h2 id="qcmanybody.models.BsseEnum" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">qcmanybody.models.BsseEnum</span>
+
+
+</h2>
+
+
   <div class="doc doc-contents first">
           <p class="doc doc-class-bases">
             Bases: <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>, <code><a class="autorefs autorefs-external" title="enum.Enum" href="https://docs.python.org/3/library/enum.html#enum.Enum">Enum</a></code></p>
@@ -825,8 +813,8 @@
 
 
 
-<h2 id="qcmanybody.models.manybody_pydv1.ManyBodySpecification" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">qcmanybody.models.manybody_pydv1.ManyBodySpecification</span>
+<h2 id="qcmanybody.models.ManyBodySpecification" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">qcmanybody.models.ManyBodySpecification</span>
 
 
 </h2>
@@ -836,6 +824,8 @@
           <p class="doc doc-class-bases">
             Bases: <code><a class="autorefs autorefs-external" title="qcelemental.models.ProtoModel" href="https://molssi.github.io/QCElemental/api/qcelemental.models.ProtoModel.html#qcelemental.models.ProtoModel">ProtoModel</a></code></p>
 
+  
+      <p>Combining the what (ManyBodyKeywords) with the how (AtomicSpecification).</p>
 
 
   
@@ -878,7 +868,7 @@
 </tr>
 <tr>
 <td>keywords</td>
-<td><class 'qcmanybody.models.manybody_pydv1.ManyBodyKeywords'></td>
+<td><class 'qcmanybody.models.manybody_input_pydv1.ManyBodyKeywords'></td>
 <td>True</td>
 <td>The many-body-specific keywords for user control.</td>
 <td>None</td>
@@ -892,7 +882,7 @@
 </tr>
 <tr>
 <td>specification</td>
-<td><class 'qcmanybody.models.manybody_pydv1.AtomicSpecification'></td>
+<td><class 'qcmanybody.models.manybody_input_pydv1.AtomicSpecification'></td>
 <td>True</td>
 <td>??? TODO expand to cbs, fd</td>
 <td>None</td>
@@ -916,6 +906,8 @@
           <p class="doc doc-class-bases">
             Bases: <code><a class="autorefs autorefs-external" title="qcelemental.models.ProtoModel" href="https://molssi.github.io/QCElemental/api/qcelemental.models.ProtoModel.html#qcelemental.models.ProtoModel">ProtoModel</a></code></p>
 
+  
+      <p>Combining the what and how (ManyBodySpecification) with the who (Molecule).</p>
 
 
   
@@ -958,7 +950,7 @@
 </tr>
 <tr>
 <td>specification</td>
-<td><class 'qcmanybody.models.manybody_pydv1.ManyBodySpecification'></td>
+<td><class 'qcmanybody.models.manybody_input_pydv1.ManyBodySpecification'></td>
 <td>True</td>
 <td>???</td>
 <td>None</td>
@@ -978,7 +970,7 @@
 ::: qcmanybody.models.manybody_pydv1.ManyBodyProtocolEnum
 
 
-::: qcmanybody.models.manybody_pydv1.ManyBodyProtocols
+::: qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols
     options:
         show_root_heading: true
 
@@ -993,6 +985,16 @@
 
 <!-- ====  Properties/Outputs  ===================================================== -->
 
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The properties model is generated dynamically based on a constant
+<code>MAX_NBODY</code>. To not overload the docs table, this is set to 5, which
+covers full calculations on tetramers. To use a larger
+<code>ManyBodyKeywords.max_nbody</code>, reset this value.</p>
+<pre><code>import qcmanybody as qcmb
+qcmb.models.MAX_NBODY = 8
+</code></pre>
+</div>
 
 
 <div class="doc doc-object doc-attribute">
@@ -1008,7 +1010,7 @@
   </span>
 
 </h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">ManyBodyResultProperties</span> <span class="o">=</span> <span class="n"><span title="qcmanybody.models.manybody_pydv1.ProtoModelSkipDefaults">ProtoModelSkipDefaults</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">ManyBodyResultProperties</span> <span class="o">=</span> <span class="n"><span title="qcmanybody.models.manybody_output_pydv1.ProtoModelSkipDefaults">ProtoModelSkipDefaults</span></span>
 </code></pre></div>
 
   <div class="doc doc-contents first">
@@ -1918,7 +1920,7 @@
 
   <div class="doc doc-contents first">
           <p class="doc doc-class-bases">
-            Bases: <code><span title="qcmanybody.models.manybody_pydv1.SuccessfulResultBase">SuccessfulResultBase</span></code></p>
+            Bases: <code><span title="qcmanybody.models.manybody_input_pydv1.SuccessfulResultBase">SuccessfulResultBase</span></code></p>
 
 
 
@@ -1955,7 +1957,7 @@
 <tbody>
 <tr>
 <td>input_data</td>
-<td><class 'qcmanybody.models.manybody_pydv1.ManyBodyInput'></td>
+<td><class 'qcmanybody.models.manybody_input_pydv1.ManyBodyInput'></td>
 <td>True</td>
 <td></td>
 <td>None</td>
@@ -2073,244 +2075,6 @@ SuccessfulResultBase
           - model_validate_json
           - copy
 -->
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h2 id="qcmanybody.resize_gradient" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">qcmanybody.resize_gradient</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">resize_gradient</span><span class="p">(</span><span class="n">grad</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span> <span class="n">bas</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">fragment_size_dict</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">],</span> <span class="n">fragment_slice_dict</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#slice">slice</a></span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span>
-</code></pre></div>
-
-  <div class="doc doc-contents first">
-  
-      <p>Pads or extracts a gradient array between subsystem and full supersystem sizes.</p>
-
-
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>grad</code></td>
-          <td>
-                <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Gradient matrix of natural size for <em>bas</em>, (3 * <nat in bas>, 3).
-If <code>reverse=True</code>, gradient matrix of supersystem size, (3 * <nat of all fragments>, 3).</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>bas</code></td>
-          <td>
-                <code><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, ...]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>1-indexed fragments active in <em>grad</em>.
-If <code>reverse=True</code>, 1-indexed fragments to be extracted from <em>grad</em>.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>fragment_size_dict</code></td>
-          <td>
-                <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Dictionary containing the number of atoms of each 1-indexed fragment.
-For He--HOOH--Me cluster, <code>{1: 1, 2: 4, 3: 5}</code>.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>fragment_slice_dict</code></td>
-          <td>
-                <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#slice">slice</a>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.
-For He--HOOH--Me cluster, <code>{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}</code>.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>reverse</code></td>
-          <td>
-                <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>If True, contract <em>grad</em> from supersystem size and shape that which is natural for <em>bas</em>.</p>
-            </div>
-          </td>
-          <td>
-                <code>False</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code>    Gradient array padded with zeros to supersystem size, (3 * &lt;nat of supersystem&gt;, 3).</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>If reverse=True, gradient array extracted to natural size, (3 * <nat in bas>, 3).</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resize_gradient</span><span class="p">(</span>
-    <span class="n">grad</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> 
-    <span class="n">fragment_size_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> 
-    <span class="n">fragment_slice_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">slice</span><span class="p">],</span> 
-    <span class="o">*</span><span class="p">,</span> 
-    <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pads or extracts a gradient array between subsystem and full supersystem sizes.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    grad</span>
-<span class="sd">        Gradient matrix of natural size for *bas*, (3 * &lt;nat in bas&gt;, 3).</span>
-<span class="sd">        If `reverse=True`, gradient matrix of supersystem size, (3 * &lt;nat of all fragments&gt;, 3).</span>
-<span class="sd">    bas</span>
-<span class="sd">        1-indexed fragments active in *grad*.</span>
-<span class="sd">        If `reverse=True`, 1-indexed fragments to be extracted from *grad*.</span>
-<span class="sd">    fragment_size_dict</span>
-<span class="sd">        Dictionary containing the number of atoms of each 1-indexed fragment.</span>
-<span class="sd">        For He--HOOH--Me cluster, `{1: 1, 2: 4, 3: 5}`.</span>
-<span class="sd">    fragment_slice_dict</span>
-<span class="sd">        Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.</span>
-<span class="sd">        For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.</span>
-<span class="sd">    reverse</span>
-<span class="sd">        If True, contract *grad* from supersystem size and shape that which is natural for *bas*.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        Gradient array padded with zeros to supersystem size, (3 * &lt;nat of supersystem&gt;, 3).</span>
-<span class="sd">        If reverse=True, gradient array extracted to natural size, (3 * &lt;nat in bas&gt;, 3).</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
-        <span class="n">nat</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span> <span class="k">for</span> <span class="n">ifr</span> <span class="ow">in</span> <span class="n">bas</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">nat</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fragment_size_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nat</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-
-    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">ifr</span> <span class="ow">in</span> <span class="n">bas</span><span class="p">:</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
-            <span class="n">ret</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="n">fragment_slice_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ret</span><span class="p">[</span><span class="n">fragment_slice_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]]</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
-        <span class="n">start</span> <span class="o">+=</span> <span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">ret</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
 
 
 
