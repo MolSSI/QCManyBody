@@ -819,7 +819,7 @@ def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, cal
     mbe_model = ManyBodyInput(**mbe_data_multilevel_631g)
 
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
-    ret = ManyBodyComputerQCNG.from_qcschema_ben(mbe_model)
+    ret = ManyBodyComputerQCNG.from_manybodyinput(mbe_model)
     print(f"MMMMMMM {request.node.name}")
     pprint.pprint(ret.dict(), width=200)
 

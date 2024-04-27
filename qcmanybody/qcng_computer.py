@@ -11,7 +11,7 @@ nppp10 = partial(np.array_str, max_line_width=120, precision=10, suppress_small=
 
 from ast import literal_eval
 # v2: from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Tuple, Union, Literal, Optional
-from typing import Any, Dict, List, Mapping, Tuple, Union, Literal, Optional
+from typing import Any, Dict, List, Mapping, Tuple, Union, Literal, Optional, TYPE_CHECKING
 
 # v2: from pydantic import ConfigDict, field_validator, FieldValidationInfo, computed_field, BaseModel, Field
 try:
@@ -24,6 +24,9 @@ import qcengine as qcng
 from qcmanybody import ManyBodyCalculator
 from qcmanybody.utils import delabeler, provenance_stamp
 from qcmanybody.models import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
+
+if TYPE_CHECKING:
+    import qcportal
 
 
 class BaseComputerQCNG(ProtoModel):
