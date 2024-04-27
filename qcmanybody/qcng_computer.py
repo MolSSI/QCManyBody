@@ -11,7 +11,7 @@ nppp10 = partial(np.array_str, max_line_width=120, precision=10, suppress_small=
 
 from ast import literal_eval
 # v2: from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Tuple, Union, Literal, Optional
-from typing import Any, Dict, List, Mapping, Tuple, Union, Literal, Optional
+from typing import Any, Dict, List, Mapping, Tuple, Union, Literal, Optional, TYPE_CHECKING
 
 # v2: from pydantic import ConfigDict, field_validator, FieldValidationInfo, computed_field, BaseModel, Field
 try:
@@ -21,9 +21,12 @@ except ImportError:
 
 from qcelemental.models import FailedOperation, Molecule, DriverEnum, ProtoModel, AtomicResult, AtomicInput
 import qcengine as qcng
-from .manybody_pydv1 import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
 from qcmanybody import ManyBodyCalculator
 from qcmanybody.utils import delabeler, provenance_stamp
+from qcmanybody.models import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
+
+if TYPE_CHECKING:
+    import qcportal
 
 
 class BaseComputerQCNG(ProtoModel):
@@ -259,16 +262,6 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             # rearrange bodies in order with supersystem last lest body count fail in organization loop below
             v = dict(sorted(v.items(), key=lambda item: 1000 if item[0] == "supersystem" else item[0]))
 
-            # rm 1 for cp-only
-            # We define cp as being a correction to only interaction energies
-            # If only doing cp, we need to ignore any user-specified 1st (monomer) level
-            #if 'cp' in kwargs.get("bsse_type", None) and 'nocp' not in kwargs.get("bsse_type", None):
-            #    if 1 in levels.keys():
-            #        removed_level = levels.pop(1)
-            #        logger.info("NOTE: User specified exclusively 'cp' correction, but provided level 1 details")
-            #        logger.info(f"NOTE: Removing level {removed_level}")
-            #        logger.info("NOTE: For total energies, add 'nocp' to bsse_list")
-
         print(f" ... setting levels={v}")
         return v
 
@@ -371,7 +364,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         return sio
 
     @classmethod
-    def from_qcschema_ben(cls, input_model: ManyBodyInput, build_tasks: bool = True):
+    def from_manybodyinput(cls, input_model: ManyBodyInput, build_tasks: bool = True):
 
         computer_model = cls(
             molecule=input_model.molecule,
@@ -413,7 +406,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         )
 
         if not build_tasks:
-            return calculator_cls
+            return computer_model, calculator_cls
 
         component_results = {}
 
@@ -459,142 +452,6 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 
         return computer_model.get_results(external_results=analyze_back)
 
-    @classmethod
-    def from_qcschema(cls, input_model: ManyBodyInput, build_tasks: bool = False):
-
-        computer_model = cls(
-            molecule=input_model.molecule,
-            driver=input_model.specification.driver,
-            # v2: **input_model.specification.keywords.model_dump(exclude_unset=True),
-            **input_model.specification.keywords.dict(exclude_unset=True),
-            input_data=input_model,  # storage, to reconstitute ManyBodyResult
-        )
-
-        print("\n<<<  (Z) QCEngine harness ManyBodyComputerQCNG.from_qcschema  >>>")
-        # v2: pprint.pprint(computer_model.model_dump(), width=200)
-        pprint.pprint(computer_model.dict(), width=200)
-
-        if build_tasks:
-            # Note: self.input_data or input input_model.
-            #   Also, we've always tried to keep build_tasks separate (see psi4.driver.task_planner).
-            #   Clearly one _can_ init from ManyBodyInput -- make this sep fn?
-
-            for mc_level_idx, mtd in enumerate(computer_model.levels.values()):
-                atspec = computer_model.input_data.specification.specification[mtd]
-
-                computer_model.build_tasks(
-                    AtomicComputerQCNG,
-                    mc_level_idx=mc_level_idx,
-                    program=atspec.program,
-                    driver=atspec.driver,  # use manybodyspecification.driver instead?
-                    method=atspec.model.method,
-                    basis=atspec.model.basis,
-                    keywords=atspec.keywords,
-                    #protocols=atspec.protocols,
-                    #**kwargs,
-                )
-
-        return computer_model
-
-    def build_tasks(
-        self,
-        mb_computer: AtomicComputerQCNG, #MBETaskComputers,
-        mc_level_idx: int,
-        **kwargs: Dict[str, Any],
-    ) -> int:
-        """Adds to the task_list as many new unique tasks as necessary to treat a single model chemistry level at one
-        or several n-body levels. New tasks are of type *mb_computer* with model chemistry level specified in *kwargs*
-        and n-body levels accessed through *mc_level_idx*.
-
-        Parameters
-        ----------
-#        mb_computer
-#            Class of task computers to instantiate and add to self.task_list. Usually :class:`~psi4.driver.AtomicComputer` but may be other when wrappers are layered.
-#        mc_level_idx
-#            Position in field self.nbodies_per_mc_level used to obtain ``nbodies``, the list of n-body
-#            levels (e.g., `[1]` or `[1, 2]` or `["supersystem"]`) to which the modelchem specified in **kwargs** applies.
-#            That is, `nbodies = self.nbodies_per_mc_level[mc_level_idx]`.
-#            Note the natural 1-indexing of ``nbodies`` _contents_, so `[1]` covers one-body contributions.
-#            The corresponding user label is the 1-indexed counterpart, `mc_level_lbl = mc_level_idx + 1`
-#            Formerly nlevel as in `nbody = self.nbody_list[nbody_level=nlevel]`.
-#        kwargs
-#            Other arguments for initializing **mb_computer**. In particular, specifies model chemistry.
-
-        Returns
-        -------
-        count : int
-            Number of new tasks planned by this call.
-            Formerly, didn't include supersystem in count.
-
-        """
-# qcng:        from psi4.driver.driver_nbody import build_nbody_compute_list
-
-        # TODO method not coming from levels right
-
-        # Get the n-body orders for this level. e.g., [1] or [2, 3] or ["supersystem"]
-        nbodies = self.nbodies_per_mc_level[mc_level_idx]
-
-#        info = "\n" + p4util.banner(f" ManyBody Setup: N-Body Levels {nbodies}", strNotOutfile=True) + "\n"
-#        core.print_out(info)
-#        logger.info(info)
-
-#        for kwg in ['dft_functional']:
-#            if kwg in kwargs:
-#                kwargs['keywords']['function_kwargs'][kwg] = kwargs.pop(kwg)
-
-        count = 0
-        template = copy.deepcopy(kwargs)
-
-        # Get compute list
-        if nbodies == ["supersystem"]:
-            # Add supersystem computation if requested -- always nocp
-            data = template
-            data["molecule"] = self.molecule
-            key = f"supersystem_{self.nfragments}"
-            self.task_list[key] = mb_computer(**data)
-            count += 1
-
-            compute_dict = build_nbody_compute_list(
-                ["nocp"], list(range(1, self.max_nbody + 1)),
-                self.nfragments, self.return_total_data, self.supersystem_ie_only)
-        else:
-            compute_dict = build_nbody_compute_list(
-                self.bsse_type, nbodies,
-                self.nfragments, self.return_total_data, self.supersystem_ie_only)
-
-        def lab_labeler(item) -> str:
-            # note 0-index to 1-index shift for label
-            return f"{mc_level_idx + 1}_{item}"
-
-        print("HHHH", compute_dict)
-        # Add current compute list to the master task list
-        # * `pair` looks like `((1,), (1, 3))` where first is real (not ghost) fragment indices
-        #    and second is basis set fragment indices, all 1-indexed
-        for nb in compute_dict["all"]:
-            for pair in compute_dict["all"][nb]:
-                lbl = lab_labeler(pair)
-                if lbl in self.task_list:
-                    continue
-
-                data = template
-                ghost = list(set(pair[1]) - set(pair[0]))
-                # while psi4.core.Molecule.extract_subsets takes 1-indexed, qcel.models.Molecule.get_fragment takes 0-indexed.
-                real0 = [(idx - 1) for idx in list(pair[0])]
-                ghost0 = [(idx - 1) for idx in ghost]
-                data["molecule"] = self.molecule.get_fragment(real=real0, ghost=ghost0, group_fragments=False)  # orient?
-#                if self.embedding_charges:
-#                    embedding_frags = list(set(range(1, self.nfragments + 1)) - set(pair[1]))
-#                    charges = []
-#                    for frag in embedding_frags:
-#                        positions = self.molecule.extract_subsets(frag).geometry().np.tolist()
-#                        charges.extend([[chg, i] for i, chg in zip(positions, self.embedding_charges[frag])])
-#                    data['keywords']['function_kwargs'].update({'external_potentials': charges})
-
-                self.task_list[lbl] = mb_computer(**data)
-                count += 1
-
-        return count
-
     def plan(self):
         # uncalled function
         return [t.plan() for t in self.task_list.values()]
@@ -612,153 +469,15 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         for t in self.task_list.values():
             t.compute(client=client)
 
-    def prepare_results(
-        self,
-        results: Optional[Dict[str, "MBETaskComputers"]] = None,
-        client: Optional["qcportal.FractalClient"] = None,
-    ) -> Dict[str, Any]:
-        """Process the results from all n-body component molecular systems and model chemistry levels into final quantities.
+    def get_results(self, external_results: Dict, client: Optional["qcportal.FractalClient"] = None) -> ManyBodyResult:
+        """Return results as ManyBody-flavored QCSchema."""
 
-        NOTE: client removed (compared to psi4.driver.ManyBodyComputer) (multilevel call, too)
-
-#        Parameters
-#        ----------
-#        results
-#            A set of tasks to process instead of self.task_list. Used in multilevel processing to pass a subset of
-#            self.task_list filtered to only one modelchem level.
-#        client
-#            QCFractal client if using QCArchive for distributed compute.
-#
-#        Returns
-#        -------
-#        nbody_results
-#            When the ManyBodyComputer specifies a single model chemistry level (see self.nbodies_per_mc_level), the
-#            return is a dictionary, nbody_results, described in the table below. Many of the items are actually filled
-#            by successive calls to assemble_nbody_components(). When multiple model chemistry levels are specified, this
-#            function diverts its return to driver_nbody_multilevel.prepare_results() wherein each mc level calls this
-#            function again and collects separate nbody_results dictionaries and processes them into a final return that
-#            is a small subset of the table below.
-#
-#
-#                                       ptype_size = (1,)/(nat, 3)/(3 * nat, 3 * nat)
-#                                        e/g/h := energy or gradient or Hessian
-#                                        rtd := return_total_data
-#
-        """
-# qcng:        from psi4.driver.driver_nbody import assemble_nbody_components
-# qcng:        from psi4.driver.driver_nbody_multilevel import prepare_results as multilevel_prepare_results
-
-        if results is None:
-            print(f"RESULTS setting empty")
-            results = {}
-
-#        # formerly nlevels
-        mc_level_labels = {i.split("_")[0] for i in self.task_list}
-        print("RESULTS", mc_level_labels, len(results), results.keys())
-        if len(mc_level_labels) > 1 and not results:  # seeming fix to recursion
-#        if len(self.nbodies_per_mc_level) > 1 and not results:  # max recursion
-            print(f"RESULTS calling MLVL")
-            return multilevel_prepare_results(self, client=client)
-
-        results_list = {k: v.get_results(client=client) for k, v in (results.items() or self.task_list.items())}
-
-#        pp.pprint(results_list["1_((1, 2), (1, 2))"].model_dump())
-        #if "1_((1, 2, 3, 4), (1, 2, 3, 4))" in results_list:
-        #    pp.pprint(results_list["1_((1, 2, 3, 4), (1, 2, 3, 4))"].model_dump())
-        if "1_((3,), (3,))" in results_list:
-            # v2: pp.pprint(results_list["1_((3,), (3,))"].model_dump())
-            pp.pprint(results_list["1_((3,), (3,))"].dict())
-        trove = {  # AtomicResult.properties return None if missing
-            "energy": {k: v.properties.return_energy for k, v in results_list.items()},
-            "gradient": {k: v.properties.return_gradient for k, v in results_list.items()},
-            "hessian": {k: v.properties.return_hessian for k, v in results_list.items()},
-        }
-
-#        # TODO: make assemble_nbody_components and driver_nbody_multilevel.prepare_results into class functions.
-#        #   note that the former uses metadata as read-only (except for one solveable case) while the latter overwrites self (!).
-        metadata = {
-            "quiet": False, #self.quiet,
-            "nbodies_per_mc_level": self.nbodies_per_mc_level,
-            "bsse_type": self.bsse_type,
-            "nfragments": self.nfragments,
-            "return_total_data": self.return_total_data,
-            "supersystem_ie_only": self.supersystem_ie_only,
-            "molecule": self.molecule,
-            "embedding_charges": bool(self.embedding_charges),
-            "max_nbody": self.max_nbody,
-        }
-        if self.driver.name == "energy":
-            nbody_results = assemble_nbody_components("energy", trove["energy"], metadata.copy())
-
-        elif self.driver.name == "gradient":
-            nbody_results = assemble_nbody_components("energy", trove["energy"], metadata.copy())
-            nbody_results.update(assemble_nbody_components("gradient", trove["gradient"], metadata.copy()))
-
-        elif self.driver.name == "hessian":
-            nbody_results = assemble_nbody_components("energy", trove["energy"], metadata.copy())
-            nbody_results.update(assemble_nbody_components("gradient", trove["gradient"], metadata.copy()))
-            nbody_results.update(assemble_nbody_components("hessian", trove["hessian"], metadata.copy()))
-
-        # save some mc_(frag, bas) component results
-        # * formerly, intermediates_energy was intermediates2
-        # * formerly, intermediates_gradient was intermediates_ptype
-        # * formerly, intermediates_hessian was intermediates_ptype
-
-        nbody_results["intermediates"] = {}
-        for idx, task in results_list.items():
-            mc, frag, bas = lab_delabeler(idx)
-            nbody_results["intermediates"][f"N-BODY ({frag})@({bas}) TOTAL ENERGY"] = task.properties.return_energy
-
-        nbody_results["intermediates_energy"] = trove["energy"]
-
-        if not all(x is None for x in trove["gradient"].values()):
-            nbody_results["intermediates_gradient"] = trove["gradient"]
-
-        if not all(x is None for x in trove["hessian"].values()):
-            nbody_results["intermediates_hessian"] = trove["hessian"]
-
-#        debug = False
-#        if debug:
-#            for k, v in nbody_results.items():
-#                if isinstance(v, np.ndarray):
-#                    print(f"CLS-prepared results >>> {k} {v.size}")
-#                elif isinstance(v, dict):
-#                    print(f"CLS-prepared results >>> {k} {len(v)}")
-#                    for k2, v2 in v.items():
-#                        if isinstance(v2, np.ndarray):
-#                            print(f"CLS-prepared results      >>> {k2} {v2.size}")
-#                        else:
-#                            print(f"CLS-prepared results      >>> {k2} {v2}")
-#                else:
-#                    print(f"CLS-prepared results >>> {k} {v}")
-
-        return nbody_results
-
-
-    def get_results(self, client: Optional["qcportal.FractalClient"] = None, external_results: Optional[Dict] = None) -> ManyBodyResult:
-        """Return results as ManyBody-flavored QCSchema.
-
-        NOTE: client removed (compared to psi4.driver.ManyBodyComputer)
-        """
-# qcng:        from psi4.driver.p4util import banner
-
-# qcng:        info = "\n" + banner(f" ManyBody Results ", strNotOutfile=True) + "\n"
-        #logger.info(info)
-
-        if external_results is None:
-            results = self.prepare_results(client=client)
-            ret_energy = results.pop("ret_energy")
-            ret_ptype = results.pop("ret_ptype")
-            ret_gradient = results.pop("ret_gradient", None)
-            nbody_number = len(self.task_list)
-        else:
-            ret_energy = external_results.pop("ret_energy")
-            ret_ptype = ret_energy if self.driver == "energy" else external_results.pop(f"ret_{self.driver.name}")
-            ret_gradient = external_results.pop("ret_gradient", None)
-            nbody_number = external_results.pop("nbody_number")
-            component_properties = external_results.pop("component_properties")
-            stdout = external_results.pop("stdout")
-
+        ret_energy = external_results.pop("ret_energy")
+        ret_ptype = ret_energy if self.driver == "energy" else external_results.pop(f"ret_{self.driver.name}")
+        ret_gradient = external_results.pop("ret_gradient", None)
+        nbody_number = external_results.pop("nbody_number")
+        component_properties = external_results.pop("component_properties")
+        stdout = external_results.pop("stdout")
 
         # load QCVariables
         qcvars = {
@@ -775,14 +494,10 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             "return_energy": ret_energy,
         }
 
-        if external_results is None:
-            for k, val in results.items():
-                qcvars[k] = val
-        else:
-            for k, val in external_results.items():
-                if k == "results":
-                    k = "nbody"
-                qcvars[k] = val
+        for k, val in external_results.items():
+            if k == "results":
+                k = "nbody"
+            qcvars[k] = val
 
         qcvars['CURRENT ENERGY'] = ret_energy
         if self.driver == 'gradient':

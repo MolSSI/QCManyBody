@@ -7,8 +7,8 @@ import numpy as np
 from qcelemental.models import Molecule
 from qcelemental.testing import compare_values
 
-from qcmanybody.models.manybody_pydv1 import ManyBodyKeywords, ManyBodyInput
-from qcmanybody.models.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
+from qcmanybody.models import ManyBodyKeywords, ManyBodyInput
+from qcmanybody.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
 
 from .addons import uusing
 
@@ -258,7 +258,7 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
     mbe_model = ManyBodyInput(**mbe_data_grad_dtz)
 
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
-    ret = ManyBodyComputerQCNG.from_qcschema_ben(mbe_model)
+    ret = ManyBodyComputerQCNG.from_manybodyinput(mbe_model)
     print(f"MMMMMMM {request.node.name}")
     pprint.pprint(ret.dict(), width=200)
 
