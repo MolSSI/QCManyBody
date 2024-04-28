@@ -27,7 +27,7 @@ jobs:
           - label: Py-max
             python-version: "3.12"
             runs-on: ubuntu-latest
-            pytest: "-k 'not (he4 and (3b or 4b))'"
+            pytest: "-k 'not (he4 and (3b or 4b) and not sio)'"
 
     name: "🐍 ${{ matrix.cfg.python-version }} • ${{ matrix.cfg.label }} • ${{ matrix.cfg.runs-on }}"
     runs-on: ${{ matrix.cfg.runs-on }}
