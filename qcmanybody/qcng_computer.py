@@ -47,7 +47,8 @@ class BaseComputerQCNG(ProtoModel):
     # v2: )
     class Config:
         extra = "allow"
-        frozen = False
+        # v2: frozen = False
+        allow_mutation = True
 
 
 class AtomicComputerQCNG(BaseComputerQCNG):
@@ -155,8 +156,10 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     )
     embedding_charges: Dict[int, List[float]] = Field(
         {},
-        description="Atom-centered point charges to be used on molecule fragments whose basis sets are not included in "
-            "the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment.",
+        description="Atom-centered point charges to be used to speed up nbody-level convergence. Charges are placed on "
+        "molecule fragments whose basis sets are not included in the computation. (An implication is that charges aren't "
+        "invoked for bsse_type=cp.) Keys: 1-based index of fragment. Values: list of atom charges for that fragment.",
+        # TODO: enforce point charge sum == fragment_charges val
         json_schema_extra={
             "shape": ["nfr", "<varies: nat in ifr>"],
         },
@@ -190,7 +193,10 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         description=ManyBodyKeywords.__fields__["supersystem_ie_only"].field_info.description,
     )
     task_list: Dict[str, Any] = {}  #MBETaskComputers] = {}
-    #qcmb_calculator: Optional[Any] = None
+    qcmb_calculator: Optional[Any] = Field(
+        None,
+        description="Low-level interface",
+    )
 
     # TODO @computed_field(description="Number of distinct fragments comprising full molecular supersystem.")
     @property
@@ -216,9 +222,10 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     # v2: def set_embedding_charges(cls, v: Any, info: FieldValidationInfo) -> Dict[int, List[float]]:
     def set_embedding_charges(cls, v, values): # -> Dict[int, List[float]]:
         print(f"hit embedding_charges validator with {v}", end="")
+        nfr = len(values["molecule"].fragments)
         # v2: if len(v) != info.data["nfragments"]:
-        if len(v) != len(values["molecule"].fragments):
-            raise ValueError(f"embedding_charges dict should have entries for each 1-indexed fragment ({len(values['molecule'].fragments)}).")
+        if len(v) != nfr:
+            raise ValueError(f"embedding_charges dict should have entries for each 1-indexed fragment ({nfr})")
 
         print(f" ... setting embedding_charges={v}")
         return v
@@ -396,7 +403,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             specifications[mtd]["specification"].pop("schema_name", None)
             specifications[mtd]["specification"].pop("protocols", None)
 
-        calculator_cls = ManyBodyCalculator(
+        computer_model.qcmb_calculator = ManyBodyCalculator(
             computer_model.molecule,
             computer_model.bsse_type,
             comp_levels,
@@ -406,11 +413,11 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         )
 
         if not build_tasks:
-            return computer_model, calculator_cls
+            return computer_model
 
         component_results = {}
 
-        for chem, label, imol in calculator_cls.iterate_molecules():
+        for chem, label, imol in computer_model.qcmb_calculator.iterate_molecules():
             inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
 
             if imol.extras.get("embedding_charges"):  # or test on self.embedding_charges ?
@@ -445,7 +452,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         pprint.pprint(component_results, width=200)
 
         print("start to analyze")
-        analyze_back = calculator_cls.analyze(component_results)
+        analyze_back = computer_model.qcmb_calculator.analyze(component_results)
         analyze_back["nbody_number"] = len(component_results)
         print("\n<<<  (ZZ 3) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben analyze_back  >>>")
         pprint.pprint(analyze_back, width=200)
@@ -461,11 +468,6 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 
         NOTE: client logic removed (compared to psi4.driver.ManyBodyComputer)
         """
-# qcng:        from psi4.driver.p4util import banner
-
-# qcng:        info = "\n" + banner(f" ManyBody Computations ", strNotOutfile=True) + "\n"
-        #logger.info(info)
-
         for t in self.task_list.values():
             t.compute(client=client)
 
