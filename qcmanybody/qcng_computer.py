@@ -419,7 +419,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 
         for chem, label, imol in computer_model.qcmb_calculator.iterate_molecules():
             inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
-            # faster for p4 inp = AtomicInput(molecule=imol, **specifications[chem]["specification"], extras={"psiapi": True})
+            # inp = AtomicInput(molecule=imol, **specifications[chem]["specification"], extras={"psiapi": True})  # faster for p4
 
             if imol.extras.get("embedding_charges"):  # or test on self.embedding_charges ?
                 if specifications[chem]["program"] == "psi4":

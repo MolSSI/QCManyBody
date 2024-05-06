@@ -234,7 +234,7 @@ class ManyBodyInput(ProtoModel):
         ...,
         description="Target molecule for many-body expansion (MBE) or interaction energy (IE) analysis.",
     )
-    #extras: Dict[str, Any] = Field(
-    #    {},
-    #    description="Additional information to bundle with the computation. Use for schema development and scratch space.",
-    #)
+    extras: Dict[str, Any] = Field(
+        {},
+        description="Additional information to bundle with the computation. Use for schema development and scratch space.",
+    )
