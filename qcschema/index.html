@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.18">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.21">
     
     
       
@@ -775,7 +775,7 @@
 <td>typing.List[float]</td>
 <td>False</td>
 <td>Atom-centered point charges to be used on molecule fragments whose basis sets are not included in the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment.</td>
-<td>{}</td>
+<td>None</td>
 </tr>
 <tr>
 <td>return_total_data</td>
@@ -874,6 +874,13 @@
 <td>None</td>
 </tr>
 <tr>
+<td>protocols</td>
+<td><class 'qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols'></td>
+<td>False</td>
+<td>Protocols regarding the manipulation of a ManyBody output data.</td>
+<td>ManyBodyProtocols(component_results=<ComponentResultsProtocolEnum.none: 'none'>)</td>
+</tr>
+<tr>
 <td>driver</td>
 <td><enum 'DriverEnum'></td>
 <td>True</td>
@@ -962,6 +969,13 @@
 <td>Target molecule for many-body expansion (MBE) or interaction energy (IE) analysis.</td>
 <td>None</td>
 </tr>
+<tr>
+<td>extras</td>
+<td>typing.Any</td>
+<td>False</td>
+<td>Additional information to bundle with the computation. Use for schema development and scratch space.</td>
+<td>{}</td>
+</tr>
 </tbody>
 </table>
 <!-- ====  Protocols  ============================================================== -->
@@ -977,9 +991,9 @@
 
 **ManyBodyProtocols**
 
-| key     | type                          | required   | description                                                 | default                  |
-|---------|-------------------------------|------------|-------------------------------------------------------------|--------------------------|
-| atomics | <enum 'ManyBodyProtocolEnum'> | False      | Which atomic evaluations to keep in a many body evaluation. | ManyBodyProtocolEnum.all |
+| key               | type                                  | required   | description                                                                       | default                           |
+|-------------------|---------------------------------------|------------|-----------------------------------------------------------------------------------|-----------------------------------|
+| component_results | <enum 'ComponentResultsProtocolEnum'> | False      | Which component results to preserve in a many body result; usually AtomicResults. | ComponentResultsProtocolEnum.none |
 
 -->
 
@@ -2033,6 +2047,13 @@ qcmb.models.MAX_NBODY = 8
 <td>None</td>
 </tr>
 <tr>
+<td>component_results</td>
+<td><class 'qcelemental.models.results.AtomicResult'></td>
+<td>False</td>
+<td>Detailed results</td>
+<td>{}</td>
+</tr>
+<tr>
 <td>return_result</td>
 <td>typing.Union[float, qcelemental.models.types.Array, typing.Dict[str, typing.Any]]</td>
 <td>True</td>
@@ -2128,7 +2149,7 @@ SuccessfulResultBase
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.3220b9d7.min.js"></script>
+      <script src="../assets/javascripts/bundle.a7c05c9e.min.js"></script>
       
     
   </body>
