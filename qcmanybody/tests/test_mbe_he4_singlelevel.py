@@ -621,8 +621,8 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     #   addressing 4-body formulas
     # e, wfn = energy('MP2/aug-cc-pVDZ', molecule=he_tetramer, ...)
 
-    atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": basis}, program=program, driver="energy", keywords=keywords)
-    mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
+    atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": basis}, program=program, driver="energy", keywords=keywords, protocols={"stdout": False})
+    mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy", "protocols": {"component_results": "all"}}, molecule=he_tetramer)
 
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
     ret = ManyBodyComputerQCNG.from_manybodyinput(mbe_model)
@@ -669,6 +669,10 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
 
     assert ret.properties.calcinfo_nmbe == ref_nmbe, f"[i] {ret.properties.calcinfo_nmbe=} != {ref_nmbe}"
+    assert len(ret.component_results) == ref_nmbe, f"[k] {len(ret.component_results)=} != {ref_nmbe}; mbe protocol did not take"
+    if ref_nmbe > 0:
+        an_atres = next(iter(ret.component_results.values()))
+        assert an_atres.stdout is None, f"[l] atomic protocol did not take"
 
     if outstrs and progln != "psi4_df":
         for stdoutkey in outstrs:

@@ -9,7 +9,7 @@ except ImportError:
     from pydantic import create_model, Field, validator
 
 from qcelemental.models.types import Array
-from qcelemental.models.results import AtomicResultProperties #, AtomicResultProtocols
+from qcelemental.models.results import AtomicResult, AtomicResultProperties
 from qcelemental.models import ProtoModel, Provenance
 
 from .manybody_input_pydv1 import ManyBodyInput, SuccessfulResultBase
@@ -320,6 +320,7 @@ class ManyBodyResult(SuccessfulResultBase):
         description="The key results for each subsystem species computed. Keys contain modelchem, real and ghost information (e.g., `'[\"(auto)\", [2], [1, 2, 3]]'`). Values are total e/g/H/property results. Array values, if present, are sized and shaped for the full supersystem.",
 
     )
+    component_results: Dict[str, AtomicResult] = Field({}, description="Detailed results")
     return_result: Union[float, Array[float], Dict[str, Any]] = Field(
         ...,
         description="The primary return specified by the :attr:`~qcelemental.models.AtomicInput.driver` field. Scalar if energy; array if gradient or hessian; dictionary with property keys if properties.",
@@ -330,3 +331,13 @@ class ManyBodyResult(SuccessfulResultBase):
     )
     stderr: Optional[str] = Field(None, description="The standard error of the program execution.")
     success: Literal[True] = Field(True, description="Always `True` for a successful result")
+
+    @validator("component_results")
+    def _component_results(cls, value, values):
+        crp = values["input_data"].specification.protocols.component_results
+        if crp == "all":
+            return value
+        elif crp == "none":
+            return {}
+        else:
+            raise ValueError(f"Protocol `component_resutls:{crp}` is not understood")

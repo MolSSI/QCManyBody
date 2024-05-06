@@ -154,8 +154,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             "through finite difference energies or MBE energy through composite method), this field refers to the "
             "*target* derivative, not any *means* specification.",
     )
-    embedding_charges: Dict[int, List[float]] = Field(
-        {},
+    embedding_charges: Optional[Dict[int, List[float]]] = Field(
+        None,
         description="Atom-centered point charges to be used to speed up nbody-level convergence. Charges are placed on "
         "molecule fragments whose basis sets are not included in the computation. (An implication is that charges aren't "
         "invoked for bsse_type=cp.) Keys: 1-based index of fragment. Values: list of atom charges for that fragment.",
@@ -224,7 +224,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         print(f"hit embedding_charges validator with {v}", end="")
         nfr = len(values["molecule"].fragments)
         # v2: if len(v) != info.data["nfragments"]:
-        if len(v) != nfr:
+        if v and len(v) != nfr:
             raise ValueError(f"embedding_charges dict should have entries for each 1-indexed fragment ({nfr})")
 
         print(f" ... setting embedding_charges={v}")
@@ -401,7 +401,6 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             specifications[mtd]["specification"] = spec
             specifications[mtd]["specification"]["driver"] = computer_model.driver  # overrides atomic driver with mb driver
             specifications[mtd]["specification"].pop("schema_name", None)
-            specifications[mtd]["specification"].pop("protocols", None)
 
         computer_model.qcmb_calculator = ManyBodyCalculator(
             computer_model.molecule,
@@ -415,10 +414,12 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         if not build_tasks:
             return computer_model
 
+        component_properties = {}
         component_results = {}
 
         for chem, label, imol in computer_model.qcmb_calculator.iterate_molecules():
             inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
+            # inp = AtomicInput(molecule=imol, **specifications[chem]["specification"], extras={"psiapi": True})  # faster for p4
 
             if imol.extras.get("embedding_charges"):  # or test on self.embedding_charges ?
                 if specifications[chem]["program"] == "psi4":
@@ -431,6 +432,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 
             _, real, bas = delabeler(label)
             result = qcng.compute(inp, specifications[chem]["program"])
+            component_results[label] = result
 
             if not result.success:
                 print(result.error.error_message)
@@ -439,25 +441,25 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             # pull out stuff
             props = {"energy", "gradient", "hessian"}
 
-            component_results[label] = {}
+            component_properties[label] = {}
 
             for p in props:
                 if hasattr(result.properties, f"return_{p}"):
                     v = getattr(result.properties, f"return_{p}")
                     # print(f"  {label} {p}: {v}")
                     if v is not None:
-                        component_results[label][p] = v
+                        component_properties[label][p] = v
 
-        print("\n<<<  (ZZ 2) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben component_results  >>>")
-        pprint.pprint(component_results, width=200)
+        print("\n<<<  (ZZ 2) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben component_properties  >>>")
+        pprint.pprint(component_properties, width=200)
 
         print("start to analyze")
-        analyze_back = computer_model.qcmb_calculator.analyze(component_results)
-        analyze_back["nbody_number"] = len(component_results)
+        analyze_back = computer_model.qcmb_calculator.analyze(component_properties)
+        analyze_back["nbody_number"] = len(component_properties)
         print("\n<<<  (ZZ 3) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben analyze_back  >>>")
         pprint.pprint(analyze_back, width=200)
 
-        return computer_model.get_results(external_results=analyze_back)
+        return computer_model.get_results(external_results=analyze_back, component_results=component_results)
 
     def plan(self):
         # uncalled function
@@ -471,7 +473,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         for t in self.task_list.values():
             t.compute(client=client)
 
-    def get_results(self, external_results: Dict, client: Optional["qcportal.FractalClient"] = None) -> ManyBodyResult:
+    def get_results(self, external_results: Dict, component_results: Dict, client: Optional["qcportal.FractalClient"] = None) -> ManyBodyResult:
         """Return results as ManyBody-flavored QCSchema."""
 
         ret_energy = external_results.pop("ret_energy")
@@ -540,7 +542,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                 qcvars[qcv] = val
 
         # v2: component_results = self.model_dump()['task_list']  # TODO when/where include the indiv outputs
-        component_results = self.dict()['task_list']  # TODO when/where include the indiv outputs
+        #?component_results = self.dict()['task_list']  # TODO when/where include the indiv outputs
 #        for k, val in component_results.items():
 #            val['molecule'] = val['molecule'].to_schema(dtype=2)
 
@@ -554,6 +556,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                 # v2: 'properties': {**atprop.model_dump(), **properties},
                 'properties': {**atprop.dict(), **properties},
                 'component_properties': component_properties,
+                "component_results": component_results,
                 'provenance': provenance_stamp(__name__),
                 'extras': {
                     'qcvars': qcvars,

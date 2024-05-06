@@ -60,14 +60,11 @@ class SuccessfulResultBase(ResultBase):
 
 # ====  Protocols  ==============================================================
 
-class ManyBodyProtocolEnum(str, Enum):
-    """
-    Which atomic evaluations to keep in a many body evaluation.
-    """
+class ComponentResultsProtocolEnum(str, Enum):
+    r"""Which component results to preserve in a many body result; usually AtomicResults."""
 
     all = "all"
-    all_real = "all_real"
-    largest_body = "largest_body"
+    # max_nbody = "max_nbody"
     none = "none"
 
 
@@ -76,9 +73,9 @@ class ManyBodyProtocols(ProtoModel):
     Protocols regarding the manipulation of a ManyBody output data.
     """
 
-    atomics: ManyBodyProtocolEnum = Field(
-        ManyBodyProtocolEnum.all,
-        description=str(ManyBodyProtocolEnum.__doc__),
+    component_results: ComponentResultsProtocolEnum = Field(
+        ComponentResultsProtocolEnum.none,
+        description=str(ComponentResultsProtocolEnum.__doc__)
     )
 
     # v2: model_config = ExtendedConfigDict(force_skip_defaults=True)
@@ -95,6 +92,7 @@ class BsseEnum(str, Enum):
     cp = "cp"      # Boys-Bernardi counterpoise correction; site-site functional counterpoise (SSFC)
     vmfc = "vmfc"  # Valiron-Mayer function counterpoise
     ssfc = "cp"
+    mbe = "nocp"
 
     def formal(self):
         return {
@@ -123,8 +121,8 @@ class ManyBodyKeywords(ProtoModel):
         description="Requested BSSE treatments. First in list determines which interaction or total "
             "energy/gradient/Hessian returned.",
     )
-    embedding_charges: Dict[int, List[float]] = Field(
-        {},
+    embedding_charges: Optional[Dict[int, List[float]]] = Field(
+        None,
         description="Atom-centered point charges to be used on molecule fragments whose basis sets are not included in "
             "the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment.",
             # TODO embedding charges should sum to fragment charge, right? enforce?
@@ -200,6 +198,7 @@ class ManyBodySpecification(ProtoModel):
     #provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
     keywords: ManyBodyKeywords = Field(..., description=ManyBodyKeywords.__doc__)
     #program: str = Field(..., description="The program for which the Specification is intended.")
+    protocols: ManyBodyProtocols = Field(ManyBodyProtocols(), description=str(ManyBodyProtocols.__doc__))
     driver: DriverEnum = Field(
         ...,
         description="The computation driver; i.e., energy, gradient, hessian.",
@@ -235,4 +234,7 @@ class ManyBodyInput(ProtoModel):
         ...,
         description="Target molecule for many-body expansion (MBE) or interaction energy (IE) analysis.",
     )
-    #protocols
+    extras: Dict[str, Any] = Field(
+        {},
+        description="Additional information to bundle with the computation. Use for schema development and scratch space.",
+    )
