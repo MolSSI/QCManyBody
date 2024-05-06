@@ -214,6 +214,8 @@ def test_mbe_level_fails(mbe_data, kws, errmsg):
     pytest.param({"bsse_type": ["ssFC", "nocp"]}, [BsseEnum.cp, BsseEnum.nocp]),
     pytest.param({"bsse_type": ["ssfc", "cp"]}, [BsseEnum.cp]),
     pytest.param({"bsse_type": ["ssfc", "vmfc", "nocp", "cp"]}, [BsseEnum.cp, BsseEnum.vmfc, BsseEnum.nocp]),
+    pytest.param({"bsse_type": "mbE"}, [BsseEnum.nocp]),
+    pytest.param({"bsse_type": ["ssfc", "cp"]}, [BsseEnum.cp]),
     pytest.param({"bsse_type": "mycp"}, "error"),
     pytest.param({"bsse_type": ["CP", "mycp"]}, "error"),
 ])
