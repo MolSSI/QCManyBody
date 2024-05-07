@@ -33,6 +33,10 @@ class AtomicSpecification(ProtoModel):
         AtomicResultProtocols(),
         description=AtomicResultProtocols.__doc__,
     )
+    extras: Dict[str, Any] = Field(
+        {},
+        description="Additional information to bundle with the computation. Use for schema development and scratch space.",
+    )
 
 
 class ResultBase(ProtoModel):
