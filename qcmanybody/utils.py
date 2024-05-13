@@ -317,7 +317,7 @@ def print_nbody_energy(
             info += f"""  {lbl:>11} {nb:3}        {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}\n"""
 
     info += "\n"
-    print(info)
+    # print(info)
     return info
 
 

@@ -1,7 +1,7 @@
 QCManyBody
 ==========
 
-<p align="center">
+<p align="left">
     <picture>
     <img alt="QCManyBody Logo" src="https://github.com/MolSSI/QCManyBody/blob/main/docs/logo.png" height="150px">
     </picture>

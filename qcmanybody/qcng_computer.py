@@ -292,10 +292,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         # * below, process values of `levels`, which are modelchem strings, into kwargs specs
         nbodies_per_mc_level = []
         prev_body = 0
-        print("\nAAA", self.levels)
         for nb in self.levels:
             nbodies = []
-            print("BBB bfore", nb, nbodies, prev_body)
             if nb == "supersystem":
                 nbodies.append(nb)
             elif nb != (prev_body + 1):
@@ -303,7 +301,6 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                     nbodies.append(m)
             else:
                 nbodies.append(nb)
-            print("BBB after", nb, nbodies)
             nbodies_per_mc_level.append(nbodies)
             prev_body = nb  # formerly buggy `+= 1`
 
@@ -382,10 +379,10 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         )
         nb_per_mc = computer_model.nbodies_per_mc_level
 
-        print("\n<<<  (ZZ 1) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben  >>>")
+        # print("\n<<<  (ZZ 1) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben  >>>")
         # v2: pprint.pprint(computer_model.model_dump(), width=200)
-        pprint.pprint(computer_model.dict(), width=200)
-        print(f"nbodies_per_mc_level={nb_per_mc}")
+        # pprint.pprint(computer_model.dict(), width=200)
+        # print(f"nbodies_per_mc_level={nb_per_mc}")
 
         comp_levels = {}
         for mc_level_idx, mtd in enumerate(computer_model.levels.values()):
@@ -450,14 +447,13 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
                     if v is not None:
                         component_properties[label][p] = v
 
-        print("\n<<<  (ZZ 2) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben component_properties  >>>")
-        pprint.pprint(component_properties, width=200)
+        # print("\n<<<  (ZZ 2) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben component_properties  >>>")
+        # pprint.pprint(component_properties, width=200)
 
-        print("start to analyze")
         analyze_back = computer_model.qcmb_calculator.analyze(component_properties)
         analyze_back["nbody_number"] = len(component_properties)
-        print("\n<<<  (ZZ 3) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben analyze_back  >>>")
-        pprint.pprint(analyze_back, width=200)
+        # print("\n<<<  (ZZ 3) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben analyze_back  >>>")
+        # pprint.pprint(analyze_back, width=200)
 
         return computer_model.get_results(external_results=analyze_back, component_results=component_results)
 
@@ -515,9 +511,9 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 
 #        build_out(qcvars)
         atprop = build_manybodyproperties(qcvars["nbody"])
-        print("ATPROP")
+        # print("ATPROP")
         # v2: pp.pprint(atprop.model_dump())
-        pp.pprint(atprop.dict())
+        # pp.pprint(atprop.dict())
 
 #        output_data = {
 #            "schema_version": 1,
@@ -534,8 +530,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 #
 #        # TODO all besides nbody may be better candidates for extras than qcvars. energy/gradient/hessian_body_dict in particular are too simple for qcvars (e.g., "2")
 
-        print("QCVARS PRESCREEN")
-        pp.pprint(qcvars)
+        # print("QCVARS PRESCREEN")
+        # pp.pprint(qcvars)
 
         for qcv, val in qcvars.items():
             if not isinstance(val, dict):
@@ -546,8 +542,8 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
 #        for k, val in component_results.items():
 #            val['molecule'] = val['molecule'].to_schema(dtype=2)
 
-        print("QCVARS")
-        pp.pprint(qcvars)
+        # print("QCVARS")
+        # pp.pprint(qcvars)
 
         nbody_model = ManyBodyResult(
             **{
