@@ -502,6 +502,57 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v020-2024-05-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.2.0 / 2024-05-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.2.0 / 2024-05-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      New Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Misc.
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v010-2024-04-24" class="md-nav__link">
     <span class="md-ellipsis">
       v0.1.0 / 2024-04-24
@@ -512,7 +563,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
+  <a href="#new-features_1" class="md-nav__link">
     <span class="md-ellipsis">
       New Features
     </span>
@@ -545,33 +596,56 @@
 
 <h1 id="changelog">Changelog</h1>
 <!--
-vX.Y.0 / 2024-MM-DD (Unreleased)
---------------------
+## vX.Y.0 / 2024-MM-DD (Unreleased)
 
-Breaking Changes
-++++++++++++++++
+#### Breaking Changes
 
-New Features
-++++++++++++
+#### New Features
 
-Enhancements
-++++++++++++
+#### Enhancements
 
-Bug Fixes
-+++++++++
+#### Bug Fixes
 
-Misc.
-+++++
+#### Misc.
 
-MUST (Unmerged)
-+++++++++++++++
+#### MUST (Unmerged)
 
-WIP (Unmerged)
-++++++++++++++
+#### WIP (Unmerged)
 -->
 
-<h3 id="v010-2024-04-24">v0.1.0 / 2024-04-24</h3>
-<h5 id="new-features">New Features</h5>
+<h2 id="v020-2024-05-13">v0.2.0 / 2024-05-13</h2>
+<h4 id="new-features">New Features</h4>
+<ul>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/25">#25</a> Schema -- added a new field <code>ManyBodyResults.component_results</code>
+  to store subsystem <code>AtomicResult</code>s (or other Result if layered computation). By default this is not stored, but it can
+  be with <code>ManyBodyInput.protocols.component_results = "all"</code>. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/25">#25</a> Schema -- added <code>GeneralizedOptimizationInput</code> and
+  <code>GeneralizedOptimizationResult</code> models as temporary extensions of <code>OptimizationInput/Result</code> when the optimizer can
+  run <code>ManyBodyInput</code>s through QCEngine, not just <code>AtomicInput</code>s. Needs special QCElemental, QCEngine, and OptKing to
+  work for now. @loriab</li>
+</ul>
+<h4 id="enhancements">Enhancements</h4>
+<ul>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/22">#22</a> Intf -- move high-level interface to main directory and remove
+  unused functions. Most common route into interface is now: <code>qcmb.ManyBodyComputerQCNG.from_manybodyinput</code>. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/25">#25</a> Schema -- <code>AtomicSpecification.protocols</code> set in
+  <code>ManyBodySpecification.specification</code> will now be observed. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/26">#26</a> Schema -- add <code>AtomicSpecification.extras</code>. @loriab</li>
+</ul>
+<h4 id="bug-fixes">Bug Fixes</h4>
+<ul>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/25">#25</a> Schema -- <code>ManyBodyKeywords.embedding_charges</code> now default to None
+  rather than empty dict. @loriab</li>
+</ul>
+<h4 id="misc">Misc.</h4>
+<ul>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/21">#21</a> Docs -- installation and molecule. @bennybp</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/24">#24</a> Intf -- release "frozen" pydantic on high-level
+  ManyBodyComputerQCNG, so core-interface ManyBodyCalculator can live on the class. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/26">#26</a> Cleanup -- remove most debug printing. @loriab</li>
+</ul>
+<h2 id="v010-2024-04-24">v0.1.0 / 2024-04-24</h2>
+<h4 id="new-features_1">New Features</h4>
 <ul>
 <li>Runs CP, NoCP, VMFC energies, gradients, and Hessians. @bennybp @loriab</li>
 </ul>
