@@ -171,14 +171,14 @@ class ManyBodyKeywords(ProtoModel):
         # definitive description
         description="Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) "
             "analysis, thereby omitting intermediate-body calculations. When False (default), compute each n-body level "
-            "in the MBE up through ``max_nbody``. When True (only allowed for ``max_nbody = nfragments``), only compute "
+            "in the MBE up through ``max_nbody``. When True (only allowed for ``max_nbody = nfragments``\), only compute "
             "enough for the overall interaction/total energy: max_nbody-body and 1-body. When True, properties "
-            "``INTERACTION {driver} THROUGH {max_nbody}-BODY`` will always be available; ``TOTAL {driver} THROUGH "
-            "{max_nbody}-BODY`` will be available depending on ``return_total_data``; and ``{max_nbody}-BODY "
-            "CONTRIBUTION TO {driver}`` won't be available (except for dimers). This keyword produces no savings for a "
-            "two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body "
-            "subsystems can be skipped with ``supersystem_ie_only=True`` Do not use with ``vmfc`` in ``bsse_type``"
-            "as it cannot produce savings."
+            "``INTERACTION {driver} THROUGH {max_nbody}-BODY`` will always be available; "
+            "``TOTAL {driver} THROUGH {max_nbody}-BODY`` will be available depending on ``return_total_data``\; and "
+            "``{max_nbody}-BODY CONTRIBUTION TO {driver}`` won't be available (except for dimers). This keyword produces "
+            "no savings for a two-fragment molecule. But for the interaction energy of a three-fragment molecule, for "
+            "example, 2-body subsystems can be skipped with ``supersystem_ie_only=True``. Do not use with ``vmfc`` in "
+            "``bsse_type`` as it cannot produce savings.",
     )
 
     # v2: @field_validator("bsse_type", mode="before")
