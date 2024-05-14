@@ -10,9 +10,8 @@ from qcelemental.models import Molecule
 from qcelemental.testing import compare_values, compare_recursive
 
 from qcmanybody.models import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
-from qcmanybody.qcng_computer import ManyBodyComputerQCNG, qcvars_to_manybodyproperties
+from qcmanybody.computer import ManyBodyComputer, qcvars_to_manybodyproperties
 
-import qcengine as qcng
 from .addons import using
 from .test_mbe_he4_singlelevel import sumdict as sumdict_single
 
@@ -726,7 +725,7 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcin
     mbe_model = ManyBodyInput(**mbe_data_multilevel_631g)
 
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
-    ret = ManyBodyComputerQCNG.from_manybodyinput(mbe_model)
+    ret = ManyBodyComputer.from_manybodyinput(mbe_model)
     print(f"MMMMMMM {request.node.name}")
     pprint.pprint(ret.dict(), width=200)
 
@@ -819,7 +818,7 @@ def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, cal
     mbe_model = ManyBodyInput(**mbe_data_multilevel_631g)
 
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
-    ret = ManyBodyComputerQCNG.from_manybodyinput(mbe_model)
+    ret = ManyBodyComputer.from_manybodyinput(mbe_model)
     print(f"MMMMMMM {request.node.name}")
     pprint.pprint(ret.dict(), width=200)
 
@@ -896,7 +895,7 @@ def test_count_he4_multi(mbe_keywords, ref_count, he_tetramer, request):
     atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": "mybas"}, program="myqc", driver="energy")
     mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
 
-    ret = ManyBodyComputerQCNG.from_manybodyinput(mbe_model, build_tasks=False)
+    ret = ManyBodyComputer.from_manybodyinput(mbe_model, build_tasks=False)
     ret = ret.qcmb_calculator
 
     text, dcount = ret.format_calc_plan()

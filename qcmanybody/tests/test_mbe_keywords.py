@@ -12,10 +12,8 @@ import qcelemental
 from qcelemental.models import DriverEnum, Molecule
 from qcmanybody.models import BsseEnum, ManyBodyInput
 
-import qcengine as qcng
-
-# qcng: from qcengine.procedures.manybody import ManyBodyComputerQCNG
-from qcmanybody.qcng_computer import ManyBodyComputerQCNG
+# qcng: from qcengine.procedures.manybody import ManyBodyComputer
+from qcmanybody.computer import ManyBodyComputer
 from qcmanybody import ManyBodyCalculator
 
 
@@ -103,7 +101,7 @@ def test_mbe_rtd(mbe_data, driver, kws, ans):
     mbe_data["specification"]["keywords"] = kws
 
     input_model = ManyBodyInput(**mbe_data)
-    comp_model = ManyBodyComputerQCNG.from_manybodyinput(input_model, build_tasks=False)
+    comp_model = ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
     assert comp_model.driver == driver
     assert comp_model.return_total_data == ans
@@ -150,7 +148,7 @@ def test_mbe_level_bodies(mbe_data, kws, ans):
     mbe_data["specification"]["keywords"] = kws
 
     input_model = ManyBodyInput(**mbe_data)
-    comp_model = ManyBodyComputerQCNG.from_manybodyinput(input_model, build_tasks=False)
+    comp_model = ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
     assert comp_model.nfragments == 3
     assert comp_model.max_nbody == ans[0]
@@ -178,7 +176,7 @@ def test_mbe_level_5mer(mbe_data, kws, ans):
     mbe_data["specification"]["keywords"] = kws
 
     input_model = ManyBodyInput(**mbe_data)
-    comp_model = ManyBodyComputerQCNG.from_manybodyinput(input_model, build_tasks=False)
+    comp_model = ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
     assert comp_model.nfragments == 5
     assert comp_model.max_nbody == ans[0]
@@ -200,7 +198,7 @@ def test_mbe_level_fails(mbe_data, kws, errmsg):
     # v2: with pytest.raises(Exception):
     with pytest.raises(ValidationError) as e:
         input_model = ManyBodyInput(**mbe_data)
-        ManyBodyComputerQCNG.from_manybodyinput(input_model, build_tasks=False)
+        ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
     assert errmsg in str(e.value), e.value
 
@@ -230,7 +228,7 @@ def test_mbe_bsse_type(mbe_data, kws, ans):
         return
 
     input_model = ManyBodyInput(**mbe_data)
-    comp_model = ManyBodyComputerQCNG.from_manybodyinput(input_model, build_tasks=False)
+    comp_model = ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
     assert comp_model.bsse_type == ans, f"{comp_model=} != {ans}"
 
@@ -252,13 +250,13 @@ def test_mbe_sie(mbe_data, kws, ans):
     if isinstance(ans, str):
         input_model = ManyBodyInput(**mbe_data)
         with pytest.raises(ValidationError) as e:
-            ManyBodyComputerQCNG.from_manybodyinput(input_model, build_tasks=False)
+            ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
         assert ans in str(e.value)
         return
 
     input_model = ManyBodyInput(**mbe_data)
-    comp_model = ManyBodyComputerQCNG.from_manybodyinput(input_model, build_tasks=False)
+    comp_model = ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
     assert comp_model.supersystem_ie_only == ans
 
