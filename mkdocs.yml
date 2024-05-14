@@ -36,6 +36,7 @@ plugins:
 - search
 - mkdocstrings:
     default_handler: python
+    enable_inventory: true
     handlers:
       python:
         paths: [.]
@@ -50,6 +51,7 @@ plugins:
           merge_init_into_class: true
           show_signature_annotations: true
           signature_crossrefs: true
+          show_source: true
         import:
           - https://docs.python.org/3/objects.inv
           - https://numpy.org/doc/stable/objects.inv
