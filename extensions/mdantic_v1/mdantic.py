@@ -6,7 +6,10 @@ from collections import namedtuple
 from typing import List, Dict, Optional
 
 import tabulate
-from pydantic.v1 import BaseModel
+try:
+    from pydantic.v1 import BaseModel
+except ModuleNotFoundError:
+    from pydantic import BaseModel
 from markdown import Markdown
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
