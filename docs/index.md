@@ -45,3 +45,14 @@ For more information, see [Core interface](core-interface.md).
 3. [Core Interface](core-interface.md)
 4. [Results](results.md)
 5. [How-To Guides](how-to-guides.md)
+
+<!--
+
+PYTHONPATH=docs/extensions:. mkdocs serve
+
+python -m sphinx.ext.intersphinx 'https://molssi.github.io/QCManyBody/objects.inv'
+python -m sphinx.ext.intersphinx 'http://127.0.0.1:8000/QCManyBody/objects.inv'
+
+mkdocs build
+
+-->

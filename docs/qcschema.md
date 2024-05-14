@@ -4,6 +4,7 @@
 ::: qcmanybody.models.BsseEnum
     options:
         show_root_heading: true
+        show_source: true
 
 
 ::: qcmanybody.models.ManyBodyKeywords
