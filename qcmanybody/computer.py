@@ -51,7 +51,7 @@ class BaseComputerQCNG(ProtoModel):
         allow_mutation = True
 
 
-class AtomicComputerQCNG(BaseComputerQCNG):
+class AtomicComputer(BaseComputerQCNG):
     """Computer for analytic single-geometry computations."""
 
     molecule: Molecule = Field(..., description="The molecule to use in the computation.")
@@ -130,7 +130,7 @@ class AtomicComputerQCNG(BaseComputerQCNG):
             return self.result
 
 
-class ManyBodyComputerQCNG(BaseComputerQCNG):
+class ManyBodyComputer(BaseComputerQCNG):
 
     input_data: ManyBodyInput = Field(
         ...,
@@ -221,13 +221,13 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     @classmethod
     # v2: def set_embedding_charges(cls, v: Any, info: FieldValidationInfo) -> Dict[int, List[float]]:
     def set_embedding_charges(cls, v, values): # -> Dict[int, List[float]]:
-        print(f"hit embedding_charges validator with {v}", end="")
+        # print(f"hit embedding_charges validator with {v}", end="")
         nfr = len(values["molecule"].fragments)
         # v2: if len(v) != info.data["nfragments"]:
         if v and len(v) != nfr:
             raise ValueError(f"embedding_charges dict should have entries for each 1-indexed fragment ({nfr})")
 
-        print(f" ... setting embedding_charges={v}")
+        # print(f" ... setting embedding_charges={v}")
         return v
 
     # v2: @field_validator("return_total_data")
@@ -235,7 +235,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     @classmethod
     # v2: def set_return_total_data(cls, v: Optional[bool], info: FieldValidationInfo) -> bool:
     def set_return_total_data(cls, v: Optional[bool], values) -> bool:
-        print(f"hit return_total_data validator with {v}", end="")
+        # print(f"hit return_total_data validator with {v}", end="")
         if v is not None:
             rtd = v
         # v2: elif info.data["driver"] in ["gradient", "hessian"]:
@@ -248,7 +248,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         if values.get("embedding_charges", False) and rtd is False:
             raise ValueError("Cannot return interaction data when using embedding scheme.")
 
-        print(f" ... setting rtd={rtd}")
+        # print(f" ... setting rtd={rtd}")
         return rtd
 
     # v2: @field_validator("levels")
@@ -256,7 +256,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     @classmethod
     # v2: def set_levels(cls, v: Any, info: FieldValidationInfo) -> Dict[Union[int, Literal["supersystem"]], str]:
     def set_levels(cls, v: Any, values) -> Dict[Union[int, Literal["supersystem"]], str]:
-        print(f"hit levels validator with {v}", end="")
+        # print(f"hit levels validator with {v}", end="")
 
         if v is None:
             pass
@@ -269,7 +269,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             # rearrange bodies in order with supersystem last lest body count fail in organization loop below
             v = dict(sorted(v.items(), key=lambda item: 1000 if item[0] == "supersystem" else item[0]))
 
-        print(f" ... setting levels={v}")
+        # print(f" ... setting levels={v}")
         return v
 
     # TODO @computed_field(
@@ -285,7 +285,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         #},
     @property
     def nbodies_per_mc_level(self) -> List[List[Union[int, Literal["supersystem"]]]]:
-        print(f"hit nbodies_per_mc_level", end="")
+        # print(f"hit nbodies_per_mc_level", end="")
 
         # Organize nbody calculations into modelchem levels
         # * expand keys of `levels` into full lists of nbodies covered. save to plan, resetting max_nbody accordingly
@@ -304,7 +304,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             nbodies_per_mc_level.append(nbodies)
             prev_body = nb  # formerly buggy `+= 1`
 
-        print(f" ... setting nbodies_per_mc_level={nbodies_per_mc_level}")
+        # print(f" ... setting nbodies_per_mc_level={nbodies_per_mc_level}")
         return nbodies_per_mc_level
 
     # v2: @field_validator("max_nbody")
@@ -312,12 +312,12 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     @classmethod
     # v2: def set_max_nbody(cls, v: Any, info: FieldValidationInfo) -> int:
     def set_max_nbody(cls, v: Any, values) -> int:
-        print(f"hit max_nbody validator with {v}", end="")
+        # print(f"hit max_nbody validator with {v}", end="")
         # v2: levels_max_nbody = max(nb for nb in info.data["levels"] if nb != "supersystem")
         # v2: nfr = len(info.data["molecule"].fragments)
         levels_max_nbody = max(nb for nb in values["levels"] if nb != "supersystem")
         nfr = len(values["molecule"].fragments)
-        print(f" {levels_max_nbody=} {nfr=}", end="")
+        # print(f" {levels_max_nbody=} {nfr=}", end="")
 
         #ALT if v == -1:
         if v is None:
@@ -333,7 +333,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             pass
             # TODO once was           return min(v, nfragments)
 
-        print(f" ... setting max_nbody={v}")
+        # print(f" ... setting max_nbody={v}")
         return v
 
 #       levels          max_nbody           F-levels        F-max_nbody     result
@@ -350,7 +350,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
     @classmethod
     # v2: def set_supersystem_ie_only(cls, v: Optional[bool], info: FieldValidationInfo) -> bool:
     def set_supersystem_ie_only(cls, v: Optional[bool], values) -> bool:
-        print(f"hit supersystem_ie_only validator with {v}", end="")
+        # print(f"hit supersystem_ie_only validator with {v}", end="")
         sio = v
         # v2: _nfr = len(info.data["molecule"].fragments)
         _nfr = len(values["molecule"].fragments)
@@ -364,7 +364,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
         if (sio is True) and ("vmfc" in values["bsse_type"]):
             raise ValueError(f"Cannot skip intermediate n-body jobs when VMFC in bsse_type={values['bsse_type']}. Use CP instead.")
 
-        print(f" ... setting {sio=}")
+        # print(f" ... setting {sio=}")
         return sio
 
     @classmethod
@@ -432,7 +432,7 @@ class ManyBodyComputerQCNG(BaseComputerQCNG):
             component_results[label] = result
 
             if not result.success:
-                print(result.error.error_message)
+                # print(result.error.error_message)
                 raise RuntimeError("Calculation did not succeed! Error:\n" + result.error.error_message)
 
             # pull out stuff

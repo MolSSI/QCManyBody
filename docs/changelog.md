@@ -19,6 +19,14 @@
 -->
 
 
+## v0.2.1 / 2024-05-14
+
+#### Enhancements
+
+* [\#27](https://github.com/MolSSI/QCManyBody/pull/27) Intf -- move high-level interface from
+  `qcmb.qcng_computer.ManyBodyComputerQCNG` to `qcmb.computer.ManyBodyComputer`. Suppressed remaining printing. @loriab
+
+
 ## v0.2.0 / 2024-05-13
 
 #### New Features
