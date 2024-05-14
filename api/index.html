@@ -550,9 +550,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="ManyBodyComputerQCNG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#qcmanybody.qcng_computer.ManyBodyComputerQCNG.compute" class="md-nav__link">
     <span class="md-ellipsis">
       compute
@@ -560,13 +561,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#qcmanybody.qcng_computer.ManyBodyComputerQCNG.get_results" class="md-nav__link">
     <span class="md-ellipsis">
       get_results
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -645,9 +651,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="ManyBodyComputerQCNG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#qcmanybody.qcng_computer.ManyBodyComputerQCNG.compute" class="md-nav__link">
     <span class="md-ellipsis">
       compute
@@ -655,13 +662,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#qcmanybody.qcng_computer.ManyBodyComputerQCNG.get_results" class="md-nav__link">
     <span class="md-ellipsis">
       get_results
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1407,7 +1419,13 @@ to process energy/gradient/Hessian.</p>
 
 
 
-<a id="qcmanybody.qcng_computer.ManyBodyComputerQCNG"></a>
+<h2 id="qcmanybody.qcng_computer.ManyBodyComputerQCNG" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">qcmanybody.qcng_computer.ManyBodyComputerQCNG</span>
+
+
+</h2>
+
+
   <div class="doc doc-contents first">
           <p class="doc doc-class-bases">
             Bases: <code><span title="qcmanybody.qcng_computer.BaseComputerQCNG">BaseComputerQCNG</span></code></p>
@@ -1431,11 +1449,11 @@ to process energy/gradient/Hessian.</p>
 
 
 
-<h2 id="qcmanybody.qcng_computer.ManyBodyComputerQCNG.compute" class="doc doc-heading">
+<h3 id="qcmanybody.qcng_computer.ManyBodyComputerQCNG.compute" class="doc doc-heading">
           <span class="doc doc-object-name doc-function-name">compute</span>
 
 
-</h2>
+</h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><span title="qcportal.FractalClient">FractalClient</span></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
@@ -1470,11 +1488,11 @@ to process energy/gradient/Hessian.</p>
 
 
 
-<h2 id="qcmanybody.qcng_computer.ManyBodyComputerQCNG.get_results" class="doc doc-heading">
+<h3 id="qcmanybody.qcng_computer.ManyBodyComputerQCNG.get_results" class="doc doc-heading">
           <span class="doc doc-object-name doc-function-name">get_results</span>
 
 
-</h2>
+</h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_results</span><span class="p">(</span><span class="n">external_results</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">,</span> <span class="n">component_results</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><span title="qcportal.FractalClient">FractalClient</span></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="qcmanybody.models.ManyBodyResult" href="../qcschema/#qcmanybody.models.ManyBodyResult">ManyBodyResult</a></span>
 </code></pre></div>
 
@@ -1688,7 +1706,97 @@ to process energy/gradient/Hessian.</p>
   </div>
 
 
-</div>
+</div><p><strong>ManyBodyComputerQCNG</strong></p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>type</th>
+<th>required</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>input_data</td>
+<td><class 'qcmanybody.models.manybody_input_pydv1.ManyBodyInput'></td>
+<td>True</td>
+<td>Input schema containing the relevant settings for performing the many body expansion. This is entirely redundant with the piecemeal assembly of this Computer class and is only stored to be available for error handling and exact reconstruction of ManyBodyResult.</td>
+<td>None</td>
+</tr>
+<tr>
+<td>bsse_type</td>
+<td><enum 'BsseEnum'></td>
+<td>False</td>
+<td>Requested BSSE treatments. First in list determines which interaction or total energy/gradient/Hessian returned.</td>
+<td>[<BsseEnum.cp: 'cp'>]</td>
+</tr>
+<tr>
+<td>molecule</td>
+<td><class 'qcelemental.models.molecule.Molecule'></td>
+<td>True</td>
+<td>Target molecule for many body expansion (MBE) or interaction energy (IE) analysis. Fragmentation should already be defined in <code>fragments</code> and related fields.</td>
+<td>None</td>
+</tr>
+<tr>
+<td>driver</td>
+<td><enum 'DriverEnum'></td>
+<td>True</td>
+<td>The computation driver; i.e., energy, gradient, hessian. In case of ambiguity (e.g., MBE gradient through finite difference energies or MBE energy through composite method), this field refers to the <em>target</em> derivative, not any <em>means</em> specification.</td>
+<td>None</td>
+</tr>
+<tr>
+<td>embedding_charges</td>
+<td>typing.List[float]</td>
+<td>False</td>
+<td>Atom-centered point charges to be used to speed up nbody-level convergence. Charges are placed on molecule fragments whose basis sets are not included in the computation. (An implication is that charges aren't invoked for bsse_type=cp.) Keys: 1-based index of fragment. Values: list of atom charges for that fragment.</td>
+<td>None</td>
+</tr>
+<tr>
+<td>return_total_data</td>
+<td><class 'bool'></td>
+<td>False</td>
+<td>When True, returns the total data (energy/gradient/Hessian) of the system, otherwise returns interaction data. Default is False for energies, True for gradients and Hessians. Note that the calculation of counterpoise corrected total energies implies the calculation of the energies of monomers in the monomer basis, hence specifying <code>return_total_data = True</code> may carry out more computations than <code>return_total_data = False</code>. For gradients and Hessians, <code>return_total_data = False</code> is rarely useful.</td>
+<td>None</td>
+</tr>
+<tr>
+<td>levels</td>
+<td><class 'str'></td>
+<td>False</td>
+<td>Dictionary of different levels of theory for different levels of expansion. Note that the primary method_string is not used when this keyword is given. <code>supersystem</code> computes all higher order n-body effects up to the number of fragments; this higher-order correction uses the nocp basis, regardless of bsse_type. A method fills in for any lower unlisted nbody levels. Note that if both this and max_nbody are provided, they must be consistent. Examples: SUPERSYSTEM definition suspect* {1: 'ccsd(t)', 2: 'mp2', 'supersystem': 'scf'} * {2: 'ccsd(t)/cc-pvdz', 3: 'mp2'} * Now invalid: {1: 2, 2: 'ccsd(t)/cc-pvdz', 3: 'mp2'} Examples above are processed in the ManyBodyComputer, and once processed, only the values should be used. The keys turn into nbodies_per_mc_level, as notated below. * {1: 'ccsd(t)', 2: 'mp2', 'supersystem': 'scf'} -&gt; nbodies_per_mc_level=[[1], [2], ['supersystem']] * {2: 'ccsd(t)/cc-pvdz', 3: 'mp2'} -&gt; nbodies_per_mc_level=[[1, 2], [3]]</td>
+<td>None</td>
+</tr>
+<tr>
+<td>max_nbody</td>
+<td><class 'int'></td>
+<td>False</td>
+<td>Maximum number of bodies to include in the many-body treatment. Possible: max_nbody &lt;= nfragments. Default: max_nbody = nfragments.</td>
+<td>None</td>
+</tr>
+<tr>
+<td>supersystem_ie_only</td>
+<td><class 'bool'></td>
+<td>False</td>
+<td>Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) analysis, thereby omitting intermediate-body calculations. When False (default), compute each n-body level in the MBE up through <code>max_nbody</code>. When True (only allowed for <code>max_nbody = nfragments</code>), only compute enough for the overall interaction/total energy: max_nbody-body and 1-body. When True, properties <code>INTERACTION {driver} THROUGH {max_nbody}-BODY</code> will always be available; <code>TOTAL {driver} THROUGH {max_nbody}-BODY</code> will be available depending on <code>return_total_data</code>; and <code>{max_nbody}-BODY CONTRIBUTION TO {driver}</code> won't be available (except for dimers). This keyword produces no savings for a two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body subsystems can be skipped with <code>supersystem_ie_only=True</code> Do not use with <code>vmfc</code> in <code>bsse_type</code>as it cannot produce savings.</td>
+<td>False</td>
+</tr>
+<tr>
+<td>task_list</td>
+<td>typing.Any</td>
+<td>False</td>
+<td></td>
+<td>{}</td>
+</tr>
+<tr>
+<td>qcmb_calculator</td>
+<td>typing.Any</td>
+<td>False</td>
+<td>Low-level interface</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
 
 
 
