@@ -39,3 +39,10 @@ pip install git+https://github.com/MolSSI/QCManyBody.git
 ## Documentation
 
 Full documentation is available at [https://molssi.github.io/QCManyBody/](https://molssi.github.io/QCManyBody/)
+
+## Authors
+
+* Asem Alenaizan, @alenaizan, original Psi4 implementations of vmfc Hessians, multi-level, and embedded point charges
+* Lori A. Burns, @loriab, ManyBody QCSchema and high-level interface
+* Benjamin P. Pritchard, @bennybp, core interface and QCArchive integration
+* Daniel G. A. Smith, @dgasmith, original Psi4 implementations of nocp, cp, and vmfc single-level e/g/H and distributed driver integration
