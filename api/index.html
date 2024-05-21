@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.732c4fb1.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1098,12 +1098,12 @@
 
 
 <a id="qcmanybody.ManyBodyCalculator"></a>
-  <div class="doc doc-contents first">
+    <div class="doc doc-contents first">
 
 
-                <details class="quote">
-                  <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-                  <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 31</span>
+                  <details class="quote">
+                    <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 31</span>
 <span class="normal"> 32</span>
 <span class="normal"> 33</span>
 <span class="normal"> 34</span>
@@ -1253,12 +1253,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fragment_slice_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">iat</span><span class="p">,</span> <span class="n">iat</span> <span class="o">+</span> <span class="n">nat</span><span class="p">)</span>
         <span class="n">iat</span> <span class="o">+=</span> <span class="n">nat</span>
 </code></pre></div></td></tr></table></div>
-                </details>
+                  </details>
 
-  
+
 
   <div class="doc doc-children">
-
 
 
 
@@ -1271,86 +1270,83 @@
 <div class="doc doc-object doc-function">
 
 
-
 <h2 id="qcmanybody.ManyBodyCalculator.format_calc_plan" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">format_calc_plan</span>
+            <span class="doc doc-object-name doc-function-name">format_calc_plan</span>
 
 
 </h2>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">format_calc_plan</span><span class="p">(</span><span class="n">sset</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">]]]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Formulate per-modelchem and per-body job count data and summary text.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>sset</code></td>
-          <td>
-                <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Among {"all", "nocp", "cp", "vmfc_compute"}, which data structure to return.</p>
-            </div>
-          </td>
-          <td>
-                <code>&#39;all&#39;</code>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>sset</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Among {"all", "nocp", "cp", "vmfc_compute"}, which data structure to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;all&#39;</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code>info</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A text summary with per- model chemistry and per- n-body-level job counts.</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-        <tr class="doc-section-item">
-          <td>
-                <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>info</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A text summary with per- model chemistry and per- n-body-level job counts.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
@@ -1422,32 +1418,30 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">info</span><span class="p">,</span> <span class="p">{</span><span class="n">mc</span><span class="p">:</span> <span class="n">dsset</span><span class="p">[</span><span class="n">sset</span><span class="p">]</span> <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">dsset</span> <span class="ow">in</span> <span class="n">compute_list_count</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h2 id="qcmanybody.ManyBodyCalculator.iterate_molecules" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">iterate_molecules</span>
+            <span class="doc doc-object-name doc-function-name">iterate_molecules</span>
 
 
 </h2>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">iterate_molecules</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Iterable" href="https://docs.python.org/3/library/typing.html#typing.Iterable">Iterable</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="qcelemental.models.Molecule" href="https://molssi.github.io/QCElemental/api/qcelemental.models.Molecule.html#qcelemental.models.Molecule">Molecule</a></span><span class="p">]]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Iterate over all the molecules needed for the computation.</p>
 <p>Yields model chemistry, label, and molecule.</p>
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
 <span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
@@ -1515,48 +1509,45 @@
                 <span class="n">done_molecules</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
                 <span class="k">yield</span> <span class="n">mc</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">mol</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h2 id="qcmanybody.ManyBodyCalculator.analyze" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">analyze</span>
+            <span class="doc doc-object-name doc-function-name">analyze</span>
 
 
 </h2>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">analyze</span><span class="p">(</span><span class="n">component_results</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">]]])</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
 
 
 
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>component_results</code></td>
-          <td>
-                <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a>, <a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a>]]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Nested dictionary with results from all individual molecular system
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>component_results</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a>, <a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a>]]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Nested dictionary with results from all individual molecular system
 calculations, including all subsystem/basis combinations, all model
 chemistries, and all properties (e.g., e/g/h).</p>
 <p>For example, the below is the format for a nocp gradient run on a
@@ -1570,22 +1561,23 @@ to process energy/gradient/Hessian.</p>
  '["mp2", [2], [2]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
  '["mp2", [1, 2], [1, 2]]': {'energy': -5.73, 'gradient': array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},
 }</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
 
 <details class="return" open>
   <summary>Return</summary>
   
 </details>
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">458</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/manybody.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">458</span>
 <span class="normal">459</span>
 <span class="normal">460</span>
 <span class="normal">461</span>
@@ -1797,8 +1789,8 @@ to process energy/gradient/Hessian.</p>
 
         <span class="k">return</span> <span class="n">all_results</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
 
@@ -1806,8 +1798,7 @@ to process energy/gradient/Hessian.</p>
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
 
@@ -1816,19 +1807,19 @@ to process energy/gradient/Hessian.</p>
 
 
 <h2 id="qcmanybody.computer.ManyBodyComputer" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">qcmanybody.computer.ManyBodyComputer</span>
+            <span class="doc doc-object-name doc-class-name">qcmanybody.computer.ManyBodyComputer</span>
 
 
 </h2>
 
 
-  <div class="doc doc-contents first">
-          <p class="doc doc-class-bases">
-            Bases: <code><span title="qcmanybody.computer.BaseComputerQCNG">BaseComputerQCNG</span></code></p>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="qcmanybody.computer.BaseComputerQCNG">BaseComputerQCNG</span></code></p>
 
 
 
-  
+
 
   <div class="doc doc-children">
 
@@ -1843,9 +1834,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.input_data" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">input_data</span>
+            <span class="doc doc-object-name doc-attribute-name">input_data</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -1855,8 +1846,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">input_data</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="qcmanybody.models.ManyBodyInput" href="../qcschema/#qcmanybody.models.ManyBodyInput">ManyBodyInput</a></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Input schema containing the relevant settings for performing the many body expansion. This is entirely redundant with the piecemeal assembly of this Computer class and is only stored to be available for error handling and exact reconstruction of ManyBodyResult.&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -1865,9 +1856,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.bsse_type" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">bsse_type</span>
+            <span class="doc doc-object-name doc-attribute-name">bsse_type</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -1877,8 +1868,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">bsse_type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.List" href="https://docs.python.org/3/library/typing.html#typing.List">List</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="qcmanybody.models.BsseEnum" href="../qcschema/#qcmanybody.models.BsseEnum">BsseEnum</a></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">([</span><span class="n"><span title="qcmanybody.models.BsseEnum.cp">cp</span></span><span class="p">],</span> <span class="n">description</span><span class="o">=</span><span class="n"><span title="field_info.description">description</span></span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -1887,9 +1878,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.molecule" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">molecule</span>
+            <span class="doc doc-object-name doc-attribute-name">molecule</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -1899,8 +1890,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">molecule</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="qcelemental.models.Molecule" href="https://molssi.github.io/QCElemental/api/qcelemental.models.Molecule.html#qcelemental.models.Molecule">Molecule</a></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Target molecule for many body expansion (MBE) or interaction energy (IE) analysis. Fragmentation should already be defined in `fragments` and related fields.&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -1909,9 +1900,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.driver" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">driver</span>
+            <span class="doc doc-object-name doc-attribute-name">driver</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -1921,8 +1912,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">driver</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="qcelemental.models.DriverEnum" href="https://molssi.github.io/QCElemental/api/qcelemental.models.DriverEnum.html#qcelemental.models.DriverEnum">DriverEnum</a></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;The computation driver; i.e., energy, gradient, hessian. In case of ambiguity (e.g., MBE gradient through finite difference energies or MBE energy through composite method), this field refers to the *target* derivative, not any *means* specification.&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -1931,9 +1922,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.embedding_charges" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">embedding_charges</span>
+            <span class="doc doc-object-name doc-attribute-name">embedding_charges</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -1943,8 +1934,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">embedding_charges</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.List" href="https://docs.python.org/3/library/typing.html#typing.List">List</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span><span class="p">]]]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Atom-centered point charges to be used to speed up nbody-level convergence. Charges are placed on molecule fragments whose basis sets are not included in the computation. (An implication is that charges aren&#39;t invoked for bsse_type=cp.) Keys: 1-based index of fragment. Values: list of atom charges for that fragment.&quot;</span><span class="p">,</span> <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;nfr&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;varies: nat in ifr&gt;&#39;</span><span class="p">]})</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -1953,9 +1944,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.return_total_data" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">return_total_data</span>
+            <span class="doc doc-object-name doc-attribute-name">return_total_data</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -1965,8 +1956,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">return_total_data</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n"><span title="field_info.description">description</span></span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -1975,9 +1966,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.levels" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">levels</span>
+            <span class="doc doc-object-name doc-attribute-name">levels</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -1987,8 +1978,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">levels</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Literal" href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a></span><span class="p">[</span><span class="s1">&#39;supersystem&#39;</span><span class="p">]],</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">]]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n"><span title="field_info.description">description</span></span> <span class="o">+</span> <span class="s2">&quot;Examples above are processed in the ManyBodyComputer, and once processed, only the values should be used. The keys turn into nbodies_per_mc_level, as notated below. * {1: &#39;ccsd(t)&#39;, 2: &#39;mp2&#39;, &#39;supersystem&#39;: &#39;scf&#39;} -&gt; nbodies_per_mc_level=[[1], [2], [&#39;supersystem&#39;]] * {2: &#39;ccsd(t)/cc-pvdz&#39;, 3: &#39;mp2&#39;} -&gt; nbodies_per_mc_level=[[1, 2], [3]] &quot;</span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -1997,9 +1988,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.max_nbody" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">max_nbody</span>
+            <span class="doc doc-object-name doc-attribute-name">max_nbody</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -2009,8 +2000,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">max_nbody</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n"><span title="field_info.description">description</span></span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -2019,9 +2010,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.supersystem_ie_only" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">supersystem_ie_only</span>
+            <span class="doc doc-object-name doc-attribute-name">supersystem_ie_only</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -2031,8 +2022,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n"><span title="field_info.description">description</span></span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -2041,9 +2032,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.task_list" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">task_list</span>
+            <span class="doc doc-object-name doc-attribute-name">task_list</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -2053,8 +2044,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">task_list</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -2063,9 +2054,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.qcmb_calculator" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">qcmb_calculator</span>
+            <span class="doc doc-object-name doc-attribute-name">qcmb_calculator</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
@@ -2075,8 +2066,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">qcmb_calculator</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Low-level interface&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -2085,9 +2076,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.nfragments" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">nfragments</span>
+            <span class="doc doc-object-name doc-attribute-name">nfragments</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -2096,8 +2087,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">nfragments</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -2106,9 +2097,9 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.nbodies_per_mc_level" class="doc doc-heading">
-          <span class="doc doc-object-name doc-attribute-name">nbodies_per_mc_level</span>
+            <span class="doc doc-object-name doc-attribute-name">nbodies_per_mc_level</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -2117,8 +2108,8 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">nbodies_per_mc_level</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.List" href="https://docs.python.org/3/library/typing.html#typing.List">List</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.List" href="https://docs.python.org/3/library/typing.html#typing.List">List</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Literal" href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a></span><span class="p">[</span><span class="s1">&#39;supersystem&#39;</span><span class="p">]]]]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  </div>
+    <div class="doc doc-contents ">
+    </div>
 
 </div>
 
@@ -2128,17 +2119,17 @@ to process energy/gradient/Hessian.</p>
 
 
 <h3 id="qcmanybody.computer.ManyBodyComputer.Config" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">Config</span>
+            <span class="doc doc-object-name doc-class-name">Config</span>
 
 
 </h3>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
 
 
-  
+
 
   <div class="doc doc-children">
 
@@ -2154,21 +2145,18 @@ to process energy/gradient/Hessian.</p>
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
-
 
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.set_bsse_type" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">set_bsse_type</span>
+            <span class="doc doc-object-name doc-function-name">set_bsse_type</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
@@ -2177,11 +2165,11 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">set_bsse_type</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.List" href="https://docs.python.org/3/library/typing.html#typing.List">List</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="qcmanybody.models.BsseEnum" href="../qcschema/#qcmanybody.models.BsseEnum">BsseEnum</a></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">207</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
@@ -2203,20 +2191,18 @@ to process energy/gradient/Hessian.</p>
     <span class="c1">#   vals through as bt lets pydantic raise a clearer error message</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">([(</span><span class="n">BsseEnum</span><span class="p">[</span><span class="n">bt</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">bt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">BsseEnum</span><span class="o">.</span><span class="n">__members__</span> <span class="k">else</span> <span class="n">bt</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]))</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.set_embedding_charges" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">set_embedding_charges</span>
+            <span class="doc doc-object-name doc-function-name">set_embedding_charges</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
@@ -2225,11 +2211,11 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">set_embedding_charges</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
 <span class="normal">223</span>
@@ -2253,20 +2239,18 @@ to process energy/gradient/Hessian.</p>
     <span class="c1"># print(f&quot; ... setting embedding_charges={v}&quot;)</span>
     <span class="k">return</span> <span class="n">v</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.set_return_total_data" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">set_return_total_data</span>
+            <span class="doc doc-object-name doc-function-name">set_return_total_data</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
@@ -2275,11 +2259,11 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">set_return_total_data</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">],</span> <span class="n">values</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">234</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">234</span>
 <span class="normal">235</span>
 <span class="normal">236</span>
 <span class="normal">237</span>
@@ -2317,20 +2301,18 @@ to process energy/gradient/Hessian.</p>
     <span class="c1"># print(f&quot; ... setting rtd={rtd}&quot;)</span>
     <span class="k">return</span> <span class="n">rtd</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.set_levels" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">set_levels</span>
+            <span class="doc doc-object-name doc-function-name">set_levels</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
@@ -2339,11 +2321,11 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">set_levels</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">,</span> <span class="n">values</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Literal" href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a></span><span class="p">[</span><span class="s1">&#39;supersystem&#39;</span><span class="p">]],</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
 <span class="normal">256</span>
 <span class="normal">257</span>
 <span class="normal">258</span>
@@ -2381,20 +2363,18 @@ to process energy/gradient/Hessian.</p>
     <span class="c1"># print(f&quot; ... setting levels={v}&quot;)</span>
     <span class="k">return</span> <span class="n">v</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.set_max_nbody" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">set_max_nbody</span>
+            <span class="doc doc-object-name doc-function-name">set_max_nbody</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
@@ -2403,11 +2383,11 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">set_max_nbody</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">,</span> <span class="n">values</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">311</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">311</span>
 <span class="normal">312</span>
 <span class="normal">313</span>
 <span class="normal">314</span>
@@ -2461,20 +2441,18 @@ to process energy/gradient/Hessian.</p>
     <span class="c1"># print(f&quot; ... setting max_nbody={v}&quot;)</span>
     <span class="k">return</span> <span class="n">v</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.set_supersystem_ie_only" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">set_supersystem_ie_only</span>
+            <span class="doc doc-object-name doc-function-name">set_supersystem_ie_only</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
@@ -2483,11 +2461,11 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">set_supersystem_ie_only</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">],</span> <span class="n">values</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">349</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">349</span>
 <span class="normal">350</span>
 <span class="normal">351</span>
 <span class="normal">352</span>
@@ -2527,20 +2505,18 @@ to process energy/gradient/Hessian.</p>
     <span class="c1"># print(f&quot; ... setting {sio=}&quot;)</span>
     <span class="k">return</span> <span class="n">sio</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.from_manybodyinput" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">from_manybodyinput</span>
+            <span class="doc doc-object-name doc-function-name">from_manybodyinput</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
@@ -2549,11 +2525,11 @@ to process energy/gradient/Hessian.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_manybodyinput</span><span class="p">(</span><span class="n">input_model</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="qcmanybody.models.ManyBodyInput" href="../qcschema/#qcmanybody.models.ManyBodyInput">ManyBodyInput</a></span><span class="p">,</span> <span class="n">build_tasks</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">370</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">370</span>
 <span class="normal">371</span>
 <span class="normal">372</span>
 <span class="normal">373</span>
@@ -2731,60 +2707,56 @@ to process energy/gradient/Hessian.</p>
 
     <span class="k">return</span> <span class="n">computer_model</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="n">external_results</span><span class="o">=</span><span class="n">analyze_back</span><span class="p">,</span> <span class="n">component_results</span><span class="o">=</span><span class="n">component_results</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.plan" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">plan</span>
+            <span class="doc doc-object-name doc-function-name">plan</span>
 
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">plan</span><span class="p">()</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">460</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">460</span>
 <span class="normal">461</span>
 <span class="normal">462</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1"># uncalled function</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">plan</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_list</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.compute" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">compute</span>
+            <span class="doc doc-object-name doc-function-name">compute</span>
 
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><span title="qcportal.FractalClient">FractalClient</span></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Run quantum chemistry.</p>
 <p>NOTE: client logic removed (compared to psi4.driver.ManyBodyComputer)</p>
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">464</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">464</span>
 <span class="normal">465</span>
 <span class="normal">466</span>
 <span class="normal">467</span>
@@ -2798,31 +2770,29 @@ to process energy/gradient/Hessian.</p>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_list</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="n">t</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h3 id="qcmanybody.computer.ManyBodyComputer.get_results" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">get_results</span>
+            <span class="doc doc-object-name doc-function-name">get_results</span>
 
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_results</span><span class="p">(</span><span class="n">external_results</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">,</span> <span class="n">component_results</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><span title="qcportal.FractalClient">FractalClient</span></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="qcmanybody.models.ManyBodyResult" href="../qcschema/#qcmanybody.models.ManyBodyResult">ManyBodyResult</a></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Return results as ManyBody-flavored QCSchema.</p>
 
-          <details class="quote">
-            <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">472</span>
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/computer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">472</span>
 <span class="normal">473</span>
 <span class="normal">474</span>
 <span class="normal">475</span>
@@ -3014,8 +2984,8 @@ to process energy/gradient/Hessian.</p>
 
         <span class="k">return</span> <span class="n">nbody_model</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
 
@@ -3023,8 +2993,7 @@ to process energy/gradient/Hessian.</p>
 
   </div>
 
-  </div>
-
+    </div>
 
 </div><p><strong>ManyBodyComputer</strong></p>
 <table>
@@ -3170,7 +3139,7 @@ to process energy/gradient/Hessian.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5cfa9459.min.js"></script>
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
       
     
   </body>
