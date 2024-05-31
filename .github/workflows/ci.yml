@@ -111,6 +111,7 @@ jobs:
         # python -m pip install . --no-deps  # gives no codecov beyond tests
 
     - name: Configure QCEngine
+      if: "(matrix.cfg.label != 'Py-min')"
       run: |
         cat > qcengine.yaml <<EOF
         all:
