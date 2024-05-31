@@ -24,13 +24,18 @@ dependencies = [
     "numpy",
     "pydantic",
     "qcelemental",
-    "qcengine",
 ]
 
 [project.optional-dependencies]
+standard = [
+    # needed for continuous hi-lvl interface: `mbres = ManyBodyComputer.from_manybodyinput(mbin)`
+    "qcengine",
+]
 tests = [
     "pytest",
     "zstandard",
+    # qcengine & one of psi4, nwchem, cfour needed for hi-lvl interface testing
+    # qcengine & psi4 needed to regenerate test reference data
 ]
 docs = [
     "mkdocs",
@@ -39,14 +44,14 @@ docs = [
     "tabulate",
 ]
 
-
 [tool.setuptools.package-data]
 
 
 [project.urls]
-"Homepage" = "https://github.com/MolSSI/QCManyBody"
-"Bug Tracker" = "https://github.com/MolSSI/QCManyBody/issues"
-
+homepage = "https://github.com/MolSSI/QCManyBody"
+changelog = "https://github.com/MolSSI/QCManyBody/docs/changelog.md"
+documentation = "https://molssi.github.io/QCManyBody/"
+issues = "https://github.com/MolSSI/QCManyBody/issues"
 
 [tool.black]
 line-length = 120

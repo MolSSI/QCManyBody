@@ -3,7 +3,10 @@ from typing import List
 import pytest
 
 from qcelemental.util import parse_version, which, which_import
-from qcengine.testing import _programs as _programs_qcng
+try:
+    from qcengine.testing import _programs as _programs_qcng
+except ModuleNotFoundError:
+    _programs_qcng = {}
 
 
 __all__ = [
@@ -21,8 +24,15 @@ def is_qcfractal_new_enough(version_feature_introduced):
 
 # Figure out what is imported
 # * anything _not_ in QCEngine goes here
+# * to allow qcng as optional dependency, duplicate the using's in qcmb's test suite here
 _programs = {
     "vasp": False,
+    "cfour": which("xcfour", return_bool=True),
+    "gamess": which("rungms", return_bool=True),
+    "geometric": which_import("geometric", return_bool=True),
+    "nwchem": which("nwchem", return_bool=True),
+    "psi4": which("psi4", return_bool=True),
+    "qcengine": which_import("qcengine", return_bool=True),
 }
 
 

@@ -4,7 +4,6 @@ import os
 from typing import Mapping, Union, Literal, Any, Iterable, Optional
 
 import numpy
-import qcengine as qcng
 import zstandard
 from qcelemental.models import Molecule, AtomicInput
 
@@ -171,6 +170,7 @@ def run_qcengine(
     supersystem_ie_only: bool,
     embedding_charges: Optional[Mapping[int, list]],
 ):
+    import qcengine as qcng
 
     mc = ManyBodyCore(molecule, bsse_type, levels, return_total_data, supersystem_ie_only, embedding_charges)
 

@@ -25,13 +25,16 @@
 
  * [\#28](https://github.com/MolSSI/QCManyBody/pull/28) Intf -- low-level "core" interface renamed from
    `ManyBodyCalculator` to `ManyBodyCore`. The old name will continue to work for a few months. Also, its file changed
-   from `manybody.py` to `core.py` but it was already a top-level import.
+   from `manybody.py` to `core.py` but it was already a top-level import. @loriab
 
 #### New Features
 
 #### Enhancements
 
- * [\#28](https://github.com/MolSSI/QCManyBody/pull/28) Intf -- high-level interface is now importable from the top level module.
+ * [\#28](https://github.com/MolSSI/QCManyBody/pull/28) Intf -- high-level interface is now importable from the top level
+   module. @loriab
+ * [\#29](https://github.com/MolSSI/QCManyBody/pull/29) Maint -- QCEngine is needed only for the continuous running
+   function of the high-level interface, so making it an optional dependency. @loriab
 
 #### Bug Fixes
 
