@@ -641,28 +641,31 @@ The primary responsibilities of the core interface are:</p>
 <p>Note that the user is expected to run the calculations themselves, and the core interface does not provide any tools for
 running the calculations.</p>
 <h2 id="using-the-core-interface">Using the core interface</h2>
-<p>The core interface is accessed through the <a class="autorefs autorefs-internal" href="../api/#qcmanybody.ManyBodyCalculator"><code>ManyBodyCalculator</code></a>
+<p>The core interface is accessed through the [<code>ManyBodyCore</code>][qcmanybody.manybody.ManyBodyCore]
 class.</p>
 <p>The first step is to create a molecule. This molecule is a
 <a href="https://molssi.github.io/QCElemental/model_molecule.html">QCElemental molecule object</a>, and must contain fragments.
 (see also: <a href="../keywords/#molecule">moleule input</a>)</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">qcmanybody</span> <span class="k">as</span> <span class="nn">qcmb</span>
-<span class="kn">import</span> <span class="nn">qcelemental</span> <span class="k">as</span> <span class="nn">qcel</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">qcelemental.models</span> <span class="kn">import</span> <span class="n">Molecule</span>
 
-<span class="c1"># Create a molecule with 3 hydrogen atoms, each as its own fragment</span>
-<span class="n">mol</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">],</span>
-                           <span class="n">geometry</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span>
-                           <span class="n">fragments</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="c1"># Create a molecule with 3 neon atoms, each as its own fragment</span>
+
+<span class="n">mol</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">],</span>
+               <span class="n">geometry</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span>
+               <span class="n">fragments</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
 </code></pre></div>
-<p>Next, create a <code>ManyBodyCalculator</code> object. This object is constructed using the molecule,
+<p>Next, create a <code>ManyBodyCore</code> object. This object is constructed using the molecule,
 the desired BSSE correction, levels of MBE, and other options of the MBE.</p>
-<div class="highlight"><pre><span></span><code><span class="n">mbc</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">ManyBodyCalculator</span><span class="p">(</span>
-    <span class="n">molecule</span><span class="o">=</span><span class="n">mol</span><span class="p">,</span>
-    <span class="n">bsse_type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cp&#39;</span><span class="p">],</span>
-    <span class="n">levels</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;mp2/aug-cc-pvtz&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;b3lyp/def2-svp&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;hf/sto-3g&#39;</span><span class="p">},</span>
-    <span class="n">return_total_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">supersystem_ie_only</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">qcmanybody</span> <span class="kn">import</span> <span class="n">ManyBodyCore</span>
+
+<span class="n">mbc</span> <span class="o">=</span> <span class="n">ManyBodyCore</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="n">mol</span><span class="p">,</span>
+                   <span class="n">bsse_type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cp&quot;</span><span class="p">],</span>
+                   <span class="n">levels</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;ccsd/cc-pvtz&quot;</span><span class="p">,</span>
+                           <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;mp2/cc-pvdz&quot;</span><span class="p">,</span>
+                           <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;mp2/cc-pvdz&quot;</span><span class="p">},</span>
+                   <span class="n">return_total_data</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                   <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="n">embedding_charges</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>levels</code> option is a dictionary that specifies the n-body level as a key, then an arbitrary
 string as the description of the calculation to be performed at the n-body level. This string is
@@ -672,10 +675,10 @@ map these strings to some meaningful definition of a calculation.</p>
     In the core interface, all levels must be accounted for (that is, keys must go from 1 to the maximum
     nbody you would like to calculate). All levels must be present even if the model chemistry
     is the same for all levels.</p>
-<p>For a complete discussion of the other options available in the <code>ManyBodyCalculator</code> object, see the
+<p>For a complete discussion of the other options available in the <code>ManyBodyCore</code> object, see the
 <a href="../keywords/">keywords discussion</a>
-the <a class="autorefs autorefs-internal" href="../api/#qcmanybody.ManyBodyCalculator"><code>ManyBodyCalculator API documentation</code></a>.</p>
-<p>The next step is to obtain the calculations to be run from the <code>ManyBodyCalculator</code> object.
+the [<code>ManyBodyCore API documentation</code>][qcmanybody.manybody.ManyBodyCore].</p>
+<p>The next step is to obtain the calculations to be run from the <code>ManyBodyCore</code> object.
 This is done with a python generator function <code>iterate_molecules</code> that returns
 a tuple. This tuple contains</p>
 <ol>
@@ -691,7 +694,7 @@ a tuple. This tuple contains</p>
 does not provide any tools for running the calculations.</p>
 <h3 id="results-dictionary">Results dictionary</h3>
 <p>The data returned from the calculations is expected to be stored in a nested dictionary.
-The level is the opaque label as given from the <code>QCManyBodyCalculator</code>.
+The level is the opaque label as given from the <code>QCManyBodyCore</code>.
 The second level is the name of the property.</p>
 <div class="highlight"><pre><span></span><code><span class="n">calculation_results</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;label1&#39;</span><span class="p">:</span> <span class="p">{</span>
