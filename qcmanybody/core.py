@@ -33,16 +33,23 @@ class ManyBodyCore:
         molecule: Molecule,
         bsse_type: Sequence[BsseEnum],
         levels: Mapping[Union[int, Literal["supersystem"]], str],
+        *,
         return_total_data: bool,
         supersystem_ie_only: bool,
         embedding_charges: Mapping[int, Sequence[float]],
     ):
         self.embedding_charges = embedding_charges
-        self.molecule = molecule
+        if isinstance(molecule, dict):
+            mol = Molecule(**molecule)
+        elif isinstance(molecule, Molecule):
+            mol = molecule.copy()
+        else:
+            raise ValueError(f"Molecule input type of {type(molecule)} not understood.")
+        self.molecule = mol
         self.bsse_type = [BsseEnum(x) for x in bsse_type]
         self.return_total_data = return_total_data
         self.supersystem_ie_only = supersystem_ie_only
-        self.nfragments = len(molecule.fragments)
+        self.nfragments = len(self.molecule.fragments)
 
         self.levels = levels
 
@@ -561,3 +568,21 @@ class ManyBodyCore:
         all_results["stdout"] = stdout
 
         return all_results
+
+
+class ManyBodyCalculator(ManyBodyCore):
+    # retire after a grace period
+    def __init__(
+        self,
+        molecule: Molecule,
+        bsse_type: Sequence[BsseEnum],
+        levels: Mapping[Union[int, Literal["supersystem"]], str],
+        return_total_data: bool,
+        supersystem_ie_only: bool,
+        embedding_charges: Mapping[int, Sequence[float]],
+    ):
+        super().__init__(molecule, bsse_type, levels,
+            return_total_data=return_total_data,
+            supersystem_ie_only=supersystem_ie_only,
+            embedding_charges=embedding_charges,
+        )

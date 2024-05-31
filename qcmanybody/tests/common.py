@@ -21,6 +21,8 @@ units bohr
 """
 )
 
+mol_h2o_3_dict = {k: v for k, v in mol_h2o_3.dict().items() if k in ["symbols", "geometry", "fragments"]}
+
 specifications = {
     "e_scf": {
         "program": "psi4",

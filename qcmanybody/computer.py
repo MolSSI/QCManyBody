@@ -402,15 +402,20 @@ class ManyBodyComputer(BaseComputerQCNG):
             computer_model.molecule,
             computer_model.bsse_type,
             comp_levels,
-            computer_model.return_total_data,
-            computer_model.supersystem_ie_only,
-            computer_model.embedding_charges,
+            return_total_data=computer_model.return_total_data,
+            supersystem_ie_only=computer_model.supersystem_ie_only,
+            embedding_charges=computer_model.embedding_charges,
         )
 
         if not build_tasks:
             return computer_model
 
-        import qcengine as qcng
+        try:
+            import qcengine as qcng
+        except ModuleNotFoundError:
+            raise ModuleNotFoundError(
+                "Python module qcengine not found. Solve by installing it: "
+                "`conda install qcengine -c conda-forge` or `pip install qcengine`")
 
         component_properties = {}
         component_results = {}
