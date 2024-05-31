@@ -20,7 +20,6 @@ except ImportError:
     from pydantic import create_model, Field, validator, BaseModel
 
 from qcelemental.models import FailedOperation, Molecule, DriverEnum, ProtoModel, AtomicResult, AtomicInput
-import qcengine as qcng
 from qcmanybody import ManyBodyCore
 from qcmanybody.utils import delabeler, provenance_stamp
 from qcmanybody.models import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
@@ -410,6 +409,8 @@ class ManyBodyComputer(BaseComputerQCNG):
 
         if not build_tasks:
             return computer_model
+
+        import qcengine as qcng
 
         component_properties = {}
         component_results = {}

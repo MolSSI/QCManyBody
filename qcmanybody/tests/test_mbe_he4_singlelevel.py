@@ -12,7 +12,7 @@ from qcmanybody.models import AtomicSpecification, ManyBodyKeywords, ManyBodyInp
 from qcmanybody import ManyBodyComputer
 from qcmanybody.computer import qcvars_to_manybodyproperties
 
-from .addons import using
+from .addons import using, uusing
 
 def skprop(qcvar):
     # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
@@ -396,6 +396,7 @@ def he_tetramer():
     return Molecule(symbols=["He", "He", "He", "He"], fragments=[[0], [1], [2], [3]], geometry=[0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2])
 
 
+@uusing("qcengine")
 @pytest.mark.parametrize("program,basis,keywords", [
     pytest.param("cfour", "aug-pvdz", {"frozen_core": False}, id="cfour_conv", marks=using("cfour")),
     pytest.param("nwchem", "aug-cc-pvdz", {"basis__spherical": True, "scf__thresh": 1.0e-8, "mp2__freeze": False}, id="nwchem_conv", marks=using("nwchem")),

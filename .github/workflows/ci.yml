@@ -50,7 +50,7 @@ jobs:
             - setuptools-scm
             # Core
             - python
-            - qcengine
+            - qcelemental
             - pydantic
             # Testing
             - pytest
@@ -58,7 +58,7 @@ jobs:
             - pytest-cov
             - codecov
             # Testing CMS
-            - psi4=1.9.1
+            #- dummy1
             #- nwchem  # lands on different he4 soln
             #- networkx
           EOF
@@ -66,6 +66,9 @@ jobs:
             :
             if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
                 sed -i "s;pydantic;pydantic=1;g" export.yaml
+            fi
+            if [[ "${{ matrix.cfg.label }}" == "Py-max" ]]; then
+                sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
             fi
           fi
           # model sed for L/W
@@ -162,8 +165,7 @@ jobs:
             - setuptools-scm
             # Core
             - python
-            - qcengine
-            - pydantic
+            - qcelemental
             # Docs
             - mkdocs
             - mkdocs-material

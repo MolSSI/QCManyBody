@@ -12,7 +12,7 @@ from qcelemental.testing import compare_values, compare_recursive
 from qcmanybody.models import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcmanybody.computer import ManyBodyComputer, qcvars_to_manybodyproperties
 
-from .addons import using
+from .addons import using, uusing
 from .test_mbe_he4_singlelevel import sumdict as sumdict_single
 
 def skprop(qcvar):
@@ -442,6 +442,7 @@ def he_tetramer():
     return Molecule(symbols=["He", "He", "He", "He"], fragments=[[0], [1], [2], [3]], geometry=[0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2])
 
 
+@uusing("qcengine")
 @pytest.mark.parametrize("levels", [
     # pattern 121
     pytest.param({4: "c4-hf", 3: "c4-mp2", 1: "c4-ccsd"}, id="121-cfour_pure", marks=using("cfour")),
@@ -770,6 +771,7 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcin
             assert re.search(sumstr[stdoutkey][pattern], ret.stdout, re.MULTILINE), f"[j] N-Body pattern not found: {sumstr[stdoutkey][pattern]}"
 
 
+@uusing("qcengine")
 @pytest.mark.parametrize("levels", [
     # pattern ss121
     #pytest.param({4: "c4-hf", 3: "c4-mp2", 1: "c4-ccsd"}, id="121-cfour_pure", marks=using("cfour")),
