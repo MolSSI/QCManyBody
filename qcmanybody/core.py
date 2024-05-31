@@ -98,6 +98,12 @@ class ManyBodyCore:
         # To be built on the fly
         self.mc_compute_dict = None
 
+        if self.nfragments == 1:
+            # Usually we try to "pass-through" edge cases, so a single-fragment mol would return 0 or ordinary energy,
+            #   depending on rtd=T/F. But it seems more likely that user just forgot the fragments field, so we don't
+            #   want to start a full energy on monsterMol. Reconsider handling in future.
+            raise ValueError("""QCManyBody: Molecule fragmentation has not been specified through `fragments` field.""")
+
         if not np.array_equal(np.concatenate(self.molecule.fragments), np.arange(len(self.molecule.symbols))):
             raise ValueError("""QCManyBody: non-contiguous fragments could be implemented but aren't at present""")
 

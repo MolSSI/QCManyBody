@@ -27,7 +27,7 @@ def test_h2o_trimer_single(levels, component_file, ref_file):
     ref_data = load_ref_data(ref_file)
 
     mc = ManyBodyCore(mol_h2o_3_dict, [BsseEnum.cp, BsseEnum.nocp, BsseEnum.vmfc], levels,
-        return_total_data=True, supersystem_ie_only=False, embedding_charges=None)
+        embedding_charges=None, supersystem_ie_only=False, return_total_data=True)
     nbody_results = mc.analyze(component_results)
     compare_results(nbody_results, ref_data, levels)
 

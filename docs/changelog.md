@@ -38,7 +38,8 @@
  * [\#29](https://github.com/MolSSI/QCManyBody/pull/29) Maint -- QCEngine is needed only for the continuous running
    function of the high-level interface, so making it an optional dependency. @loriab
  * [\#30](https://github.com/MolSSI/QCManyBody/pull/30) Intf -- low-level "core" interface now accepts a molecule in
-   partial schema dictionary format rather than requiring a constructed `qcelemental.Molecule` object.
+   partial schema dictionary format rather than requiring a constructed `qcelemental.Molecule` object. If the molecule
+   is a single large fragment, an error is thrown. @loriab
 
 #### Bug Fixes
 
