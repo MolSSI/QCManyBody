@@ -24,7 +24,8 @@
 #### Breaking Changes
 
  * [\#28](https://github.com/MolSSI/QCManyBody/pull/28) Intf -- low-level "core" interface renamed from
-   `ManyBodyCalculator` to `ManyBodyCore`. The old name will continue to work for a few months.
+   `ManyBodyCalculator` to `ManyBodyCore`. The old name will continue to work for a few months. Also, its file changed
+   from `manybody.py` to `core.py` but it was already a top-level import.
 
 #### New Features
 
