@@ -9,7 +9,8 @@ from qcelemental.models import Molecule
 from qcelemental.testing import compare_values, compare_recursive
 
 from qcmanybody.models import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
-from qcmanybody.computer import ManyBodyComputer, qcvars_to_manybodyproperties
+from qcmanybody import ManyBodyComputer
+from qcmanybody.computer import qcvars_to_manybodyproperties
 
 from .addons import using
 
@@ -712,7 +713,7 @@ def test_count_he4_single(mbe_keywords, ref_count, he_tetramer):
     mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
 
     ret = ManyBodyComputer.from_manybodyinput(mbe_model, build_tasks=False)
-    ret = ret.qcmb_calculator
+    ret = ret.qcmb_core
 
     text, dcount = ret.format_calc_plan()
     assert compare_recursive(ref_count["all"], dcount, atol=1.e-6)

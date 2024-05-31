@@ -14,7 +14,7 @@ from qcmanybody.models import BsseEnum, ManyBodyInput
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputer
 from qcmanybody.computer import ManyBodyComputer
-from qcmanybody import ManyBodyCalculator
+from qcmanybody import ManyBodyCalculator  # test old name still operational
 
 
 @pytest.fixture(scope="function")

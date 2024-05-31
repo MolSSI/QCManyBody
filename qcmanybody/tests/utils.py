@@ -8,7 +8,7 @@ import qcengine as qcng
 import zstandard
 from qcelemental.models import Molecule, AtomicInput
 
-from qcmanybody import ManyBodyCalculator, delabeler
+from qcmanybody import ManyBodyCore, delabeler
 from qcmanybody.models import BsseEnum
 
 _my_dir = os.path.dirname(os.path.realpath(__file__))
@@ -172,7 +172,7 @@ def run_qcengine(
     embedding_charges: Optional[Mapping[int, list]],
 ):
 
-    mc = ManyBodyCalculator(molecule, bsse_type, levels, return_total_data, supersystem_ie_only, embedding_charges)
+    mc = ManyBodyCore(molecule, bsse_type, levels, return_total_data, supersystem_ie_only, embedding_charges)
 
     component_results = {}
 

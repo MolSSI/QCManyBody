@@ -21,7 +21,7 @@ except ImportError:
 
 from qcelemental.models import FailedOperation, Molecule, DriverEnum, ProtoModel, AtomicResult, AtomicInput
 import qcengine as qcng
-from qcmanybody import ManyBodyCalculator
+from qcmanybody import ManyBodyCore
 from qcmanybody.utils import delabeler, provenance_stamp
 from qcmanybody.models import BsseEnum, ManyBodyKeywords, ManyBodyInput, ManyBodyResult, ManyBodyResultProperties
 
@@ -193,7 +193,7 @@ class ManyBodyComputer(BaseComputerQCNG):
         description=ManyBodyKeywords.__fields__["supersystem_ie_only"].field_info.description,
     )
     task_list: Dict[str, Any] = {}  #MBETaskComputers] = {}
-    qcmb_calculator: Optional[Any] = Field(
+    qcmb_core: Optional[Any] = Field(
         None,
         description="Low-level interface",
     )
@@ -399,7 +399,7 @@ class ManyBodyComputer(BaseComputerQCNG):
             specifications[mtd]["specification"]["driver"] = computer_model.driver  # overrides atomic driver with mb driver
             specifications[mtd]["specification"].pop("schema_name", None)
 
-        computer_model.qcmb_calculator = ManyBodyCalculator(
+        computer_model.qcmb_core = ManyBodyCore(
             computer_model.molecule,
             computer_model.bsse_type,
             comp_levels,
@@ -414,7 +414,7 @@ class ManyBodyComputer(BaseComputerQCNG):
         component_properties = {}
         component_results = {}
 
-        for chem, label, imol in computer_model.qcmb_calculator.iterate_molecules():
+        for chem, label, imol in computer_model.qcmb_core.iterate_molecules():
             inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
             # inp = AtomicInput(molecule=imol, **specifications[chem]["specification"], extras={"psiapi": True})  # faster for p4
 
@@ -450,7 +450,7 @@ class ManyBodyComputer(BaseComputerQCNG):
         # print("\n<<<  (ZZ 2) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben component_properties  >>>")
         # pprint.pprint(component_properties, width=200)
 
-        analyze_back = computer_model.qcmb_calculator.analyze(component_properties)
+        analyze_back = computer_model.qcmb_core.analyze(component_properties)
         analyze_back["nbody_number"] = len(component_properties)
         # print("\n<<<  (ZZ 3) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben analyze_back  >>>")
         # pprint.pprint(analyze_back, width=200)
