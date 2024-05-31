@@ -12,7 +12,7 @@ running the calculations.
 
 ## Using the core interface
 
-The core interface is accessed through the [`ManyBodyCalculator`][qcmanybody.manybody.ManyBodyCalculator]
+The core interface is accessed through the [`ManyBodyCore`][qcmanybody.manybody.ManyBodyCore]
 class.
 
 The first step is to create a molecule. This molecule is a
@@ -20,26 +20,29 @@ The first step is to create a molecule. This molecule is a
 (see also: [moleule input](keywords.md#molecule))
 
 ```python
-import qcmanybody as qcmb
-import qcelemental as qcel
+from qcelemental.models import Molecule
 
-# Create a molecule with 3 hydrogen atoms, each as its own fragment
-mol = qcel.models.Molecule(symbols=['h', 'h', 'h'],
-                           geometry=[[0,0,0],[0,0,2],[0,0,4]],
-                           fragments=[[0], [1], [2]])
+# Create a molecule with 3 neon atoms, each as its own fragment
+
+mol = Molecule(symbols=["ne", "ne", "ne"],
+               geometry=[[0,0,0], [0,0,2], [0,0,4]],
+               fragments=[[0], [1], [2]])
 ```
 
-Next, create a `ManyBodyCalculator` object. This object is constructed using the molecule,
+Next, create a `ManyBodyCore` object. This object is constructed using the molecule,
 the desired BSSE correction, levels of MBE, and other options of the MBE.
 
 ```python
-mbc = qcmb.ManyBodyCalculator(
-    molecule=mol,
-    bsse_type=['cp'],
-    levels={1: 'mp2/aug-cc-pvtz', 2: 'b3lyp/def2-svp', 3: 'hf/sto-3g'},
-    return_total_data=True,
-    supersystem_ie_only=False
-)
+from qcmanybody import ManyBodyCore
+
+mbc = ManyBodyCore(molecule=mol,
+                   bsse_type=["cp"],
+                   levels={1: "ccsd/cc-pvtz",
+                           2: "mp2/cc-pvdz",
+                           3: "mp2/cc-pvdz"},
+                   return_total_data: True,
+                   supersystem_ie_only: False,
+                   embedding_charges: None)
 ```
 
 The `levels` option is a dictionary that specifies the n-body level as a key, then an arbitrary
@@ -52,11 +55,11 @@ map these strings to some meaningful definition of a calculation.
     nbody you would like to calculate). All levels must be present even if the model chemistry
     is the same for all levels.
 
-For a complete discussion of the other options available in the `ManyBodyCalculator` object, see the
+For a complete discussion of the other options available in the `ManyBodyCore` object, see the
 [keywords discussion](keywords.md)
-the [`ManyBodyCalculator API documentation`][qcmanybody.manybody.ManyBodyCalculator].
+the [`ManyBodyCore API documentation`][qcmanybody.manybody.ManyBodyCore].
 
-The next step is to obtain the calculations to be run from the `ManyBodyCalculator` object.
+The next step is to obtain the calculations to be run from the `ManyBodyCore` object.
 This is done with a python generator function `iterate_molecules` that returns
 a tuple. This tuple contains
 
@@ -76,7 +79,7 @@ does not provide any tools for running the calculations.
 ### Results dictionary
 
 The data returned from the calculations is expected to be stored in a nested dictionary.
-The level is the opaque label as given from the `QCManyBodyCalculator`.
+The level is the opaque label as given from the `QCManyBodyCore`.
 The second level is the name of the property.
 
 ```python

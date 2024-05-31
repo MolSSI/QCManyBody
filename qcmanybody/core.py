@@ -27,7 +27,7 @@ from qcmanybody.utils import (
 logger = logging.getLogger(__name__)
 
 
-class ManyBodyCalculator:
+class ManyBodyCore:
     def __init__(
         self,
         molecule: Molecule,

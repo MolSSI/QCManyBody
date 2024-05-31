@@ -21,6 +21,8 @@ classifiers = [
     "Operating System :: MacOS",
 ]
 dependencies = [
+    "numpy",
+    "pydantic",
     "qcelemental",
     "qcengine",
 ]

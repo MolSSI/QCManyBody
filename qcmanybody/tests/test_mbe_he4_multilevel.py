@@ -896,7 +896,7 @@ def test_count_he4_multi(mbe_keywords, ref_count, he_tetramer, request):
     mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
 
     ret = ManyBodyComputer.from_manybodyinput(mbe_model, build_tasks=False)
-    ret = ret.qcmb_calculator
+    ret = ret.qcmb_core
 
     text, dcount = ret.format_calc_plan()
     assert compare_recursive(ref_count["all"], dcount, atol=1.e-6)

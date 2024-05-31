@@ -13,11 +13,10 @@ Examples:
 ```python
 from qcelemental.models import Molecule
 
-# Molecule with 3 hydrogen atoms, each as its own fragment
-h3 = Molecule(symbols=['h', 'h', 'h'],
-              geometry=[[0,0,0],[0,0,2],[0,0,4]],
-              fragments=[[0], [1], [2]])
-
+# Molecule with 3 neon atoms, each as its own fragment
+ne3 = Molecule(symbols=["ne", "ne", "ne"],
+               geometry=[[0,0,0],[0,0,2],[0,0,4]],
+               fragments=[[0], [1], [2]])
 
 # Water tetramer
 water4 = Molecule(symbols=['o', 'h', 'h', 'o', 'h', 'h', 'o', 'h', 'h', 'o', 'h', 'h'],
