@@ -42,7 +42,7 @@ Full documentation is available at [https://molssi.github.io/QCManyBody/](https:
 
 ## Authors
 
-* Asem Alenaizan, @alenaizan, original Psi4 implementations of vmfc Hessians, multi-level, and embedded point charges
-* Lori A. Burns, @loriab, ManyBody QCSchema and high-level interface
-* Benjamin P. Pritchard, @bennybp, core interface and QCArchive integration
-* Daniel G. A. Smith, @dgasmith, original Psi4 implementations of nocp, cp, and vmfc single-level e/g/H and distributed driver integration
+* Asem Alenaizan, [@alenaizan](https://github.com/alenaizan), original Psi4 implementations of vmfc Hessians, multi-level, and embedded point charges
+* Lori A. Burns, [@loriab](https://github.com/loriab), ManyBody QCSchema and high-level interface
+* Benjamin P. Pritchard, [@bennybp](https://github.com/bennybp), core interface and QCArchive integration
+* Daniel G. A. Smith, [@dgasmith](https://github.com/dgasmith), original Psi4 implementations of nocp, cp, and vmfc single-level e/g/H and distributed driver integration

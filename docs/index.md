@@ -1,6 +1,6 @@
 # QCManyBody Documentation
 
-QCManyBody is a python package for running quantum chemistry manybody expansions and interaction calculations in a
+QCManyBody is a python package for running quantum chemistry many-body expansions and interaction calculations in a
 package-independent way.
 
 ## Installation

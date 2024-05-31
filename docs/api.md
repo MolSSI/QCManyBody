@@ -1,6 +1,6 @@
-::: qcmanybody.ManyBodyCalculator
+::: qcmanybody.ManyBodyCore
 
-::: qcmanybody.computer.ManyBodyComputer
+::: qcmanybody.ManyBodyComputer
     options:
         show_root_heading: true
         inherited_members: true
