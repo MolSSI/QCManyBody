@@ -172,7 +172,10 @@ def run_qcengine(
 ):
     import qcengine as qcng
 
-    mc = ManyBodyCore(molecule, bsse_type, levels, return_total_data, supersystem_ie_only, embedding_charges)
+    mc = ManyBodyCore(molecule, bsse_type, levels,
+                      return_total_data=return_total_data,
+                      supersystem_ie_only=supersystem_ie_only,
+                      embedding_charges=embedding_charges)
 
     component_results = {}
 

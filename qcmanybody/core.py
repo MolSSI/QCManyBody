@@ -33,16 +33,23 @@ class ManyBodyCore:
         molecule: Molecule,
         bsse_type: Sequence[BsseEnum],
         levels: Mapping[Union[int, Literal["supersystem"]], str],
+        *,
         return_total_data: bool,
         supersystem_ie_only: bool,
         embedding_charges: Mapping[int, Sequence[float]],
     ):
         self.embedding_charges = embedding_charges
-        self.molecule = molecule
+        if isinstance(molecule, dict):
+            mol = Molecule(**molecule)
+        elif isinstance(molecule, Molecule):
+            mol = molecule.copy()
+        else:
+            raise ValueError(f"Molecule input type of {type(molecule)} not understood.")
+        self.molecule = mol
         self.bsse_type = [BsseEnum(x) for x in bsse_type]
         self.return_total_data = return_total_data
         self.supersystem_ie_only = supersystem_ie_only
-        self.nfragments = len(molecule.fragments)
+        self.nfragments = len(self.molecule.fragments)
 
         self.levels = levels
 
@@ -90,6 +97,12 @@ class ManyBodyCore:
 
         # To be built on the fly
         self.mc_compute_dict = None
+
+        if self.nfragments == 1:
+            # Usually we try to "pass-through" edge cases, so a single-fragment mol would return 0 or ordinary energy,
+            #   depending on rtd=T/F. But it seems more likely that user just forgot the fragments field, so we don't
+            #   want to start a full energy on monsterMol. Reconsider handling in future.
+            raise ValueError("""QCManyBody: Molecule fragmentation has not been specified through `fragments` field.""")
 
         if not np.array_equal(np.concatenate(self.molecule.fragments), np.arange(len(self.molecule.symbols))):
             raise ValueError("""QCManyBody: non-contiguous fragments could be implemented but aren't at present""")
@@ -561,3 +574,21 @@ class ManyBodyCore:
         all_results["stdout"] = stdout
 
         return all_results
+
+
+class ManyBodyCalculator(ManyBodyCore):
+    # retire after a grace period
+    def __init__(
+        self,
+        molecule: Molecule,
+        bsse_type: Sequence[BsseEnum],
+        levels: Mapping[Union[int, Literal["supersystem"]], str],
+        return_total_data: bool,
+        supersystem_ie_only: bool,
+        embedding_charges: Mapping[int, Sequence[float]],
+    ):
+        super().__init__(molecule, bsse_type, levels,
+            return_total_data=return_total_data,
+            supersystem_ie_only=supersystem_ie_only,
+            embedding_charges=embedding_charges,
+        )

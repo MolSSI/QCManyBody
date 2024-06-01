@@ -1,8 +1,9 @@
 import pytest
 
+import qcelemental
 from qcmanybody import ManyBodyCore
 from qcmanybody.models import BsseEnum
-from .common import mol_h2o_3
+from .common import mol_h2o_3_dict
 from .utils import load_ref_data, compare_results, load_component_data
 
 
@@ -25,6 +26,16 @@ def test_h2o_trimer_single(levels, component_file, ref_file):
     component_results = load_component_data(component_file)
     ref_data = load_ref_data(ref_file)
 
-    mc = ManyBodyCore(mol_h2o_3, [BsseEnum.cp, BsseEnum.nocp, BsseEnum.vmfc], levels, True, False, None)
+    mc = ManyBodyCore(mol_h2o_3_dict, [BsseEnum.cp, BsseEnum.nocp, BsseEnum.vmfc], levels,
+        embedding_charges=None, supersystem_ie_only=False, return_total_data=True)
     nbody_results = mc.analyze(component_results)
     compare_results(nbody_results, ref_data, levels)
+
+
+def test_core_mol_error():
+    # check sensible error from internal Molecule construction
+    odd_mol = mol_h2o_3_dict.copy()
+    odd_mol["symbols"][0] = "A"
+    with pytest.raises(qcelemental.exceptions.NotAnElementError):
+        ManyBodyCore(odd_mol, [BsseEnum.nocp], {1: "asdf"},
+            return_total_data=False, supersystem_ie_only=False, embedding_charges=None)

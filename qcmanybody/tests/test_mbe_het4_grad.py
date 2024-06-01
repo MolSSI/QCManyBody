@@ -219,8 +219,8 @@ sumdict_grad = {
 @pytest.fixture
 def het_tetramer():
     return Molecule(
-        symbols=["F", "H", "F", "H", "H", "He"], 
-        fragments=[[0], [1, 2], [3, 4], [5]], 
+        symbols=["F", "H", "F", "H", "H", "He"],
+        fragments=[[0], [1, 2], [3, 4], [5]],
         fragment_charges=[-1, 0, 0, 0],
         geometry=[-2,  0,  0, 0,  0,  0, 4,  0,  0, 0,  3,  0, 0,  3,  2, 0, -3,  0],
     )
@@ -309,3 +309,19 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
     if outstrs:
         for stdoutkey in outstrs:
             assert re.search(sumstr[stdoutkey], ret.stdout, re.MULTILINE), f"[j] N-Body pattern not found: {sumstr[stdoutkey]}"
+
+
+def test_fragmentless_mol(mbe_data_grad_dtz):
+    het_tetramer_fragmentless = Molecule(
+        symbols=["F", "H", "F", "H", "H", "He"],
+        geometry=[-2,  0,  0, 0,  0,  0, 4,  0,  0, 0,  3,  0, 0,  3,  2, 0, -3,  0],
+    )
+
+    mbe_data_grad_dtz["molecule"] = het_tetramer_fragmentless
+    mbe_data_grad_dtz["specification"]["keywords"] = {}
+    mbe_model = ManyBodyInput(**mbe_data_grad_dtz)
+
+    with pytest.raises(ValueError) as e:
+        ManyBodyComputer.from_manybodyinput(mbe_model)
+
+    assert "fragmentation has not been specified" in str(e.value), e.value

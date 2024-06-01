@@ -46,3 +46,8 @@ Full documentation is available at [https://molssi.github.io/QCManyBody/](https:
 * Lori A. Burns, [@loriab](https://github.com/loriab), ManyBody QCSchema and high-level interface
 * Benjamin P. Pritchard, [@bennybp](https://github.com/bennybp), core interface and QCArchive integration
 * Daniel G. A. Smith, [@dgasmith](https://github.com/dgasmith), original Psi4 implementations of nocp, cp, and vmfc single-level e/g/H and distributed driver integration
+
+## Demonstration
+
+An example of the core and high-level interfaces can be found in [test_examples](qcmanybody/tests/test_examples.py) with
+directions in [tests/README](qcmanybody/tests/README.md).
