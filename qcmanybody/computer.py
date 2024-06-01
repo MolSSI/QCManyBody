@@ -454,7 +454,8 @@ class ManyBodyComputer(BaseComputerQCNG):
                         component_properties[label][p] = v
 
         # print("\n<<<  (ZZ 2) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben component_properties  >>>")
-        # pprint.pprint(component_properties, width=200)
+        # with np.printoptions(precision=6, suppress=True):
+        #     pprint.pprint(component_properties, width=200)
 
         analyze_back = computer_model.qcmb_core.analyze(component_properties)
         analyze_back["nbody_number"] = len(component_properties)

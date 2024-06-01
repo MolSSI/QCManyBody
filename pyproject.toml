@@ -76,6 +76,7 @@ testpaths = [
 markers = [
     "addon: tests require external non-required software",
 
+    "qcengine: tests using QCEngine software; skip if unavailable",
     "cfour: tests using CFOUR software; skip if unavailable",
     "nwchem: tests using classic NWChem software; skip if unavailable",
     "psi4: tests using Psi4 software; skip if unavailable",
