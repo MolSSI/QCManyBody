@@ -40,6 +40,7 @@
  * [\#30](https://github.com/MolSSI/QCManyBody/pull/30) Intf -- low-level "core" interface now accepts a molecule in
    partial schema dictionary format rather than requiring a constructed `qcelemental.Molecule` object. If the molecule
    is a single large fragment, an error is thrown. @loriab
+ * [\#30](https://github.com/MolSSI/QCManyBody/pull/30) Docs -- add end-to-end demos in test_examples. @loriab
 
 #### Bug Fixes
 

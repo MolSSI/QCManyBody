@@ -11,17 +11,36 @@ There are inadvertantly a few classes of tests:
 
 ### Examples
 
-* includes TODO
+* includes [test_examples](test_examples.py)
+* tests core and high-level interfaces
+* easy to read
+* as set up, one test runs w/o any QC runners, while the other two tests require Psi4 and NWChem.
+* _A_ way to run the examples is to create a conda environment from the file below (Linux/Mac/Win), activate it, then
+  `pytest -v qcmanybody/ -k "examples"`
+
+```yaml
+name: test
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python
+  - qcmanybody
+  - qcengine
+  - pytest
+  - psi4=1.9.1
+  - nwchem
+```
 
 ### Unit Tests
 
-* includes [test_mbe_keywords.py](test_mbe_keywords.py), [test_utils.py](test_utils.py)
+* includes [test_mbe_keywords](test_mbe_keywords.py), [test_utils](test_utils.py)
 * runs quickly with no extra requirements
 * tests elements of QCManyBody like input schema and utilities
 
 ### Static-Data Regression Tests
 
-* includes [test_single.py](test_single.py), [test_multi.py](test_multi.py), [test_multi_ss.py](test_multi_ss.py)
+* includes [test_single](test_single.py), [test_multi](test_multi.py), [test_multi_ss](test_multi_ss.py)
 * tests core interface
 * HARD TO READ! These test many combinations of inputs and a dictionary comparison against pre-stored outputs, so parts
   are scattered. Users looking for examples aren't advised to look at these.
