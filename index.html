@@ -636,10 +636,10 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <h2 id="package-overview">Package Overview</h2>
 <p>The package has two main interfaces. The high-level interface allows for a comprehensive workflow, where the user
 provides complete information about the calculation, including the full specification (method, basis set, etc.) of the
-manybody calculation. This is designed to work with <a href="https://github.com/MolSSI/QCEngine">QCEngine</a> or other packages
+many-body calculation. This is designed to work with <a href="https://github.com/MolSSI/QCEngine">QCEngine</a> or other packages
 that implement the <a href="https://github.com/MolSSI/QCSchema">QCSchema</a>.</p>
 <p>For more information, see <a href="high-level-interface/">High-level interface</a>.</p>
-<p>QCManyBody also has a core low-level interface that allows for more flexibility in how the calculations are run. This
+<p>QCManyBody also has a low-level <em>core</em> interface that allows for more flexibility in how the calculations are run. This
 interface generally takes a molecule and an arbitrary definition of quantum chemistry specifications, and expects
 the user to run them themselves.</p>
 <p>For more information, see <a href="core-interface/">Core interface</a>.</p>

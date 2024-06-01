@@ -636,12 +636,12 @@
 The primary responsibilities of the core interface are:</p>
 <ol>
 <li>Given a molecule and desired levels of MBE, return the fragments and levels that must be computed for each fragment</li>
-<li>Given a dictionary of the results of those computations, analyze those results and calculate the desired manybody properties</li>
+<li>Given a dictionary of the results of those computations, analyze those results and calculate the desired many-body properties</li>
 </ol>
 <p>Note that the user is expected to run the calculations themselves, and the core interface does not provide any tools for
 running the calculations.</p>
 <h2 id="using-the-core-interface">Using the core interface</h2>
-<p>The core interface is accessed through the [<code>ManyBodyCore</code>][qcmanybody.manybody.ManyBodyCore]
+<p>The core interface is accessed through the <a class="autorefs autorefs-internal" href="../api/#qcmanybody.ManyBodyCore"><code>ManyBodyCore</code></a>
 class.</p>
 <p>The first step is to create a molecule. This molecule is a
 <a href="https://molssi.github.io/QCElemental/model_molecule.html">QCElemental molecule object</a>, and must contain fragments.
@@ -677,7 +677,7 @@ map these strings to some meaningful definition of a calculation.</p>
     is the same for all levels.</p>
 <p>For a complete discussion of the other options available in the <code>ManyBodyCore</code> object, see the
 <a href="../keywords/">keywords discussion</a>
-the [<code>ManyBodyCore API documentation</code>][qcmanybody.manybody.ManyBodyCore].</p>
+the <a class="autorefs autorefs-internal" href="../api/#qcmanybody.ManyBodyCore"><code>ManyBodyCore API documentation</code></a>.</p>
 <p>The next step is to obtain the calculations to be run from the <code>ManyBodyCore</code> object.
 This is done with a python generator function <code>iterate_molecules</code> that returns
 a tuple. This tuple contains</p>
