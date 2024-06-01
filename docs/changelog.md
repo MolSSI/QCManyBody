@@ -41,6 +41,7 @@
    partial schema dictionary format rather than requiring a constructed `qcelemental.Molecule` object. If the molecule
    is a single large fragment, an error is thrown. @loriab
  * [\#30](https://github.com/MolSSI/QCManyBody/pull/30) Docs -- add end-to-end demos in test_examples. @loriab
+ * [\#31](https://github.com/MolSSI/QCManyBody/pull/31) Schema -- add "none" as a bsse_type alias to "nocp". @loriab
 
 #### Bug Fixes
 

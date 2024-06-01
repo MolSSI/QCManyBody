@@ -9,6 +9,18 @@ from qcelemental import constants
 from qcmanybody.models import FragBasIndex
 
 
+__all__ = [
+    # "collect_vars",
+    "delabeler",
+    "labeler",
+    # "print_nbody_energy",
+    "provenance_stamp",
+    "resize_gradient",
+    "resize_hessian",
+    # "sum_cluster_data",
+]
+
+
 def find_shape(x: Union[float, np.ndarray]) -> Tuple[int, ...]:
     if isinstance(x, float):
         return (1,)
@@ -54,13 +66,13 @@ def resize_gradient(
     *, 
     reverse: bool = False,
 ) -> np.ndarray:
-    """Pads or extracts a gradient array between subsystem and full supersystem sizes.
+    r"""Pads or extracts a gradient array between subsystem and full supersystem sizes.
 
     Parameters
     ----------
     grad
-        Gradient matrix of natural size for *bas*, (3 * <nat in bas>, 3).
-        If `reverse=True`, gradient matrix of supersystem size, (3 * <nat of all fragments>, 3).
+        Gradient matrix of natural size for *bas*, (3 * _<nat in bas\>_, 3).
+        If `reverse=True`, gradient matrix of supersystem size, (3 * _<nat of all fragments\>_, 3).
     bas
         1-indexed fragments active in *grad*.
         If `reverse=True`, 1-indexed fragments to be extracted from *grad*.
@@ -71,12 +83,13 @@ def resize_gradient(
         Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.
         For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.
     reverse
-        If True, contract *grad* from supersystem size and shape that which is natural for *bas*.
+        If True, contract *grad* from supersystem size and shape to that which is natural for *bas*.
 
     Returns
     -------
-        Gradient array padded with zeros to supersystem size, (3 * <nat of supersystem>, 3).
-        If reverse=True, gradient array extracted to natural size, (3 * <nat in bas>, 3).
+    np.ndarray
+        Gradient array padded with zeros to supersystem size, (3 * _<nat of supersystem\>_, 3).
+        If reverse=True, gradient array extracted to natural size, (3 * _<nat in bas\>_, 3).
 
     """
     if reverse:
@@ -105,13 +118,13 @@ def resize_hessian(
     *,
     reverse: bool = False,
 ) -> np.ndarray:
-    """Pads or extracts a Hessian array between subsystem and full supersystem sizes.
+    r"""Pads or extracts a Hessian array between subsystem and full supersystem sizes.
 
     Parameters
     ----------
-    grad
-        Hessian matrix of natural size for *bas*, (3 * <nat in bas>, 3 * <nat in bas>).
-        If `reverse=True`, Hessian matrix of supersystem size, (3 * <nat of all fragments>, 3 * <nat of all fragments>).
+    hess
+        Hessian matrix of natural size for *bas*, (3 * _<nat in bas\>_, 3 * _<nat in bas\>_).
+        If `reverse=True`, Hessian matrix of supersystem size, (3 * _<nat of all fragments\>_, 3 * _<nat of all fragments\>_).
     bas
         1-indexed fragments active in *hess*.
         If `reverse=True`, 1-indexed fragments to be extracted from *hess*.
@@ -122,12 +135,13 @@ def resize_hessian(
         Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.
         For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.
     reverse
-        If True, contract *hess* from supersystem size and shape that which is natural for *bas*.
+        If True, contract *hess* from supersystem size and shape to that which is natural for *bas*.
 
     Returns
     -------
-        Hessian array padded with zeros to supersystem size, (3 * <nat of supersystem>, 3 * <nat of supersystem>).
-        If reverse=True, Hessian array extracted to natural size, (3 * <nat in bas>, 3 * <nat in bas>).
+    ndarray
+        Hessian array padded with zeros to supersystem size, (3 * _<nat of supersystem\>_, 3 * _<nat of supersystem\>_).
+        If reverse=True, Hessian array extracted to natural size, (3 * _<nat in bas\>_, 3 * _<nat in bas\>_).
 
     """
     if reverse:
@@ -174,19 +188,20 @@ def sum_cluster_data(
         A list of (frag, bas) tuples notating all the required computations for the desired sum.
     mc_level_lbl
         User label for what modelchem level results should be pulled out of *data*.
-    vmfc, optional
+    vmfc
         Is this a vmfc calculation, by default False?
-    nb, optional
+    nb
         1-indexed n-body level only used when `vmfc=True`, by default 0.
 
     Returns
     -------
-    Scalar or array containing summed energy, gradient, Hessian, or other result.
-    Usually (nocp or cp; `vmfc=False`), compute_list defines all fragments of a given number of
-    active fragments and active basis fragments, so the return is the 3b@3b sum, for example.
-    Other times (`vmfc=True`), compute list defines all fragments of a given number of active basis
-    fragments. Then alternating weighting is applied so if `nb=3`, the return is the quantity
-    (3b@3b sum - 2b@3b sum + 1b@3b sum), for example.
+    Union[float, np.ndarray]
+        Scalar or array containing summed energy, gradient, Hessian, or other result.
+        Usually (nocp or cp; `vmfc=False`), compute_list defines all fragments of a given number of
+        active fragments and active basis fragments, so the return is the 3b@3b sum, for example.
+        Other times (`vmfc=True`), compute list defines all fragments of a given number of active basis
+        fragments. Then alternating weighting is applied so if `nb=3`, the return is the quantity
+        (3b@3b sum - 2b@3b sum + 1b@3b sum), for example.
 
     Raises
     ------
@@ -230,13 +245,13 @@ def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> s
     Returns
     -------
     str
-        JSON string from inputs: `labeler("mp2",(1), (1, 2))` returns `'["mp2", 1, [1, 2]]'`.
+        JSON string from inputs: `labeler("mp2", (1), (1, 2))` returns `'["mp2", 1, [1, 2]]'`.
     """
     return json.dumps([str(mc_level_lbl), frag, bas])
 
 
 def delabeler(item: str) -> Tuple[str, Tuple[int, ...], Tuple[int, ...]]:
-    """Transform labels like string "1_((2,), (1, 2))" into tuple (1, (2,), (1, 2))."""
+    """Back-form from label into tuple: `delabeler('["mp2", 1, [1, 2]]')` returns `('mp2', 1, [1, 2])`."""
 
     mc, frag, bas = json.loads(item)
     return str(mc), frag, bas
@@ -260,7 +275,7 @@ def print_nbody_energy(
         Specialization for table title.
     nfragments
         Number of lines in table is number of fragments.
-    embedding, optional
+    embedding
         Whether charge embedding present suppress printing, usually False
     supersystem_ie_only
         Whether only 1-body and nfragments-body levels are available, usually False.
@@ -269,7 +284,18 @@ def print_nbody_energy(
 
     Returns
     -------
-        A text table Hartrees and kcal/mol
+    str
+        A text table in Hartrees and kcal/mol
+
+        ```
+        ==> N-Body: Counterpoise Corrected (CP) energies <=='
+
+                n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy'
+                           [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]'
+                     1     -386.455609352609        0.000000000000        0.000000000000        0.000000000000        0.000000000000'
+                     2     -384.203153844163        2.252455508446     1413.437170812134        2.252455508446     1413.437170812134'
+          FULL/RTN   3     -384.128628718676        2.326980633933     1460.202393089624        0.074525125487       46.765222277490'
+        ```
     """
     info = f"""\n   ==> N-Body: {header} energies <==\n\n"""
     info += f"""     {"n-Body":>12}     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy\n"""
@@ -342,14 +368,15 @@ def collect_vars(
         Dictionary of minimal per-body info already specialized for property *prop* and treatment *bsse*. May contain either total data or interaction data, both cummulative not additive, from 1-body to max_nbody-body (see also *supersystem_ie_only*). Interaction data signaled by zero float or array for 1-body. May contain multiple model chemistry levels.
     max_nbody
         _description_
-    embedding, optional
+    embedding
         Is charge embedding enabled, by default False?
-    supersystem_ie_only, optional
+    supersystem_ie_only
         Is data available in *body_dict* only for 1-body (possibly zero) and nfr-body levels? By default False: data is available for consecutive levels, up to max_nbody-body.
     has_supersystem
         Whether contributions higher than max_nbody are a summary correction.
     Returns
     -------
+    dict
         _description_. Empty return if *embedding* enabled.
     """
     previous_e = body_dict[1]
@@ -406,6 +433,10 @@ def provenance_stamp(routine: str) -> Dict[str, str]:
     with QCManyBody's credentials for creator and version. The
     generating routine's name is passed in through `routine`.
 
+    ```python
+    qcmb.utils.provenance_stamp(__name__)
+    #> {'creator': 'QCManyBody', 'version': '0.2.2', 'routine': '__main__'}
+    ```
     """
     import qcmanybody
     return {"creator": "QCManyBody", "version": qcmanybody.__version__, "routine": routine}

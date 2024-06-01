@@ -4,7 +4,7 @@ The core interface of QCManyBody is designed to allow for more flexibility in ho
 The primary responsibilities of the core interface are:
 
 1. Given a molecule and desired levels of MBE, return the fragments and levels that must be computed for each fragment
-2. Given a dictionary of the results of those computations, analyze those results and calculate the desired manybody properties
+2. Given a dictionary of the results of those computations, analyze those results and calculate the desired many-body properties
 
 Note that the user is expected to run the calculations themselves, and the core interface does not provide any tools for
 running the calculations.
@@ -12,7 +12,7 @@ running the calculations.
 
 ## Using the core interface
 
-The core interface is accessed through the [`ManyBodyCore`][qcmanybody.manybody.ManyBodyCore]
+The core interface is accessed through the [`ManyBodyCore`][qcmanybody.core.ManyBodyCore]
 class.
 
 The first step is to create a molecule. This molecule is a
@@ -57,7 +57,7 @@ map these strings to some meaningful definition of a calculation.
 
 For a complete discussion of the other options available in the `ManyBodyCore` object, see the
 [keywords discussion](keywords.md)
-the [`ManyBodyCore API documentation`][qcmanybody.manybody.ManyBodyCore].
+the [`ManyBodyCore API documentation`][qcmanybody.core.ManyBodyCore].
 
 The next step is to obtain the calculations to be run from the `ManyBodyCore` object.
 This is done with a python generator function `iterate_molecules` that returns

@@ -97,6 +97,7 @@ class BsseEnum(str, Enum):
     vmfc = "vmfc"  # Valiron-Mayer function counterpoise
     ssfc = "cp"
     mbe = "nocp"
+    none = "nocp"
 
     def formal(self):
         return {

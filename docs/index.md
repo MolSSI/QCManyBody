@@ -27,12 +27,12 @@ pip install git+https://github.com/MolSSI/QCManyBody.git
 
 The package has two main interfaces. The high-level interface allows for a comprehensive workflow, where the user
 provides complete information about the calculation, including the full specification (method, basis set, etc.) of the
-manybody calculation. This is designed to work with [QCEngine](https://github.com/MolSSI/QCEngine) or other packages
+many-body calculation. This is designed to work with [QCEngine](https://github.com/MolSSI/QCEngine) or other packages
 that implement the [QCSchema](https://github.com/MolSSI/QCSchema).
 
 For more information, see [High-level interface](high-level-interface.md).
 
-QCManyBody also has a core low-level interface that allows for more flexibility in how the calculations are run. This
+QCManyBody also has a low-level _core_ interface that allows for more flexibility in how the calculations are run. This
 interface generally takes a molecule and an arbitrary definition of quantum chemistry specifications, and expects
 the user to run them themselves.
 

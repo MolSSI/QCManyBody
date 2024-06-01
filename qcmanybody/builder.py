@@ -6,6 +6,9 @@ from typing import Iterable, Union, Literal, Optional, Dict, Set, List
 from qcmanybody.models import BsseEnum, FragBasIndex
 
 
+__all__ = ["build_nbody_compute_list"]
+
+
 def build_nbody_compute_list(
     bsse_type: Iterable[BsseEnum],
     nfragments: int,
