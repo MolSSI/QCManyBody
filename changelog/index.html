@@ -721,6 +721,8 @@
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/28">#28</a> Intf -- low-level "core" interface renamed from
    <code>ManyBodyCalculator</code> to <code>ManyBodyCore</code>. The old name will continue to work for a few months. Also, its file changed
    from <code>manybody.py</code> to <code>core.py</code> but it was already a top-level import. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/30">#30</a> Intf -- low-level "core" interface now requires named arguments
+   beyond the first recognizable ones (mol, bsse_type, levels). @loriab</li>
 </ul>
 <h4 id="new-features">New Features</h4>
 <h4 id="enhancements">Enhancements</h4>
@@ -729,6 +731,10 @@
    module. @loriab</li>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/29">#29</a> Maint -- QCEngine is needed only for the continuous running
    function of the high-level interface, so making it an optional dependency. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/30">#30</a> Intf -- low-level "core" interface now accepts a molecule in
+   partial schema dictionary format rather than requiring a constructed <code>qcelemental.Molecule</code> object. If the molecule
+   is a single large fragment, an error is thrown. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/30">#30</a> Docs -- add end-to-end demos in test_examples. @loriab</li>
 </ul>
 <h4 id="bug-fixes">Bug Fixes</h4>
 <h4 id="misc">Misc.</h4>
