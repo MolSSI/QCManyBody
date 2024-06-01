@@ -1,8 +1,11 @@
 import pprint
 
-import pytest
 from qcelemental.testing import compare_values
-from .addons import uusing
+try:
+    from .addons import uusing
+except ImportError:
+    # for runnning file as script
+    from qcmanybody.tests.addons import uusing
 
 
 # * for anyone replicating this, note that Psi4 MP2 is density-fitted, and NWChem CCSD is conventional.
@@ -238,3 +241,9 @@ def test_highlevel_interface_example():
     pprint.pprint(ret.dict(), width=200)
     # Uncomment below to force fail and see `ret` printing
     # assert 0
+
+
+if __name__ == "__main__":
+    test_core_interface_example_1_show_running()
+    test_core_interface_example_2_show_processing()
+    test_highlevel_interface_example()

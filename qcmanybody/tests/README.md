@@ -15,8 +15,9 @@ There are inadvertantly a few classes of tests:
 * tests core and high-level interfaces
 * easy to read
 * as set up, one test runs w/o any QC runners, while the other two tests require Psi4 and NWChem.
-* _A_ way to run the examples is to create a conda environment from the file below (Linux/Mac/Win), activate it, then
-  `pytest -v qcmanybody/ -k "examples"`
+* _A_ way to run the examples is to create a conda environment from the file below (Linux/Mac/Win), activate it, then:
+  * run it through pytest as `pytest -v qcmanybody/ -k "examples"`
+  * -or- run it through python as `python qcmanybody/tests/test_examples.py`
 
 ```yaml
 name: test
