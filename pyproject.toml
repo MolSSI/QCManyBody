@@ -43,6 +43,9 @@ docs = [
     "mkdocstrings[python]",
     "tabulate",
 ]
+dev = [
+    "pre-commit",
+]
 
 [tool.setuptools.package-data]
 
@@ -55,7 +58,11 @@ issues = "https://github.com/MolSSI/QCManyBody/issues"
 
 [tool.black]
 line-length = 120
+exclude = '''.*test_.*'''
 
+[tool.isort]
+profile = "black"
+line_length = 120
 
 [tool.setuptools_scm]
 
