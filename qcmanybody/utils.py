@@ -60,10 +60,10 @@ def all_same_shape(it: Iterable[Union[float, np.ndarray]]) -> bool:
 
 def resize_gradient(
     grad: np.ndarray,
-    bas: Tuple[int, ...], 
-    fragment_size_dict: Dict[int, int], 
-    fragment_slice_dict: Dict[int, slice], 
-    *, 
+    bas: Tuple[int, ...],
+    fragment_size_dict: Dict[int, int],
+    fragment_slice_dict: Dict[int, slice],
+    *,
     reverse: bool = False,
 ) -> np.ndarray:
     r"""Pads or extracts a gradient array between subsystem and full supersystem sizes.
@@ -263,7 +263,7 @@ def print_nbody_energy(
     nfragments: int,
     embedding: bool,
     supersystem_ie_only: bool,
-    supersystem_beyond: Optional[int]
+    supersystem_beyond: Optional[int],
 ) -> str:
     """Format summary string for energies of a single bsse_type. Logs and returns output.
 
@@ -348,14 +348,14 @@ def print_nbody_energy(
 
 
 def collect_vars(
-        bsse: str,
-        prop: str,
-        body_dict: Mapping[int, Union[float, np.ndarray]],
-        max_nbody: int,
-        embedding: bool = False,
-        supersystem_ie_only: bool = False,
-        has_supersystem: bool = False,
-    ) -> Dict:
+    bsse: str,
+    prop: str,
+    body_dict: Mapping[int, Union[float, np.ndarray]],
+    max_nbody: int,
+    embedding: bool = False,
+    supersystem_ie_only: bool = False,
+    has_supersystem: bool = False,
+) -> Dict:
     """From *body_dict*, construct QCVariables.
 
     Parameters
@@ -439,4 +439,5 @@ def provenance_stamp(routine: str) -> Dict[str, str]:
     ```
     """
     import qcmanybody
+
     return {"creator": "QCManyBody", "version": qcmanybody.__version__, "routine": routine}

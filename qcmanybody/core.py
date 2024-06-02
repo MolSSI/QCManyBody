@@ -182,7 +182,7 @@ class ManyBodyCore:
         info = []
         for mc, counter in compute_list_count.items():
             all_counter = counter["all"]
-            info.append(f"    Model chemistry \"{mc}\" (???):    {sum(all_counter.values())}")
+            info.append(f'    Model chemistry "{mc}" (???):    {sum(all_counter.values())}')
             for nb, count in sorted(all_counter.items()):
                 other_counts = [f"{sub}: {counter[sub][nb]}" for sub in ["nocp", "cp", "vmfc_compute"]]
                 info.append(f"        Number of {nb}-body computations: {count:6} ({', '.join(other_counts)})")
@@ -226,7 +226,7 @@ class ManyBodyCore:
                         embedding_frags = list(set(range(1, self.nfragments + 1)) - set(basis_atoms))
                         charges = []
                         for ifr in embedding_frags:
-                            positions = self.molecule.get_fragment(ifr-1).geometry.tolist()
+                            positions = self.molecule.get_fragment(ifr - 1).geometry.tolist()
                             charges.extend([[chg, i] for i, chg in zip(positions, self.embedding_charges[ifr])])
                         mol.extras["embedding_charges"] = charges
 
@@ -536,7 +536,7 @@ class ManyBodyCore:
         all_results = {}
         nbody_dict = {}
         stdout = ""
-#        all_results["energy_body_dict"] = {"cp": {1: 0.0}}
+        #        all_results["energy_body_dict"] = {"cp": {1: 0.0}}
 
         for property_label, property_results in component_results_inv.items():
             # Expand gradient and hessian
@@ -597,7 +597,10 @@ class ManyBodyCalculator(ManyBodyCore):
         supersystem_ie_only: bool,
         embedding_charges: Mapping[int, Sequence[float]],
     ):
-        super().__init__(molecule, bsse_type, levels,
+        super().__init__(
+            molecule,
+            bsse_type,
+            levels,
             return_total_data=return_total_data,
             supersystem_ie_only=supersystem_ie_only,
             embedding_charges=embedding_charges,

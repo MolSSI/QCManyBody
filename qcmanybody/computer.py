@@ -5,11 +5,13 @@ import copy
 import pprint
 from functools import partial
 import numpy as np
+
 pp = pprint.PrettyPrinter(width=120, compact=True, indent=1)
 nppp = partial(np.array_str, max_line_width=120, precision=8, suppress_small=True)
 nppp10 = partial(np.array_str, max_line_width=120, precision=10, suppress_small=True)
 
 from ast import literal_eval
+
 # v2: from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Tuple, Union, Literal, Optional
 from typing import Any, Dict, List, Mapping, Tuple, Union, Literal, Optional, TYPE_CHECKING
 
@@ -56,8 +58,11 @@ class AtomicComputer(BaseComputerQCNG):
     molecule: Molecule = Field(..., description="The molecule to use in the computation.")
     basis: str = Field(..., description="The quantum chemistry basis set to evaluate (e.g., 6-31g, cc-pVDZ, ...).")
     method: str = Field(..., description="The quantum chemistry method to evaluate (e.g., B3LYP, MP2, ...).")
-    driver: DriverEnum = Field(..., description="The resulting type of computation: energy, gradient, hessian, properties."
-        "Note for finite difference that this should be the target driver, not the means driver.")
+    driver: DriverEnum = Field(
+        ...,
+        description="The resulting type of computation: energy, gradient, hessian, properties."
+        "Note for finite difference that this should be the target driver, not the means driver.",
+    )
     keywords: Dict[str, Any] = Field(default_factory=dict, description="The keywords to use in the computation.")
     program: str = Field(..., description="Which program harness to run single-point with.")
     computed: bool = Field(False, description="Whether quantum chemistry has been run on this task.")
@@ -85,15 +90,14 @@ class AtomicComputer(BaseComputerQCNG):
     def plan(self) -> AtomicInput:
         """Form QCSchema input from member data."""
 
-        atomic_model = AtomicInput(**{
-            "molecule": self.molecule,
-            "driver": self.driver,
-            "model": {
-                "method": self.method,
-                "basis": self.basis
-            },
-            "keywords": self.keywords,
-        })
+        atomic_model = AtomicInput(
+            **{
+                "molecule": self.molecule,
+                "driver": self.driver,
+                "model": {"method": self.method, "basis": self.basis},
+                "keywords": self.keywords,
+            }
+        )
 
         return atomic_model
 
@@ -107,17 +111,17 @@ class AtomicComputer(BaseComputerQCNG):
         if self.computed:
             return
 
-        #logger.info(f'<<< JSON launch ... {self.molecule.name} {self.molecule.nuclear_repulsion_energy()}')
+        # logger.info(f'<<< JSON launch ... {self.molecule.name} {self.molecule.nuclear_repulsion_energy()}')
 
         self.result = qcng_compute(
             self.plan(),
             self.program,
-            raise_error=False,  #True,
-            #task_config=task_config,
+            raise_error=False,  # True,
+            # task_config=task_config,
         )
 
-        #pp.pprint(self.result.model_dump())
-        #logger.debug(pp.pformat(self.result.model_dump()))
+        # pp.pprint(self.result.model_dump())
+        # logger.debug(pp.pformat(self.result.model_dump()))
         self.computed = True
 
     def get_results(self, client: Optional["qcportal.FractalClient"] = None) -> AtomicResult:
@@ -134,8 +138,8 @@ class ManyBodyComputer(BaseComputerQCNG):
     input_data: ManyBodyInput = Field(
         ...,
         description="Input schema containing the relevant settings for performing the many body "
-            "expansion. This is entirely redundant with the piecemeal assembly of this Computer class "
-            "and is only stored to be available for error handling and exact reconstruction of ManyBodyResult.",
+        "expansion. This is entirely redundant with the piecemeal assembly of this Computer class "
+        "and is only stored to be available for error handling and exact reconstruction of ManyBodyResult.",
     )
     bsse_type: List[BsseEnum] = Field(
         [BsseEnum.cp],
@@ -145,13 +149,13 @@ class ManyBodyComputer(BaseComputerQCNG):
     molecule: Molecule = Field(
         ...,
         description="Target molecule for many body expansion (MBE) or interaction energy (IE) analysis. "
-            "Fragmentation should already be defined in `fragments` and related fields.",
+        "Fragmentation should already be defined in `fragments` and related fields.",
     )
     driver: DriverEnum = Field(
         ...,
         description="The computation driver; i.e., energy, gradient, hessian. In case of ambiguity (e.g., MBE gradient "
-            "through finite difference energies or MBE energy through composite method), this field refers to the "
-            "*target* derivative, not any *means* specification.",
+        "through finite difference energies or MBE energy through composite method), this field refers to the "
+        "*target* derivative, not any *means* specification.",
     )
     embedding_charges: Optional[Dict[int, List[float]]] = Field(
         None,
@@ -173,11 +177,11 @@ class ManyBodyComputer(BaseComputerQCNG):
         None,
         validate_default=True,
         # v2: description=ManyBodyKeywords.model_fields["levels"].description + \
-        description=ManyBodyKeywords.__fields__["levels"].field_info.description + \
-            "Examples above are processed in the ManyBodyComputer, and once processed, only the values should be used. "
-            "The keys turn into nbodies_per_mc_level, as notated below. "
-            "* {1: 'ccsd(t)', 2: 'mp2', 'supersystem': 'scf'} -> nbodies_per_mc_level=[[1], [2], ['supersystem']] "
-            "* {2: 'ccsd(t)/cc-pvdz', 3: 'mp2'} -> nbodies_per_mc_level=[[1, 2], [3]] ",
+        description=ManyBodyKeywords.__fields__["levels"].field_info.description
+        + "Examples above are processed in the ManyBodyComputer, and once processed, only the values should be used. "
+        "The keys turn into nbodies_per_mc_level, as notated below. "
+        "* {1: 'ccsd(t)', 2: 'mp2', 'supersystem': 'scf'} -> nbodies_per_mc_level=[[1], [2], ['supersystem']] "
+        "* {2: 'ccsd(t)/cc-pvdz', 3: 'mp2'} -> nbodies_per_mc_level=[[1, 2], [3]] ",
     )
     max_nbody: Optional[int] = Field(
         None,
@@ -191,7 +195,7 @@ class ManyBodyComputer(BaseComputerQCNG):
         # v2: description=ManyBodyKeywords.model_fields["supersystem_ie_only"].description,
         description=ManyBodyKeywords.__fields__["supersystem_ie_only"].field_info.description,
     )
-    task_list: Dict[str, Any] = {}  #MBETaskComputers] = {}
+    task_list: Dict[str, Any] = {}  # MBETaskComputers] = {}
     qcmb_core: Optional[Any] = Field(
         None,
         description="Low-level interface",
@@ -213,13 +217,17 @@ class ManyBodyComputer(BaseComputerQCNG):
         #   works until aliases added to BsseEnum
         # * BsseEnum[bt].value as return works for good vals, but passing bad
         #   vals through as bt lets pydantic raise a clearer error message
-        return list(dict.fromkeys([(BsseEnum[bt.lower()].value if bt.lower() in BsseEnum.__members__ else bt.lower()) for bt in v]))
+        return list(
+            dict.fromkeys(
+                [(BsseEnum[bt.lower()].value if bt.lower() in BsseEnum.__members__ else bt.lower()) for bt in v]
+            )
+        )
 
     # v2: @field_validator("embedding_charges")
     @validator("embedding_charges", pre=True)
     @classmethod
     # v2: def set_embedding_charges(cls, v: Any, info: FieldValidationInfo) -> Dict[int, List[float]]:
-    def set_embedding_charges(cls, v, values): # -> Dict[int, List[float]]:
+    def set_embedding_charges(cls, v, values):  # -> Dict[int, List[float]]:
         # print(f"hit embedding_charges validator with {v}", end="")
         nfr = len(values["molecule"].fragments)
         # v2: if len(v) != info.data["nfragments"]:
@@ -260,8 +268,8 @@ class ManyBodyComputer(BaseComputerQCNG):
         if v is None:
             pass
             # TODO levels = {plan.max_nbody: method}
-            #v = {info.data["nfragments"]: "???method???"}
-            #v = {len(info.data["molecule"].fragments): "???method???"}
+            # v = {info.data["nfragments"]: "???method???"}
+            # v = {len(info.data["molecule"].fragments): "???method???"}
             # v2: v = {len(info.data["molecule"].fragments): "(auto)"}
             v = {len(values["molecule"].fragments): "(auto)"}
         else:
@@ -279,9 +287,9 @@ class ManyBodyComputer(BaseComputerQCNG):
     # TODO         "`[[1], [2]]` has max_nbody=2 and 1-body and 2-body contributions computed at different levels of theory. "
     # TODO         "An entry 'supersystem' means all higher order n-body effects up to the number of fragments. The n-body "
     # TODO         "levels are effectively sorted in the outer list, and any 'supersystem' element is at the end.")
-        #json_schema_extra={
-        #    "shape": ["nmc", "<varies>"],
-        #},
+    # json_schema_extra={
+    #    "shape": ["nmc", "<varies>"],
+    # },
     @property
     def nbodies_per_mc_level(self) -> List[List[Union[int, Literal["supersystem"]]]]:
         # print(f"hit nbodies_per_mc_level", end="")
@@ -318,13 +326,13 @@ class ManyBodyComputer(BaseComputerQCNG):
         nfr = len(values["molecule"].fragments)
         # print(f" {levels_max_nbody=} {nfr=}", end="")
 
-        #ALT if v == -1:
+        # ALT if v == -1:
         if v is None:
             v = levels_max_nbody
         elif v < 0 or v > nfr:
             raise ValueError(f"max_nbody={v} should be between 1 and {nfr}.")
         elif v != levels_max_nbody:
-            #raise ValueError(f"levels={levels_max_nbody} contradicts user max_nbody={v}.")
+            # raise ValueError(f"levels={levels_max_nbody} contradicts user max_nbody={v}.")
             # TODO reconsider logic. move this from levels to here?
             # v2: info.data["levels"] = {v: "(auto)"}
             values["levels"] = {v: "(auto)"}
@@ -335,12 +343,12 @@ class ManyBodyComputer(BaseComputerQCNG):
         # print(f" ... setting max_nbody={v}")
         return v
 
-#       levels          max_nbody           F-levels        F-max_nbody     result
-#
-#       {stuff}         None                {stuff}         set from stuff  all consistent; max_nbody from levels
-#       None            int                 {int: mtd}      int             all consistent; levels from max_nbody
-#       None            None                {nfr: mtd}      nfr             all consistent; any order
-#       {stuff}         int                 {stuff}         int             need to check consistency
+    #       levels          max_nbody           F-levels        F-max_nbody     result
+    #
+    #       {stuff}         None                {stuff}         set from stuff  all consistent; max_nbody from levels
+    #       None            int                 {int: mtd}      int             all consistent; levels from max_nbody
+    #       None            None                {nfr: mtd}      nfr             all consistent; any order
+    #       {stuff}         int                 {stuff}         int             need to check consistency
 
     # TODO also, perhaps change nbodies_per_mc_level into dict of lists so that pos'n/label indexing coincides
 
@@ -361,7 +369,9 @@ class ManyBodyComputer(BaseComputerQCNG):
             raise ValueError(f"Cannot skip intermediate n-body jobs when max_nbody={_max_nbody} != nfragments={_nfr}.")
 
         if (sio is True) and ("vmfc" in values["bsse_type"]):
-            raise ValueError(f"Cannot skip intermediate n-body jobs when VMFC in bsse_type={values['bsse_type']}. Use CP instead.")
+            raise ValueError(
+                f"Cannot skip intermediate n-body jobs when VMFC in bsse_type={values['bsse_type']}. Use CP instead."
+            )
 
         # print(f" ... setting {sio=}")
         return sio
@@ -395,7 +405,9 @@ class ManyBodyComputer(BaseComputerQCNG):
             specifications[mtd] = {}
             specifications[mtd]["program"] = spec.pop("program")
             specifications[mtd]["specification"] = spec
-            specifications[mtd]["specification"]["driver"] = computer_model.driver  # overrides atomic driver with mb driver
+            specifications[mtd]["specification"][
+                "driver"
+            ] = computer_model.driver  # overrides atomic driver with mb driver
             specifications[mtd]["specification"].pop("schema_name", None)
 
         computer_model.qcmb_core = ManyBodyCore(
@@ -415,7 +427,8 @@ class ManyBodyComputer(BaseComputerQCNG):
         except ModuleNotFoundError:
             raise ModuleNotFoundError(
                 "Python module qcengine not found. Solve by installing it: "
-                "`conda install qcengine -c conda-forge` or `pip install qcengine`")
+                "`conda install qcengine -c conda-forge` or `pip install qcengine`"
+            )
 
         component_properties = {}
         component_results = {}
@@ -431,7 +444,9 @@ class ManyBodyComputer(BaseComputerQCNG):
                     fkw.update({"external_potentials": charges})
                     inp.keywords["function_kwargs"] = fkw
                 else:
-                    raise RuntimeError(f"Don't know how to handle external charges in {specifications[chem]['program']}")
+                    raise RuntimeError(
+                        f"Don't know how to handle external charges in {specifications[chem]['program']}"
+                    )
 
             _, real, bas = delabeler(label)
             result = qcng.compute(inp, specifications[chem]["program"])
@@ -476,7 +491,9 @@ class ManyBodyComputer(BaseComputerQCNG):
         for t in self.task_list.values():
             t.compute(client=client)
 
-    def get_results(self, external_results: Dict, component_results: Dict, client: Optional["qcportal.FractalClient"] = None) -> ManyBodyResult:
+    def get_results(
+        self, external_results: Dict, component_results: Dict, client: Optional["qcportal.FractalClient"] = None
+    ) -> ManyBodyResult:
         """Return results as ManyBody-flavored QCSchema."""
 
         ret_energy = external_results.pop("ret_energy")
@@ -488,8 +505,8 @@ class ManyBodyComputer(BaseComputerQCNG):
 
         # load QCVariables
         qcvars = {
-            'NUCLEAR REPULSION ENERGY': self.molecule.nuclear_repulsion_energy(),
-            'NBODY NUMBER': nbody_number,
+            "NUCLEAR REPULSION ENERGY": self.molecule.nuclear_repulsion_energy(),
+            "NBODY NUMBER": nbody_number,
         }
 
         properties = {
@@ -506,36 +523,36 @@ class ManyBodyComputer(BaseComputerQCNG):
                 k = "nbody"
             qcvars[k] = val
 
-        qcvars['CURRENT ENERGY'] = ret_energy
-        if self.driver == 'gradient':
-            qcvars['CURRENT GRADIENT'] = ret_ptype
+        qcvars["CURRENT ENERGY"] = ret_energy
+        if self.driver == "gradient":
+            qcvars["CURRENT GRADIENT"] = ret_ptype
             properties["return_gradient"] = ret_ptype
-        elif self.driver == 'hessian':
-            qcvars['CURRENT GRADIENT'] = ret_gradient
-            qcvars['CURRENT HESSIAN'] = ret_ptype
+        elif self.driver == "hessian":
+            qcvars["CURRENT GRADIENT"] = ret_gradient
+            qcvars["CURRENT HESSIAN"] = ret_ptype
             properties["return_gradient"] = ret_gradient
             properties["return_hessian"] = ret_ptype
 
-#        build_out(qcvars)
+        #        build_out(qcvars)
         atprop = build_manybodyproperties(qcvars["nbody"])
         # print("ATPROP")
         # v2: pp.pprint(atprop.model_dump())
         # pp.pprint(atprop.dict())
 
-#        output_data = {
-#            "schema_version": 1,
-#            "molecule": gamessmol,  # overwrites with outfile Cartesians in case fix_*=F
-#            "extras": {**input_model.extras},
-#            "native_files": {k: v for k, v in outfiles.items() if v is not None},
-#            "properties": atprop,
+        #        output_data = {
+        #            "schema_version": 1,
+        #            "molecule": gamessmol,  # overwrites with outfile Cartesians in case fix_*=F
+        #            "extras": {**input_model.extras},
+        #            "native_files": {k: v for k, v in outfiles.items() if v is not None},
+        #            "properties": atprop,
 
-#####
-#        nbody_model = self.get_results(client=client)
-#        ret = nbody_model.return_result
-#
-#        wfn = core.Wavefunction.build(self.molecule, "def2-svp", quiet=True)
-#
-#        # TODO all besides nbody may be better candidates for extras than qcvars. energy/gradient/hessian_body_dict in particular are too simple for qcvars (e.g., "2")
+        #####
+        #        nbody_model = self.get_results(client=client)
+        #        ret = nbody_model.return_result
+        #
+        #        wfn = core.Wavefunction.build(self.molecule, "def2-svp", quiet=True)
+        #
+        #        # TODO all besides nbody may be better candidates for extras than qcvars. energy/gradient/hessian_body_dict in particular are too simple for qcvars (e.g., "2")
 
         # print("QCVARS PRESCREEN")
         # pp.pprint(qcvars)
@@ -545,31 +562,32 @@ class ManyBodyComputer(BaseComputerQCNG):
                 qcvars[qcv] = val
 
         # v2: component_results = self.model_dump()['task_list']  # TODO when/where include the indiv outputs
-        #?component_results = self.dict()['task_list']  # TODO when/where include the indiv outputs
-#        for k, val in component_results.items():
-#            val['molecule'] = val['molecule'].to_schema(dtype=2)
+        # ?component_results = self.dict()['task_list']  # TODO when/where include the indiv outputs
+        #        for k, val in component_results.items():
+        #            val['molecule'] = val['molecule'].to_schema(dtype=2)
 
         # print("QCVARS")
         # pp.pprint(qcvars)
 
         nbody_model = ManyBodyResult(
             **{
-                'input_data': self.input_data,
+                "input_data": self.input_data,
                 #'molecule': self.molecule,
                 # v2: 'properties': {**atprop.model_dump(), **properties},
-                'properties': {**atprop.dict(), **properties},
-                'component_properties': component_properties,
+                "properties": {**atprop.dict(), **properties},
+                "component_properties": component_properties,
                 "component_results": component_results,
-                'provenance': provenance_stamp(__name__),
-                'extras': {
-                    'qcvars': qcvars,
+                "provenance": provenance_stamp(__name__),
+                "extras": {
+                    "qcvars": qcvars,
                 },
-                'return_result': ret_ptype,
+                "return_result": ret_ptype,
                 "stdout": stdout,
-                'success': True,
-            })
+                "success": True,
+            }
+        )
 
-#        logger.debug('\nNBODY QCSchema:\n' + pp.pformat(nbody_model.model_dump()))
+        #        logger.debug('\nNBODY QCSchema:\n' + pp.pformat(nbody_model.model_dump()))
 
         return nbody_model
 

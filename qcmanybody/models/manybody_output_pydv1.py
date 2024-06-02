@@ -43,68 +43,76 @@ mbprop = {}
 # ========  Calcinfo  ===========================================================
 
 mbprop["calcinfo_nmc"] = (
-        Optional[int],
-        Field(
-            None,
-            description="The number of model chemistries applied to n-body levels of the computation.",
-        ))
+    Optional[int],
+    Field(
+        None,
+        description="The number of model chemistries applied to n-body levels of the computation.",
+    ),
+)
 
 mbprop["calcinfo_nfr"] = (
-        Optional[int],
-        Field(
-            None,
-            description="The number of fragments in the molecule for the computation.",
-        ))
+    Optional[int],
+    Field(
+        None,
+        description="The number of fragments in the molecule for the computation.",
+    ),
+)
 
 mbprop["calcinfo_natom"] = (
-        Optional[int],
-        Field(
-            None,
-            description="The number of atoms in the computation.",
-        ))  # alias nat
+    Optional[int],
+    Field(
+        None,
+        description="The number of atoms in the computation.",
+    ),
+)  # alias nat
 
 mbprop["calcinfo_nmbe"] = (
-        Optional[int],
-        Field(
-            None,
-            description="The number of real/ghost molecule patterns for the computation.",
-        ))  # alias NBODY NUMBER
+    Optional[int],
+    Field(
+        None,
+        description="The number of real/ghost molecule patterns for the computation.",
+    ),
+)  # alias NBODY NUMBER
 
 # ========  Canonical  ==========================================================
 
 mbprop["nuclear_repulsion_energy"] = (
-        Optional[float],
-        Field(
-            None,
-            description="The nuclear repulsion energy.",
-        ))
+    Optional[float],
+    Field(
+        None,
+        description="The nuclear repulsion energy.",
+    ),
+)
 
 # ret_energy
 mbprop["return_energy"] = (
-        Optional[float],
-        Field(
-            None,
-            description=f"The interaction energy of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Always available. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`\\ =\\ :attr:`~qcelemental.models.DriverEnum.energy` computations.",
-            json_schema_extra={"units": "E_h"},
-        ))
+    Optional[float],
+    Field(
+        None,
+        description=f"The interaction energy of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Always available. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`\\ =\\ :attr:`~qcelemental.models.DriverEnum.energy` computations.",
+        json_schema_extra={"units": "E_h"},
+    ),
+)
 
 # ret_gradient
 mbprop["return_gradient"] = (
-        Optional[Array[float]],
-        Field(
-            None,
-            description=f"The interaction gradient of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Available when driver is g/h. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`\\ =\\ :attr:`~qcelemental.models.DriverEnum.gradient` computations.",
-            json_schema_extra=json_schema_extras["gradient"],
-        ))
+    Optional[Array[float]],
+    Field(
+        None,
+        description=f"The interaction gradient of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Available when driver is g/h. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`\\ =\\ :attr:`~qcelemental.models.DriverEnum.gradient` computations.",
+        json_schema_extra=json_schema_extras["gradient"],
+    ),
+)
 
 # ret_hessian
 mbprop["return_hessian"] = (
-        Optional[Array[float]],
-        Field(
-            None,
-            description=f"The interaction Hessian of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Available when driver is h. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`\\ =\\ :attr:`~qcelemental.models.DriverEnum.hessian` computations.",
-            json_schema_extra=json_schema_extras["Hessian"],
-        ))
+    Optional[Array[float]],
+    Field(
+        None,
+        description=f"The interaction Hessian of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Available when driver is h. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`\\ =\\ :attr:`~qcelemental.models.DriverEnum.hessian` computations.",
+        json_schema_extra=json_schema_extras["Hessian"],
+    ),
+)
 
 # ========  CP E/G/H summary data  ==============================================
 
@@ -127,16 +135,18 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"MBE sum of subsystems of {nb}-body or fewer (cumulative); summed are total {plural} w/ cp treatment. Available when cp in bsse_type & rtd=T & max_nbody>={nb}{availability_of_derivative}.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
     # CP-CORRECTED TOTAL ENERGY
     mbprop[f"cp_corrected_total_{egh}"] = (
-            Optional[typ],
-            Field(
-                None,
-                description=f"Best available total {singular} with cp treatment: cp_corrected_total_{egh}_through_{{max_nbody}}_body. Available when cp in bsse_type & rtd=T{availability_of_derivative}.",
-                json_schema_extra=jse,
-            ))
+        Optional[typ],
+        Field(
+            None,
+            description=f"Best available total {singular} with cp treatment: cp_corrected_total_{egh}_through_{{max_nbody}}_body. Available when cp in bsse_type & rtd=T{availability_of_derivative}.",
+            json_schema_extra=jse,
+        ),
+    )
 
     # CP-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY
     for nb in range(1, MAX_NBODY):
@@ -146,16 +156,18 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} with cp treatment. Available when when cp in bsse_type & max_nbody>={nb}{availability_of_derivative}. The 1-body quantity is zero by definition.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
     # CP-CORRECTED INTERACTION ENERGY
     mbprop[f"cp_corrected_interaction_{egh}"] = (
-            Optional[typ],
-            Field(
-                None,
-                description=f"Best available interaction {singular} with cp treatment: cp_corrected_interaction_{egh}_through_{{max_nbody}}_body. Available when cp in bsse_type{availability_of_derivative}.",
-                json_schema_extra=jse,
-            ))
+        Optional[typ],
+        Field(
+            None,
+            description=f"Best available interaction {singular} with cp treatment: cp_corrected_interaction_{egh}_through_{{max_nbody}}_body. Available when cp in bsse_type{availability_of_derivative}.",
+            json_schema_extra=jse,
+        ),
+    )
 
     # CP-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY
     for nb in range(2, MAX_NBODY):
@@ -165,9 +177,10 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"{nb}-body total data less ({nb}-1)-body data for partial IE; inputs are total {plural} w/ cp treat. Available when cp in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
-# ========  NOCP E/G/H summary data  ============================================
+    # ========  NOCP E/G/H summary data  ============================================
 
     # NOCP-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY
     for nb in range(1, MAX_NBODY):
@@ -177,16 +190,18 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"MBE sum of subsystems of {nb}-body or fewer (cumulative); summed are total {plural} without cp treatment. Available when nocp in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
     # NOCP-CORRECTED TOTAL ENERGY
     mbprop[f"nocp_corrected_total_{egh}"] = (
-            Optional[typ],
-            Field(
-                None,
-                description=f"Best available total {singular} without cp treatment: nocp_corrected_total_{egh}_through_{{max_nbody}}_body. Available when nocp in bsse_type{availability_of_derivative}.",
-                json_schema_extra=jse,
-            ))
+        Optional[typ],
+        Field(
+            None,
+            description=f"Best available total {singular} without cp treatment: nocp_corrected_total_{egh}_through_{{max_nbody}}_body. Available when nocp in bsse_type{availability_of_derivative}.",
+            json_schema_extra=jse,
+        ),
+    )
 
     # NOCP-CORRECTED INTERATION ENERGY THROUGH {nb}-BODY
     for nb in range(1, MAX_NBODY):
@@ -196,19 +211,21 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} without cp treatment. Available when when nocp in bsse_type & max_nbody>={nb}{availability_of_derivative}. The 1-body quantity is zero by definition.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
-# TODO note htat TOT 1BODY cp=nocp=vmfc
-# TODO note that summ INTERACTION ENERGY props (w/o explicit -BODY) return 0.0 for max_nbody=1 for completeness
+    # TODO note htat TOT 1BODY cp=nocp=vmfc
+    # TODO note that summ INTERACTION ENERGY props (w/o explicit -BODY) return 0.0 for max_nbody=1 for completeness
 
     # NOCP-CORRECTED INTERACTION ENERGY
     mbprop[f"nocp_corrected_interaction_{egh}"] = (
-            Optional[typ],
-            Field(
-                None,
-                description=f"Best available interaction {singular} without cp treatment: nocp_corrected_interaction_{egh}_through_{{max_nbody}}_body. Available when nocp in bsse_type{availability_of_derivative}.",
-                json_schema_extra=jse,
-            ))
+        Optional[typ],
+        Field(
+            None,
+            description=f"Best available interaction {singular} without cp treatment: nocp_corrected_interaction_{egh}_through_{{max_nbody}}_body. Available when nocp in bsse_type{availability_of_derivative}.",
+            json_schema_extra=jse,
+        ),
+    )
 
     # NOCP-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY
     for nb in range(2, MAX_NBODY):
@@ -218,9 +235,10 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"{nb}-body total data less ({nb}-1)-body data for partial IE; inputs are total {plural} w/o cp treatment. Available when nocp in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
-# ========  VMFC E/G/H summary data  ============================================
+    # ========  VMFC E/G/H summary data  ============================================
 
     # VMFC-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY
     for nb in range(1, MAX_NBODY):
@@ -230,16 +248,18 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"MBE sum of subsystems of {nb}-body or fewer (cumulative); summed are total {plural} with vmfc treatment. Available when vmfc in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
     # VMFC-CORRECTED TOTAL ENERGY
     mbprop[f"vmfc_corrected_total_{egh}"] = (
-            Optional[typ],
-            Field(
-                None,
-                description=f"Best available total {singular} with vmfc treatment: vmfc_corrected_total_{egh}_through_{{max_nbody}}_body. Available when vmfc in bsse_type{availability_of_derivative}.",
-                json_schema_extra=jse,
-            ))
+        Optional[typ],
+        Field(
+            None,
+            description=f"Best available total {singular} with vmfc treatment: vmfc_corrected_total_{egh}_through_{{max_nbody}}_body. Available when vmfc in bsse_type{availability_of_derivative}.",
+            json_schema_extra=jse,
+        ),
+    )
 
     # VMFC-CORRECTED INTERATION ENERGY THROUGH {nb}-BODY
     for nb in range(1, MAX_NBODY):
@@ -249,16 +269,18 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"{nb}-body total data less 1-body total data for cumulative IE; inputs are total {plural} w/ vmfc treatment. Available when when vmfc in bsse_type & max_nbody>={nb}{availability_of_derivative}. The 1-body quantity is zero by definition.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
     # VMFC-CORRECTED INTERACTION ENERGY
     mbprop[f"vmfc_corrected_interaction_{egh}"] = (
-            Optional[typ],
-            Field(
-                None,
-                description=f"Best available interaction {singular} with vmfc treatment: vmfc_corrected_interaction_{egh}_through_{{max_nbody}}_body. Available when vmfc in bsse_type{availability_of_derivative}.",
-                json_schema_extra=jse,
-            ))
+        Optional[typ],
+        Field(
+            None,
+            description=f"Best available interaction {singular} with vmfc treatment: vmfc_corrected_interaction_{egh}_through_{{max_nbody}}_body. Available when vmfc in bsse_type{availability_of_derivative}.",
+            json_schema_extra=jse,
+        ),
+    )
 
     # VMFC-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY
     for nb in range(2, MAX_NBODY):
@@ -268,7 +290,8 @@ for singular in ["energy", "gradient", "Hessian"]:
                 None,
                 description=f"{nb}-body total data less ({nb}-1)-body total data for partial IE; inputs are total {plural} w/ vmfc treatment. Available when vmfc in bsse_type & max_nbody>={nb}{availability_of_derivative}.",
                 json_schema_extra=jse,
-            ))
+            ),
+        )
 
 
 class ProtoModelSkipDefaults(ProtoModel):
@@ -277,19 +300,21 @@ class ProtoModelSkipDefaults(ProtoModel):
         serialize_skip_defaults = True
         force_skip_defaults = True
 
+
 if TYPE_CHECKING:
     ManyBodyResultProperties = ProtoModelSkipDefaults
 else:
     # if/else suppresses a warning about using a dynamically generated class as Field type in ManyBodyResults
     ManyBodyResultProperties = create_model(
-    "ManyBodyResultProperties",
-    #__doc__=manybodyresultproperties_doc,  # needs later pydantic
-    __base__=ProtoModelSkipDefaults,
-    **mbprop,
-)
+        "ManyBodyResultProperties",
+        # __doc__=manybodyresultproperties_doc,  # needs later pydantic
+        __base__=ProtoModelSkipDefaults,
+        **mbprop,
+    )
 
 
 # ====  Results  ================================================================
+
 
 # ManyBodyResult(ManyBodyInput):
 class ManyBodyResult(SuccessfulResultBase):
@@ -318,7 +343,6 @@ class ManyBodyResult(SuccessfulResultBase):
     component_properties: Dict[str, AtomicResultProperties] = Field(
         ...,
         description="The key results for each subsystem species computed. Keys contain modelchem, real and ghost information (e.g., `'[\"(auto)\", [2], [1, 2, 3]]'`). Values are total e/g/H/property results. Array values, if present, are sized and shaped for the full supersystem.",
-
     )
     component_results: Dict[str, AtomicResult] = Field({}, description="Detailed results")
     return_result: Union[float, Array[float], Dict[str, Any]] = Field(

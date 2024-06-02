@@ -3,6 +3,7 @@ from typing import List
 import pytest
 
 from qcelemental.util import parse_version, which, which_import
+
 try:
     from qcengine.testing import _programs as _programs_qcng
 except ModuleNotFoundError:
@@ -16,9 +17,10 @@ __all__ = [
 
 
 def is_qcfractal_new_enough(version_feature_introduced):
-    if not which_import('qcfractal', return_bool=True):
+    if not which_import("qcfractal", return_bool=True):
         return False
     import qcfractal
+
     return parse_version(qcfractal.__version__) >= parse_version(version_feature_introduced)
 
 
@@ -66,6 +68,7 @@ def _compose_decos(decos):
         for deco in reversed(decos):
             func = deco(func)
         return func
+
     return composition
 
 
