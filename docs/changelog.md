@@ -98,4 +98,3 @@
 #### New Features
 
 * Runs CP, NoCP, VMFC energies, gradients, and Hessians. @bennybp @loriab
-

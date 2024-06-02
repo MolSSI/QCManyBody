@@ -6,4 +6,3 @@ For the [core interface](core-interface.md), the results are expected to be stor
 [high-level interface](high-level-interface.md), the results are stored in a `ManyBodyResult` object.
 
 ## Fields
-

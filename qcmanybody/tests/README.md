@@ -58,4 +58,3 @@ dependencies:
 * requires QCEngine be installed
 * requires one of Psi4, NWChem, or Cfour be installed (actual QCManyBody tests are the same with each QC runner)
 * small QC calculations are actually run, so takes a few minutes. Prune with `-k "not (3b or 4b)"`, for example.
-

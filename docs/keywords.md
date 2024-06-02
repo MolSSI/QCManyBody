@@ -72,7 +72,7 @@ In the [core interface](core-interface.md), all levels must be accounted for (th
 from 1 to the maximum), and `max_nbody` cannot be specified. In the high-level interface, a computational model
 fills in for any lower unlisted n-body levels.
 
-In the high-level interface, if both levels and max_nbody are provided, they must be consistent. 
+In the high-level interface, if both levels and max_nbody are provided, they must be consistent.
 
 Examples:
 
