@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import json
-from typing import Dict, Mapping, Set, Tuple, Union, Iterable, Optional
+from typing import Dict, Iterable, Mapping, Optional, Set, Tuple, Union
 
 import numpy as np
 from qcelemental import constants
 
 from qcmanybody.models import FragBasIndex
-
 
 __all__ = [
     # "collect_vars",

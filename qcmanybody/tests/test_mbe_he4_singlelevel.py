@@ -1,18 +1,19 @@
-import re
 import pprint
+import re
 
 import pytest
-
 from qcelemental import constants
 from qcelemental.models import Molecule
-# v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
-from qcelemental.testing import compare_values, compare_recursive
 
-from qcmanybody.models import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
+# v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
+from qcelemental.testing import compare_recursive, compare_values
+
 from qcmanybody import ManyBodyComputer
 from qcmanybody.computer import qcvars_to_manybodyproperties
+from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywords
 
 from .addons import using, uusing
+
 
 def skprop(qcvar):
     # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]

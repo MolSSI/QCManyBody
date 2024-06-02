@@ -3,6 +3,7 @@ Tests the DQM compute dispatch module
 """
 
 import pytest
+
 try:
     from pydantic.v1 import ValidationError
 except ImportError:
@@ -10,11 +11,12 @@ except ImportError:
 
 import qcelemental
 from qcelemental.models import DriverEnum, Molecule
-from qcmanybody.models import BsseEnum, ManyBodyInput
+
+from qcmanybody import ManyBodyCalculator  # test old name still operational
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputer
 from qcmanybody.computer import ManyBodyComputer
-from qcmanybody import ManyBodyCalculator  # test old name still operational
+from qcmanybody.models import BsseEnum, ManyBodyInput
 
 
 @pytest.fixture(scope="function")

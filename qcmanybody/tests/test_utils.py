@@ -1,9 +1,9 @@
-import pytest
 import numpy as np
-
+import pytest
 from qcelemental.testing import compare_values
 
 import qcmanybody as qcmb
+
 
 @pytest.fixture(scope="function")
 def mbe_data():

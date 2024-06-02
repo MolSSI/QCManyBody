@@ -1,19 +1,18 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Literal, Optional, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Union
 
 # v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
 try:
-    from pydantic.v1 import create_model, Field, validator
+    from pydantic.v1 import Field, create_model, validator
 except ImportError:
     from pydantic import create_model, Field, validator
 
-from qcelemental.models.types import Array
-from qcelemental.models.results import AtomicResult, AtomicResultProperties
 from qcelemental.models import ProtoModel, Provenance
+from qcelemental.models.results import AtomicResult, AtomicResultProperties
+from qcelemental.models.types import Array
 
 from .manybody_input_pydv1 import ManyBodyInput, SuccessfulResultBase
-
 
 # ====  Properties  =============================================================
 

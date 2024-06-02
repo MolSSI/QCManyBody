@@ -2,8 +2,9 @@ import pytest
 
 from qcmanybody import ManyBodyCalculator  # test old name still operational
 from qcmanybody.models import BsseEnum
+
 from .common import mol_h2o_3
-from .utils import load_ref_data, compare_results, load_component_data
+from .utils import compare_results, load_component_data, load_ref_data
 
 
 @pytest.mark.parametrize(

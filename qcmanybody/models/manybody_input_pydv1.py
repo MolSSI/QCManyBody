@@ -1,22 +1,21 @@
 from __future__ import annotations
 
 from enum import Enum, IntEnum
-from typing import Any, Dict, List, Optional, Literal, Tuple, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
 # v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
 try:
-    from pydantic.v1 import create_model, Field, validator
+    from pydantic.v1 import Field, create_model, validator
 except ImportError:
     from pydantic import create_model, Field, validator
 
-from qcelemental.models.types import Array
+from qcelemental.models import DriverEnum, ProtoModel, Provenance
 
 # from .basemodels import ExtendedConfigDict, ProtoModel
 from qcelemental.models.common_models import Model
 from qcelemental.models.molecule import Molecule
 from qcelemental.models.results import AtomicResultProperties, AtomicResultProtocols
-from qcelemental.models import DriverEnum, ProtoModel, Provenance
-
+from qcelemental.models.types import Array
 
 # ====  Misplaced & Next Models  ================================================
 

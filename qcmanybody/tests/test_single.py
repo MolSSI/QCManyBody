@@ -1,10 +1,11 @@
 import pytest
-
 import qcelemental
+
 from qcmanybody import ManyBodyCore
 from qcmanybody.models import BsseEnum
+
 from .common import mol_h2o_3_dict
-from .utils import load_ref_data, compare_results, load_component_data
+from .utils import compare_results, load_component_data, load_ref_data
 
 
 @pytest.mark.parametrize(

@@ -1,16 +1,16 @@
-import re
 import pprint
+import re
 
-import pytest
 import numpy as np
-
+import pytest
 from qcelemental.models import Molecule
 from qcelemental.testing import compare_values
 
-from qcmanybody.models import ManyBodyKeywords, ManyBodyInput
 from qcmanybody.computer import ManyBodyComputer, qcvars_to_manybodyproperties
+from qcmanybody.models import ManyBodyInput, ManyBodyKeywords
 
 from .addons import uusing
+
 
 def skprop(qcvar):
     # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]

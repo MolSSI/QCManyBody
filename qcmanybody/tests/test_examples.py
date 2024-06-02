@@ -1,6 +1,7 @@
 import pprint
 
 from qcelemental.testing import compare_values
+
 try:
     from .addons import uusing
 except ImportError:
@@ -37,8 +38,9 @@ def test_core_interface_example_1_show_running():
                        embedding_charges=None)
     
     # Running
-    from qcelemental.models import AtomicInput
     import qcengine as qcng
+    from qcelemental.models import AtomicInput
+
     from qcmanybody.utils import delabeler
 
     calculation_results = {}
@@ -205,8 +207,8 @@ def test_highlevel_interface_example():
                    fragments=[[0], [1], [2]])
     
     # Snippet 4
-    from qcmanybody.models import ManyBodyInput
     from qcmanybody import ManyBodyComputer
+    from qcmanybody.models import ManyBodyInput
     
     manybodyinput = ManyBodyInput(**{
       "molecule": mol,

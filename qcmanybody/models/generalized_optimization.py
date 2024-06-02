@@ -11,7 +11,6 @@ from qcelemental.models.procedures import QCInputSpecification
 from .manybody_input_pydv1 import ManyBodySpecification
 from .manybody_output_pydv1 import ManyBodyResult
 
-
 # note that qcel AtomicResult.schema_name needs editing
 ResultTrajectories = Annotated[Union[AtomicResult, ManyBodyResult], Field(discriminator="schema_name")]
 

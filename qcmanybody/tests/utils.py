@@ -1,11 +1,11 @@
 import json
 import math
 import os
-from typing import Mapping, Union, Literal, Any, Iterable, Optional
+from typing import Any, Iterable, Literal, Mapping, Optional, Union
 
 import numpy
 import zstandard
-from qcelemental.models import Molecule, AtomicInput
+from qcelemental.models import AtomicInput, Molecule
 
 from qcmanybody import ManyBodyCore, delabeler
 from qcmanybody.models import BsseEnum

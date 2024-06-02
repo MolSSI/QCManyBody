@@ -1,7 +1,6 @@
 from typing import List
 
 import pytest
-
 from qcelemental.util import parse_version, which, which_import
 
 try:

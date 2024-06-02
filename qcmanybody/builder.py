@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import itertools
-from typing import Iterable, Union, Literal, Optional, Dict, Set, List
+from typing import Dict, Iterable, List, Literal, Optional, Set, Union
 
 from qcmanybody.models import BsseEnum, FragBasIndex
-
 
 __all__ = ["build_nbody_compute_list"]
 
