@@ -32,6 +32,9 @@ if TYPE_CHECKING:
     import qcportal
 
 
+__all__ = ["ManyBodyComputer"]
+
+
 class BaseComputerQCNG(ProtoModel):
     """Base class for "computers" that plan, run, and process QC tasks."""
 
