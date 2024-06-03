@@ -32,6 +32,9 @@
    (or any other results dicts) in extras @loriab
  * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Utils -- `qcmanybody.utils.collect_vars` now returns with keys
     from ManyBodyResultProperties rather than QCVariables. @loriab
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Utils -- arguments rearranged in
+   `qcmanybody.tests.utils.run_qcengine` (use serial backend for core interface) to align with `ManyBodyCore` init
+   arguments. @loriab
 
 #### New Features
 
