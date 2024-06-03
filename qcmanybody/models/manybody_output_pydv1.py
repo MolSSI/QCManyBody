@@ -384,7 +384,7 @@ class ManyBodyResult(SuccessfulResultBase):
         description="The primary logging output of the program, whether natively standard output or a file. Presence vs. absence (or null-ness?) configurable by protocol.",
     )
     stderr: Optional[str] = Field(None, description="The standard error of the program execution.")
-    success: Literal[True] = Field(True, description="Always `True` for a successful result")
+    # v2: success: Literal[True] = Field(True, description="Always `True` for a successful result")
 
     @validator("component_results")
     def _component_results(cls, value, values):
