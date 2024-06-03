@@ -17,6 +17,7 @@ __all__ = [
     "resize_gradient",
     "resize_hessian",
     # "sum_cluster_data",
+    "translate_qcvariables",
 ]
 
 
@@ -123,7 +124,8 @@ def resize_hessian(
     ----------
     hess
         Hessian matrix of natural size for *bas*, (3 * _<nat in bas\>_, 3 * _<nat in bas\>_).
-        If `reverse=True`, Hessian matrix of supersystem size, (3 * _<nat of all fragments\>_, 3 * _<nat of all fragments\>_).
+        If `reverse=True`, Hessian matrix of supersystem size, (3 * _<nat of all fragments\>_,
+        3 * _<nat of all fragments\>_).
     bas
         1-indexed fragments active in *hess*.
         If `reverse=True`, 1-indexed fragments to be extracted from *hess*.
@@ -139,8 +141,9 @@ def resize_hessian(
     Returns
     -------
     ndarray
-        Hessian array padded with zeros to supersystem size, (3 * _<nat of supersystem\>_, 3 * _<nat of supersystem\>_).
-        If reverse=True, Hessian array extracted to natural size, (3 * _<nat in bas\>_, 3 * _<nat in bas\>_).
+        Hessian array padded with zeros to supersystem size, (3 * _<nat of supersystem\>_,
+        3 * _<nat of supersystem\>_). If reverse=True, Hessian array extracted to natural size,
+        (3 * _<nat in bas\>_, 3 * _<nat in bas\>_).
 
     """
     if reverse:
@@ -355,29 +358,36 @@ def collect_vars(
     supersystem_ie_only: bool = False,
     has_supersystem: bool = False,
 ) -> Dict:
-    """From *body_dict*, construct QCVariables.
+    """From *body_dict*, construct data for ManyBodyResultProperties.
 
     Parameters
     ----------
     bsse
-        Uppercase label for a single many-body treatment, generally a value of BsseEnum.
+        Label for a single many-body treatment, generally a value of BsseEnum.
     prop
-        Uppercase label for a single property, generally a value of DriverEnum.
+        Label for a single property, generally a value of DriverEnum.
     body_dict
-        Dictionary of minimal per-body info already specialized for property *prop* and treatment *bsse*. May contain either total data or interaction data, both cummulative not additive, from 1-body to max_nbody-body (see also *supersystem_ie_only*). Interaction data signaled by zero float or array for 1-body. May contain multiple model chemistry levels.
+        Dictionary of minimal per-body info already specialized for property *prop* and treatment
+        *bsse*. May contain either total data or interaction data (cummulative, not additive) from
+        1-body to max_nbody-body (see also *supersystem_ie_only*). Interaction data signaled by zero
+        float or array for 1-body. May contain data from multiple model chemistry levels.
     max_nbody
         _description_
     embedding
         Is charge embedding enabled, by default False?
     supersystem_ie_only
-        Is data available in *body_dict* only for 1-body (possibly zero) and nfr-body levels? By default False: data is available for consecutive levels, up to max_nbody-body.
+        Is data available in *body_dict* only for 1-body (possibly zero) and nfr-body levels?
+        By default False: data is available for consecutive levels, up to max_nbody-body.
     has_supersystem
         Whether contributions higher than max_nbody are a summary correction.
+
     Returns
     -------
     dict
         _description_. Empty return if *embedding* enabled.
     """
+    bsse = bsse.lower()
+    prop = prop.lower()
     previous_e = body_dict[1]
     property_shape = find_shape(previous_e)
     tot_e = bool(np.count_nonzero(previous_e))
@@ -386,42 +396,42 @@ def collect_vars(
     res = {}
 
     if tot_e:
-        res[f"{bsse}-CORRECTED TOTAL {prop}"] = body_dict[max_nbody]
-    res[f"{bsse}-CORRECTED INTERACTION {prop}"] = body_dict[max_nbody] - body_dict[1]
-    res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH 1-BODY"] = shaped_zero(property_shape)
+        res[f"{bsse}_corrected_total_{prop}"] = body_dict[max_nbody]
+    res[f"{bsse}_corrected_interaction_{prop}"] = body_dict[max_nbody] - body_dict[1]
+    res[f"{bsse}_corrected_interaction_{prop}_through_1_body"] = shaped_zero(property_shape)
 
     if supersystem_ie_only:
         nfr = nbody_range[-1]
         for nb in [nfr]:
-            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}_corrected_interaction_{prop}_through_{nb}_body"] = body_dict[nb] - body_dict[1]
             if nb == 2:
-                res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[nb - 1]
+                res[f"{bsse}_corrected_{nb}_body_contribution_to_{prop}"] = body_dict[nb] - body_dict[nb - 1]
         if tot_e:
             for nb in [1, nfr]:
-                res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
+                res[f"{bsse}_corrected_total_{prop}_through_{nb}_body"] = body_dict[nb]
     elif has_supersystem:
         nfr = nbody_range[-1]
-        res[f"{bsse}-CORRECTED INTERACTION {prop}"] = body_dict[nfr] - body_dict[1]  # reset
+        res[f"{bsse}_corrected_interaction_{prop}"] = body_dict[nfr] - body_dict[1]  # reset
         for nb in range(2, max_nbody + 1):
-            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
-            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[nb - 1]
+            res[f"{bsse}_corrected_interaction_{prop}_through_{nb}_body"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}_corrected_{nb}_body_contribution_to_{prop}"] = body_dict[nb] - body_dict[nb - 1]
         for nb in [nfr]:
-            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
-            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[max_nbody]
+            res[f"{bsse}_corrected_interaction_{prop}_through_{nb}_body"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}_corrected_{nb}_body_contribution_to_{prop}"] = body_dict[nb] - body_dict[max_nbody]
         if tot_e:
-            res[f"{bsse}-CORRECTED TOTAL {prop}"] = body_dict[nfr]  # reset
+            res[f"{bsse}_corrected_total_{prop}"] = body_dict[nfr]  # reset
             for nb in nbody_range:
-                res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
+                res[f"{bsse}_corrected_total_{prop}_through_{nb}_body"] = body_dict[nb]
     else:
         for nb in range(2, max(nbody_range) + 1):
-            res[f"{bsse}-CORRECTED INTERACTION {prop} THROUGH {nb}-BODY"] = body_dict[nb] - body_dict[1]
-            res[f"{bsse}-CORRECTED {nb}-BODY CONTRIBUTION TO {prop}"] = body_dict[nb] - body_dict[nb - 1]
+            res[f"{bsse}_corrected_interaction_{prop}_through_{nb}_body"] = body_dict[nb] - body_dict[1]
+            res[f"{bsse}_corrected_{nb}_body_contribution_to_{prop}"] = body_dict[nb] - body_dict[nb - 1]
         if tot_e:
             for nb in nbody_range:
-                res[f"{bsse}-CORRECTED TOTAL {prop} THROUGH {nb}-BODY"] = body_dict[nb]
+                res[f"{bsse}_corrected_total_{prop}_through_{nb}_body"] = body_dict[nb]
 
     if embedding:
-        res = {k: v for k, v in res.items() if "INTERACTION" not in k}
+        res = {k: v for k, v in res.items() if "interaction" not in k}
 
     return res
 
@@ -440,3 +450,26 @@ def provenance_stamp(routine: str) -> Dict[str, str]:
     import qcmanybody
 
     return {"creator": "QCManyBody", "version": qcmanybody.__version__, "routine": routine}
+
+
+def translate_qcvariables(varsmap: Mapping[str, Any]) -> Dict[str, Any]:
+    """Translate between ManyBody results in Psi4/QCDB terminology (qcvars) and QCSchema terminology (skprops).
+
+    Parameters
+    ----------
+    varsmap
+        Dictionary with keys all members of QCVariables or ManyBodyResultProperties and arbitrary values.
+
+    Returns
+    -------
+    dict
+        varsmap with keys swapped to other set. Untranslatable keys are omitted.
+
+    """
+    from qcmanybody.models import ManyBodyResultProperties
+
+    # identify direction of translation
+    qcv2skp = any([" " in lbl for lbl in varsmap])
+    labelmap = ManyBodyResultProperties.to_qcvariables(reverse=qcv2skp)
+
+    return {labelmap[lbl]: data for lbl, data in varsmap.items() if lbl in labelmap}

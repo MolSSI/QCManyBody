@@ -9,6 +9,7 @@ from qcelemental.models import AtomicInput, Molecule
 
 from qcmanybody import ManyBodyCore, delabeler
 from qcmanybody.models import BsseEnum
+from qcmanybody.utils import translate_qcvariables
 
 _my_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -129,6 +130,10 @@ def compare_results(qcmb_results, ref_results, levels):
     res = qcmb_results["results"]
     if not res:
         return
+
+    # res (from ManyBodyCore) keys are ManyBodyResultProperties fields, while ref_results keys are
+    #   Psi4.core.Wavefunction.variables() keys, so need to translate former for compare() calls below
+    res = translate_qcvariables(res)
 
     if not f"NOCP-CORRECTED TOTAL ENERGY" in ref_results:
         # Psi4 used during the bootstrapping tests does not have data for multi+ss

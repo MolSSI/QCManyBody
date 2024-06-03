@@ -9,16 +9,12 @@ from qcelemental.models import Molecule
 # v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcelemental.testing import compare_recursive, compare_values
 
-from qcmanybody.computer import ManyBodyComputer, qcvars_to_manybodyproperties
-from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywords
+from qcmanybody.computer import ManyBodyComputer
+from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywords, ManyBodyResultProperties
+from qcmanybody.utils import translate_qcvariables
 
 from .addons import using, uusing
 from .test_mbe_he4_singlelevel import sumdict as sumdict_single
-
-
-def skprop(qcvar):
-    # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
-    return qcvars_to_manybodyproperties[qcvar]
 
 
 @pytest.fixture(scope="function")
@@ -731,6 +727,12 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcin
     print(f"MMMMMMM {request.node.name}")
     pprint.pprint(ret.dict(), width=200)
 
+    # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
+    assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
+    qcvars = translate_qcvariables(ret.properties.dict())
+
+    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+
     refs = he4_refs_conv_multilevel_631g[pattern]
     ans = refs[anskey]
     ref_nmbe = calcinfo_nmbe[pattern]
@@ -739,29 +741,29 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcin
     atol = 2.5e-8
 
     for qcv, ref in refs.items():
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in ref_bodykeys:
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[a] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[a] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[b] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[z] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[z] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     for qcv in sumdict["4b_all"]:
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in ref_sumdict:
             ref = refs[ref_sumdict[qcv]]
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[c] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[c] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[d] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[y] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[y] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     for qcv, ref in {
         "CURRENT ENERGY": ans,
     }.items():
-        skp = skprop(qcv)
-        assert compare_values(ref, ret.extras["qcvars"][qcv], atol=atol, label=f"[e] qcvars {qcv}")
+        skp = skprop[qcv]
+        assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[e] qcvars {qcv}")
         assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] skprop {skp}")
     assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
 
@@ -825,6 +827,12 @@ def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, cal
     print(f"MMMMMMM {request.node.name}")
     pprint.pprint(ret.dict(), width=200)
 
+    # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
+    assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
+    qcvars = translate_qcvariables(ret.properties.dict())
+
+    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+
     refs = he4_refs_conv_multilevel_631g[pattern]
     ans = refs[anskey]
     ref_nmbe = calcinfo_nmbe[pattern]
@@ -833,29 +841,29 @@ def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, cal
     atol = 2.5e-8
 
     for qcv, ref in refs.items():
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in ref_bodykeys:
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[a] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[a] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[b] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[z] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[z] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     for qcv in sumdict["4b_all"]:
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in ref_sumdict:
             ref = refs[ref_sumdict[qcv]]
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[c] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[c] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[d] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[y] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[y] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     for qcv, ref in {
         "CURRENT ENERGY": ans,
     }.items():
-        skp = skprop(qcv)
-        assert compare_values(ref, ret.extras["qcvars"][qcv], atol=atol, label=f"[e] qcvars {qcv}")
+        skp = skprop[qcv]
+        assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[e] qcvars {qcv}")
         assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] skprop {skp}")
     assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
 

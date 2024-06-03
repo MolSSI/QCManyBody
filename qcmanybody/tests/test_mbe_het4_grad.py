@@ -6,15 +6,11 @@ import pytest
 from qcelemental.models import Molecule
 from qcelemental.testing import compare_values
 
-from qcmanybody.computer import ManyBodyComputer, qcvars_to_manybodyproperties
-from qcmanybody.models import ManyBodyInput, ManyBodyKeywords
+from qcmanybody.computer import ManyBodyComputer
+from qcmanybody.models import ManyBodyInput, ManyBodyKeywords, ManyBodyResultProperties
+from qcmanybody.utils import translate_qcvariables
 
 from .addons import uusing
-
-
-def skprop(qcvar):
-    # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
-    return qcvars_to_manybodyproperties[qcvar]
 
 
 @pytest.fixture(scope="function")
@@ -270,37 +266,43 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
     ref_sumdict = sumdict_grad[kwdsln]
     atol = 2.5e-8
 
+    # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
+    assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
+    qcvars = translate_qcvariables(ret.properties.dict())
+
+    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+
     for qcv, ref in refs.items():
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in ref_bodykeys:
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[a] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[a] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[b] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[z] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[z] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     for qcv in sumdict_grad["4b_all"]:
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in ref_sumdict:
             ref = refs[ref_sumdict[qcv]]
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[c] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[c] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[d] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[y] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[y] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     for qcv, ref in {
         "CURRENT ENERGY": ansE,
     }.items():
-        skp = skprop(qcv)
-        assert compare_values(ref, ret.extras["qcvars"][qcv], atol=atol, label=f"[e] qcvars {qcv}")
+        skp = skprop[qcv]
+        assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[e] qcvars {qcv}")
         assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] skprop {skp}")
 
     for qcv, ref in {
         "CURRENT GRADIENT": ansG,
     }.items():
-        skp = skprop(qcv)
-        assert compare_values(ref, ret.extras["qcvars"][qcv], atol=atol, label=f"[e] G qcvars {qcv}")
+        skp = skprop[qcv]
+        assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[e] G qcvars {qcv}")
         assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] G skprop {skp}")
     assert compare_values(ansG, ret.return_result, atol=atol, label=f"[g] G ret")
 

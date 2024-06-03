@@ -312,6 +312,37 @@ else:
     )
 
 
+def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
+    """Form translation map between many-body results QCSchema and Psi4/QCDB terminologies.
+
+    Parameters
+    ----------
+    reverse
+        Keys are QCVariable names (`reverse=True`) rather than QCSchema names (default; `reverse=False`).
+
+    Returns
+    -------
+    dict
+        Map from ManyBodyResultProperties field names to QCVariable names, or reverse.
+
+    """
+    qcvars_to_mbprop = {}
+    # v2: for skprop in ManyBodyResultProperties.model_fields.keys():
+    for skprop in cls.__fields__.keys():
+        qcvar = skprop.replace("_body", "-body").replace("_corr", "-corr").replace("_", " ").upper()
+        qcvars_to_mbprop[qcvar] = skprop
+    for ret in ["energy", "gradient", "hessian"]:
+        qcvars_to_mbprop[f"CURRENT {ret.upper()}"] = f"return_{ret}"
+
+    if reverse:
+        return qcvars_to_mbprop
+    else:
+        return {v: k for k, v in qcvars_to_mbprop.items()}
+
+
+ManyBodyResultProperties.to_qcvariables = classmethod(_qcvars_translator)
+
+
 # ====  Results  ================================================================
 
 

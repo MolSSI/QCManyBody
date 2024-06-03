@@ -9,16 +9,10 @@ from qcelemental.models import Molecule
 from qcelemental.testing import compare_recursive, compare_values
 
 from qcmanybody import ManyBodyComputer
-from qcmanybody.computer import qcvars_to_manybodyproperties
-from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywords
+from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywords, ManyBodyResultProperties
+from qcmanybody.utils import translate_qcvariables
 
 from .addons import using, uusing
-
-
-def skprop(qcvar):
-    # qcng: return qcng.procedures.manybody.qcvars_to_manybodyproperties[qcvar]
-    return qcvars_to_manybodyproperties[qcvar]
-
 
 he4_refs_species = {
     "NO": ('[\"(auto)\", [1, 2, 4], [1, 2, 4]]', -8.644153798224503),
@@ -236,7 +230,7 @@ sumstr = {
 }
 
 
- 
+
 
 sumdict = {
     "4b_all": {
@@ -586,7 +580,7 @@ def he_tetramer():
         {"bsse_type": "nocp", "return_total_data": False, "max_nbody": 1},
         "NOCP-CORRECTED INTERACTION ENERGY THROUGH 1-BODY",
         [k for k in he4_refs_conv if (k.startswith("NOCP-") and ("1-BODY" in k))],
-        None, 
+        None,
         4,  # maybe TODO this could be 0 but rtd hasn't be used to winnow nocp
         id="1b_nocp"),
     pytest.param(
@@ -632,6 +626,12 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     # v2: pprint.pprint(ret.model_dump(), width=200)
     pprint.pprint(ret.dict(), width=200)
 
+    # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
+    assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
+    qcvars = translate_qcvariables(ret.properties.dict())
+
+    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+
     _inner = request.node.name.split("[")[1].split("]")[0]
     kwdsln, progln = _inner.split("-")
     refs = he4_refs_df if progln == "psi4_df" else he4_refs_conv
@@ -640,22 +640,22 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     atol = 1.0e-8
 
     for qcv, ref in refs.items():
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in bodykeys:
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[a] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[a] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[b] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[z] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[z] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     for qcv in sumdict["4b_all"]:
-        skp = skprop(qcv)
+        skp = skprop[qcv]
         if qcv in sumdict[kwdsln]:
             ref = refs[sumdict[kwdsln][qcv]]
-            assert compare_values(ref, ret.extras["qcvars"]["nbody"][qcv], atol=atol, label=f"[c] qcvars {qcv}")
+            assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[c] qcvars {qcv}")
             assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[d] skprop {skp}")
         else:
-            assert qcv not in ret.extras["qcvars"]["nbody"], f"[y] {qcv=} wrongly present"
+            assert qcv not in qcvars, f"[y] {qcv=} wrongly present"
             assert getattr(ret.properties, skp) is None
 
     if "3b" in kwdsln and not progln.endswith("df"):
@@ -665,8 +665,8 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     for qcv, ref in {
         "CURRENT ENERGY": ans,
     }.items():
-        skp = skprop(qcv)
-        assert compare_values(ref, ret.extras["qcvars"][qcv], atol=atol, label=f"[e] qcvars {qcv}")
+        skp = skprop[qcv]
+        assert compare_values(ref, qcvars[qcv], atol=atol, label=f"[e] qcvars {qcv}")
         assert compare_values(ref, getattr(ret.properties, skp), atol=atol, label=f"[f] skprop {skp}")
     assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
 
