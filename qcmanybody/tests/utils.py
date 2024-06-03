@@ -9,6 +9,7 @@ from qcelemental.models import AtomicInput, Molecule
 
 from qcmanybody import ManyBodyCore, delabeler
 from qcmanybody.models import BsseEnum
+from qcmanybody.utils import translate_qcvariables
 
 _my_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -65,9 +66,18 @@ def load_component_data(file_base):
 
 
 def generate_component_data(
-    mol, levels, specifications, bsse_type, return_total_data, out_filename, supsersytem_ie_only=False
+    mol,
+    levels,
+    specifications,
+    bsse_type,
+    return_total_data,
+    out_filename,
+    supsersytem_ie_only=False,
+    embedding_charges=None,
 ):
-    mc, component_results = run_qcengine(mol, levels, specifications, bsse_type, return_total_data, supsersytem_ie_only)
+    mc, component_results = run_qcengine(
+        specifications, mol, bsse_type, levels, return_total_data, supsersytem_ie_only, embedding_charges
+    )
 
     component_results = jsonify(component_results)
     filepath = os.path.join(_my_dir, "component_data", out_filename + ".json.zst")
@@ -130,6 +140,10 @@ def compare_results(qcmb_results, ref_results, levels):
     if not res:
         return
 
+    # res (from ManyBodyCore) keys are ManyBodyResultProperties fields, while ref_results keys are
+    #   Psi4.core.Wavefunction.variables() keys, so need to translate former for compare() calls below
+    res = translate_qcvariables(res)
+
     if not f"NOCP-CORRECTED TOTAL ENERGY" in ref_results:
         # Psi4 used during the bootstrapping tests does not have data for multi+ss
         return
@@ -164,10 +178,10 @@ def compare_results(qcmb_results, ref_results, levels):
 
 
 def run_qcengine(
-    molecule: Molecule,
-    levels: Mapping[Union[int, Literal["supersystem"]], str],
     specifications: Mapping[str, Mapping[str, Any]],
+    molecule: Molecule,
     bsse_type: Iterable[BsseEnum],
+    levels: Mapping[Union[int, Literal["supersystem"]], str],
     return_total_data: bool,
     supersystem_ie_only: bool,
     embedding_charges: Optional[Mapping[int, list]],

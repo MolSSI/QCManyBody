@@ -32,6 +32,9 @@ if TYPE_CHECKING:
     import qcportal
 
 
+__all__ = ["ManyBodyComputer"]
+
+
 class BaseComputerQCNG(ProtoModel):
     """Base class for "computers" that plan, run, and process QC tasks."""
 
@@ -505,12 +508,6 @@ class ManyBodyComputer(BaseComputerQCNG):
         component_properties = external_results.pop("component_properties")
         stdout = external_results.pop("stdout")
 
-        # load QCVariables
-        qcvars = {
-            "NUCLEAR REPULSION ENERGY": self.molecule.nuclear_repulsion_energy(),
-            "NBODY NUMBER": nbody_number,
-        }
-
         properties = {
             "calcinfo_nmc": len(self.nbodies_per_mc_level),
             "calcinfo_nfr": self.nfragments,  # or len(self.molecule.fragments)
@@ -520,26 +517,11 @@ class ManyBodyComputer(BaseComputerQCNG):
             "return_energy": ret_energy,
         }
 
-        for k, val in external_results.items():
-            if k == "results":
-                k = "nbody"
-            qcvars[k] = val
-
-        qcvars["CURRENT ENERGY"] = ret_energy
         if self.driver == "gradient":
-            qcvars["CURRENT GRADIENT"] = ret_ptype
             properties["return_gradient"] = ret_ptype
         elif self.driver == "hessian":
-            qcvars["CURRENT GRADIENT"] = ret_gradient
-            qcvars["CURRENT HESSIAN"] = ret_ptype
             properties["return_gradient"] = ret_gradient
             properties["return_hessian"] = ret_ptype
-
-        #        build_out(qcvars)
-        atprop = build_manybodyproperties(qcvars["nbody"])
-        # print("ATPROP")
-        # v2: pp.pprint(atprop.model_dump())
-        # pp.pprint(atprop.dict())
 
         #        output_data = {
         #            "schema_version": 1,
@@ -559,30 +541,20 @@ class ManyBodyComputer(BaseComputerQCNG):
         # print("QCVARS PRESCREEN")
         # pp.pprint(qcvars)
 
-        for qcv, val in qcvars.items():
-            if not isinstance(val, dict):
-                qcvars[qcv] = val
-
         # v2: component_results = self.model_dump()['task_list']  # TODO when/where include the indiv outputs
         # ?component_results = self.dict()['task_list']  # TODO when/where include the indiv outputs
         #        for k, val in component_results.items():
         #            val['molecule'] = val['molecule'].to_schema(dtype=2)
-
-        # print("QCVARS")
-        # pp.pprint(qcvars)
 
         nbody_model = ManyBodyResult(
             **{
                 "input_data": self.input_data,
                 #'molecule': self.molecule,
                 # v2: 'properties': {**atprop.model_dump(), **properties},
-                "properties": {**atprop.dict(), **properties},
+                "properties": {**external_results["results"], **properties},
                 "component_properties": component_properties,
                 "component_results": component_results,
                 "provenance": provenance_stamp(__name__),
-                "extras": {
-                    "qcvars": qcvars,
-                },
                 "return_result": ret_ptype,
                 "stdout": stdout,
                 "success": True,
@@ -592,35 +564,3 @@ class ManyBodyComputer(BaseComputerQCNG):
         #        logger.debug('\nNBODY QCSchema:\n' + pp.pformat(nbody_model.model_dump()))
 
         return nbody_model
-
-
-qcvars_to_manybodyproperties = {}
-# v2: for skprop in ManyBodyResultProperties.model_fields.keys():
-for skprop in ManyBodyResultProperties.__fields__.keys():
-    qcvar = skprop.replace("_body", "-body").replace("_corr", "-corr").replace("_", " ").upper()
-    qcvars_to_manybodyproperties[qcvar] = skprop
-qcvars_to_manybodyproperties["CURRENT ENERGY"] = "return_energy"
-qcvars_to_manybodyproperties["CURRENT GRADIENT"] = "return_gradient"
-qcvars_to_manybodyproperties["CURRENT HESSIAN"] = "return_hessian"
-
-
-def build_manybodyproperties(qcvars: Mapping) -> ManyBodyResultProperties:
-    """For results extracted from QC output in QCDB terminology, translate to QCSchema terminology.
-
-    Parameters
-    ----------
-    qcvars : PreservingDict
-        Dictionary of calculation information in QCDB QCVariable terminology.
-
-    Returns
-    -------
-    atprop : ManyBodyResultProperties
-        Object of calculation information in QCSchema ManyBodyResultProperties terminology.
-
-    """
-    atprop = {}
-    for pv, dpv in qcvars.items():
-        if pv in qcvars_to_manybodyproperties:
-            atprop[qcvars_to_manybodyproperties[pv]] = dpv
-
-    return ManyBodyResultProperties(**atprop)

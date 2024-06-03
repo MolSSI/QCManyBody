@@ -565,8 +565,8 @@ class ManyBodyCore:
             for bt in self.bsse_type:
                 nbody_dict.update(
                     collect_vars(
-                        bt.upper(),
-                        property_label.upper(),
+                        bt,
+                        property_label,
                         all_results[f"{property_label}_body_dict"][bt],
                         self.max_nbody,
                         is_embedded,

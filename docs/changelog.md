@@ -28,8 +28,20 @@
    from `manybody.py` to `core.py` but it was already a top-level import. @loriab
  * [\#30](https://github.com/MolSSI/QCManyBody/pull/30) Intf -- low-level "core" interface now requires named arguments
    beyond the first recognizable ones (mol, bsse_type, levels). @loriab
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Intf -- "high-level" interface now no longer stores QCVariables
+   (or any other results dicts) in extras @loriab
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Utils -- `qcmanybody.utils.collect_vars` now returns with keys
+    from ManyBodyResultProperties rather than QCVariables. @loriab
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Utils -- arguments rearranged in
+   `qcmanybody.tests.utils.run_qcengine` (use serial backend for core interface) to align with `ManyBodyCore` init
+   arguments. @loriab
 
 #### New Features
+
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) QCSchema -- a new function
+   `ManyBodyResultProperties.to_qcvariables()` returns a translation map to QCVariables keys. @loriab
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) QCSchema -- a new function
+   `qcmanybody.utils.translate_qcvariables(map)` switches between QCVariable and QCSchema keys. @loriab
 
 #### Enhancements
 
