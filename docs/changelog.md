@@ -42,6 +42,7 @@
    `ManyBodyResultProperties.to_qcvariables()` returns a translation map to QCVariables keys. @loriab
  * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) QCSchema -- a new function
    `qcmanybody.utils.translate_qcvariables(map)` switches between QCVariable and QCSchema keys. @loriab
+ * [\#33](https://github.com/MolSSI/QCManyBody/pull/33) QCSchema -- `ManyBodySpecification.extras` added. @loriab
 
 #### Enhancements
 

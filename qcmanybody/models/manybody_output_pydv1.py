@@ -333,6 +333,7 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
         qcvars_to_mbprop[qcvar] = skprop
     for ret in ["energy", "gradient", "hessian"]:
         qcvars_to_mbprop[f"CURRENT {ret.upper()}"] = f"return_{ret}"
+    qcvars_to_mbprop["NBODY NUMBER"] = "calcinfo_nmbe"
 
     if reverse:
         return qcvars_to_mbprop

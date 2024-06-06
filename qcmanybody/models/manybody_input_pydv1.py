@@ -218,6 +218,10 @@ class ManyBodySpecification(ProtoModel):
         ...,
         description="??? TODO expand to cbs, fd",
     )
+    extras: Dict[str, Any] = Field(
+        {},
+        description="Additional information to bundle with the computation. Use for schema development and scratch space.",
+    )
 
     # v2: @field_validator("specification", mode="before")
     @validator("specification", pre=True)
