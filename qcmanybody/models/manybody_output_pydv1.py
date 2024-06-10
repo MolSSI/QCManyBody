@@ -39,6 +39,18 @@ json_schema_extras = {
 
 mbprop = {}
 
+mbprop["schema_name"] = (
+    Literal["qcschema_manybodyproperties"],
+    Field("qcschema_manybodyproperties"),
+)
+mbprop["schema_version"] = (
+    Literal[1],
+    Field(
+        1,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    ),
+)
+
 # ========  Calcinfo  ===========================================================
 
 mbprop["calcinfo_nmc"] = (

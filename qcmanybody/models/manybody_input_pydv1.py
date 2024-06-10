@@ -27,6 +27,11 @@ class AtomicSpecification(ProtoModel):
     program: str = Field(..., description="The program for which the Specification is intended.")
 
     schema_name: Literal["qcschema_atomicspecification"] = "qcschema_atomicspecification"
+    schema_version: Literal[1] = Field(
+        1,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
+
     driver: DriverEnum = Field(..., description=DriverEnum.__doc__)
     model: Model = Field(..., description=Model.__doc__)
     protocols: AtomicResultProtocols = Field(
@@ -121,6 +126,11 @@ FragBasIndex = Tuple[Tuple[int], Tuple[int]]
 class ManyBodyKeywords(ProtoModel):
     """The many-body-specific keywords for user control."""
 
+    schema_name: Literal["qcschema_manybodykeywords"] = "qcschema_manybodykeywords"
+    schema_version: Literal[1] = Field(
+        1,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
     bsse_type: List[BsseEnum] = Field(
         [BsseEnum.cp],
         # definitive description
@@ -205,6 +215,10 @@ class ManyBodySpecification(ProtoModel):
     """Combining the what (ManyBodyKeywords) with the how (AtomicSpecification)."""
 
     schema_name: Literal["qcschema_manybodyspecification"] = "qcschema_manybodyspecification"
+    schema_version: Literal[1] = Field(
+        1,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
     # provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
     keywords: ManyBodyKeywords = Field(..., description=ManyBodyKeywords.__doc__)
     # program: str = Field(..., description="The program for which the Specification is intended.")  # TODO is qcmanybody
@@ -239,6 +253,10 @@ class ManyBodyInput(ProtoModel):
     """Combining the what and how (ManyBodySpecification) with the who (Molecule)."""
 
     schema_name: Literal["qcschema_manybodyinput"] = "qcschema_manybodyinput"
+    schema_version: Literal[1] = Field(
+        1,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
     # provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
     specification: ManyBodySpecification = Field(
         ...,
