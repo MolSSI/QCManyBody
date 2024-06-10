@@ -11,16 +11,21 @@ from qcelemental.models.procedures import QCInputSpecification
 from .manybody_input_pydv1 import ManyBodySpecification
 from .manybody_output_pydv1 import ManyBodyResult
 
-# note that qcel AtomicResult.schema_name needs editing
+# note that qcel QCInputSpecification and AtomicResult.schema_name needs editing
 ResultTrajectories = Annotated[Union[AtomicResult, ManyBodyResult], Field(discriminator="schema_name")]
+InputSpecifications = Annotated[
+    Union[QCInputSpecification, ManyBodySpecification],
+    Field(
+        discriminator="schema_name",
+        description="An ordinary atomic/single-point or many-body directive to compute a gradient.",
+    ),
+]
 
 
 class GeneralizedOptimizationInput(OptimizationInput):
     schema_name: Literal["qcschema_generalizedoptimizationinput"] = "qcschema_generalizedoptimizationinput"
     schema_version: int = 1
-    input_specification: Union[QCInputSpecification, ManyBodySpecification] = Field(
-        ..., description="ordinary or mbe grad spec"
-    )
+    input_specification: InputSpecifications
 
 
 class GeneralizedOptimizationResult(OptimizationResult):
@@ -28,6 +33,4 @@ class GeneralizedOptimizationResult(OptimizationResult):
     trajectory: List[ResultTrajectories] = Field(
         ..., description="A list of ordered Result objects for each step in the optimization."
     )
-    input_specification: Union[QCInputSpecification, ManyBodySpecification] = Field(
-        ..., description="ordinary or mbe grad spec"
-    )
+    input_specification: InputSpecifications
