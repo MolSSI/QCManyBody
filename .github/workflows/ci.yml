@@ -201,7 +201,7 @@ jobs:
     - name: Build Documentation
       run: |
         python -m pip install . --no-deps
-        PYTHONPATH=docs/extensions mkdocs build
+        QCMANYBODY_MAX_NBODY=5 PYTHONPATH=docs/extensions mkdocs build
         cd docs
 
     - name: GitHub Pages Deploy

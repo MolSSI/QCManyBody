@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Union
 
 # v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
@@ -29,7 +30,9 @@ manybodyresultproperties_doc = """
     * nmbe: number of jobs = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nmbe`
     """
 
-MAX_NBODY = 5  # 5 covers tetramers
+MAX_NBODY = int(os.environ.get("QCMANYBODY_MAX_NBODY", 5))  # 5 covers tetramers
+
+# TODO: bump up default MAX_NBODY and add some warnings or mitigations so insufficient value doesn't fail at very end at Result formation time
 
 json_schema_extras = {
     "energy": {"units": "E_h"},

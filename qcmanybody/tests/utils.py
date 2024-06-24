@@ -75,7 +75,7 @@ def generate_component_data(
     supsersytem_ie_only=False,
     embedding_charges=None,
 ):
-    mc, component_results = run_qcengine(
+    mbc, component_results = run_qcengine(
         specifications, mol, bsse_type, levels, return_total_data, supsersytem_ie_only, embedding_charges
     )
 
@@ -188,7 +188,7 @@ def run_qcengine(
 ):
     import qcengine as qcng
 
-    mc = ManyBodyCore(
+    mbc = ManyBodyCore(
         molecule,
         bsse_type,
         levels,
@@ -200,7 +200,7 @@ def run_qcengine(
     component_results = {}
 
     computation_count = {}
-    for chem, label, imol in mc.iterate_molecules():
+    for chem, label, imol in mbc.iterate_molecules():
         print(label)
         inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
 
@@ -226,4 +226,4 @@ def run_qcengine(
                 if v is not None:
                     component_results[label][p] = v
 
-    return mc, component_results
+    return mbc, component_results
