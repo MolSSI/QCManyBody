@@ -31,18 +31,21 @@
  * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Intf -- "high-level" interface now no longer stores QCVariables
    (or any other results dicts) in extras @loriab
  * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Utils -- `qcmanybody.utils.collect_vars` now returns with keys
-    from ManyBodyResultProperties rather than QCVariables. @loriab
+    from ManyBodyResultProperties rather than QCVariables. Since properties doesn't allow extras and there's no "if exists"
+    check, this is unforgiving if MAX_NBODY not set high enough for fragment count and max_nbody of calculation. @loriab
  * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Utils -- arguments rearranged in
    `qcmanybody.tests.utils.run_qcengine` (use serial backend for core interface) to align with `ManyBodyCore` init
    arguments. @loriab
 
 #### New Features
 
- * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) QCSchema -- a new function
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Schema -- a new function
    `ManyBodyResultProperties.to_qcvariables()` returns a translation map to QCVariables keys. @loriab
- * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) QCSchema -- a new function
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Schema -- a new function
    `qcmanybody.utils.translate_qcvariables(map)` switches between QCVariable and QCSchema keys. @loriab
- * [\#33](https://github.com/MolSSI/QCManyBody/pull/33) QCSchema -- `ManyBodySpecification.extras` added. @loriab
+ * [\#33](https://github.com/MolSSI/QCManyBody/pull/33) Schema -- `ManyBodySpecification.extras` added. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- Add schema_version to `AtomicSpecification`,
+   `ManyBodySpecification`, `ManyBodyKeywords`, `ManyBodyInput`, and `ManyBodyResultProperties`. @loriab
 
 #### Enhancements
 
@@ -55,6 +58,11 @@
    is a single large fragment, an error is thrown. @loriab
  * [\#30](https://github.com/MolSSI/QCManyBody/pull/30) Docs -- add end-to-end demos in test_examples. @loriab
  * [\#31](https://github.com/MolSSI/QCManyBody/pull/31) Schema -- add "none" as a bsse_type alias to "nocp". @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- Allow environment variable QCMANYBODY_MAX_NBODY to
+   influence the body-level to which `ManyBodyResultProperties` is defined added. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- added discriminator to input for
+   `GeneralizedOptimizationInput` and `GeneralizedOptimizationResult` models to allow input from dicts (rather than
+   models) in OptKing. Further specialized QCElemental. @loriab
 
 #### Bug Fixes
 
