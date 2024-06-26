@@ -49,10 +49,13 @@ $pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols
     The properties model is generated dynamically based on a constant
     ``MAX_NBODY``. To not overload the docs table, this is set to 5, which
     covers full calculations on tetramers. To use a larger
-    ``ManyBodyKeywords.max_nbody``, reset this value.
+    ``ManyBodyKeywords.max_nbody``, reset this value *outside* the interpreter.
 
-        import qcmanybody as qcmb
-        qcmb.models.MAX_NBODY = 8
+        python -c "import qcmanybody as qcmb;print(qcmb.models.MAX_NBODY)"
+        #> 5
+        export QCMANYBODY_MAX_NBODY=9  # allows octamers
+        python -c "import qcmanybody as qcmb;print(qcmb.models.MAX_NBODY)"
+        #> 9
 
 
 ::: qcmanybody.models.ManyBodyResultProperties

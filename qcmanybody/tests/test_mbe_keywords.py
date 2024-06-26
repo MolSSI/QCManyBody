@@ -16,7 +16,7 @@ from qcmanybody import ManyBodyCalculator  # test old name still operational
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputer
 from qcmanybody.computer import ManyBodyComputer
-from qcmanybody.models import BsseEnum, ManyBodyInput
+from qcmanybody.models import BsseEnum, ManyBodyInput, ManyBodyResultProperties
 
 
 @pytest.fixture(scope="function")
@@ -278,3 +278,39 @@ def test_noncontiguous_fragments_evaded():
 
     assert "QCManyBody: non-contiguous fragments could be implemented but aren't at present" in str(e.value)
 
+
+@pytest.mark.parametrize("kws,ans", [
+    pytest.param({
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy": 4,
+    }, 2),
+    pytest.param({
+        "calcinfo_nfr": 3,
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy_through_51_body": 50,
+        "cp_corrected_total_energy": 5,
+    }, 4),
+    pytest.param({
+        "an_interloper": 3,
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy": 4,
+    }, "Field names not allowed"),
+    pytest.param({
+        "an_interloper": 3,
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy_through_50_body": 50,
+        "calcinfo_nfrrrrrrrrrrr": 3,
+    }, "Field names not allowed"),
+])
+def test_mbproperties_expansion(kws, ans):
+
+    if isinstance(ans, str):
+        with pytest.raises(ValidationError) as e:
+            input_model = ManyBodyResultProperties(**kws)
+
+        assert ans in str(e.value)
+        return
+
+    input_model = ManyBodyResultProperties(**kws)
+
+    assert len(input_model.dict()) == ans
