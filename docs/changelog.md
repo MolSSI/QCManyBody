@@ -64,6 +64,7 @@
    models) in OptKing. Further specialized QCElemental. @loriab
  * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- `ManyBodyResultProperties` is still only explicitly
    enumerated up to tetramers, but now it allows through higher-body fields when they match a pattern. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Maint -- start testing optimizations through QCEngine. @loriab
 
 #### Bug Fixes
 

@@ -31,6 +31,7 @@ _programs = {
     "cfour": which("xcfour", return_bool=True),
     "gamess": which("rungms", return_bool=True),
     "geometric": which_import("geometric", return_bool=True),
+    "optking": which_import("optking", return_bool=True),
     "nwchem": which("nwchem", return_bool=True),
     "psi4": which("psi4", return_bool=True),
     "qcengine": which_import("qcengine", return_bool=True),
