@@ -87,4 +87,8 @@ markers = [
     "cfour: tests using CFOUR software; skip if unavailable",
     "nwchem: tests using classic NWChem software; skip if unavailable",
     "psi4: tests using Psi4 software; skip if unavailable",
+    "geometric: tests using GeomeTRIC software; skip if unavailable",
+    "geometric_genopt: tests using GeomeTRIC software with new additions; skip if unavailable",
+    "optking: tests using OptKing software; skip if unavailable",
+    "optking_genopt: tests using OptKin software with new additions; skip if unavailable",
 ]

@@ -43,6 +43,9 @@ def has_program(name):
         return _programs[name]
     elif name in _programs_qcng:
         return _programs_qcng[name]
+    elif name in ["optking_genopt", "geometric_genopt"]:
+        # give up rather than duplicate
+        return False
     else:
         raise KeyError(f"Program {name} not registered with QCManyBody testing.")
 
