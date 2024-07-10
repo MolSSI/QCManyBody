@@ -65,6 +65,9 @@
  * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- `ManyBodyResultProperties` is still only explicitly
    enumerated up to tetramers, but now it allows through higher-body fields when they match a pattern. @loriab
  * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Maint -- start testing optimizations through QCEngine. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add `labeler(..., opaque=False)` option to produce
+   eye-friendly `(1)@(1, 2)` style lablels as well as the semi-opaque internal style. Also always convent single ints
+   to tuples now. Function `delabeler` can decode the new style. @loriab
 
 #### Bug Fixes
 

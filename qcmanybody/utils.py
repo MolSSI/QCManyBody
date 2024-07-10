@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import ast
 import json
+import re
 from typing import Dict, Iterable, Mapping, Optional, Set, Tuple, Union
 
 import numpy as np
@@ -230,7 +232,9 @@ def sum_cluster_data(
     return ret
 
 
-def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> str:
+def labeler(
+    mc_level_lbl: Union[str, int, NoneType], frag: Tuple[int, ...], bas: Tuple[int, ...], *, opaque: bool = True
+) -> str:
     """Form label from model chemistry id and fragment and basis indices.
 
     Parameters
@@ -238,25 +242,69 @@ def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> s
     mc_level_lbl
         Key identifying the model chemistry. May be `"(auto)"`. Often the
         ManyBodyInput.specification.specification keys.
+        When `opaque=False`, result is for pretty printing so `mc_level_lbl`
+        instead of a string might be an integer index (apply 1-indexing beforehand)
+        or None (if the model chemistry part is unwanted because single-level).
     frag
         List of 1-indexed fragments active in the supersystem.
     bas
         List of 1-indexed fragments with active basis sets in the supersystem.
         All those in *frag* plus any ghost.
+    opaque
+        Toggle whether to return JSON-friendly semi-opaque internal str label (True) or
+        eye-friendly label with @ for basis and § for model chemistry (False).
 
     Returns
     -------
     str
-        JSON string from inputs: `labeler("mp2", (1), (1, 2))` returns `'["mp2", 1, [1, 2]]'`.
+        JSON string from inputs:
+
+        ```python
+        labeler("mp2", 1, (1, 2))
+        #> '["mp2", [1], [1, 2]]'
+        labeler("mp2", 1, (1, 2), opaque=False)
+        #> '§mp2_(1)@(1, 2)'
+        ```
     """
-    return json.dumps([str(mc_level_lbl), frag, bas])
+    if isinstance(frag, int):
+        frag = (frag,)
+    if isinstance(bas, int):
+        bas = (bas,)
+
+    if opaque:
+        return json.dumps([str(mc_level_lbl), frag, bas])
+    else:
+        mc_pre = "" if mc_level_lbl is None else f"§{mc_level_lbl}_"
+        return f"{mc_pre}({', '.join(map(str, frag))})@({', '.join(map(str, bas))})"
 
 
 def delabeler(item: str) -> Tuple[str, Tuple[int, ...], Tuple[int, ...]]:
-    """Back-form from label into tuple: `delabeler('["mp2", 1, [1, 2]]')` returns `('mp2', 1, [1, 2])`."""
+    """Back-form from label into tuple.
 
-    mc, frag, bas = json.loads(item)
-    return str(mc), frag, bas
+    Returns
+    -------
+    mcfragbas
+        Tuple of opaque or pretty-print model chemistry (may be None for latter),
+        fragments and bases (1-indexed by convention).
+
+        ```python
+        delabeler('["mp2", [1], [1, 2]]')
+        #> ('mp2', [1], [1, 2])
+        delabeler("§mp2_(1)@(1, 2)")
+        #> ('mp2', [1], [1, 2])
+        ```
+    """
+
+    if "@" not in item:
+        mc, frag, bas = json.loads(item)
+        return str(mc), frag, bas
+    else:
+        mobj = re.match(r"(?:§(?P<mc>\S*)_)?(?P<frag>.*)@(?P<bas>.*)", item)
+        mc, frag, bas = mobj.groups()
+        # want lists and avoids (1) non-iterable error
+        frag = frag.replace("(", "[").replace(")", "]")
+        bas = bas.replace("(", "[").replace(")", "]")
+        return mc, ast.literal_eval(frag), ast.literal_eval(bas)
 
 
 def print_nbody_energy(

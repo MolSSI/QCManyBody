@@ -122,12 +122,12 @@ f3hesses = {
 @pytest.mark.parametrize("gin,bas,reverse,gans", [
     pytest.param(f3grads["full"], [1, 2, 3], False, f3grads["full"]),  # idempotent
     pytest.param(f3grads["full"], [1, 2, 3], True, f3grads["full"]),  # idempotent
-    pytest.param(f3grads["b13"], [1, 3], False, f3grads["b13_"]),  
-    pytest.param(f3grads["b13_"], [1, 3], True, f3grads["b13"]),  
-    pytest.param(f3grads["full"], [1, 3], True, f3grads["b13"]),  
-    pytest.param(f3grads["b3"], [3], False, f3grads["b3_"]),  
-    pytest.param(f3grads["b3_"], [3], True, f3grads["b3"]),  
-    pytest.param(f3grads["full"], [3], True, f3grads["b3"]),  
+    pytest.param(f3grads["b13"], [1, 3], False, f3grads["b13_"]),
+    pytest.param(f3grads["b13_"], [1, 3], True, f3grads["b13"]),
+    pytest.param(f3grads["full"], [1, 3], True, f3grads["b13"]),
+    pytest.param(f3grads["b3"], [3], False, f3grads["b3_"]),
+    pytest.param(f3grads["b3_"], [3], True, f3grads["b3"]),
+    pytest.param(f3grads["full"], [3], True, f3grads["b3"]),
     pytest.param(f3grads["full"], [], False, np.zeros((4, 3))),  # zero
     pytest.param(f3grads["full"], [], True, np.zeros((0, 3))),  # collapse
 ])
@@ -139,12 +139,12 @@ def test_resize_gradient(gin, bas, reverse, gans):
 @pytest.mark.parametrize("hin,bas,reverse,hans", [
     pytest.param(f3hesses["full"], [1, 2, 3], False, f3hesses["full"]),  # idempotent
     pytest.param(f3hesses["full"], [1, 2, 3], True, f3hesses["full"]),  # idempotent
-    pytest.param(f3hesses["b13"], [1, 3], False, f3hesses["b13_"]),  
-    pytest.param(f3hesses["b13_"], [1, 3], True, f3hesses["b13"]),  
-    pytest.param(f3hesses["full"], [1, 3], True, f3hesses["b13"]),  
-    pytest.param(f3hesses["b3"], [3], False, f3hesses["b3_"]),  
-    pytest.param(f3hesses["b3_"], [3], True, f3hesses["b3"]),  
-    pytest.param(f3hesses["full"], [3], True, f3hesses["b3"]),  
+    pytest.param(f3hesses["b13"], [1, 3], False, f3hesses["b13_"]),
+    pytest.param(f3hesses["b13_"], [1, 3], True, f3hesses["b13"]),
+    pytest.param(f3hesses["full"], [1, 3], True, f3hesses["b13"]),
+    pytest.param(f3hesses["b3"], [3], False, f3hesses["b3_"]),
+    pytest.param(f3hesses["b3_"], [3], True, f3hesses["b3"]),
+    pytest.param(f3hesses["full"], [3], True, f3hesses["b3"]),
     pytest.param(f3hesses["full"], [], False, np.zeros((12, 12))),  # zero
     pytest.param(f3hesses["full"], [], True, np.zeros((0, 0))),  # collapse
 ])
@@ -152,3 +152,39 @@ def test_resize_hessian(hin, bas, reverse, hans):
     hout = qcmb.resize_hessian(hin, bas, {1: 1, 2: 1, 3: 2}, {1: slice(0, 1), 2: slice(1, 2), 3: slice(2, 4)}, reverse=reverse)
     assert compare_values(hans, hout, atol=1e-5, label="resize_hessian")
 
+@pytest.mark.parametrize("mc,frag,bas,opq,ans", [
+    pytest.param("mp2", 1, (1, 2), True, '["mp2", [1], [1, 2]]'),
+    pytest.param("mp2", (1,), (1, 2), True, '["mp2", [1], [1, 2]]'),
+    pytest.param("mp2", [1], [1, 2], True, '["mp2", [1], [1, 2]]'),
+    pytest.param("mp2", (1,2), (1, 2), True, '["mp2", [1, 2], [1, 2]]'),
+    pytest.param("1", 2, 2, True, '["1", [2], [2]]'),
+    pytest.param(1, 2, 2, True, '["1", [2], [2]]'),
+
+    pytest.param("mp2", 1, (1, 2), False, '§mp2_(1)@(1, 2)'),
+    pytest.param("mp2", (1,), (1, 2), False, '§mp2_(1)@(1, 2)'),
+    pytest.param("mp2", [1], [1, 2], False, '§mp2_(1)@(1, 2)'),
+    pytest.param("mp2", (1,2), (1, 2), False, '§mp2_(1, 2)@(1, 2)'),
+    pytest.param("1", 2, 2, False, '§1_(2)@(2)'),
+    pytest.param(1, 2, 22, False, '§1_(2)@(22)'),
+    pytest.param(None, (1,2), (1, 2), False, '(1, 2)@(1, 2)'),  # !opaque-only
+])
+def test_labeler(mc, frag, bas, opq, ans):
+    lbl = qcmb.labeler(mc, frag, bas, opaque=opq)
+    assert lbl == ans, f"{lbl} != {ans}"
+
+@pytest.mark.parametrize("lbl,mc_ans,frag_ans,bas_ans", [
+    pytest.param('["mp2", [1], [1, 2]]', "mp2", [1], [1, 2]),  # x3
+    pytest.param('["mp2", [1, 2], [1, 2]]', "mp2", [1, 2], [1, 2]),
+    pytest.param('["1", [2], [2]]', "1", [2], [2]),  # x2
+    pytest.param('["mp2", 1, [1, 2]]', 'mp2', 1, [1, 2]),  # not usual
+
+    pytest.param('§mp2_(1)@(1, 2)', "mp2", [1], [1, 2]),  # x3
+    pytest.param('§mp2_(1, 2)@(1, 2)', "mp2", [1, 2], [1, 2]),
+    pytest.param('§1_(2)@(2)', "1", [2], [2]),  # x2
+    pytest.param('(1, 2)@(1, 2)', None, [1, 2], [1, 2]),  # !opaque-only
+])
+def test_delabeler(lbl, mc_ans, frag_ans, bas_ans):
+    mc, frag, bas = qcmb.delabeler(lbl)
+    assert mc == mc_ans, f"{mc} != {mc_ans}"
+    assert frag == frag_ans, f"{frag} != {frag_ans}"
+    assert bas == bas_ans, f"{bas} != {bas_ans}"
