@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from qcelemental.testing import compare_values
+from qcelemental.testing import compare_recursive, compare_values
 
 import qcmanybody as qcmb
 
@@ -188,3 +188,20 @@ def test_delabeler(lbl, mc_ans, frag_ans, bas_ans):
     assert mc == mc_ans, f"{mc} != {mc_ans}"
     assert frag == frag_ans, f"{frag} != {frag_ans}"
     assert bas == bas_ans, f"{bas} != {bas_ans}"
+
+@pytest.mark.parametrize("nbmc,ans", [
+    pytest.param({"hi": [2, 1], "lo": [3]}, {1: ("hi", "§A", "§12"), 2: ("hi", "§A", "§12"), 3: ("lo", "§B", "§3")}),
+    pytest.param({"lo": [1, 2, 3], "hi": [5, 6], "md": [4]}, {1: ('lo', '§A', '§123'), 2: ('lo', '§A', '§123'), 3: ('lo', '§A', '§123'), 4: ("md", "§B", "§4"), 5: ('hi', '§C', '§56'), 6: ('hi', '§C', '§56')}),
+    pytest.param({"md": [4], "hi": [5, 6], "lo": [1, 2, 3]}, {1: ('lo', '§A', '§123'), 2: ('lo', '§A', '§123'), 3: ('lo', '§A', '§123'), 4: ("md", "§B", "§4"), 5: ('hi', '§C', '§56'), 6: ('hi', '§C', '§56')}),
+    pytest.param({"hi": [5, 6], "md": [4], "lo": [1, 2, 3]}, {1: ('lo', '§A', '§123'), 2: ('lo', '§A', '§123'), 3: ('lo', '§A', '§123'), 4: ("md", "§B", "§4"), 5: ('hi', '§C', '§56'), 6: ('hi', '§C', '§56')}),
+    pytest.param({"md": [3, 4], "hi": [1, 2, 5], "lo": [6, 7, 8, 9, 10, 11]}, {1: ("hi", "§A", "§125"), 2: ("hi", "§A", "§125"), 3: ("md", "§B", "§34"), 4: ("md", "§B", "§34"), 5: ("hi", "§A", "§125"), 6: ("lo", "§C", "§<11"), 7: ("lo", "§C", "§<11"), 8: ("lo", "§C", "§<11"), 9: ("lo", "§C", "§<11"), 10: ("lo", "§C", "§<11"), 11: ("lo", "§C", "§<11")}),
+    pytest.param({"md": [3, 4], "hi": [5, 2, 1], "lo": [10, 11, 9, 6, 7, 8]}, {1: ("hi", "§A", "§125"), 2: ("hi", "§A", "§125"), 3: ("md", "§B", "§34"), 4: ("md", "§B", "§34"), 5: ("hi", "§A", "§125"), 6: ("lo", "§C", "§<11"), 7: ("lo", "§C", "§<11"), 8: ("lo", "§C", "§<11"), 9: ("lo", "§C", "§<11"), 10: ("lo", "§C", "§<11"), 11: ("lo", "§C", "§<11")}),
+    pytest.param({'hf/6-31g': ['supersystem'], 'ccsd/6-31g': [1], 'mp2/6-31g': [2]}, {1: ("ccsd/6-31g", "§A", "§1"), 2: ("mp2/6-31g", "§B", "§2"), "supersystem": ('hf/6-31g', '§C', '§SS')}),
+    pytest.param({'p4-ccsd': [1], 'p4-mp2': [2, 3], 'p4-hf': [4]}, {1: ('p4-ccsd', '§A', '§1'), 2: ('p4-mp2', '§B', '§23'), 3: ('p4-mp2', '§B', '§23'), 4: ('p4-hf', '§C', '§4')}),
+    pytest.param({'hi': [1, 2, 3], 'md': [4], 'md2': [5, 6, 7, 8, 9, 10], 'lo': ['supersystem']},
+        {1: ('hi', '§A', '§123'), 2: ('hi', '§A', '§123'), 3: ('hi', '§A', '§123'), 4: ('md', '§B', '§4'), 5: ('md2', '§C', '§<10'), 6: ('md2', '§C', '§<10'), 7: ('md2', '§C', '§<10'), 8: ('md2', '§C', '§<10'), 9: ('md2', '§C', '§<10'), 10: ('md2', '§C', '§<10'), "supersystem": ('lo', '§D', '§SS')}),
+])
+def test_modelchem_labels(nbmc, ans):
+    res = qcmb.utils.modelchem_labels(nbmc)
+    print(res)
+    assert compare_recursive(res, ans)

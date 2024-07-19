@@ -100,119 +100,119 @@ sumstr = {
     "dfcp4b_tot": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-11.5307519\d+        0.0000000\d+        0.00000\d+        0.0000000\d+        0.0000000\d+
-^\s+2\s+-11.5224035\d+        0.0083483\d+        5.23867\d+        0.0083483\d+        5.2386764\d+
-^\s+3\s+-11.5226401\d+        0.0081117\d+        5.09021\d+       -0.0002365\d+       -0.1484610\d+
-^\s+FULL/RTN\s+4\s+-11.5225766\d+        0.0081753\d+        5.13007\d+        0.0000635\d+        0.0398644\d+
+^\s+§A\s+1\s+-11.5307519\d+        0.0000000\d+        0.00000\d+        0.0000000\d+        0.0000000\d+
+^\s+§A\s+2\s+-11.5224035\d+        0.0083483\d+        5.23867\d+        0.0083483\d+        5.2386764\d+
+^\s+§A\s+3\s+-11.5226401\d+        0.0081117\d+        5.09021\d+       -0.0002365\d+       -0.1484610\d+
+^\s+FULL/RTN\s+§A\s+4\s+-11.5225766\d+        0.0081753\d+        5.13007\d+        0.0000635\d+        0.0398644\d+
 """,
     "cp4b_tot": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
-^\s+3\s+-11.5227028\d+        0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
-^\s+FULL/RTN\s+4      -11.5226398\d+        0.0080288\d+        5.03\d+        0.0000629\d+        0.03\d+
+^\s+§A\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+§A\s+3\s+-11.5227028\d+        0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+FULL/RTN\s+§A\s+4      -11.5226398\d+        0.0080288\d+        5.03\d+        0.0000629\d+        0.03\d+
 """,
     "cp4b_tot_sio": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
 ^\s+2\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
 ^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
-^\s+FULL/RTN\s+4\s+-11.5226398\d+        0.0080288\d+        5.03\d+\s+N/A\s+N/A\s*
+^\s+FULL/RTN\s+§A\s+4\s+-11.5226398\d+        0.0080288\d+        5.03\d+\s+N/A\s+N/A\s*
 """,
     "cp4b_ie": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
-^\s+3\s+N/A\s+0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
-^\s+FULL/RTN\s+4\s+N/A\s+0.0080288\d+        5.03\d+        0.0000629\d+        0.03\d+
+^\s+§A\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+§A\s+3\s+N/A\s+0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+FULL/RTN\s+§A\s+4\s+N/A\s+0.0080288\d+        5.03\d+        0.0000629\d+        0.03\d+
 """,
    "cp4b_ie_sio": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
 ^\s+2\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
 ^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
-^\s+FULL/RTN\s+4\s+N/A\s+0.0080288\d+        5.03\d+\s+N/A\s+N/A\s*
+^\s+FULL/RTN\s+§A\s+4\s+N/A\s+0.0080288\d+        5.03\d+\s+N/A\s+N/A\s*
 """,
     "nocp4b_tot": r"""
    ==> N-Body: Non-Counterpoise Corrected \(NoCP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+2\s+-11.5228512\d+        0.0078175\d+        4.90\d+        0.0078175\d+        4.90\d+
-^\s+3\s+-11.5230952\d+        0.0075734\d+        4.75\d+       -0.0002440\d+       -0.15\d+
-^\s+FULL/RTN\s+4      -11.5230380\d+        0.0076306\d+        4.78\d+        0.0000571\d+        0.03\d+
+^\s+§A\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+-11.5228512\d+        0.0078175\d+        4.90\d+        0.0078175\d+        4.90\d+
+^\s+§A\s+3\s+-11.5230952\d+        0.0075734\d+        4.75\d+       -0.0002440\d+       -0.15\d+
+^\s+FULL/RTN\s+§A\s+4      -11.5230380\d+        0.0076306\d+        4.78\d+        0.0000571\d+        0.03\d+
 """,
     "vmfc4b_tot": r"""
    ==> N-Body: Valiron-Mayer Function Counterpoise \(VMFC\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+2\s+-11.5224489\d+        0.0082197\d+        5.15\d+        0.0082197\d+        5.15\d+
-^\s+3\s+-11.5226845\d+        0.0079841\d+        5.01\d+       -0.000235\d+       -0.14\d+
-^\s+FULL/RTN\s+4\s+-11.5226215\d+        0.0080471\d+        5.04\d+        0.0000629\d+        0.03\d+
+^\s+§A\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+-11.5224489\d+        0.0082197\d+        5.15\d+        0.0082197\d+        5.15\d+
+^\s+§A\s+3\s+-11.5226845\d+        0.0079841\d+        5.01\d+       -0.000235\d+       -0.14\d+
+^\s+FULL/RTN\s+§A\s+4\s+-11.5226215\d+        0.0080471\d+        5.04\d+        0.0000629\d+        0.03\d+
 """,
     "cp3b_tot": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
-^\s+RTN\s+3\s+-11.5227028\d+        0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+§A\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+RTN\s+§A\s+3\s+-11.5227028\d+        0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
 ^\s+FULL\s+4\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
 """,
     "cp3b_ie": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
-^\s+RTN\s+3\s+N/A\s+0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
+^\s+§A\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+RTN\s+§A\s+3\s+N/A\s+0.0079658\d+        4.99\d+       -0.0002351\d+       -0.14\d+
 ^\s+FULL\s+4\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
 """,
     "cp2b_tot": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+RTN\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+§A\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+RTN\s+§A\s+2\s+-11.5224677\d+        0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
 ^\s+3\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
 ^\s+FULL\s+4\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
 """,
     "cp2b_ie": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+RTN\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
+^\s+§A\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+RTN\s+§A\s+2\s+N/A\s+0.0082009\d+        5.14\d+        0.0082009\d+        5.14\d+
 ^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
 ^\s+FULL\s+4\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
 """,
     "cp1b_tot": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+RTN\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+RTN\s+§A\s+1\s+-11.5306687\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
 ^\s+2\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
 ^\s+3\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
 ^\s+FULL\s+4\s+N/A                   N/A                   N/A                   N/A                   N/A\s*
@@ -220,9 +220,9 @@ sumstr = {
     "cp1b_ie": r"""
    ==> N-Body: Counterpoise Corrected \(CP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+RTN\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+RTN\s+§A\s+1\s+N/A\s+0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
 ^\s+2\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
 ^\s+3\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
 ^\s+FULL\s+4\s+N/A\s+N/A\s+N/A\s+N/A\s+N/A\s*
@@ -679,46 +679,3 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     if outstrs and progln != "psi4_df":
         for stdoutkey in outstrs:
             assert re.search(sumstr[stdoutkey], ret.stdout, re.MULTILINE), f"[j] N-Body pattern not found: {sumstr[stdoutkey]}"
-
-
-@pytest.mark.parametrize("mbe_keywords,ref_count", [
-    pytest.param(
-        {"bsse_type": ["nocp", "cp", "vmfc"]},
-        # 65,
-        {"all": {"(auto)": {4: 1, 3: 8, 2: 24, 1: 32}},
-         "cp": {"(auto)": {4: 1, 3: 4, 2: 6, 1: 4}},  # other 4 1b req'd are in nocp
-         "nocp": {"(auto)": {4: 1, 3: 4, 2: 6, 1: 4}},
-         "vmfc_compute": {"(auto)": {4: 1, 3: 8, 2: 24, 1: 32}},
-         },
-        id="4b_all"),
-    pytest.param(
-        {"bsse_type": "cp", "return_total_data": True, "max_nbody": 3},
-        # 18,
-        {"all": {"(auto)": {1: 8, 2: 6, 3: 4}},
-         "cp": {"(auto)": {1: 4, 2: 6, 3: 4}},
-         "nocp": {"(auto)": {1: 4}},
-         "vmfc_compute": {"(auto)": {}},
-        },
-        id="3b_cp_rtd"),
-    pytest.param(
-        {"bsse_type": "vmfc", "return_total_data": False, "max_nbody": 3},
-        # 50,
-        {"all": {"(auto)": {1: 28, 2: 18, 3: 4}},
-         "cp": {"(auto)": {}},
-         "nocp": {"(auto)": {1: 4, 2: 6, 3: 4}},  # free with vmfc
-         "vmfc_compute": {"(auto)": {1: 28, 2: 18, 3: 4}},
-        },
-        id="3b_vmfc"),
-])
-def test_count_he4_single(mbe_keywords, ref_count, he_tetramer):
-    atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": "mybas"}, program="myqc", driver="energy")
-    mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
-
-    ret = ManyBodyComputer.from_manybodyinput(mbe_model, build_tasks=False)
-    ret = ret.qcmb_core
-
-    text, dcount = ret.format_calc_plan()
-    assert compare_recursive(ref_count["all"], dcount, atol=1.e-6)
-    for sset in ["all", "cp", "nocp", "vmfc_compute"]:
-        text, dcount = ret.format_calc_plan(sset)
-        assert compare_recursive(ref_count[sset], dcount, atol=1.e-6)
