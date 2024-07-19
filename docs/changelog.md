@@ -68,6 +68,12 @@
  * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add `labeler(..., opaque=False)` option to produce
    eye-friendly `(1)@(1, 2)` style lablels as well as the semi-opaque internal style. Also always convent single ints
    to tuples now. Function `delabeler` can decode the new style. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Intf -- sort "core" `nbodies_per_mc_level` dictionary so model
+   chemistries are in a predictable 1b, 2b, ..., supersystem order. Check that high-level (different data structure) agrees.
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add short ordinal model chemistry level (e.g., §A) to the
+   `format_calc_plan` and `print_nbody_energy` summaries. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add function `modelchem_labels` to associate n-body
+   level, model chemistry level, one-char ordinal modelchem label, and n-bodies-covered modelchem label. @loriab
 
 #### Bug Fixes
 

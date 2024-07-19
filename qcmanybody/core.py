@@ -567,7 +567,7 @@ class ManyBodyCore:
                 all_results["energy_body_dict"][bt],
                 f"{bt.formal()} ({bt.abbr()})",
                 self.nfragments,
-                modelchem_labels(self.nbodies_per_mc_level),
+                modelchem_labels(self.nbodies_per_mc_level, presorted=True),
                 is_embedded,
                 self.supersystem_ie_only,
                 self.max_nbody if self.has_supersystem else None,

@@ -4,7 +4,6 @@ import ast
 import json
 import re
 import string
-from types import NoneType
 from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, Set, Tuple, Union
 
 import numpy as np
@@ -235,7 +234,7 @@ def sum_cluster_data(
 
 
 def labeler(
-    mc_level_lbl: Union[str, int, NoneType], frag: Tuple[int, ...], bas: Tuple[int, ...], *, opaque: bool = True
+    mc_level_lbl: Optional[Union[str, int]], frag: Tuple[int, ...], bas: Tuple[int, ...], *, opaque: bool = True
 ) -> str:
     """Form label from model chemistry id and fragment and basis indices.
 
