@@ -90,5 +90,5 @@ markers = [
     "geometric: tests using GeomeTRIC software; skip if unavailable",
     "geometric_genopt: tests using GeomeTRIC software with new additions; skip if unavailable",
     "optking: tests using OptKing software; skip if unavailable",
-    "optking_genopt: tests using OptKin software with new additions; skip if unavailable",
+    "optking_genopt: tests using OptKing software with new additions; skip if unavailable",
 ]

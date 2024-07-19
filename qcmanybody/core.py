@@ -93,8 +93,8 @@ class ManyBodyCore:
         for k, v in self.levels_no_ss.items():
             self.nbodies_per_mc_level[v].append(k)
 
-        # order nbodies_per_mc_level keys (modelchems) by the lowest n-body level covered with
-        #   supersystem (replaced below) at the end. Order nbodies within each modelchem.
+        # order nbodies_per_mc_level keys (modelchems) by the lowest n-body level covered; any
+        #   supersystem key (replaced below) is at the end. Order nbodies within each modelchem.
         #   Reset mc_levels to match.
         self.nbodies_per_mc_level = {
             k: sorted(v)
@@ -189,10 +189,12 @@ class ManyBodyCore:
                 all_calcs = set().union(*compute_dict[sub].values())
                 compute_list_count[mc][sub] = Counter([len(frag) for (frag, _) in all_calcs])
 
+        mc_labels = modelchem_labels(self.nbodies_per_mc_level, presorted=True)
+        full_to_ordinal_mc_lbl = {v[0]: v[1] for v in mc_labels.values()}
         info = []
-        for imc, (mc, counter) in enumerate(compute_list_count.items()):
+        for mc, counter in compute_list_count.items():
             all_counter = counter["all"]
-            mcheader = f'    Model chemistry "{mc}" (§{string.ascii_uppercase[imc]}):'
+            mcheader = f'    Model chemistry "{mc}" ({full_to_ordinal_mc_lbl[mc]}):'
             info.append(f"{mcheader:38} {sum(all_counter.values()):6}")
             for nb, count in sorted(all_counter.items()):
                 other_counts = [f"{sub}: {counter[sub][nb]}" for sub in ["nocp", "cp", "vmfc_compute"]]

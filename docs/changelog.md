@@ -19,7 +19,7 @@
 -->
 
 
-## v0.3.0 / 2024-MM-DD (Unreleased)
+## v0.3.0 / 2024-07-19
 
 #### Breaking Changes
 
@@ -74,14 +74,6 @@
    `format_calc_plan` and `print_nbody_energy` summaries. @loriab
  * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add function `modelchem_labels` to associate n-body
    level, model chemistry level, one-char ordinal modelchem label, and n-bodies-covered modelchem label. @loriab
-
-#### Bug Fixes
-
-#### Misc.
-
-#### MUST (Unmerged)
-
-#### WIP (Unmerged)
 
 
 ## v0.2.1 / 2024-05-14

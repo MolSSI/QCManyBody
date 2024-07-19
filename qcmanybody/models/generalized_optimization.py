@@ -12,12 +12,18 @@ from .manybody_input_pydv1 import ManyBodySpecification
 from .manybody_output_pydv1 import ManyBodyResult
 
 # note that qcel QCInputSpecification and AtomicResult.schema_name needs editing
-ResultTrajectories = Annotated[Union[AtomicResult, ManyBodyResult], Field(discriminator="schema_name")]
+ResultTrajectories = Annotated[
+    Union[AtomicResult, ManyBodyResult],
+    Field(
+        discriminator="schema_name",
+        description="A result object for a single step in the optimization. Either an ordinary atomic/single-point or a many-body result.",
+    ),
+]
 InputSpecifications = Annotated[
     Union[QCInputSpecification, ManyBodySpecification],
     Field(
         discriminator="schema_name",
-        description="An ordinary atomic/single-point or many-body directive to compute a gradient.",
+        description="A directive to compute a gradient. Either an ordinary atomic/single-point or a many-body spec.",
     ),
 ]
 

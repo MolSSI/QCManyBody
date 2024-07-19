@@ -564,16 +564,19 @@ def modelchem_labels(
         #   "supersystem": ('lo', '§D', '§SS')}
         ```
     """
-    if not presorted:
-        nb_per_mc = {
-            k: sorted(v)
-            for (k, v) in sorted(
-                nb_per_mc.items(), key=lambda mc_nbs: sorted([1000] if (mc_nbs[1] == ["supersystem"]) else mc_nbs[1])[0]
-            )
-        }
+    sorted_nb_per_mc = {
+        k: sorted(v)
+        for (k, v) in sorted(
+            nb_per_mc.items(), key=lambda mc_nbs: sorted([1000] if (mc_nbs[1] == ["supersystem"]) else mc_nbs[1])[0]
+        )
+    }
+    if presorted:
+        assert (
+            sorted_nb_per_mc == nb_per_mc
+        ), f"If presorted, input dictionary should be sorted. {nb_per_mc} != {sorted_nb_per_mc}   "
 
     lvl_lbl = {}
-    for mc, nbs in nb_per_mc.items():
+    for mc, nbs in sorted_nb_per_mc.items():
         if nbs == ["supersystem"]:
             lvl_lbl[mc] = "§SS"
         elif max(nbs) > 9:
@@ -581,11 +584,11 @@ def modelchem_labels(
         else:
             lvl_lbl[mc] = f"§{''.join(map(str, sorted(nbs)))}"
 
-    indexed_mc = {k: i for i, k in enumerate(nb_per_mc.keys())}
+    indexed_mc = {k: i for i, k in enumerate(sorted_nb_per_mc.keys())}
 
     mc_per_nb = {
         nb: (mc, f"§{string.ascii_uppercase[indexed_mc[mc]]}", lvl_lbl[mc])
-        for mc, nbs in nb_per_mc.items()
+        for mc, nbs in sorted_nb_per_mc.items()
         for nb in nbs
     }
 

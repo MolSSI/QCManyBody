@@ -35,13 +35,13 @@ dependencies:
 
 ### Unit Tests
 
-* includes [test_mbe_keywords](test_mbe_keywords.py), [test_utils](test_utils.py)
+* includes [test_schema_keywords](test_schema_keywords.py), [test_utils](test_utils.py), [test_core_auxiliary](test_core_auxiliary.py)
 * runs quickly with no extra requirements
 * tests elements of QCManyBody like input schema and utilities
 
 ### Static-Data Regression Tests
 
-* includes [test_single](test_single.py), [test_multi](test_multi.py), [test_multi_ss](test_multi_ss.py)
+* includes [test_core_singlelevel](test_core_singlelevel.py), [test_core_multilevel](test_core_multilevel.py), [test_core_multilevel_ss](test_core_multilevel_ss.py)
 * tests core interface
 * HARD TO READ! These test many combinations of inputs and a dictionary comparison against pre-stored outputs, so parts
   are scattered. Users looking for examples aren't advised to look at these.
@@ -51,7 +51,7 @@ dependencies:
 
 ### End-to-End Correctness Tests
 
-* includes [test_mbe_he4_singlelevel](test_mbe_he4_singlelevel.py), [test_mbe_he4_multilevel](test_mbe_he4_multilevel.py), [test_mbe_het4_grad.py](test_mbe_het4_grad.py)
+* includes [test_computer_he4_singlelevel](test_computer_he4_singlelevel.py), [test_computer_he4_multilevel](test_computer_he4_multilevel.py), [test_computer_het4_grad.py](test_computer_het4_grad.py)
 * tests high-level (and through it, core) interfaces
 * HARD TO READ! These test many combinations of inputs and many details of outputs, so to avoid repetition, there is
   much parameterization and dictionary lookups. Users looking for examples aren't advised to look at these.

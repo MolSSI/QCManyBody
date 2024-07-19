@@ -1,8 +1,10 @@
 import pytest
+import qcelemental
 from qcelemental import constants
 from qcelemental.models import Molecule
 from qcelemental.testing import compare_recursive
 
+from qcmanybody import ManyBodyCalculator  # test old name still operational
 from qcmanybody import ManyBodyComputer
 from qcmanybody.models import AtomicSpecification, ManyBodyInput
 
@@ -11,6 +13,23 @@ from qcmanybody.models import AtomicSpecification, ManyBodyInput
 def he_tetramer():
     a2 = 2 / constants.bohr2angstroms
     return Molecule(symbols=["He", "He", "He", "He"], fragments=[[0], [1], [2], [3]], geometry=[0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2])
+
+
+def test_noncontiguous_fragments_ordinary():
+    with pytest.raises(qcelemental.exceptions.ValidationError) as e:
+        Molecule(symbols=["H", "Ne", "Cl"], geometry=[0, 0, 0, 2, 0, 0, 0, 2, 0], fragments=[[0, 2], [1]])
+
+    assert "QCElemental would need to reorder atoms to accommodate non-contiguous fragments" in str(e.value)
+
+
+def test_noncontiguous_fragments_evaded():
+    neon_in_hcl = Molecule(symbols=["H", "Ne", "Cl"], geometry=[0, 0, 0, 2, 0, 0, 0, 2, 0], fragments=[[0, 2], [1]], validated=True)
+
+    with pytest.raises(ValueError) as e:
+        ManyBodyCalculator(neon_in_hcl, ["cp"], {2: "mp2", 1: "mp2"}, False, False, None)
+
+    assert "QCManyBody: non-contiguous fragments could be implemented but aren't at present" in str(e.value)
+
 
 @pytest.mark.parametrize("mbe_keywords,ref_count,ref_text", [
     pytest.param(
