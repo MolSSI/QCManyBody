@@ -51,7 +51,7 @@ dependencies:
 
 ### End-to-End Correctness Tests
 
-* includes [test_computer_he4_singlelevel](test_computer_he4_singlelevel.py), [test_computer_he4_multilevel](test_computer_he4_multilevel.py), [test_computer_het4_grad.py](test_computer_het4_grad.py)
+* includes [test_computer_he4_singlelevel](test_computer_he4_singlelevel.py), [test_computer_he4_multilevel](test_computer_he4_multilevel.py), [test_computer_het4_gradient.py](test_computer_het4_gradient.py)
 * tests high-level (and through it, core) interfaces
 * HARD TO READ! These test many combinations of inputs and many details of outputs, so to avoid repetition, there is
   much parameterization and dictionary lookups. Users looking for examples aren't advised to look at these.

@@ -14,7 +14,7 @@ from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywor
 from qcmanybody.utils import translate_qcvariables
 
 from .addons import using, uusing
-from .test_mbe_he4_singlelevel import sumdict as sumdict_single
+from .test_computer_he4_singlelevel import sumdict as sumdict_single
 
 
 @pytest.fixture(scope="function")
