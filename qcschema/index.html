@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -174,7 +174,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -762,6 +762,20 @@
 </thead>
 <tbody>
 <tr>
+<td>schema_name</td>
+<td>typing.Literal['qcschema_manybodykeywords']</td>
+<td>False</td>
+<td></td>
+<td>qcschema_manybodykeywords</td>
+</tr>
+<tr>
+<td>schema_version</td>
+<td>typing.Literal[1]</td>
+<td>False</td>
+<td>The version number of <code>schema_name</code> to which this model conforms.</td>
+<td>1</td>
+</tr>
+<tr>
 <td>bsse_type</td>
 <td><enum 'BsseEnum'></td>
 <td>False</td>
@@ -864,6 +878,13 @@
 <td>qcschema_manybodyspecification</td>
 </tr>
 <tr>
+<td>schema_version</td>
+<td>typing.Literal[1]</td>
+<td>False</td>
+<td>The version number of <code>schema_name</code> to which this model conforms.</td>
+<td>1</td>
+</tr>
+<tr>
 <td>keywords</td>
 <td><class 'qcmanybody.models.manybody_input_pydv1.ManyBodyKeywords'></td>
 <td>True</td>
@@ -890,6 +911,13 @@
 <td>True</td>
 <td>??? TODO expand to cbs, fd</td>
 <td>None</td>
+</tr>
+<tr>
+<td>extras</td>
+<td>typing.Any</td>
+<td>False</td>
+<td>Additional information to bundle with the computation. Use for schema development and scratch space.</td>
+<td>{}</td>
 </tr>
 </tbody>
 </table>
@@ -952,6 +980,13 @@
 <td>qcschema_manybodyinput</td>
 </tr>
 <tr>
+<td>schema_version</td>
+<td>typing.Literal[1]</td>
+<td>False</td>
+<td>The version number of <code>schema_name</code> to which this model conforms.</td>
+<td>1</td>
+</tr>
+<tr>
 <td>specification</td>
 <td><class 'qcmanybody.models.manybody_input_pydv1.ManyBodySpecification'></td>
 <td>True</td>
@@ -999,10 +1034,15 @@
 <p class="admonition-title">Note</p>
 <p>The properties model is generated dynamically based on a constant
 <code>MAX_NBODY</code>. To not overload the docs table, this is set to 5, which
-covers full calculations on tetramers. To use a larger
-<code>ManyBodyKeywords.max_nbody</code>, reset this value.</p>
-<pre><code>import qcmanybody as qcmb
-qcmb.models.MAX_NBODY = 8
+covers full calculations on tetramers. In practice this isn't a problem for
+larger clusters because <code>cp_corrected_total_energy_through_12_body</code>, for
+example, is allowed dynamically for a model instance. Nevertheless, to use a
+larger <code>ManyBodyKeywords.max_nbody</code>, reset this value <em>outside</em> the interpreter.</p>
+<pre><code>python -c "import qcmanybody as qcmb;print(qcmb.models.MAX_NBODY)"
+#&gt; 5
+export QCMANYBODY_MAX_NBODY=9  # explicitly enumerates octamer properties
+python -c "import qcmanybody as qcmb;print(qcmb.models.MAX_NBODY)"
+#&gt; 9
 </code></pre>
 </div>
 
@@ -1038,6 +1078,20 @@ qcmb.models.MAX_NBODY = 8
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>schema_name</td>
+<td>typing.Literal['qcschema_manybodyproperties']</td>
+<td>False</td>
+<td></td>
+<td>qcschema_manybodyproperties</td>
+</tr>
+<tr>
+<td>schema_version</td>
+<td>typing.Literal[1]</td>
+<td>False</td>
+<td>The version number of <code>schema_name</code> to which this model conforms.</td>
+<td>1</td>
+</tr>
 <tr>
 <td>calcinfo_nmc</td>
 <td><class 'int'></td>
@@ -2144,7 +2198,7 @@ SuccessfulResultBase
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
       
     
   </body>

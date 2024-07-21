@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -172,7 +172,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -673,6 +673,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#qcmanybody.utils.modelchem_labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      modelchem_labels
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -900,6 +909,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#qcmanybody.utils.modelchem_labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      modelchem_labels
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -966,9 +984,7 @@
 
                   <details class="quote">
                     <summary>Source code in <code>qcmanybody/core.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 34</span>
-<span class="normal"> 35</span>
-<span class="normal"> 36</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 36</span>
 <span class="normal"> 37</span>
 <span class="normal"> 38</span>
 <span class="normal"> 39</span>
@@ -1053,7 +1069,25 @@
 <span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecule</span><span class="p">,</span>
     <span class="n">bsse_type</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">BsseEnum</span><span class="p">],</span>
@@ -1113,7 +1147,23 @@
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_no_ss</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="c1"># order nbodies_per_mc_level keys (modelchems) by the lowest n-body level covered; any</span>
+    <span class="c1">#   supersystem key (replaced below) is at the end. Order nbodies within each modelchem.</span>
+    <span class="c1">#   Reset mc_levels to match.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">1000</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">}</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">mc_levels</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>  <span class="c1"># remove after some downstream testing</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mc_levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">nbs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">nbs</span> <span class="ow">and</span> <span class="p">((</span><span class="n">nbs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">nbs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nbs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;QCManyBody: N-Body levels must be contiguous within a model chemistry spec (</span><span class="si">{</span><span class="n">mc</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">nbs</span><span class="si">}</span><span class="s2">). Use an alternate spec name to accomplish this input.&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># TODO - test and reenable if appropriate. my guess is that noncontig nb is fine on the core computing side,</span>
+            <span class="c1">#   but trouble for computer and nbodies_per_mc_level inverting and indexing. Safer to deflect for now since input tweak allows the calc.</span>
 
     <span class="c1"># Supersystem is always at the end</span>
     <span class="k">if</span> <span class="s2">&quot;supersystem&quot;</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
@@ -1217,11 +1267,11 @@
             <td>
               <div class="doc-md-description">
                 <p>A text summary with per- model chemistry and per- n-body-level job counts.
-<div class="highlight"><pre><span></span><code>Model chemistry &quot;c4-ccsd&quot;:    22
+<div class="highlight"><pre><span></span><code>Model chemistry &quot;c4-ccsd&quot; (§A):         22
      Number of 1-body computations:     16 (nocp: 0, cp: 0, vmfc_compute: 16)
      Number of 2-body computations:      6 (nocp: 0, cp: 0, vmfc_compute: 6)
 
-Model chemistry &quot;c4-mp2&quot;:    28
+Model chemistry &quot;c4-mp2&quot; (§B):          28
      Number of 1-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
      Number of 2-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
      Number of 3-body computations:      4 (nocp: 0, cp: 0, vmfc_compute: 4)
@@ -1235,7 +1285,7 @@ Model chemistry &quot;c4-mp2&quot;:    28
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.</p>
+                <p>Data structure with outer key mc-label, inner key 1-indexed n-body, and value job count.</p>
               </div>
             </td>
           </tr>
@@ -1244,25 +1294,7 @@ Model chemistry &quot;c4-mp2&quot;:    28
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/core.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
@@ -1289,7 +1321,28 @@ Model chemistry &quot;c4-mp2&quot;:    28
 <span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
-<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">format_calc_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">format_calc_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Formulate per-modelchem and per-body job count data and summary text.</span>
 
 <span class="sd">    Parameters</span>
@@ -1302,17 +1355,17 @@ Model chemistry &quot;c4-mp2&quot;:    28
 <span class="sd">    info</span>
 <span class="sd">        A text summary with per- model chemistry and per- n-body-level job counts.</span>
 <span class="sd">        ```</span>
-<span class="sd">        Model chemistry &quot;c4-ccsd&quot;:    22</span>
+<span class="sd">        Model chemistry &quot;c4-ccsd&quot; (§A):         22</span>
 <span class="sd">             Number of 1-body computations:     16 (nocp: 0, cp: 0, vmfc_compute: 16)</span>
 <span class="sd">             Number of 2-body computations:      6 (nocp: 0, cp: 0, vmfc_compute: 6)</span>
 
-<span class="sd">        Model chemistry &quot;c4-mp2&quot;:    28</span>
+<span class="sd">        Model chemistry &quot;c4-mp2&quot; (§B):          28</span>
 <span class="sd">             Number of 1-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)</span>
 <span class="sd">             Number of 2-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)</span>
 <span class="sd">             Number of 3-body computations:      4 (nocp: 0, cp: 0, vmfc_compute: 4)</span>
 <span class="sd">        ```</span>
 <span class="sd">    Dict[str, Dict[int, int]]</span>
-<span class="sd">        Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.</span>
+<span class="sd">        Data structure with outer key mc-label, inner key 1-indexed n-body, and value job count.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Rearrange compute_list from key nb having values (species) to compute all of that nb</span>
     <span class="c1">#   to key nb having values counting that nb.</span>
@@ -1323,10 +1376,13 @@ Model chemistry &quot;c4-mp2&quot;:    28
             <span class="n">all_calcs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">compute_dict</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
             <span class="n">compute_list_count</span><span class="p">[</span><span class="n">mc</span><span class="p">][</span><span class="n">sub</span><span class="p">]</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">all_calcs</span><span class="p">])</span>
 
+    <span class="n">mc_labels</span> <span class="o">=</span> <span class="n">modelchem_labels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="p">,</span> <span class="n">presorted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">full_to_ordinal_mc_lbl</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mc_labels</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
     <span class="n">info</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">counter</span> <span class="ow">in</span> <span class="n">compute_list_count</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">all_counter</span> <span class="o">=</span> <span class="n">counter</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    Model chemistry &quot;</span><span class="si">{</span><span class="n">mc</span><span class="si">}</span><span class="s1">&quot; (???):    </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">all_counter</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">mcheader</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;    Model chemistry &quot;</span><span class="si">{</span><span class="n">mc</span><span class="si">}</span><span class="s1">&quot; (</span><span class="si">{</span><span class="n">full_to_ordinal_mc_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span><span class="si">}</span><span class="s1">):&#39;</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mcheader</span><span class="si">:</span><span class="s2">38</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">all_counter</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">nb</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_counter</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="n">other_counts</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sub</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">counter</span><span class="p">[</span><span class="n">sub</span><span class="p">][</span><span class="n">nb</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;nocp&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">,</span> <span class="s2">&quot;vmfc_compute&quot;</span><span class="p">]]</span>
             <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Number of </span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body computations: </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">other_counts</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
@@ -1359,28 +1415,7 @@ Model chemistry &quot;c4-mp2&quot;:    28
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/core.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
 <span class="normal">225</span>
@@ -1392,7 +1427,28 @@ Model chemistry &quot;c4-mp2&quot;:    28
 <span class="normal">231</span>
 <span class="normal">232</span>
 <span class="normal">233</span>
-<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]]:</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate over all the molecules needed for the computation.</span>
 
 <span class="sd">    Yields model chemistry, label, and molecule.</span>
@@ -1491,28 +1547,7 @@ to process energy/gradient/Hessian.
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/core.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">484</span>
-<span class="normal">485</span>
-<span class="normal">486</span>
-<span class="normal">487</span>
-<span class="normal">488</span>
-<span class="normal">489</span>
-<span class="normal">490</span>
-<span class="normal">491</span>
-<span class="normal">492</span>
-<span class="normal">493</span>
-<span class="normal">494</span>
-<span class="normal">495</span>
-<span class="normal">496</span>
-<span class="normal">497</span>
-<span class="normal">498</span>
-<span class="normal">499</span>
-<span class="normal">500</span>
-<span class="normal">501</span>
-<span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span>
-<span class="normal">505</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">505</span>
 <span class="normal">506</span>
 <span class="normal">507</span>
 <span class="normal">508</span>
@@ -1593,7 +1628,29 @@ to process energy/gradient/Hessian.
 <span class="normal">583</span>
 <span class="normal">584</span>
 <span class="normal">585</span>
-<span class="normal">586</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">component_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]],</span>
 <span class="p">):</span>
@@ -1668,6 +1725,7 @@ to process energy/gradient/Hessian.
             <span class="n">all_results</span><span class="p">[</span><span class="s2">&quot;energy_body_dict&quot;</span><span class="p">][</span><span class="n">bt</span><span class="p">],</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">formal</span><span class="p">()</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">bt</span><span class="o">.</span><span class="n">abbr</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span><span class="p">,</span>
+            <span class="n">modelchem_labels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="p">,</span> <span class="n">presorted</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="n">is_embedded</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">max_nbody</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_supersystem</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -1758,10 +1816,7 @@ to process energy/gradient/Hessian.
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/computer.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">384</span>
-<span class="normal">385</span>
-<span class="normal">386</span>
-<span class="normal">387</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">387</span>
 <span class="normal">388</span>
 <span class="normal">389</span>
 <span class="normal">390</span>
@@ -1859,7 +1914,18 @@ to process energy/gradient/Hessian.
 <span class="normal">482</span>
 <span class="normal">483</span>
 <span class="normal">484</span>
-<span class="normal">485</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">from_manybodyinput</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">input_model</span><span class="p">:</span> <span class="n">ManyBodyInput</span><span class="p">,</span> <span class="n">build_tasks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 
     <span class="n">computer_model</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
@@ -1901,6 +1967,14 @@ to process energy/gradient/Hessian.
         <span class="n">supersystem_ie_only</span><span class="o">=</span><span class="n">computer_model</span><span class="o">.</span><span class="n">supersystem_ie_only</span><span class="p">,</span>
         <span class="n">embedding_charges</span><span class="o">=</span><span class="n">computer_model</span><span class="o">.</span><span class="n">embedding_charges</span><span class="p">,</span>
     <span class="p">)</span>
+
+    <span class="c1"># check that core and computer storage are consistent in mc ordering and grouping and nbody levels</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">computer_model</span><span class="o">.</span><span class="n">qcmb_core</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="n">computer_model</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;CORE </span><span class="si">{</span><span class="n">computer_model</span><span class="o">.</span><span class="n">qcmb_core</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="si">}</span><span class="s2"> != COMPUTER </span><span class="si">{</span><span class="n">computer_model</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">computer_model</span><span class="o">.</span><span class="n">qcmb_core</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="n">computer_model</span><span class="o">.</span><span class="n">levels</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;CORE </span><span class="si">{</span><span class="n">computer_model</span><span class="o">.</span><span class="n">qcmb_core</span><span class="o">.</span><span class="n">nbodies_per_mc_level</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2"> != COMPUTER </span><span class="si">{</span><span class="n">computer_model</span><span class="o">.</span><span class="n">levels</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">build_tasks</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">computer_model</span>
@@ -2107,10 +2181,7 @@ to process energy/gradient/Hessian.
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
@@ -2120,7 +2191,10 @@ to process energy/gradient/Hessian.
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">all_same_shape</span><span class="p">(</span><span class="n">it</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">all_same_shape</span><span class="p">(</span><span class="n">it</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if all elements of an iterable have the same shape.&quot;&quot;&quot;</span>
 
     <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
@@ -2270,10 +2344,7 @@ If reverse=True, gradient array extracted to natural size, (3 * <em>&lt;nat in b
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
-<span class="normal"> 64</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 64</span>
 <span class="normal"> 65</span>
 <span class="normal"> 66</span>
 <span class="normal"> 67</span>
@@ -2319,7 +2390,10 @@ If reverse=True, gradient array extracted to natural size, (3 * <em>&lt;nat in b
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resize_gradient</span><span class="p">(</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resize_gradient</span><span class="p">(</span>
     <span class="n">grad</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">fragment_size_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -2507,10 +2581,7 @@ For He--HOOH--Me cluster, <code>{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
@@ -2567,7 +2638,10 @@ For He--HOOH--Me cluster, <code>{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)
 <span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
-<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resize_hessian</span><span class="p">(</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resize_hessian</span><span class="p">(</span>
     <span class="n">hess</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">fragment_size_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -2787,10 +2861,7 @@ fragments. Then alternating weighting is applied so if <code>nb=3</code>, the re
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
@@ -2841,7 +2912,10 @@ fragments. Then alternating weighting is applied so if <code>nb=3</code>, the re
 <span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span>
-<span class="normal">230</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">sum_cluster_data</span><span class="p">(</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">sum_cluster_data</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
     <span class="n">compute_list</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">FragBasIndex</span><span class="p">],</span>
     <span class="n">mc_level_lbl</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -2910,7 +2984,7 @@ fragments. Then alternating weighting is applied so if <code>nb=3</code>, the re
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">labeler</span><span class="p">(</span><span class="n">mc_level_lbl</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n">frag</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">bas</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">labeler</span><span class="p">(</span><span class="n">mc_level_lbl</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">]],</span> <span class="n">frag</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">bas</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">opaque</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2932,12 +3006,15 @@ fragments. Then alternating weighting is applied so if <code>nb=3</code>, the re
           <tr class="doc-section-item">
             <td><code>mc_level_lbl</code></td>
             <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+                  <code><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
                 <p>Key identifying the model chemistry. May be <code>"(auto)"</code>. Often the
-ManyBodyInput.specification.specification keys.</p>
+ManyBodyInput.specification.specification keys.
+When <code>opaque=False</code>, result is for pretty printing so instead of a string,
+<code>mc_level_lbl</code> might be an integer index (apply 1-indexing beforehand)
+or None (if the model chemistry part is unwanted because single-level).</p>
               </div>
             </td>
             <td>
@@ -2973,6 +3050,21 @@ All those in <em>frag</em> plus any ghost.</p>
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td><code>opaque</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Toggle whether to return JSON-friendly semi-opaque internal str label (True) or
+eye-friendly label with @ for basis and § for model chemistry (False).</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -2992,7 +3084,12 @@ All those in <em>frag</em> plus any ghost.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>JSON string from inputs: <code>labeler("mp2", (1), (1, 2))</code> returns <code>'["mp2", 1, [1, 2]]'</code>.</p>
+                <p>JSON string from inputs:</p>
+<div class="highlight"><pre><span></span><code><span class="n">labeler</span><span class="p">(</span><span class="s2">&quot;mp2&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1">#&gt; &#39;[&quot;mp2&quot;, [1], [1, 2]]&#39;</span>
+<span class="n">labeler</span><span class="p">(</span><span class="s2">&quot;mp2&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">opaque</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#&gt; &#39;§mp2_(1)@(1, 2)&#39;</span>
+</code></pre></div>
               </div>
             </td>
           </tr>
@@ -3001,10 +3098,7 @@ All those in <em>frag</em> plus any ghost.</p>
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
 <span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
@@ -3020,7 +3114,36 @@ All those in <em>frag</em> plus any ghost.</p>
 <span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
-<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">labeler</span><span class="p">(</span><span class="n">mc_level_lbl</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">labeler</span><span class="p">(</span>
+    <span class="n">mc_level_lbl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">frag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">opaque</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Form label from model chemistry id and fragment and basis indices.</span>
 
 <span class="sd">    Parameters</span>
@@ -3028,18 +3151,40 @@ All those in <em>frag</em> plus any ghost.</p>
 <span class="sd">    mc_level_lbl</span>
 <span class="sd">        Key identifying the model chemistry. May be `&quot;(auto)&quot;`. Often the</span>
 <span class="sd">        ManyBodyInput.specification.specification keys.</span>
+<span class="sd">        When `opaque=False`, result is for pretty printing so instead of a string,</span>
+<span class="sd">        `mc_level_lbl` might be an integer index (apply 1-indexing beforehand)</span>
+<span class="sd">        or None (if the model chemistry part is unwanted because single-level).</span>
 <span class="sd">    frag</span>
 <span class="sd">        List of 1-indexed fragments active in the supersystem.</span>
 <span class="sd">    bas</span>
 <span class="sd">        List of 1-indexed fragments with active basis sets in the supersystem.</span>
 <span class="sd">        All those in *frag* plus any ghost.</span>
+<span class="sd">    opaque</span>
+<span class="sd">        Toggle whether to return JSON-friendly semi-opaque internal str label (True) or</span>
+<span class="sd">        eye-friendly label with @ for basis and § for model chemistry (False).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
-<span class="sd">        JSON string from inputs: `labeler(&quot;mp2&quot;, (1), (1, 2))` returns `&#39;[&quot;mp2&quot;, 1, [1, 2]]&#39;`.</span>
+<span class="sd">        JSON string from inputs:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        labeler(&quot;mp2&quot;, 1, (1, 2))</span>
+<span class="sd">        #&gt; &#39;[&quot;mp2&quot;, [1], [1, 2]]&#39;</span>
+<span class="sd">        labeler(&quot;mp2&quot;, 1, (1, 2), opaque=False)</span>
+<span class="sd">        #&gt; &#39;§mp2_(1)@(1, 2)&#39;</span>
+<span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">mc_level_lbl</span><span class="p">),</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">frag</span> <span class="o">=</span> <span class="p">(</span><span class="n">frag</span><span class="p">,)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bas</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">bas</span> <span class="o">=</span> <span class="p">(</span><span class="n">bas</span><span class="p">,)</span>
+
+    <span class="k">if</span> <span class="n">opaque</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">mc_level_lbl</span><span class="p">),</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mc_pre</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">mc_level_lbl</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;§</span><span class="si">{</span><span class="n">mc_level_lbl</span><span class="si">}</span><span class="s2">_&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mc_pre</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">frag</span><span class="p">))</span><span class="si">}</span><span class="s2">)@(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">bas</span><span class="p">))</span><span class="si">}</span><span class="s2">)&quot;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3059,19 +3204,92 @@ All those in <em>frag</em> plus any ghost.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Back-form from label into tuple: <code>delabeler('["mp2", 1, [1, 2]]')</code> returns <code>('mp2', 1, [1, 2])</code>.</p>
+      <p>Back-form from label into tuple.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>mcfragbas</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tuple of opaque or pretty-print model chemistry (may be None for latter),
+fragments and bases (1-indexed by convention).</p>
+<div class="highlight"><pre><span></span><code><span class="n">delabeler</span><span class="p">(</span><span class="s1">&#39;[&quot;mp2&quot;, [1], [1, 2]]&#39;</span><span class="p">)</span>
+<span class="c1">#&gt; (&#39;mp2&#39;, [1], [1, 2])</span>
+<span class="n">delabeler</span><span class="p">(</span><span class="s2">&quot;§mp2_(1)@(1, 2)&quot;</span><span class="p">)</span>
+<span class="c1">#&gt; (&#39;mp2&#39;, [1], [1, 2])</span>
+</code></pre></div>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">delabeler</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Back-form from label into tuple: `delabeler(&#39;[&quot;mp2&quot;, 1, [1, 2]]&#39;)` returns `(&#39;mp2&#39;, 1, [1, 2])`.&quot;&quot;&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">delabeler</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Back-form from label into tuple.</span>
 
-    <span class="n">mc</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">mc</span><span class="p">),</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mcfragbas</span>
+<span class="sd">        Tuple of opaque or pretty-print model chemistry (may be None for latter),</span>
+<span class="sd">        fragments and bases (1-indexed by convention).</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        delabeler(&#39;[&quot;mp2&quot;, [1], [1, 2]]&#39;)</span>
+<span class="sd">        #&gt; (&#39;mp2&#39;, [1], [1, 2])</span>
+<span class="sd">        delabeler(&quot;§mp2_(1)@(1, 2)&quot;)</span>
+<span class="sd">        #&gt; (&#39;mp2&#39;, [1], [1, 2])</span>
+<span class="sd">        ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+        <span class="n">mc</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">mc</span><span class="p">),</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mobj</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?:§(?P&lt;mc&gt;\S*)_)?(?P&lt;frag&gt;.*)@(?P&lt;bas&gt;.*)&quot;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="n">mc</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">mobj</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="c1"># want lists and avoids (1) non-iterable error</span>
+        <span class="n">frag</span> <span class="o">=</span> <span class="n">frag</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span>
+        <span class="n">bas</span> <span class="o">=</span> <span class="n">bas</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mc</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">frag</span><span class="p">),</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">bas</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3086,7 +3304,7 @@ All those in <em>frag</em> plus any ghost.</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">print_nbody_energy</span><span class="p">(</span><span class="n">energy_body_dict</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Mapping" href="https://docs.python.org/3/library/typing.html#typing.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span><span class="p">],</span> <span class="n">header</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n">nfragments</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n">embedding</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">,</span> <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">,</span> <span class="n">supersystem_beyond</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">print_nbody_energy</span><span class="p">(</span><span class="n">energy_body_dict</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Mapping" href="https://docs.python.org/3/library/typing.html#typing.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span><span class="p">],</span> <span class="n">header</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n">nfragments</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n">modelchem_labels</span><span class="p">,</span> <span class="n">embedding</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">,</span> <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span><span class="p">,</span> <span class="n">supersystem_beyond</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3141,6 +3359,21 @@ All those in <em>frag</em> plus any ghost.</p>
             <td>
               <div class="doc-md-description">
                 <p>Number of lines in table is number of fragments.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>modelchem_labels</code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dictionary mapping active nbody-levels to a tuple with first element the
+full model chemistry key and second element a short label. A suitable
+dictionary is <code>modelchem_labels(manybodycore_instance.nbodies_per_mc_level)</code>.</p>
               </div>
             </td>
             <td>
@@ -3225,56 +3458,7 @@ All those in <em>frag</em> plus any ghost.</p>
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">311</span>
 <span class="normal">312</span>
 <span class="normal">313</span>
 <span class="normal">314</span>
@@ -3312,10 +3496,68 @@ All those in <em>frag</em> plus any ghost.</p>
 <span class="normal">346</span>
 <span class="normal">347</span>
 <span class="normal">348</span>
-<span class="normal">349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">print_nbody_energy</span><span class="p">(</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">print_nbody_energy</span><span class="p">(</span>
     <span class="n">energy_body_dict</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">nfragments</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">modelchem_labels</span><span class="p">,</span>
     <span class="n">embedding</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">supersystem_beyond</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
@@ -3330,6 +3572,10 @@ All those in <em>frag</em> plus any ghost.</p>
 <span class="sd">        Specialization for table title.</span>
 <span class="sd">    nfragments</span>
 <span class="sd">        Number of lines in table is number of fragments.</span>
+<span class="sd">    modelchem_labels</span>
+<span class="sd">        Dictionary mapping active nbody-levels to a tuple with first element the</span>
+<span class="sd">        full model chemistry key and second element a short label. A suitable</span>
+<span class="sd">        dictionary is `modelchem_labels(manybodycore_instance.nbodies_per_mc_level)`.</span>
 <span class="sd">    embedding</span>
 <span class="sd">        Whether charge embedding present suppress printing, usually False</span>
 <span class="sd">    supersystem_ie_only</span>
@@ -3353,8 +3599,8 @@ All those in <em>frag</em> plus any ghost.</p>
 <span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">   ==&gt; N-Body: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s2"> energies &lt;==</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span>
-    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;     </span><span class="si">{</span><span class="s2">&quot;n-Body&quot;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
-    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;                      [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;        </span><span class="si">{</span><span class="s2">&quot;MC n-Body&quot;</span><span class="si">:</span><span class="s2">&gt;15</span><span class="si">}</span><span class="s2">  Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;                         [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
     <span class="n">previous_e</span> <span class="o">=</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">tot_e</span> <span class="o">=</span> <span class="n">previous_e</span> <span class="o">!=</span> <span class="mf">0.0</span>
     <span class="n">nbody_range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">energy_body_dict</span><span class="p">)</span>
@@ -3371,6 +3617,8 @@ All those in <em>frag</em> plus any ghost.</p>
             <span class="n">lbl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;RTN&quot;</span><span class="p">)</span>
         <span class="n">lbl</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lbl</span><span class="p">)</span>
 
+        <span class="n">mclbl</span> <span class="o">=</span> <span class="n">modelchem_labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbody_range</span><span class="p">:</span>
             <span class="n">delta_e</span> <span class="o">=</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">previous_e</span>
             <span class="n">delta_e_kcal</span> <span class="o">=</span> <span class="n">delta_e</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">hartree2kcalmol</span>
@@ -3382,23 +3630,24 @@ All those in <em>frag</em> plus any ghost.</p>
                 <span class="n">int_e_kcal</span> <span class="o">=</span> <span class="n">int_e</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">hartree2kcalmol</span>
             <span class="k">if</span> <span class="n">supersystem_ie_only</span> <span class="ow">and</span> <span class="n">nb</span> <span class="o">==</span> <span class="n">nfragments</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
-                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">embedding</span><span class="p">:</span>
-                        <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                        <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                        <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
             <span class="n">previous_e</span> <span class="o">=</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+            <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s2">&quot;&quot;</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
 
-    <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="c1"># print(info)</span>
+    <span class="n">mc_legend</span> <span class="o">=</span> <span class="p">{</span><span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">modelchem_labels</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+    <span class="n">mc_legend</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">: &quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mc_legend</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   MC Legend: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mc_legend</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">info</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3563,64 +3812,7 @@ By default False: data is available for consecutive levels, up to max_nbody-body
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">352</span>
-<span class="normal">353</span>
-<span class="normal">354</span>
-<span class="normal">355</span>
-<span class="normal">356</span>
-<span class="normal">357</span>
-<span class="normal">358</span>
-<span class="normal">359</span>
-<span class="normal">360</span>
-<span class="normal">361</span>
-<span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span>
-<span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
-<span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span>
-<span class="normal">380</span>
-<span class="normal">381</span>
-<span class="normal">382</span>
-<span class="normal">383</span>
-<span class="normal">384</span>
-<span class="normal">385</span>
-<span class="normal">386</span>
-<span class="normal">387</span>
-<span class="normal">388</span>
-<span class="normal">389</span>
-<span class="normal">390</span>
-<span class="normal">391</span>
-<span class="normal">392</span>
-<span class="normal">393</span>
-<span class="normal">394</span>
-<span class="normal">395</span>
-<span class="normal">396</span>
-<span class="normal">397</span>
-<span class="normal">398</span>
-<span class="normal">399</span>
-<span class="normal">400</span>
-<span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
-<span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">409</span>
 <span class="normal">410</span>
 <span class="normal">411</span>
 <span class="normal">412</span>
@@ -3647,7 +3839,64 @@ By default False: data is available for consecutive levels, up to max_nbody-body
 <span class="normal">433</span>
 <span class="normal">434</span>
 <span class="normal">435</span>
-<span class="normal">436</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">collect_vars</span><span class="p">(</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">collect_vars</span><span class="p">(</span>
     <span class="n">bsse</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">prop</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">body_dict</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
@@ -3761,20 +4010,20 @@ generating routine's name is passed in through <code>routine</code>.</p>
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span>
-<span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span>
-<span class="normal">451</span>
-<span class="normal">452</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">provenance_stamp</span><span class="p">(</span><span class="n">routine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">provenance_stamp</span><span class="p">(</span><span class="n">routine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return dictionary satisfying QCSchema,</span>
 <span class="sd">    https://github.com/MolSSI/QCSchema/blob/master/qcschema/dev/definitions.py#L23-L41</span>
 <span class="sd">    with QCManyBody&#39;s credentials for creator and version. The</span>
@@ -3802,7 +4051,7 @@ generating routine's name is passed in through <code>routine</code>.</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">translate_qcvariables</span><span class="p">(</span><span class="n">varsmap</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Mapping" href="https://docs.python.org/3/library/typing.html#typing.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">translate_qcvariables</span><span class="p">(</span><span class="n">varsmap</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Mapping" href="https://docs.python.org/3/library/typing.html#typing.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3824,7 +4073,7 @@ generating routine's name is passed in through <code>routine</code>.</p>
           <tr class="doc-section-item">
             <td><code>varsmap</code></td>
             <td>
-                  <code><a class="autorefs autorefs-external" title="typing.Mapping" href="https://docs.python.org/3/library/typing.html#typing.Mapping">Mapping</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, Any]</code>
+                  <code><a class="autorefs autorefs-external" title="typing.Mapping" href="https://docs.python.org/3/library/typing.html#typing.Mapping">Mapping</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3863,27 +4112,27 @@ generating routine's name is passed in through <code>routine</code>.</p>
 
             <details class="quote">
               <summary>Source code in <code>qcmanybody/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
-<span class="normal">459</span>
-<span class="normal">460</span>
-<span class="normal">461</span>
-<span class="normal">462</span>
-<span class="normal">463</span>
-<span class="normal">464</span>
-<span class="normal">465</span>
-<span class="normal">466</span>
-<span class="normal">467</span>
-<span class="normal">468</span>
-<span class="normal">469</span>
-<span class="normal">470</span>
-<span class="normal">471</span>
-<span class="normal">472</span>
-<span class="normal">473</span>
-<span class="normal">474</span>
-<span class="normal">475</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">translate_qcvariables</span><span class="p">(</span><span class="n">varsmap</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">translate_qcvariables</span><span class="p">(</span><span class="n">varsmap</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate between ManyBody results in Psi4/QCDB terminology (qcvars) and QCSchema terminology (skprops).</span>
 
 <span class="sd">    Parameters</span>
@@ -3904,6 +4153,229 @@ generating routine's name is passed in through <code>routine</code>.</p>
     <span class="n">labelmap</span> <span class="o">=</span> <span class="n">ManyBodyResultProperties</span><span class="o">.</span><span class="n">to_qcvariables</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="n">qcv2skp</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span><span class="n">labelmap</span><span class="p">[</span><span class="n">lbl</span><span class="p">]:</span> <span class="n">data</span> <span class="k">for</span> <span class="n">lbl</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">varsmap</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="n">labelmap</span><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="qcmanybody.utils.modelchem_labels" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">modelchem_labels</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">modelchem_labels</span><span class="p">(</span><span class="n">nb_per_mc</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.List" href="https://docs.python.org/3/library/typing.html#typing.List">List</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Literal" href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a></span><span class="p">[</span><span class="s1">&#39;supersystem&#39;</span><span class="p">]]]],</span> <span class="n">presorted</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Literal" href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a></span><span class="p">[</span><span class="s1">&#39;supersystem&#39;</span><span class="p">]],</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Tuple" href="https://docs.python.org/3/library/typing.html#typing.Tuple">Tuple</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+      <p>Form ordinal and letter labels for model chemistries.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>nb_per_mc</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="typing.List" href="https://docs.python.org/3/library/typing.html#typing.List">List</a>[<a class="autorefs autorefs-external" title="typing.Union" href="https://docs.python.org/3/library/typing.html#typing.Union">Union</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, <a class="autorefs autorefs-external" title="typing.Literal" href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[&#39;supersystem&#39;]]]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dictionary mapping model chemistries to lists of n-body levels computed.
+If a model chemistry is supersystem, the value should be ["supersystem"].
+Generally, this is the <code>ManyBodyCore.nbodies_per_mc_level</code> data structure.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>presorted</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, the input dictionary keys and values are already sorted by increasing n-body level.
+This is the case when the input is <code>ManyBodyCore.nbodies_per_mc_level</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>mc_per_nb</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dictionary mapping n-body levels to a tuple of full model chemistry label,
+single-letter ordinal label, and n-body-levels-covered label.</p>
+<div class="highlight"><pre><span></span><code><span class="n">modelchem_labels</span><span class="p">({</span><span class="s1">&#39;ccsd&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;mp2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;hf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]})</span>
+<span class="c1">#&gt; {1: (&#39;ccsd&#39;, &#39;§A&#39;, &#39;§1&#39;), 2: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 3: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 4: (&#39;hf&#39;, &#39;§C&#39;, &#39;§4&#39;)}</span>
+
+<span class="n">modelchem_labels</span><span class="p">({</span><span class="s1">&#39;hi&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;md&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s1">&#39;md2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;lo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;supersystem&#39;</span><span class="p">]})</span>
+<span class="c1">#&gt; {1: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 2: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 3: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;),</span>
+<span class="c1">#   4: (&#39;md&#39;, &#39;§B&#39;, &#39;§4&#39;),</span>
+<span class="c1">#   5: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 6: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 7: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 8: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 9: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 10: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;),</span>
+<span class="c1">#   &quot;supersystem&quot;: (&#39;lo&#39;, &#39;§D&#39;, &#39;§SS&#39;)}</span>
+</code></pre></div>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>qcmanybody/utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">modelchem_labels</span><span class="p">(</span>
+    <span class="n">nb_per_mc</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]]]],</span> <span class="n">presorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Form ordinal and letter labels for model chemistries.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nb_per_mc</span>
+<span class="sd">        Dictionary mapping model chemistries to lists of n-body levels computed.</span>
+<span class="sd">        If a model chemistry is supersystem, the value should be [&quot;supersystem&quot;].</span>
+<span class="sd">        Generally, this is the `ManyBodyCore.nbodies_per_mc_level` data structure.</span>
+<span class="sd">    presorted</span>
+<span class="sd">        If True, the input dictionary keys and values are already sorted by increasing n-body level.</span>
+<span class="sd">        This is the case when the input is `ManyBodyCore.nbodies_per_mc_level`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mc_per_nb</span>
+<span class="sd">        Dictionary mapping n-body levels to a tuple of full model chemistry label,</span>
+<span class="sd">        single-letter ordinal label, and n-body-levels-covered label.</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        modelchem_labels({&#39;ccsd&#39;: [1], &#39;mp2&#39;: [2, 3], &#39;hf&#39;: [4]})</span>
+<span class="sd">        #&gt; {1: (&#39;ccsd&#39;, &#39;§A&#39;, &#39;§1&#39;), 2: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 3: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 4: (&#39;hf&#39;, &#39;§C&#39;, &#39;§4&#39;)}</span>
+
+<span class="sd">        modelchem_labels({&#39;hi&#39;: [1, 2, 3], &#39;md&#39;: [4], &#39;md2&#39;: [5, 6, 7, 8, 9, 10], &#39;lo&#39;: [&#39;supersystem&#39;]})</span>
+<span class="sd">        #&gt; {1: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 2: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 3: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;),</span>
+<span class="sd">        #   4: (&#39;md&#39;, &#39;§B&#39;, &#39;§4&#39;),</span>
+<span class="sd">        #   5: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 6: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 7: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 8: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 9: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 10: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;),</span>
+<span class="sd">        #   &quot;supersystem&quot;: (&#39;lo&#39;, &#39;§D&#39;, &#39;§SS&#39;)}</span>
+<span class="sd">        ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorted_nb_per_mc</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">nb_per_mc</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">mc_nbs</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">([</span><span class="mi">1000</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">mc_nbs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">])</span> <span class="k">else</span> <span class="n">mc_nbs</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">presorted</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">sorted_nb_per_mc</span> <span class="o">==</span> <span class="n">nb_per_mc</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;If presorted, input dictionary should be sorted. </span><span class="si">{</span><span class="n">nb_per_mc</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">sorted_nb_per_mc</span><span class="si">}</span><span class="s2">   &quot;</span>
+
+    <span class="n">lvl_lbl</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">nbs</span> <span class="ow">in</span> <span class="n">sorted_nb_per_mc</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">nbs</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]:</span>
+            <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;§SS&quot;</span>
+        <span class="k">elif</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;§&lt;</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">nbs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;§</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="nb">sorted</span><span class="p">(</span><span class="n">nbs</span><span class="p">)))</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">indexed_mc</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sorted_nb_per_mc</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
+
+    <span class="n">mc_per_nb</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">nb</span><span class="p">:</span> <span class="p">(</span><span class="n">mc</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;§</span><span class="si">{</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span><span class="p">[</span><span class="n">indexed_mc</span><span class="p">[</span><span class="n">mc</span><span class="p">]]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">nbs</span> <span class="ow">in</span> <span class="n">sorted_nb_per_mc</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbs</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">mc_per_nb</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4491,7 +4963,7 @@ subdict and among subdicts.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
       
     
   </body>

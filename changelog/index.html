@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -170,7 +170,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -502,13 +502,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v030-2024-mm-dd-unreleased" class="md-nav__link">
+  <a href="#v030-2024-07-21" class="md-nav__link">
     <span class="md-ellipsis">
-      v0.3.0 / 2024-MM-DD (Unreleased)
+      v0.3.0 / 2024-07-21
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v0.3.0 / 2024-MM-DD (Unreleased)">
+    <nav class="md-nav" aria-label="v0.3.0 / 2024-07-21">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -533,42 +533,6 @@
   <a href="#enhancements" class="md-nav__link">
     <span class="md-ellipsis">
       Enhancements
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bug-fixes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bug Fixes
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#misc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Misc.
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#must-unmerged" class="md-nav__link">
-    <span class="md-ellipsis">
-      MUST (Unmerged)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#wip-unmerged" class="md-nav__link">
-    <span class="md-ellipsis">
-      WIP (Unmerged)
     </span>
   </a>
   
@@ -632,7 +596,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bug-fixes_1" class="md-nav__link">
+  <a href="#bug-fixes" class="md-nav__link">
     <span class="md-ellipsis">
       Bug Fixes
     </span>
@@ -641,7 +605,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#misc_1" class="md-nav__link">
+  <a href="#misc" class="md-nav__link">
     <span class="md-ellipsis">
       Misc.
     </span>
@@ -715,7 +679,7 @@
 #### WIP (Unmerged)
 -->
 
-<h2 id="v030-2024-mm-dd-unreleased">v0.3.0 / 2024-MM-DD (Unreleased)</h2>
+<h2 id="v030-2024-07-21">v0.3.0 / 2024-07-21</h2>
 <h4 id="breaking-changes">Breaking Changes</h4>
 <ul>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/28">#28</a> Intf -- low-level "core" interface renamed from
@@ -733,10 +697,13 @@
 </ul>
 <h4 id="new-features">New Features</h4>
 <ul>
-<li><a href="https://github.com/MolSSI/QCManyBody/pull/32">#32</a> QCSchema -- a new function
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/32">#32</a> Schema -- a new function
    <code>ManyBodyResultProperties.to_qcvariables()</code> returns a translation map to QCVariables keys. @loriab</li>
-<li><a href="https://github.com/MolSSI/QCManyBody/pull/32">#32</a> QCSchema -- a new function
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/32">#32</a> Schema -- a new function
    <code>qcmanybody.utils.translate_qcvariables(map)</code> switches between QCVariable and QCSchema keys. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/33">#33</a> Schema -- <code>ManyBodySpecification.extras</code> added. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Schema -- Add schema_version to <code>AtomicSpecification</code>,
+   <code>ManyBodySpecification</code>, <code>ManyBodyKeywords</code>, <code>ManyBodyInput</code>, and <code>ManyBodyResultProperties</code>. @loriab</li>
 </ul>
 <h4 id="enhancements">Enhancements</h4>
 <ul>
@@ -749,11 +716,24 @@
    is a single large fragment, an error is thrown. @loriab</li>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/30">#30</a> Docs -- add end-to-end demos in test_examples. @loriab</li>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/31">#31</a> Schema -- add "none" as a bsse_type alias to "nocp". @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Schema -- Allow environment variable QCMANYBODY_MAX_NBODY to
+   influence the body-level to which <code>ManyBodyResultProperties</code> is defined added. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Schema -- added discriminator to input for
+   <code>GeneralizedOptimizationInput</code> and <code>GeneralizedOptimizationResult</code> models to allow input from dicts (rather than
+   models) in OptKing. Further specialized QCElemental. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Schema -- <code>ManyBodyResultProperties</code> is still only explicitly
+   enumerated up to tetramers, but now it allows through higher-body fields when they match a pattern. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Maint -- start testing optimizations through QCEngine. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Util -- add <code>labeler(..., opaque=False)</code> option to produce
+   eye-friendly <code>(1)@(1, 2)</code> style lablels as well as the semi-opaque internal style. Also always convent single ints
+   to tuples now. Function <code>delabeler</code> can decode the new style. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Intf -- sort "core" <code>nbodies_per_mc_level</code> dictionary so model
+   chemistries are in a predictable 1b, 2b, ..., supersystem order. Check that high-level (different data structure) agrees.</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Util -- add short ordinal model chemistry level (e.g., §A) to the
+   <code>format_calc_plan</code> and <code>print_nbody_energy</code> summaries. @loriab</li>
+<li><a href="https://github.com/MolSSI/QCManyBody/pull/34">#34</a> Util -- add function <code>modelchem_labels</code> to associate n-body
+   level, model chemistry level, one-char ordinal modelchem label, and n-bodies-covered modelchem label. @loriab</li>
 </ul>
-<h4 id="bug-fixes">Bug Fixes</h4>
-<h4 id="misc">Misc.</h4>
-<h4 id="must-unmerged">MUST (Unmerged)</h4>
-<h4 id="wip-unmerged">WIP (Unmerged)</h4>
 <h2 id="v021-2024-05-14">v0.2.1 / 2024-05-14</h2>
 <h4 id="enhancements_1">Enhancements</h4>
 <ul>
@@ -779,12 +759,12 @@
   <code>ManyBodySpecification.specification</code> will now be observed. @loriab</li>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/26">#26</a> Schema -- add <code>AtomicSpecification.extras</code>. @loriab</li>
 </ul>
-<h4 id="bug-fixes_1">Bug Fixes</h4>
+<h4 id="bug-fixes">Bug Fixes</h4>
 <ul>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/25">#25</a> Schema -- <code>ManyBodyKeywords.embedding_charges</code> now default to None
   rather than empty dict. @loriab</li>
 </ul>
-<h4 id="misc_1">Misc.</h4>
+<h4 id="misc">Misc.</h4>
 <ul>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/21">#21</a> Docs -- installation and molecule. @bennybp</li>
 <li><a href="https://github.com/MolSSI/QCManyBody/pull/24">#24</a> Intf -- release "frozen" pydantic on high-level
@@ -849,7 +829,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
       
     
   </body>
