@@ -31,6 +31,7 @@ _programs = {
     "cfour": which("xcfour", return_bool=True),
     "gamess": which("rungms", return_bool=True),
     "geometric": which_import("geometric", return_bool=True),
+    "optking": which_import("optking", return_bool=True),
     "nwchem": which("nwchem", return_bool=True),
     "psi4": which("psi4", return_bool=True),
     "qcengine": which_import("qcengine", return_bool=True),
@@ -43,6 +44,9 @@ def has_program(name):
         return _programs[name]
     elif name in _programs_qcng:
         return _programs_qcng[name]
+    elif name in ["optking_genopt", "geometric_genopt"]:
+        # give up rather than duplicate
+        return False
     else:
         raise KeyError(f"Program {name} not registered with QCManyBody testing.")
 

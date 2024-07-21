@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import ast
 import json
-from typing import Dict, Iterable, Mapping, Optional, Set, Tuple, Union
+import re
+import string
+from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, Set, Tuple, Union
 
 import numpy as np
 from qcelemental import constants
@@ -230,7 +233,9 @@ def sum_cluster_data(
     return ret
 
 
-def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> str:
+def labeler(
+    mc_level_lbl: Optional[Union[str, int]], frag: Tuple[int, ...], bas: Tuple[int, ...], *, opaque: bool = True
+) -> str:
     """Form label from model chemistry id and fragment and basis indices.
 
     Parameters
@@ -238,31 +243,76 @@ def labeler(mc_level_lbl: str, frag: Tuple[int, ...], bas: Tuple[int, ...]) -> s
     mc_level_lbl
         Key identifying the model chemistry. May be `"(auto)"`. Often the
         ManyBodyInput.specification.specification keys.
+        When `opaque=False`, result is for pretty printing so instead of a string,
+        `mc_level_lbl` might be an integer index (apply 1-indexing beforehand)
+        or None (if the model chemistry part is unwanted because single-level).
     frag
         List of 1-indexed fragments active in the supersystem.
     bas
         List of 1-indexed fragments with active basis sets in the supersystem.
         All those in *frag* plus any ghost.
+    opaque
+        Toggle whether to return JSON-friendly semi-opaque internal str label (True) or
+        eye-friendly label with @ for basis and § for model chemistry (False).
 
     Returns
     -------
     str
-        JSON string from inputs: `labeler("mp2", (1), (1, 2))` returns `'["mp2", 1, [1, 2]]'`.
+        JSON string from inputs:
+
+        ```python
+        labeler("mp2", 1, (1, 2))
+        #> '["mp2", [1], [1, 2]]'
+        labeler("mp2", 1, (1, 2), opaque=False)
+        #> '§mp2_(1)@(1, 2)'
+        ```
     """
-    return json.dumps([str(mc_level_lbl), frag, bas])
+    if isinstance(frag, int):
+        frag = (frag,)
+    if isinstance(bas, int):
+        bas = (bas,)
+
+    if opaque:
+        return json.dumps([str(mc_level_lbl), frag, bas])
+    else:
+        mc_pre = "" if mc_level_lbl is None else f"§{mc_level_lbl}_"
+        return f"{mc_pre}({', '.join(map(str, frag))})@({', '.join(map(str, bas))})"
 
 
 def delabeler(item: str) -> Tuple[str, Tuple[int, ...], Tuple[int, ...]]:
-    """Back-form from label into tuple: `delabeler('["mp2", 1, [1, 2]]')` returns `('mp2', 1, [1, 2])`."""
+    """Back-form from label into tuple.
 
-    mc, frag, bas = json.loads(item)
-    return str(mc), frag, bas
+    Returns
+    -------
+    mcfragbas
+        Tuple of opaque or pretty-print model chemistry (may be None for latter),
+        fragments and bases (1-indexed by convention).
+
+        ```python
+        delabeler('["mp2", [1], [1, 2]]')
+        #> ('mp2', [1], [1, 2])
+        delabeler("§mp2_(1)@(1, 2)")
+        #> ('mp2', [1], [1, 2])
+        ```
+    """
+
+    if "@" not in item:
+        mc, frag, bas = json.loads(item)
+        return str(mc), frag, bas
+    else:
+        mobj = re.match(r"(?:§(?P<mc>\S*)_)?(?P<frag>.*)@(?P<bas>.*)", item)
+        mc, frag, bas = mobj.groups()
+        # want lists and avoids (1) non-iterable error
+        frag = frag.replace("(", "[").replace(")", "]")
+        bas = bas.replace("(", "[").replace(")", "]")
+        return mc, ast.literal_eval(frag), ast.literal_eval(bas)
 
 
 def print_nbody_energy(
     energy_body_dict: Mapping[int, float],
     header: str,
     nfragments: int,
+    modelchem_labels,
     embedding: bool,
     supersystem_ie_only: bool,
     supersystem_beyond: Optional[int],
@@ -277,6 +327,10 @@ def print_nbody_energy(
         Specialization for table title.
     nfragments
         Number of lines in table is number of fragments.
+    modelchem_labels
+        Dictionary mapping active nbody-levels to a tuple with first element the
+        full model chemistry key and second element a short label. A suitable
+        dictionary is `modelchem_labels(manybodycore_instance.nbodies_per_mc_level)`.
     embedding
         Whether charge embedding present suppress printing, usually False
     supersystem_ie_only
@@ -300,8 +354,8 @@ def print_nbody_energy(
         ```
     """
     info = f"""\n   ==> N-Body: {header} energies <==\n\n"""
-    info += f"""     {"n-Body":>12}     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy\n"""
-    info += f"""                      [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]\n"""
+    info += f"""        {"MC n-Body":>15}  Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy\n"""
+    info += f"""                         [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]\n"""
     previous_e = energy_body_dict[1]
     tot_e = previous_e != 0.0
     nbody_range = list(energy_body_dict)
@@ -318,6 +372,8 @@ def print_nbody_energy(
             lbl.append("RTN")
         lbl = "/".join(lbl)
 
+        mclbl = modelchem_labels.get(nb, ("", ""))[1]
+
         if nb in nbody_range:
             delta_e = energy_body_dict[nb] - previous_e
             delta_e_kcal = delta_e * constants.hartree2kcalmol
@@ -329,23 +385,24 @@ def print_nbody_energy(
                 int_e_kcal = int_e * constants.hartree2kcalmol
             if supersystem_ie_only and nb == nfragments:
                 if tot_e:
-                    info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
+                    info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
                 else:
-                    info += f"""  {lbl:>11} {nb:3}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
+                    info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
             else:
                 if tot_e:
                     if embedding:
-                        info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}        {"N/A":20}  {"N/A":14}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}        {"N/A":20}  {"N/A":14}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
                     else:
-                        info += f"""  {lbl:>11} {nb:3}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
                 else:
-                    info += f"""  {lbl:>11} {nb:3}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                    info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
             previous_e = energy_body_dict[nb]
         else:
-            info += f"""  {lbl:>11} {nb:3}        {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}\n"""
+            info += f"""  {lbl:>11} {"":2} {nb:2}        {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}\n"""
 
-    info += "\n"
-    # print(info)
+    mc_legend = {tup[1]: tup[0] for tup in modelchem_labels.values()}
+    mc_legend = [f'{k}: "{v}"' for k, v in mc_legend.items()]
+    info += f"\n   MC Legend: {', '.join(mc_legend)}\n\n"
     return info
 
 
@@ -473,3 +530,66 @@ def translate_qcvariables(varsmap: Mapping[str, Any]) -> Dict[str, Any]:
     labelmap = ManyBodyResultProperties.to_qcvariables(reverse=qcv2skp)
 
     return {labelmap[lbl]: data for lbl, data in varsmap.items() if lbl in labelmap}
+
+
+def modelchem_labels(
+    nb_per_mc: Dict[str, List[Union[int, Literal["supersystem"]]]], presorted: bool = False
+) -> Dict[Union[int, Literal["supersystem"]], Tuple[str, str, str]]:
+    """Form ordinal and letter labels for model chemistries.
+
+    Parameters
+    ----------
+    nb_per_mc
+        Dictionary mapping model chemistries to lists of n-body levels computed.
+        If a model chemistry is supersystem, the value should be ["supersystem"].
+        Generally, this is the `ManyBodyCore.nbodies_per_mc_level` data structure.
+    presorted
+        If True, the input dictionary keys and values are already sorted by increasing n-body level.
+        This is the case when the input is `ManyBodyCore.nbodies_per_mc_level`.
+
+    Returns
+    -------
+    mc_per_nb
+        Dictionary mapping n-body levels to a tuple of full model chemistry label,
+        single-letter ordinal label, and n-body-levels-covered label.
+
+        ```python
+        modelchem_labels({'ccsd': [1], 'mp2': [2, 3], 'hf': [4]})
+        #> {1: ('ccsd', '§A', '§1'), 2: ('mp2', '§B', '§23'), 3: ('mp2', '§B', '§23'), 4: ('hf', '§C', '§4')}
+
+        modelchem_labels({'hi': [1, 2, 3], 'md': [4], 'md2': [5, 6, 7, 8, 9, 10], 'lo': ['supersystem']})
+        #> {1: ('hi', '§A', '§123'), 2: ('hi', '§A', '§123'), 3: ('hi', '§A', '§123'),
+        #   4: ('md', '§B', '§4'),
+        #   5: ('md2', '§C', '§<10'), 6: ('md2', '§C', '§<10'), 7: ('md2', '§C', '§<10'), 8: ('md2', '§C', '§<10'), 9: ('md2', '§C', '§<10'), 10: ('md2', '§C', '§<10'),
+        #   "supersystem": ('lo', '§D', '§SS')}
+        ```
+    """
+    sorted_nb_per_mc = {
+        k: sorted(v)
+        for (k, v) in sorted(
+            nb_per_mc.items(), key=lambda mc_nbs: sorted([1000] if (mc_nbs[1] == ["supersystem"]) else mc_nbs[1])[0]
+        )
+    }
+    if presorted:
+        assert (
+            sorted_nb_per_mc == nb_per_mc
+        ), f"If presorted, input dictionary should be sorted. {nb_per_mc} != {sorted_nb_per_mc}   "
+
+    lvl_lbl = {}
+    for mc, nbs in sorted_nb_per_mc.items():
+        if nbs == ["supersystem"]:
+            lvl_lbl[mc] = "§SS"
+        elif max(nbs) > 9:
+            lvl_lbl[mc] = f"§<{max(nbs)}"
+        else:
+            lvl_lbl[mc] = f"§{''.join(map(str, sorted(nbs)))}"
+
+    indexed_mc = {k: i for i, k in enumerate(sorted_nb_per_mc.keys())}
+
+    mc_per_nb = {
+        nb: (mc, f"§{string.ascii_uppercase[indexed_mc[mc]]}", lvl_lbl[mc])
+        for mc, nbs in sorted_nb_per_mc.items()
+        for nb in nbs
+    }
+
+    return mc_per_nb

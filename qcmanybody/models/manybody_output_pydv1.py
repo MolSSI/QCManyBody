@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import os
+import re
 from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Union
 
 # v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
 try:
-    from pydantic.v1 import Field, create_model, validator
+    from pydantic.v1 import Field, create_model, root_validator, validator
 except ImportError:
-    from pydantic import create_model, Field, validator
+    from pydantic import create_model, Field, validator, root_validator
 
 from qcelemental.models import ProtoModel, Provenance
 from qcelemental.models.results import AtomicResult, AtomicResultProperties
@@ -29,7 +31,9 @@ manybodyresultproperties_doc = """
     * nmbe: number of jobs = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nmbe`
     """
 
-MAX_NBODY = 5  # 5 covers tetramers
+MAX_NBODY = int(os.environ.get("QCMANYBODY_MAX_NBODY", 5))  # 5 covers tetramers
+
+# TODO: bump up default MAX_NBODY and add some warnings or mitigations so insufficient value doesn't fail at very end at Result formation time
 
 json_schema_extras = {
     "energy": {"units": "E_h"},
@@ -38,6 +42,18 @@ json_schema_extras = {
 }
 
 mbprop = {}
+
+mbprop["schema_name"] = (
+    Literal["qcschema_manybodyproperties"],
+    Field("qcschema_manybodyproperties"),
+)
+mbprop["schema_version"] = (
+    Literal[1],
+    Field(
+        1,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    ),
+)
 
 # ========  Calcinfo  ===========================================================
 
@@ -293,11 +309,30 @@ for singular in ["energy", "gradient", "Hessian"]:
         )
 
 
+def _validate_arb_max_nbody_fieldnames(cls, values):
+
+    ok_field_name = re.compile(
+        # fmt: off
+        r"^(?:cp|nocp|vmfc)_corrected_((?:total|interaction)_(?:energy|gradient|hessian)" +
+        r"(?:_through_\d+_body)?|\d+_body_contribution_to_(?:energy|gradient|hessian))$"
+        # fmt: on
+    )
+
+    extra_fields = values.keys() - cls.__fields__.keys()
+    baduns = [xtra for xtra in extra_fields if not ok_field_name.match(xtra)]
+
+    if baduns:
+        raise ValueError(f"Field names not allowed: {baduns}")
+
+    return values
+
+
 class ProtoModelSkipDefaults(ProtoModel):
 
     class Config(ProtoModel.Config):
         serialize_skip_defaults = True
         force_skip_defaults = True
+        extra: str = "allow"  # fields filtered in root_validator
 
 
 if TYPE_CHECKING:
@@ -308,6 +343,7 @@ else:
         "ManyBodyResultProperties",
         # __doc__=manybodyresultproperties_doc,  # needs later pydantic
         __base__=ProtoModelSkipDefaults,
+        __validators__={"validator1": root_validator(_validate_arb_max_nbody_fieldnames)},
         **mbprop,
     )
 
@@ -333,6 +369,7 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
         qcvars_to_mbprop[qcvar] = skprop
     for ret in ["energy", "gradient", "hessian"]:
         qcvars_to_mbprop[f"CURRENT {ret.upper()}"] = f"return_{ret}"
+    qcvars_to_mbprop["NBODY NUMBER"] = "calcinfo_nmbe"
 
     if reverse:
         return qcvars_to_mbprop

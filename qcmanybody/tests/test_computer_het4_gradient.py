@@ -160,22 +160,22 @@ sumstr = {
     "4b_nocp_rtd": r"""
    ==> N-Body: Non-Counterpoise Corrected \(NoCP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-203.0504029\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
-^\s+2\s+-203.3519671\d+       -0.3015642\d+     -189.23\d+       -0.3015642\d+     -189.23\d+
-^\s+3\s+-203.3267180\d+       -0.2763151\d+     -173.39\d+        0.0252491\d+       15.84\d+
-^\s+FULL/RTN\s+4     -203.3253131\d+       -0.2749102\d+     -172.50\d+        0.0014048\d+        0.88\d+
+^\s+§A\s+1\s+-203.0504029\d+        0.0000000\d+        0.00\d+        0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+-203.3519671\d+       -0.3015642\d+     -189.23\d+       -0.3015642\d+     -189.23\d+
+^\s+§A\s+3\s+-203.3267180\d+       -0.2763151\d+     -173.39\d+        0.0252491\d+       15.84\d+
+^\s+FULL/RTN\s+§A\s+4     -203.3253131\d+       -0.2749102\d+     -172.50\d+        0.0014048\d+        0.88\d+
 """,
     "4b_nocp_rtd_ee": r"""
 ^\s+==> N-Body: Non-Counterpoise Corrected \(NoCP\) energies <==
 
-^\s+n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
+^\s+MC n-Body\s+Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy
 ^\s+\[Eh\]                    \[Eh\]                  \[kcal/mol\]            \[Eh\]                  \[kcal/mol\]
-^\s+1\s+-203.4340927\d+\s+N/A\s+N/A\s+0.0000000\d+        0.00\d+
-^\s+2\s+-203.3380056\d+\s+N/A\s+N/A\s+0.0960871\d+       60.29\d+
-^\s+3\s+-203.3260237\d+\s+N/A\s+N/A\s+0.0119819\d+        7.51\d+
-^\s+FULL/RTN\s+4\s+-203.3253131\d+\s+N/A\s+N/A\s+0.0007105\d+\s+0.44\d+
+^\s+§A\s+1\s+-203.4340927\d+\s+N/A\s+N/A\s+0.0000000\d+        0.00\d+
+^\s+§A\s+2\s+-203.3380056\d+\s+N/A\s+N/A\s+0.0960871\d+       60.29\d+
+^\s+§A\s+3\s+-203.3260237\d+\s+N/A\s+N/A\s+0.0119819\d+        7.51\d+
+^\s+FULL/RTN\s+§A\s+4\s+-203.3253131\d+\s+N/A\s+N/A\s+0.0007105\d+\s+0.44\d+
 """,
 }
 

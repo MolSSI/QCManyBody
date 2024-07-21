@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
+import string
 from collections import Counter, defaultdict
 from typing import Any, Dict, Iterable, Literal, Mapping, Sequence, Set, Tuple, Union
 
@@ -17,6 +18,7 @@ from qcmanybody.utils import (
     delabeler,
     find_shape,
     labeler,
+    modelchem_labels,
     print_nbody_energy,
     resize_gradient,
     resize_hessian,
@@ -91,7 +93,23 @@ class ManyBodyCore:
         for k, v in self.levels_no_ss.items():
             self.nbodies_per_mc_level[v].append(k)
 
-        self.nbodies_per_mc_level = {k: sorted(v) for k, v in self.nbodies_per_mc_level.items()}
+        # order nbodies_per_mc_level keys (modelchems) by the lowest n-body level covered; any
+        #   supersystem key (replaced below) is at the end. Order nbodies within each modelchem.
+        #   Reset mc_levels to match.
+        self.nbodies_per_mc_level = {
+            k: sorted(v)
+            for (k, v) in sorted(self.nbodies_per_mc_level.items(), key=lambda item: sorted(item[1] or [1000])[0])
+        }
+        assert self.mc_levels == set(self.nbodies_per_mc_level.keys())  # remove after some downstream testing
+        self.mc_levels = self.nbodies_per_mc_level.keys()
+
+        for mc, nbs in self.nbodies_per_mc_level.items():
+            if nbs and ((nbs[-1] - nbs[0]) != len(nbs) - 1):
+                raise ValueError(
+                    f"QCManyBody: N-Body levels must be contiguous within a model chemistry spec ({mc}: {nbs}). Use an alternate spec name to accomplish this input."
+                )
+                # TODO - test and reenable if appropriate. my guess is that noncontig nb is fine on the core computing side,
+                #   but trouble for computer and nbodies_per_mc_level inverting and indexing. Safer to deflect for now since input tweak allows the calc.
 
         # Supersystem is always at the end
         if "supersystem" in levels:
@@ -158,17 +176,17 @@ class ManyBodyCore:
         info
             A text summary with per- model chemistry and per- n-body-level job counts.
             ```
-            Model chemistry "c4-ccsd":    22
+            Model chemistry "c4-ccsd" (§A):         22
                  Number of 1-body computations:     16 (nocp: 0, cp: 0, vmfc_compute: 16)
                  Number of 2-body computations:      6 (nocp: 0, cp: 0, vmfc_compute: 6)
 
-            Model chemistry "c4-mp2":    28
+            Model chemistry "c4-mp2" (§B):          28
                  Number of 1-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
                  Number of 2-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
                  Number of 3-body computations:      4 (nocp: 0, cp: 0, vmfc_compute: 4)
             ```
         Dict[str, Dict[int, int]]
-            Data structure with outer key mc-label, inner key 1-indexed n-body, value job count.
+            Data structure with outer key mc-label, inner key 1-indexed n-body, and value job count.
         """
         # Rearrange compute_list from key nb having values (species) to compute all of that nb
         #   to key nb having values counting that nb.
@@ -179,10 +197,13 @@ class ManyBodyCore:
                 all_calcs = set().union(*compute_dict[sub].values())
                 compute_list_count[mc][sub] = Counter([len(frag) for (frag, _) in all_calcs])
 
+        mc_labels = modelchem_labels(self.nbodies_per_mc_level, presorted=True)
+        full_to_ordinal_mc_lbl = {v[0]: v[1] for v in mc_labels.values()}
         info = []
         for mc, counter in compute_list_count.items():
             all_counter = counter["all"]
-            info.append(f'    Model chemistry "{mc}" (???):    {sum(all_counter.values())}')
+            mcheader = f'    Model chemistry "{mc}" ({full_to_ordinal_mc_lbl[mc]}):'
+            info.append(f"{mcheader:38} {sum(all_counter.values()):6}")
             for nb, count in sorted(all_counter.items()):
                 other_counts = [f"{sub}: {counter[sub][nb]}" for sub in ["nocp", "cp", "vmfc_compute"]]
                 info.append(f"        Number of {nb}-body computations: {count:6} ({', '.join(other_counts)})")
@@ -556,6 +577,7 @@ class ManyBodyCore:
                 all_results["energy_body_dict"][bt],
                 f"{bt.formal()} ({bt.abbr()})",
                 self.nfragments,
+                modelchem_labels(self.nbodies_per_mc_level, presorted=True),
                 is_embedded,
                 self.supersystem_ie_only,
                 self.max_nbody if self.has_supersystem else None,

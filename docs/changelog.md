@@ -19,7 +19,7 @@
 -->
 
 
-## v0.3.0 / 2024-MM-DD (Unreleased)
+## v0.3.0 / 2024-07-21
 
 #### Breaking Changes
 
@@ -38,10 +38,13 @@
 
 #### New Features
 
- * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) QCSchema -- a new function
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Schema -- a new function
    `ManyBodyResultProperties.to_qcvariables()` returns a translation map to QCVariables keys. @loriab
- * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) QCSchema -- a new function
+ * [\#32](https://github.com/MolSSI/QCManyBody/pull/32) Schema -- a new function
    `qcmanybody.utils.translate_qcvariables(map)` switches between QCVariable and QCSchema keys. @loriab
+ * [\#33](https://github.com/MolSSI/QCManyBody/pull/33) Schema -- `ManyBodySpecification.extras` added. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- Add schema_version to `AtomicSpecification`,
+   `ManyBodySpecification`, `ManyBodyKeywords`, `ManyBodyInput`, and `ManyBodyResultProperties`. @loriab
 
 #### Enhancements
 
@@ -54,14 +57,23 @@
    is a single large fragment, an error is thrown. @loriab
  * [\#30](https://github.com/MolSSI/QCManyBody/pull/30) Docs -- add end-to-end demos in test_examples. @loriab
  * [\#31](https://github.com/MolSSI/QCManyBody/pull/31) Schema -- add "none" as a bsse_type alias to "nocp". @loriab
-
-#### Bug Fixes
-
-#### Misc.
-
-#### MUST (Unmerged)
-
-#### WIP (Unmerged)
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- Allow environment variable QCMANYBODY_MAX_NBODY to
+   influence the body-level to which `ManyBodyResultProperties` is defined added. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- added discriminator to input for
+   `GeneralizedOptimizationInput` and `GeneralizedOptimizationResult` models to allow input from dicts (rather than
+   models) in OptKing. Further specialized QCElemental. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Schema -- `ManyBodyResultProperties` is still only explicitly
+   enumerated up to tetramers, but now it allows through higher-body fields when they match a pattern. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Maint -- start testing optimizations through QCEngine. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add `labeler(..., opaque=False)` option to produce
+   eye-friendly `(1)@(1, 2)` style lablels as well as the semi-opaque internal style. Also always convent single ints
+   to tuples now. Function `delabeler` can decode the new style. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Intf -- sort "core" `nbodies_per_mc_level` dictionary so model
+   chemistries are in a predictable 1b, 2b, ..., supersystem order. Check that high-level (different data structure) agrees.
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add short ordinal model chemistry level (e.g., §A) to the
+   `format_calc_plan` and `print_nbody_energy` summaries. @loriab
+ * [\#34](https://github.com/MolSSI/QCManyBody/pull/34) Util -- add function `modelchem_labels` to associate n-body
+   level, model chemistry level, one-char ordinal modelchem label, and n-bodies-covered modelchem label. @loriab
 
 
 ## v0.2.1 / 2024-05-14

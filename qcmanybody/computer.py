@@ -331,6 +331,9 @@ class ManyBodyComputer(BaseComputerQCNG):
         nfr = len(values["molecule"].fragments)
         # print(f" {levels_max_nbody=} {nfr=}", end="")
 
+        if len(set(values["levels"].values())) != len(values["levels"]):
+            raise ValueError("Cannot have duplicate model chemistries in levels.")
+
         # ALT if v == -1:
         if v is None:
             v = levels_max_nbody
@@ -423,6 +426,14 @@ class ManyBodyComputer(BaseComputerQCNG):
             supersystem_ie_only=computer_model.supersystem_ie_only,
             embedding_charges=computer_model.embedding_charges,
         )
+
+        # check that core and computer storage are consistent in mc ordering and grouping and nbody levels
+        assert (
+            list(computer_model.qcmb_core.nbodies_per_mc_level.values()) == computer_model.nbodies_per_mc_level
+        ), f"CORE {computer_model.qcmb_core.nbodies_per_mc_level.values()} != COMPUTER {computer_model.nbodies_per_mc_level}"
+        assert list(computer_model.qcmb_core.nbodies_per_mc_level.keys()) == list(
+            computer_model.levels.values()
+        ), f"CORE {computer_model.qcmb_core.nbodies_per_mc_level.keys()} != COMPUTER {computer_model.levels.values()}"
 
         if not build_tasks:
             return computer_model

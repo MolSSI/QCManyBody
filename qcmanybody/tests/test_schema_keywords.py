@@ -9,14 +9,11 @@ try:
 except ImportError:
     from pydantic import ValidationError
 
-import qcelemental
-from qcelemental.models import DriverEnum, Molecule
-
-from qcmanybody import ManyBodyCalculator  # test old name still operational
+from qcelemental.models import Molecule
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputer
 from qcmanybody.computer import ManyBodyComputer
-from qcmanybody.models import BsseEnum, ManyBodyInput
+from qcmanybody.models import BsseEnum, ManyBodyInput, ManyBodyResultProperties
 
 
 @pytest.fixture(scope="function")
@@ -121,7 +118,6 @@ def test_mbe_rtd(mbe_data, driver, kws, ans):
     pytest.param({"supersystem_ie_only": True, "max_nbody": 3}, [3, {3: "(auto)"}, [[1, 2, 3]] ]),
 
     pytest.param({"levels": {3: "mp2"}}, [3, {3: "mp2"}, [[1, 2, 3]] ]),
-    pytest.param({"levels": {3: "ccsd", 2: "ccsd"}}, [3, {2: "ccsd", 3: "ccsd"}, [[1, 2], [3]] ]),
     pytest.param({"levels": {1: "mp2", 3: "ccsd"}}, [3, {1: "mp2", 3: "ccsd"}, [[1], [2, 3]] ]),
     pytest.param({"levels": {2: "ccsd", 3: "mp2"}}, [3, {2: "ccsd", 3: "mp2"}, [[1, 2], [3]] ]),
     pytest.param({"levels": {2: "ccsd"}}, [2, {2: "ccsd"}, [[1, 2]] ]),
@@ -131,7 +127,6 @@ def test_mbe_rtd(mbe_data, driver, kws, ans):
     pytest.param({"levels": {2: "ccsd(t)", "supersystem": "hf"}}, [2, {2: "ccsd(t)", "supersystem": "hf"}, [[1, 2], ["supersystem"]] ]),
 
     pytest.param({"max_nbody": 3, "levels": {3: "mp2"}}, [3, {3: "mp2"}, [[1, 2, 3]] ]),
-    pytest.param({"max_nbody": 3, "levels": {3: "ccsd", 2: "ccsd"}}, [3, {2: "ccsd", 3: "ccsd"}, [[1, 2], [3]] ]),
     pytest.param({"max_nbody": 3, "levels": {1: "mp2", 3: "ccsd"}}, [3, {1: "mp2", 3: "ccsd"}, [[1], [2, 3]] ]),
     pytest.param({"max_nbody": 3, "levels": {2: "ccsd", 3: "mp2"}}, [3, {2: "ccsd", 3: "mp2"}, [[1, 2], [3]] ]),
     pytest.param({"max_nbody": 2, "levels": {2: "ccsd"}}, [2, {2: "ccsd"}, [[1, 2]] ]),
@@ -193,6 +188,9 @@ def test_mbe_level_5mer(mbe_data, kws, ans):
     # fails on v1 b/c val 2 coerced to a str  pytest.param({"levels": {1: 2, 3: "mp2", 2: "ccsd"}}, "asdf"),  # `1: 2 is old syntax and doesn't pass typing
     pytest.param({"max_nbody": 1, "supersystem_ie_only": True}, "Cannot skip intermediate n-body jobs"),
     # [3, supersystem]
+    # the two below could be healed up with a more sophisticated nbodies_per_mc_level building. Right now they violate the CORE == COMPUTER consistency checks
+    pytest.param({"levels": {3: "ccsd", 2: "ccsd"}}, "Cannot have duplicate model chemistries in levels"),  #[3, {2: "ccsd", 3: "ccsd"}, [[1, 2, 3]] ]),
+    pytest.param({"max_nbody": 3, "levels": {3: "ccsd", 2: "ccsd"}}, "Cannot have duplicate model chemistries in levels"),  #[3, {2: "ccsd", 3: "ccsd"}, [[1, 2, 3]] ]),
 ])
 def test_mbe_level_fails(mbe_data, kws, errmsg):
     mbe_data["specification"]["keywords"] = kws
@@ -263,18 +261,39 @@ def test_mbe_sie(mbe_data, kws, ans):
     assert comp_model.supersystem_ie_only == ans
 
 
-def test_noncontiguous_fragments_ordinary():
-    with pytest.raises(qcelemental.exceptions.ValidationError) as e:
-        Molecule(symbols=["H", "Ne", "Cl"], geometry=[0, 0, 0, 2, 0, 0, 0, 2, 0], fragments=[[0, 2], [1]])
 
-    assert "QCElemental would need to reorder atoms to accommodate non-contiguous fragments" in str(e.value)
+@pytest.mark.parametrize("kws,ans", [
+    pytest.param({
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy": 4,
+    }, 2),
+    pytest.param({
+        "calcinfo_nfr": 3,
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy_through_51_body": 50,
+        "cp_corrected_total_energy": 5,
+    }, 4),
+    pytest.param({
+        "an_interloper": 3,
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy": 4,
+    }, "Field names not allowed"),
+    pytest.param({
+        "an_interloper": 3,
+        "cp_corrected_total_energy_through_2_body": 2,
+        "cp_corrected_total_energy_through_50_body": 50,
+        "calcinfo_nfrrrrrrrrrrr": 3,
+    }, "Field names not allowed"),
+])
+def test_mbproperties_expansion(kws, ans):
 
+    if isinstance(ans, str):
+        with pytest.raises(ValidationError) as e:
+            input_model = ManyBodyResultProperties(**kws)
 
-def test_noncontiguous_fragments_evaded():
-    neon_in_hcl = Molecule(symbols=["H", "Ne", "Cl"], geometry=[0, 0, 0, 2, 0, 0, 0, 2, 0], fragments=[[0, 2], [1]], validated=True)
+        assert ans in str(e.value)
+        return
 
-    with pytest.raises(ValueError) as e:
-        ManyBodyCalculator(neon_in_hcl, ["cp"], {2: "mp2", 1: "mp2"}, False, False, None)
+    input_model = ManyBodyResultProperties(**kws)
 
-    assert "QCManyBody: non-contiguous fragments could be implemented but aren't at present" in str(e.value)
-
+    assert len(input_model.dict()) == ans
