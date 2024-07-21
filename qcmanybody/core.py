@@ -103,6 +103,14 @@ class ManyBodyCore:
         assert self.mc_levels == set(self.nbodies_per_mc_level.keys())  # remove after some downstream testing
         self.mc_levels = self.nbodies_per_mc_level.keys()
 
+        for mc, nbs in self.nbodies_per_mc_level.items():
+            if nbs and ((nbs[-1] - nbs[0]) != len(nbs) - 1):
+                raise ValueError(
+                    f"QCManyBody: N-Body levels must be contiguous within a model chemistry spec ({mc}: {nbs}). Use an alternate spec name to accomplish this input."
+                )
+                # TODO - test and reenable if appropriate. my guess is that noncontig nb is fine on the core computing side,
+                #   but trouble for computer and nbodies_per_mc_level inverting and indexing. Safer to deflect for now since input tweak allows the calc.
+
         # Supersystem is always at the end
         if "supersystem" in levels:
             ss_mc = levels["supersystem"]

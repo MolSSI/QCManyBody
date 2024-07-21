@@ -31,6 +31,13 @@ def test_noncontiguous_fragments_evaded():
     assert "QCManyBody: non-contiguous fragments could be implemented but aren't at present" in str(e.value)
 
 
+def test_noncontiguous_nbody_levels_same_mc(he_tetramer):
+    with pytest.raises(ValueError) as e:
+        ManyBodyCalculator(he_tetramer, ["cp"], {2: "mp2", 1: "mp2", 4: "mp2", 3: "ccsd"}, True, False, None)
+
+    assert "QCManyBody: N-Body levels must be contiguous within a model chemistry spec" in str(e.value)
+
+
 @pytest.mark.parametrize("mbe_keywords,ref_count,ref_text", [
     pytest.param(
         {"bsse_type": ["nocp", "cp", "vmfc"]},
