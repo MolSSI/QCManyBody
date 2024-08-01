@@ -1,0 +1,45 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: QCManyBody
+message: >-
+  Intermolecular many-body expansion with QCArchive
+  integration
+type: software
+authors:
+  - given-names: Asem
+    family-names: Alenaizan
+    affiliation: >-
+      Chemistry Department, King Fahd University of
+      Petroleum and Minerals
+    orcid: 'https://orcid.org/0000-0002-0871-664X'
+  - given-names: Lori A
+    family-names: Burns
+    affiliation: >-
+      Center for Computational Molecular Science and      
+      Technology, Georgia Institute of Technology
+    orcid: 'https://orcid.org/0000-0003-2852-5864'
+  - given-names: Benjamin P.
+    family-names: Pritchard
+    affiliation: The Molecular Sciences Software Institute
+    orcid: 'https://orcid.org/0000-0003-2136-0606'
+  - given-names: Daniel G. A.
+    family-names: Smith
+    affiliation: The Molecular Sciences Software Institute
+    orcid: 'https://orcid.org/0000-0001-8626-0900'
+identifiers:
+  - type: url
+    value: 'https://github.com/MolSSI/QCManyBody'
+    description: Software Repository
+repository-code: 'https://github.com/MolSSI/QCManyBody'
+url: 'https://molssi.github.io/QCManyBody/'
+repository-artifact: 'https://anaconda.org/conda-forge/qcmanybody/files'
+keywords:
+  - quantum-chemistry
+  - many-body-expansion
+  - mbe
+  - schema
+license: BSD-3-Clause
+version: 0.3.0
+date-released: '2024-07-21'
