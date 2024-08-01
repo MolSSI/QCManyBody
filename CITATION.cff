@@ -8,12 +8,12 @@ message: >-
   integration
 type: software
 authors:
-  - orcid: 'https://orcid.org/0000-0002-0871-664X'
+  - given-names: Asem
+    family-names: Alenaizan
     affiliation: >-
       Chemistry Department, King Fahd University of
       Petroleum and Minerals
-    given-names: Asem
-    family-names: Alenaizan
+    orcid: 'https://orcid.org/0000-0002-0871-664X'
   - given-names: Lori A
     family-names: Burns
     affiliation: >-
