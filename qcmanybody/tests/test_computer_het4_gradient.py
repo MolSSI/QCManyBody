@@ -1,3 +1,4 @@
+import os
 import pprint
 import re
 
@@ -246,6 +247,7 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
     _inner = request.node.name.split("[")[1].split("]")[0]
     kwdsln, pattern, progln = _inner, "", "psi4"
     print("LANE", kwdsln, pattern, progln)
+    os.environ["QCMANYBODY_EMBEDDING_CHARGES"] = "1"
 
     mbe_keywords = ManyBodyKeywords(**mbe_keywords)
     mbe_data_grad_dtz["molecule"] = het_tetramer
@@ -311,6 +313,26 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
     if outstrs:
         for stdoutkey in outstrs:
             assert re.search(sumstr[stdoutkey], ret.stdout, re.MULTILINE), f"[j] N-Body pattern not found: {sumstr[stdoutkey]}"
+
+
+@pytest.mark.parametrize("mbe_keywords,errmsg", [
+    pytest.param(
+        {"bsse_type": "nocp", "return_total_data": True, "levels": {4: "p4-hf"}, "embedding_charges": {1: [-1.0], 2: [0.5, -0.5], 3: [-0.5, 0.5], 4: [0]}},
+        "Embedding charges for EE-MBE are still in testing",
+        id="4b_nocp_rtd_ee_error"),
+])
+def test_nbody_ee_error(mbe_keywords, errmsg, het_tetramer, mbe_data_grad_dtz):
+
+    mbe_keywords = ManyBodyKeywords(**mbe_keywords)
+    mbe_data_grad_dtz["molecule"] = het_tetramer
+    mbe_data_grad_dtz["specification"]["driver"] = "gradient"
+    mbe_data_grad_dtz["specification"]["keywords"] = mbe_keywords
+    mbe_model = ManyBodyInput(**mbe_data_grad_dtz)
+
+    with pytest.raises(ValueError) as e:
+        ManyBodyComputer.from_manybodyinput(mbe_model)
+
+    assert errmsg in str(e.value), e.value
 
 
 def test_fragmentless_mol(mbe_data_grad_dtz):

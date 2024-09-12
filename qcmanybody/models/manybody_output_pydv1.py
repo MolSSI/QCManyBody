@@ -33,7 +33,6 @@ manybodyresultproperties_doc = """
 
 MAX_NBODY = int(os.environ.get("QCMANYBODY_MAX_NBODY", 5))  # 5 covers tetramers
 
-# TODO: bump up default MAX_NBODY and add some warnings or mitigations so insufficient value doesn't fail at very end at Result formation time
 
 json_schema_extras = {
     "energy": {"units": "E_h"},
