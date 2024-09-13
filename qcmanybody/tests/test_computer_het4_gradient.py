@@ -243,11 +243,10 @@ def het_tetramer():
         15,
         id="4b_nocp_rtd_ee"),
 ])
-def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calcinfo_nmbe, het_tetramer, request, mbe_data_grad_dtz):
+def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calcinfo_nmbe, het_tetramer, request, mbe_data_grad_dtz, monkeypatch):
     _inner = request.node.name.split("[")[1].split("]")[0]
     kwdsln, pattern, progln = _inner, "", "psi4"
-    print("LANE", kwdsln, pattern, progln)
-    os.environ["QCMANYBODY_EMBEDDING_CHARGES"] = "1"
+    monkeypatch.setenv("QCMANYBODY_EMBEDDING_CHARGES", "1")
 
     mbe_keywords = ManyBodyKeywords(**mbe_keywords)
     mbe_data_grad_dtz["molecule"] = het_tetramer
