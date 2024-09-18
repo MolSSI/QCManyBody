@@ -2,47 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://molssi.github.io/QCManyBody/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/api/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/changelog/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/core-interface/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/high-level-interface/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/how-to-guides/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/keywords/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/qcschema/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
     <url>
          <loc>https://molssi.github.io/QCManyBody/results/</loc>
-         <lastmod>2024-08-01</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2024-09-18</lastmod>
     </url>
 </urlset>
