@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import json
+import math
 import re
 import string
 from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, Set, Tuple, Union
@@ -222,13 +223,22 @@ def sum_cluster_data(
     shape = find_shape(data[first_key])
     ret = shaped_zero(shape)
 
-    for frag, bas in compute_list:
-        egh = data[labeler(mc_level_lbl, frag, bas)]
+    precise_sum_func = math.fsum if isinstance(ret, float) else np.sum
+    ret = precise_sum_func(
+        (((-1) ** (nb - len(frag))) if vmfc else 1) * (data[labeler(mc_level_lbl, frag, bas)])
+        for frag, bas in compute_list
+    )
 
-        if vmfc:
-            sign = (-1) ** (nb - len(frag))
-
-        ret += sign * egh
+    # A more readable format for the above but not ammenable to using specialty summation functions
+    # ```
+    # for frag, bas in compute_list:
+    #     egh = data[labeler(mc_level_lbl, frag, bas)]
+    #
+    #     if vmfc:
+    #         sign = (-1) ** (nb - len(frag))
+    #
+    #     ret += sign * egh
+    # ```
 
     return ret
 

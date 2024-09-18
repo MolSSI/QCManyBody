@@ -19,6 +19,29 @@
 -->
 
 
+## v0.4.0 / 2024-MM-DD (Unreleased)
+
+#### Breaking Changes
+ * [\#36](https://github.com/MolSSI/QCManyBody/pull/36) Feature -- as the embedded point charges aren't fully validated
+   and (in the QCEngine computer function of the high-level interface) only work with Psi4 anyways, they are now hidden.
+   Set environment variable `QCMANYBODY_EMBEDDING_CHARGES=1` to access functionality. @loriab
+
+#### New Features
+
+#### Enhancements
+ * [\#36](https://github.com/MolSSI/QCManyBody/pull/36) Utils -- when adding up results from many molecular species,
+   now the compensated sums `math.fsum` or `numpy.sum` are used.
+
+#### Bug Fixes
+
+#### Misc.
+
+#### MUST (Unmerged)
+
+#### WIP (Unmerged)
+
+
+
 ## v0.3.0 / 2024-07-21
 
 #### Breaking Changes

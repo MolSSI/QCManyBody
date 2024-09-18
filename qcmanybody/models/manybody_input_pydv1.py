@@ -140,7 +140,9 @@ class ManyBodyKeywords(ProtoModel):
     embedding_charges: Optional[Dict[int, List[float]]] = Field(
         None,
         description="Atom-centered point charges to be used on molecule fragments whose basis sets are not included in "
-        "the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment.",
+        "the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment. "
+        "At present, QCManyBody will only accept non-None values of this keyword if environment variable "
+        "QCMANYBODY_EMBEDDING_CHARGES is set.",
         # TODO embedding charges should sum to fragment charge, right? enforce?
         # TODO embedding charges irrelevant to CP (basis sets always present)?
         json_schema_extra={

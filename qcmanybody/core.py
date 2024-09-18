@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
+import os
 import string
 from collections import Counter, defaultdict
 from typing import Any, Dict, Iterable, Literal, Mapping, Sequence, Set, Tuple, Union
@@ -44,6 +45,12 @@ class ManyBodyCore:
         embedding_charges: Mapping[int, Sequence[float]],
     ):
         self.embedding_charges = embedding_charges
+        if self.embedding_charges:
+            if not bool(os.environ.get("QCMANYBODY_EMBEDDING_CHARGES", False)):  # obscure until further validation
+                raise ValueError(
+                    f"Embedding charges for EE-MBE are still in testing. Set environment variable QCMANYBODY_EMBEDDING_CHARGES=1 to use at your own risk."
+                )
+
         if isinstance(molecule, dict):
             mol = Molecule(**molecule)
         elif isinstance(molecule, Molecule):
