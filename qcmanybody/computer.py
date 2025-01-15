@@ -47,6 +47,7 @@ class BaseComputerQCNG(ProtoModel):
         pass
 
     # TODO can remove?
+    #
     # v2: model_config = ConfigDict(
     # v2:     extra="allow",
     # v2:     frozen=False,
