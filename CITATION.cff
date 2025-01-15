@@ -32,6 +32,9 @@ identifiers:
   - type: url
     value: 'https://github.com/MolSSI/QCManyBody'
     description: Software Repository
+  - type: doi
+    value: 10.1063/5.0231843
+    description: Journal of Chemical Physics article
 repository-code: 'https://github.com/MolSSI/QCManyBody'
 url: 'https://molssi.github.io/QCManyBody/'
 repository-artifact: 'https://anaconda.org/conda-forge/qcmanybody/files'
@@ -41,5 +44,5 @@ keywords:
   - mbe
   - schema
 license: BSD-3-Clause
-version: 0.3.0
-date-released: '2024-07-21'
+version: 0.4.0
+date-released: '2025-01-15'

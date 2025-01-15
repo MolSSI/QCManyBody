@@ -1,7 +1,7 @@
 # Changelog
 
 <!--
-## vX.Y.0 / 2024-MM-DD (Unreleased)
+## vX.Y.0 / 2025-MM-DD (Unreleased)
 
 #### Breaking Changes
 
@@ -19,7 +19,7 @@
 -->
 
 
-## v0.4.0 / 2024-MM-DD (Unreleased)
+## v0.4.0 / 2025-01-15
 
 #### Breaking Changes
  * [\#36](https://github.com/MolSSI/QCManyBody/pull/36) Feature -- as the embedded point charges aren't fully validated
@@ -35,11 +35,7 @@
 #### Bug Fixes
 
 #### Misc.
-
-#### MUST (Unmerged)
-
-#### WIP (Unmerged)
-
+ * Maint -- pinned to QCElemental <0.70 to use only QCSchema v1.
 
 
 ## v0.3.0 / 2024-07-21

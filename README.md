@@ -47,6 +47,14 @@ Full documentation is available at [https://molssi.github.io/QCManyBody/](https:
 * Benjamin P. Pritchard, [@bennybp](https://github.com/bennybp), core interface and QCArchive integration
 * Daniel G. A. Smith, [@dgasmith](https://github.com/dgasmith), original Psi4 implementations of nocp, cp, and vmfc single-level e/g/H and distributed driver integration
 
+## Citation [![doi](https://img.shields.io/badge/doi-10.1063/5.0231843-5077AB.svg)](https://doi.org/10.1063/5.0231843)
+
+The journal article reference describing QCManyBody is:
+
+L. A. Burns, C. D. Sherrill, B. P. Pritchard,
+"QCManyBody: A Flexible Implementation of the Many-Body Expansion",
+J. Chem. Phys. 161(15) 152501 (2024).
+
 ## Demonstration
 
 An example of the core and high-level interfaces can be found in [test_examples](qcmanybody/tests/test_examples.py) with
