@@ -14,17 +14,17 @@ authors:
       Chemistry Department, King Fahd University of
       Petroleum and Minerals
     orcid: 'https://orcid.org/0000-0002-0871-664X'
-  - given-names: Lori A
+  - given-names: "Lori A."
     family-names: Burns
     affiliation: >-
-      Center for Computational Molecular Science and      
+      Center for Computational Molecular Science and
       Technology, Georgia Institute of Technology
     orcid: 'https://orcid.org/0000-0003-2852-5864'
-  - given-names: Benjamin P.
+  - given-names: "Benjamin P."
     family-names: Pritchard
     affiliation: The Molecular Sciences Software Institute
     orcid: 'https://orcid.org/0000-0003-2136-0606'
-  - given-names: Daniel G. A.
+  - given-names: "Daniel G. A."
     family-names: Smith
     affiliation: The Molecular Sciences Software Institute
     orcid: 'https://orcid.org/0000-0001-8626-0900'
@@ -34,7 +34,7 @@ identifiers:
     description: Software Repository
   - type: doi
     value: 10.1063/5.0231843
-    description: Journal of Chemical Physics article
+    description: JCP article
 repository-code: 'https://github.com/MolSSI/QCManyBody'
 url: 'https://molssi.github.io/QCManyBody/'
 repository-artifact: 'https://anaconda.org/conda-forge/qcmanybody/files'
@@ -46,3 +46,23 @@ keywords:
 license: BSD-3-Clause
 version: 0.4.0
 date-released: '2025-01-15'
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Lori A."
+    given-names: "Burns"
+    orcid: "https://orcid.org/0000-0003-2852-5864"
+  - family-names: "C. David"
+    given-names: "Sherrill"
+    orcid: "https://orcid.org/0000-0002-5570-7666"
+  - family-names: "Benjamin P."
+    given-names: "Pritchard"
+    orcid: "https://orcid.org/0000-0003-2136-0606"
+  doi: "10.1063/5.0231843"
+  journal: "The Journal of Chemical Physics"
+  month: 10
+  start: 152501
+  title: "QCManyBody: A flexible implementation of the many-body expansion"
+  issue: 15
+  volume: 161
+  year: 2024
