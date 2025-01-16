@@ -117,7 +117,7 @@ jobs:
         conda remove qcengine --force
 
     - name: Special Config - QCSchema Next Deps
-      if: "(startsWith(matrix.cfg.label, 'QCSk-next')"
+      if: "(startsWith(matrix.cfg.label, 'QCSk-next'))"
       run: |
         conda remove qcelemental qcengine --force
         python -m pip install 'git+https://github.com/MolSSI/QCElemental.git@next2025' --no-deps
