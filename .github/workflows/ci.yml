@@ -34,6 +34,11 @@ jobs:
             runs-on: ubuntu-latest
             pytest: "-k 'examples or (121-nwchem_psi4 and 4b)'"
 
+          - label: QCSk-next
+            python-version: "3.12"
+            runs-on: ubuntu-latest
+            pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
+
     name: "🐍 ${{ matrix.cfg.python-version }} • ${{ matrix.cfg.label }} • ${{ matrix.cfg.runs-on }}"
     runs-on: ${{ matrix.cfg.runs-on }}
 
@@ -78,6 +83,10 @@ jobs:
               sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
               sed -i "s;#- dummy2;- nwchem;g" export.yaml
           fi
+          if [[ "${{ matrix.cfg.label }}" == "QCSk-next" ]]; then
+              sed -i "s;pydantic;pydantic=2;g" export.yaml
+              sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+          fi
           # model sed for L/W
           #   sed -i "s;;;g" export.yaml
           # model sed for M
@@ -106,6 +115,13 @@ jobs:
       #if: "(startsWith(matrix.cfg.label, 'Psi4')) || (matrix.cfg.label == 'ADCC') || (matrix.cfg.label == 'optimization-dispersion')"
       run: |
         conda remove qcengine --force
+
+    - name: Special Config - QCSchema Next Deps
+      if: "(startsWith(matrix.cfg.label, 'QCSk-next')"
+      run: |
+        conda remove qcelemental qcengine --force
+        python -m pip install 'git+https://github.com/MolSSI/QCElemental.git@next2025' --no-deps
+        python -m pip install 'git+https://github.com/MolSSI/QCEngine.git@master' --no-deps
 
     - name: Environment Information
       run: |
