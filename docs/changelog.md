@@ -19,7 +19,7 @@
 -->
 
 
-## v0.4.0 / 2025-01-15
+## v0.4.0 / 2025-01-16
 
 #### Breaking Changes
  * [\#36](https://github.com/MolSSI/QCManyBody/pull/36) Feature -- as the embedded point charges aren't fully validated
