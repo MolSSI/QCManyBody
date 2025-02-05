@@ -2,18 +2,15 @@
 Tests the DQM compute dispatch module
 """
 
+import pydantic
 import pytest
-
-try:
-    from pydantic.v1 import ValidationError
-except ImportError:
-    from pydantic import ValidationError
-
 from qcelemental.models import Molecule
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputer
 from qcmanybody.computer import ManyBodyComputer
-from qcmanybody.models import BsseEnum, ManyBodyInput, ManyBodyResultProperties
+from qcmanybody.models import BsseEnum, ManyBodyInput
+
+from .addons import schema_versions
 
 
 @pytest.fixture(scope="function")
@@ -196,7 +193,7 @@ def test_mbe_level_fails(mbe_data, kws, errmsg):
     mbe_data["specification"]["keywords"] = kws
 
     # v2: with pytest.raises(Exception):
-    with pytest.raises(ValidationError) as e:
+    with pytest.raises(pydantic.v1.ValidationError) as e:
         input_model = ManyBodyInput(**mbe_data)
         ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
@@ -221,7 +218,7 @@ def test_mbe_bsse_type(mbe_data, kws, ans):
     mbe_data["specification"]["keywords"] = kws
 
     if ans == "error":
-        with pytest.raises(ValidationError) as e:
+        with pytest.raises(pydantic.v1.ValidationError) as e:
             input_model = ManyBodyInput(**mbe_data)
 
         assert "not a valid enumeration member; permitted: 'nocp', 'cp', 'vmfc'" in str(e.value)
@@ -249,7 +246,7 @@ def test_mbe_sie(mbe_data, kws, ans):
 
     if isinstance(ans, str):
         input_model = ManyBodyInput(**mbe_data)
-        with pytest.raises(ValidationError) as e:
+        with pytest.raises(pydantic.v1.ValidationError) as e:
             ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
         assert ans in str(e.value)
@@ -285,15 +282,21 @@ def test_mbe_sie(mbe_data, kws, ans):
         "calcinfo_nfrrrrrrrrrrr": 3,
     }, "Field names not allowed"),
 ])
-def test_mbproperties_expansion(kws, ans):
+def test_mbproperties_expansion(kws, ans, schema_versions):
 
     if isinstance(ans, str):
-        with pytest.raises(ValidationError) as e:
-            input_model = ManyBodyResultProperties(**kws)
+        with pytest.raises((pydantic.ValidationError, pydantic.v1.ValidationError)) as e:
+            try:
+                schema_versions.ManyBodyResultProperties(**kws)
+            except AttributeError:
+                schema_versions.ManyBodyProperties(**kws)
 
         assert ans in str(e.value)
         return
 
-    input_model = ManyBodyResultProperties(**kws)
+    try:
+        input_model = schema_versions.ManyBodyResultProperties(**kws)
+    except AttributeError:
+        input_model = schema_versions.ManyBodyProperties(**kws)
 
     assert len(input_model.dict()) == ans

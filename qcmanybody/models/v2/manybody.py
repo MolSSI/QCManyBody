@@ -5,45 +5,22 @@ import re
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
-# v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
-try:
-    from pydantic.v1 import Field, create_model, root_validator, validator
-except ImportError:
-    from pydantic import create_model, Field, validator, root_validator
-
-from qcelemental.models import DriverEnum, ProtoModel, Provenance
-
-# from .basemodels import ExtendedConfigDict, ProtoModel
-from qcelemental.models.common_models import Model
-from qcelemental.models.molecule import Molecule
-from qcelemental.models.results import AtomicResult, AtomicResultProperties, AtomicResultProtocols
-from qcelemental.models.types import Array
+from pydantic import Field, ValidationInfo, create_model, field_validator, model_validator
+from qcelemental.models.v2 import (
+    Array,
+    AtomicProperties,
+    AtomicProtocols,
+    AtomicResult,
+    AtomicSpecification,
+    DriverEnum,
+    Model,
+    Molecule,
+    ProtoModel,
+    Provenance,
+)
+from qcelemental.models.v2.basemodels import ExtendedConfigDict, ProtoModel, check_convertible_version
 
 # ====  Misplaced & Next Models  ================================================
-
-
-class AtomicSpecification(ProtoModel):
-    """Specification for a single point QC calculation"""
-
-    keywords: Dict[str, Any] = Field({}, description="The program specific keywords to be used.")
-    program: str = Field(..., description="The program for which the Specification is intended.")
-
-    schema_name: Literal["qcschema_atomicspecification"] = "qcschema_atomicspecification"
-    schema_version: Literal[1] = Field(
-        1,
-        description="The version number of ``schema_name`` to which this model conforms.",
-    )
-
-    driver: DriverEnum = Field(..., description=DriverEnum.__doc__)
-    model: Model = Field(..., description=Model.__doc__)
-    protocols: AtomicResultProtocols = Field(
-        AtomicResultProtocols(),
-        description=AtomicResultProtocols.__doc__,
-    )
-    extras: Dict[str, Any] = Field(
-        {},
-        description="Additional information to bundle with the computation. Use for schema development and scratch space.",
-    )
 
 
 class ResultBase(ProtoModel):
@@ -72,7 +49,7 @@ class SuccessfulResultBase(ResultBase):
 # ====  Protocols  ==============================================================
 
 
-class ComponentResultsProtocolEnum(str, Enum):
+class ClusterResultsProtocolEnum(str, Enum):
     r"""Which component results to preserve in a many body result; usually AtomicResults."""
 
     all = "all"
@@ -85,13 +62,34 @@ class ManyBodyProtocols(ProtoModel):
     Protocols regarding the manipulation of a ManyBody output data.
     """
 
-    component_results: ComponentResultsProtocolEnum = Field(
-        ComponentResultsProtocolEnum.none, description=str(ComponentResultsProtocolEnum.__doc__)
+    schema_name: Literal["qcschema_many_body_protocols"] = "qcschema_many_body_protocols"
+
+    cluster_results: ClusterResultsProtocolEnum = Field(
+        ClusterResultsProtocolEnum.none, description=str(ClusterResultsProtocolEnum.__doc__)
     )
 
-    # v2: model_config = ExtendedConfigDict(force_skip_defaults=True)
-    class Config:
-        force_skip_defaults = True
+    model_config = ExtendedConfigDict(force_skip_defaults=True)
+
+    def convert_v(
+        self, target_version: int, /
+    ) -> Union["qcmanybody.models.v1.ManyBodyProtocols", "qcmanybody.models.v2.ManyBodyProtocols"]:
+        """Convert to instance of particular QCSchema version."""
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodyProtocols") == "self":
+            return self
+
+        dself = self.model_dump()
+        if target_version == 1:
+            # serialization is compact, so use model to assure value
+            dself.pop("cluster_results", None)
+            dself["component_results"] = self.cluster_results.value
+
+            self_vN = qcmb.models.v1.ManyBodyProtocols(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN
 
 
 # ====  Inputs  =================================================================
@@ -128,11 +126,8 @@ FragBasIndex = Tuple[Tuple[int], Tuple[int]]
 class ManyBodyKeywords(ProtoModel):
     """The many-body-specific keywords for user control."""
 
-    schema_name: Literal["qcschema_manybodykeywords"] = "qcschema_manybodykeywords"
-    schema_version: Literal[1] = Field(
-        1,
-        description="The version number of ``schema_name`` to which this model conforms.",
-    )
+    schema_name: Literal["qcschema_many_body_keywords"] = "qcschema_many_body_keywords"
+
     bsse_type: List[BsseEnum] = Field(
         [BsseEnum.cp],
         # definitive description
@@ -197,8 +192,7 @@ class ManyBodyKeywords(ProtoModel):
         "``bsse_type`` as it cannot produce savings.",
     )
 
-    # v2: @field_validator("bsse_type", mode="before")
-    @validator("bsse_type", pre=True)
+    @field_validator("bsse_type", mode="before")
     @classmethod
     def set_bsse_type(cls, v: Any) -> List[BsseEnum]:
         if not isinstance(v, list):
@@ -218,11 +212,8 @@ class ManyBodyKeywords(ProtoModel):
 class ManyBodySpecification(ProtoModel):
     """Combining the what (ManyBodyKeywords) with the how (AtomicSpecification)."""
 
-    schema_name: Literal["qcschema_manybodyspecification"] = "qcschema_manybodyspecification"
-    schema_version: Literal[1] = Field(
-        1,
-        description="The version number of ``schema_name`` to which this model conforms.",
-    )
+    schema_name: Literal["qcschema_many_body_specification"] = "qcschema_many_body_specification"
+
     # provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
     keywords: ManyBodyKeywords = Field(..., description=ManyBodyKeywords.__doc__)
     # program: str = Field(..., description="The program for which the Specification is intended.")  # TODO is qcmanybody
@@ -241,8 +232,7 @@ class ManyBodySpecification(ProtoModel):
         description="Additional information to bundle with the computation. Use for schema development and scratch space.",
     )
 
-    # v2: @field_validator("specification", mode="before")
-    @validator("specification", pre=True)
+    @field_validator("specification", mode="before")
     @classmethod
     def set_specification(cls, v: Any) -> Dict[str, AtomicSpecification]:
         # print(f"hit atomicspecification validator with {type(v)=} {v}", end="")
@@ -252,13 +242,41 @@ class ManyBodySpecification(ProtoModel):
         # print(f" ... setting v={v}")
         return v
 
+    def convert_v(
+        self, target_version: int, /
+    ) -> Union["qcmanybody.models.v1.ManyBodySpecification", "qcmanybody.models.v2.ManyBodySpecification"]:
+        """Convert to instance of particular QCSchema version."""
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodySpecification") == "self":
+            return self
+
+        dself = self.model_dump()
+        if target_version == 1:
+            dself.pop("schema_name")
+
+            dself["keywords"].pop("schema_name")
+            try:
+                dself["specification"].pop("schema_name")
+            except KeyError:
+                for spec in dself["specification"].values():
+                    spec.pop("schema_name")
+
+            dself["protocols"] = self.protocols.convert_v(target_version)
+
+            self_vN = qcmb.models.v1.ManyBodySpecification(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN
+
 
 class ManyBodyInput(ProtoModel):
     """Combining the what and how (ManyBodySpecification) with the who (Molecule)."""
 
-    schema_name: Literal["qcschema_manybodyinput"] = "qcschema_manybodyinput"
-    schema_version: Literal[1] = Field(
-        1,
+    schema_name: Literal["qcschema_many_body_input"] = "qcschema_many_body_input"
+    schema_version: Literal[2] = Field(
+        2,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
     # provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
@@ -270,25 +288,44 @@ class ManyBodyInput(ProtoModel):
         ...,
         description="Target molecule for many-body expansion (MBE) or interaction energy (IE) analysis.",
     )
-    extras: Dict[str, Any] = Field(
-        {},
-        description="Additional information to bundle with the computation. Use for schema development and scratch space.",
-    )
+
+    def convert_v(
+        self, target_version: int, /
+    ) -> Union["qcmanybody.models.v1.ManyBodyInput", "qcmanybody.models.v2.ManyBodyInput"]:
+        """Convert to instance of particular QCSchema version."""
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodyInput") == "self":
+            return self
+
+        dself = self.model_dump()
+        if target_version == 1:
+            dself.pop("schema_name")
+            dself.pop("schema_version")
+
+            dself["molecule"] = self.molecule.convert_v(target_version)
+            dself["specification"] = self.specification.convert_v(target_version)
+
+            self_vN = qcmb.models.v1.ManyBodyInput(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN
 
 
 # ====  Properties  =============================================================
 
-# class ManyBodyResultProperties defined through create_model
+# class ManyBodyProperties defined through create_model
 
-manybodyresultproperties_doc = """
+manybodyproperties_doc = """
     Named properties of manybody computations following the MolSSI QCSchema.
 
     All arrays are stored flat but must be reshapable into the dimensions in attribute ``shape``, with abbreviations as follows:
 
-    * nat: number of atoms = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_natom`
-    * nmc: number of model chemistries = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nmc`
-    * nfr: number of fragments = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nfr`
-    * nmbe: number of jobs = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nmbe`
+    * nat: number of atoms = :attr:`~qcmanybody.models.v2.ManyBodyProperties.calcinfo_natom`
+    * nmc: number of model chemistries = :attr:`~qcmanybody.models.v2.ManyBodyProperties.calcinfo_nmc`
+    * nfr: number of fragments = :attr:`~qcmanybody.models.v2.ManyBodyProperties.calcinfo_nfr`
+    * nmbe: number of jobs = :attr:`~qcmanybody.models.v2.ManyBodyProperties.calcinfo_nmbe`
     """
 
 MAX_NBODY = int(os.environ.get("QCMANYBODY_MAX_NBODY", 5))  # 5 covers tetramers
@@ -303,16 +340,10 @@ json_schema_extras = {
 mbprop = {}
 
 mbprop["schema_name"] = (
-    Literal["qcschema_manybodyproperties"],
-    Field("qcschema_manybodyproperties"),
+    Literal["qcschema_many_body_properties"],
+    Field("qcschema_many_body_properties"),
 )
-mbprop["schema_version"] = (
-    Literal[1],
-    Field(
-        1,
-        description="The version number of ``schema_name`` to which this model conforms.",
-    ),
-)
+
 
 # ========  Calcinfo  ===========================================================
 
@@ -577,7 +608,7 @@ def _validate_arb_max_nbody_fieldnames(cls, values):
         # fmt: on
     )
 
-    extra_fields = values.keys() - cls.__fields__.keys()
+    extra_fields = values.keys() - cls.model_fields.keys()
     baduns = [xtra for xtra in extra_fields if not ok_field_name.match(xtra)]
 
     if baduns:
@@ -588,21 +619,20 @@ def _validate_arb_max_nbody_fieldnames(cls, values):
 
 class ProtoModelSkipDefaults(ProtoModel):
 
-    class Config(ProtoModel.Config):
-        serialize_skip_defaults = True
-        force_skip_defaults = True
-        extra: str = "allow"  # fields filtered in root_validator
+    # fields filtered in model_validator
+    model_config = ExtendedConfigDict(serialize_skip_defaults=True, force_skip_defaults=True, extra="allow")
 
 
 if TYPE_CHECKING:
-    ManyBodyResultProperties = ProtoModelSkipDefaults
+    ManyBodyProperties = ProtoModelSkipDefaults
 else:
     # if/else suppresses a warning about using a dynamically generated class as Field type in ManyBodyResults
-    ManyBodyResultProperties = create_model(
-        "ManyBodyResultProperties",
-        # __doc__=manybodyresultproperties_doc,  # needs later pydantic
+    # * deprecated but works: root_validator(skip_on_failure=True)(_validate_arb_max_nbody_fieldnames)
+    ManyBodyProperties = create_model(
+        "ManyBodyProperties",
+        # __doc__=manybodyproperties_doc,  # needs later pydantic
         __base__=ProtoModelSkipDefaults,
-        __validators__={"validator1": root_validator(_validate_arb_max_nbody_fieldnames)},
+        __validators__={"validator1": model_validator(mode="before")(_validate_arb_max_nbody_fieldnames)},
         **mbprop,
     )
 
@@ -618,12 +648,11 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
     Returns
     -------
     dict
-        Map from ManyBodyResultProperties field names to QCVariable names, or reverse.
+        Map from ManyBodyProperties field names to QCVariable names, or reverse.
 
     """
     qcvars_to_mbprop = {}
-    # v2: for skprop in ManyBodyResultProperties.model_fields.keys():
-    for skprop in cls.__fields__.keys():
+    for skprop in ManyBodyProperties.model_fields.keys():
         qcvar = skprop.replace("_body", "-body").replace("_corr", "-corr").replace("_", " ").upper()
         qcvars_to_mbprop[qcvar] = skprop
     for ret in ["energy", "gradient", "hessian"]:
@@ -636,18 +665,17 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
         return {v: k for k, v in qcvars_to_mbprop.items()}
 
 
-ManyBodyResultProperties.to_qcvariables = classmethod(_qcvars_translator)
+ManyBodyProperties.to_qcvariables = classmethod(_qcvars_translator)
 
 
 # ====  Results  ================================================================
 
 
-# ManyBodyResult(ManyBodyInput):
 class ManyBodyResult(SuccessfulResultBase):
 
-    schema_name: Literal["qcschema_manybodyresult"] = "qcschema_manybodyresult"
-    schema_version: Literal[1] = Field(
-        1,
+    schema_name: Literal["qcschema_many_body_result"] = "qcschema_many_body_result"
+    schema_version: Literal[2] = Field(
+        2,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
     id: Optional[str] = Field(None, description="The optional ID for the object.")
@@ -660,17 +688,17 @@ class ManyBodyResult(SuccessfulResultBase):
     input_data: ManyBodyInput = Field(
         ...,
     )
-    success: bool = Field(
-        ...,
+    success: Literal[True] = Field(
+        True,
         description="A boolean indicator that the operation succeeded or failed. Allows programmatic assessment of "
         "all results regardless of if they failed or succeeded by checking `result.success`.",
     )
-    properties: ManyBodyResultProperties = Field(..., description=str(ManyBodyResultProperties.__doc__))
-    component_properties: Dict[str, AtomicResultProperties] = Field(
+    properties: ManyBodyProperties = Field(..., description=str(ManyBodyProperties.__doc__))
+    cluster_properties: Dict[str, AtomicProperties] = Field(
         ...,
         description="The key results for each subsystem species computed. Keys contain modelchem, real and ghost information (e.g., `'[\"(auto)\", [2], [1, 2, 3]]'`). Values are total e/g/H/property results. Array values, if present, are sized and shaped for the full supersystem.",
     )
-    component_results: Dict[str, AtomicResult] = Field({}, description="Detailed results")
+    cluster_results: Dict[str, AtomicResult] = Field({}, description="Detailed results")
     return_result: Union[float, Array[float], Dict[str, Any]] = Field(
         ...,
         description="The primary return specified by the :attr:`~qcelemental.models.AtomicInput.driver` field. Scalar if energy; array if gradient or hessian; dictionary with property keys if properties.",
@@ -680,14 +708,45 @@ class ManyBodyResult(SuccessfulResultBase):
         description="The primary logging output of the program, whether natively standard output or a file. Presence vs. absence (or null-ness?) configurable by protocol.",
     )
     stderr: Optional[str] = Field(None, description="The standard error of the program execution.")
-    # v2: success: Literal[True] = Field(True, description="Always `True` for a successful result")
 
-    @validator("component_results")
-    def _component_results(cls, value, values):
-        crp = values["input_data"].specification.protocols.component_results
+    @field_validator("cluster_results")
+    def _cluster_results(cls, value, values: ValidationInfo):
+        crp = values.data["input_data"].specification.protocols.cluster_results
         if crp == "all":
             return value
         elif crp == "none":
             return {}
         else:
             raise ValueError(f"Protocol `component_resutls:{crp}` is not understood")
+
+    def convert_v(
+        self, target_version: int, /
+    ) -> Union["qcmanybody.models.v1.ManyBodyResult", "qcmanybody.models.v2.ManyBodyResult"]:
+        """Convert to instance of particular QCSchema version."""
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodyResult") == "self":
+            return self
+
+        dself = self.model_dump()
+        if target_version == 1:
+            dself.pop("schema_name")  # changed in v1
+            dself.pop("schema_version")  # changed in v1
+
+            # for input_data, work from model, not dict, to use convert_v
+            dself["input_data"] = self.input_data.convert_v(1).model_dump()  # exclude_unset=True, exclude_none=True
+
+            # TODO no Molecule!!!
+            # dself["molecule"] = self.molecule.convert_v(target_version)
+
+            dself["component_properties"] = dself.pop("cluster_properties")
+            dself["component_results"] = {
+                k: atres.convert_v(target_version) for k, atres in self.cluster_results.items()
+            }
+            dself.pop("cluster_results")
+
+            self_vN = qcmb.models.v1.ManyBodyResult(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN

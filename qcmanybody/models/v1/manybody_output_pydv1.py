@@ -4,12 +4,7 @@ import os
 import re
 from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Union
 
-# v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
-try:
-    from pydantic.v1 import Field, create_model, root_validator, validator
-except ImportError:
-    from pydantic import create_model, Field, validator, root_validator
-
+from pydantic.v1 import Field, create_model, root_validator, validator
 from qcelemental.models import ProtoModel, Provenance
 from qcelemental.models.results import AtomicResult, AtomicResultProperties
 from qcelemental.models.types import Array
@@ -362,7 +357,6 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
 
     """
     qcvars_to_mbprop = {}
-    # v2: for skprop in ManyBodyResultProperties.model_fields.keys():
     for skprop in cls.__fields__.keys():
         qcvar = skprop.replace("_body", "-body").replace("_corr", "-corr").replace("_", " ").upper()
         qcvars_to_mbprop[qcvar] = skprop
@@ -382,7 +376,6 @@ ManyBodyResultProperties.to_qcvariables = classmethod(_qcvars_translator)
 # ====  Results  ================================================================
 
 
-# ManyBodyResult(ManyBodyInput):
 class ManyBodyResult(SuccessfulResultBase):
 
     schema_name: Literal["qcschema_manybodyresult"] = "qcschema_manybodyresult"
@@ -420,7 +413,6 @@ class ManyBodyResult(SuccessfulResultBase):
         description="The primary logging output of the program, whether natively standard output or a file. Presence vs. absence (or null-ness?) configurable by protocol.",
     )
     stderr: Optional[str] = Field(None, description="The standard error of the program execution.")
-    # v2: success: Literal[True] = Field(True, description="Always `True` for a successful result")
 
     @validator("component_results")
     def _component_results(cls, value, values):
@@ -431,3 +423,49 @@ class ManyBodyResult(SuccessfulResultBase):
             return {}
         else:
             raise ValueError(f"Protocol `component_resutls:{crp}` is not understood")
+
+    def convert_v(
+        self,
+        target_version: int,
+    ) -> Union["qcmanybody.models.v1.ManyBodyResult", "qcmanybody.models.v2.ManyBodyResult"]:
+        """Convert to instance of particular QCSchema version.
+
+        Parameters
+        ----------
+        target_version
+            The version to convert to.
+
+        Returns
+        -------
+        ManyBodyResult
+            Returns self (not a copy) if ``target_version`` already satisfied.
+            Returns a new ManyBodyResult of ``target_version`` otherwise.
+
+        """
+        from qcelemental.models.v1.basemodels import check_convertible_version
+
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodyResult") == "self":
+            return self
+
+        dself = self.dict()
+        if target_version == 2:
+            dself.pop("schema_name")  # changed in v2
+            dself.pop("schema_version")  # changed in v2
+
+            # for input_data, work from model, not dict, to use convert_v
+            dself["input_data"] = self.input_data.convert_v(target_version).model_dump()
+
+            # TODO no Molecule!!!
+            dself["cluster_properties"] = dself.pop("component_properties")
+            dself["cluster_results"] = {
+                k: atres.convert_v(target_version) for k, atres in self.component_results.items()
+            }
+            dself.pop("component_results")
+
+            self_vN = qcmb.models.v2.ManyBodyResult(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN

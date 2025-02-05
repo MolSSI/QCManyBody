@@ -92,3 +92,19 @@ def using(program: str) -> List:
     """
     _using(program)
     return _using_cache[program][1]
+
+
+@pytest.fixture(scope="function", params=[None, "v1", "v2"])
+def schema_versions(request):
+    import qcmanybody
+
+    if request.param == "v1":
+        return qcmanybody.models.v1
+    elif request.param == "v2":
+        try:
+            import qcmanybody.models.v2
+        except ModuleNotFoundError:
+            pytest.skip("QCManyBody v2 not tested since QCElemental v2 not available.")
+        return qcmanybody.models.v2
+    else:
+        return qcmanybody.models

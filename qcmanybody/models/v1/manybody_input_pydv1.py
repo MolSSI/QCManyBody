@@ -1,21 +1,23 @@
 from __future__ import annotations
 
+import warnings
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
 # v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
-try:
-    from pydantic.v1 import Field, create_model, validator
-except ImportError:
-    from pydantic import create_model, Field, validator
-
+from pydantic.v1 import Field, create_model, validator
 from qcelemental.models import DriverEnum, ProtoModel, Provenance
 
 # from .basemodels import ExtendedConfigDict, ProtoModel
-from qcelemental.models.common_models import Model
-from qcelemental.models.molecule import Molecule
-from qcelemental.models.results import AtomicResultProperties, AtomicResultProtocols
-from qcelemental.models.types import Array
+with warnings.catch_warnings():
+    # keeping longstanding imports for compatibility with pre-next qcelemental
+    warnings.simplefilter("ignore")
+
+    from qcelemental.models.common_models import Model
+    from qcelemental.models.molecule import Molecule
+    from qcelemental.models.results import AtomicResultProperties, AtomicResultProtocols
+    from qcelemental.models.types import Array
+
 
 # ====  Misplaced & Next Models  ================================================
 
@@ -90,6 +92,29 @@ class ManyBodyProtocols(ProtoModel):
     # v2: model_config = ExtendedConfigDict(force_skip_defaults=True)
     class Config:
         force_skip_defaults = True
+
+    def convert_v(
+        self, target_version: int, /
+    ) -> Union["qcmanybody.models.v1.ManyBodyProtocols", "qcmanybody.models.v2.ManyBodyProtocols"]:
+        """Convert to instance of particular QCSchema version."""
+        from qcelemental.models.v1.basemodels import check_convertible_version
+
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodyProtocols") == "self":
+            return self
+
+        dself = self.dict()
+        if target_version == 2:
+            # serialization is compact, so use model to assure value
+            dself.pop("component_results", None)
+            dself["cluster_results"] = self.component_results.value
+
+            self_vN = qcmb.models.v2.ManyBodyProtocols(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN
 
 
 # ====  Inputs  =================================================================
@@ -250,6 +275,39 @@ class ManyBodySpecification(ProtoModel):
         # print(f" ... setting v={v}")
         return v
 
+    def convert_v(
+        self, target_version: int, /
+    ) -> Union["qcmanybody.models.v1.ManyBodySpecification", "qcmanybody.models.v2.ManyBodySpecification"]:
+        """Convert to instance of particular QCSchema version."""
+        from qcelemental.models.v1.basemodels import check_convertible_version
+
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodySpecification") == "self":
+            return self
+
+        dself = self.dict()
+        if target_version == 2:
+            dself.pop("schema_name")
+            dself.pop("schema_version")
+
+            dself["keywords"].pop("schema_name")
+            dself["keywords"].pop("schema_version")
+
+            try:
+                dself["specification"].pop("schema_name")
+                dself["specification"].pop("schema_version")
+            except KeyError:
+                for spec in dself["specification"].values():
+                    spec.pop("schema_name")
+                    spec.pop("schema_version")
+
+            self_vN = qcmb.models.v2.ManyBodySpecification(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN
+
 
 class ManyBodyInput(ProtoModel):
     """Combining the what and how (ManyBodySpecification) with the who (Molecule)."""
@@ -272,3 +330,32 @@ class ManyBodyInput(ProtoModel):
         {},
         description="Additional information to bundle with the computation. Use for schema development and scratch space.",
     )
+
+    def convert_v(
+        self, target_version: int, /
+    ) -> Union["qcmanybody.models.v1.ManyBodyInput", "qcmanybody.models.v2.ManyBodyInput"]:
+        """Convert to instance of particular QCSchema version."""
+        from qcelemental.models.v1.basemodels import check_convertible_version
+
+        import qcmanybody as qcmb
+
+        if check_convertible_version(target_version, error="ManyBodyInput") == "self":
+            return self
+
+        dself = self.dict()
+        if target_version == 2:
+            dself.pop("schema_name")  # changed in v2
+            dself.pop("schema_version")  # changed in v2
+
+            # remove harmless empty extras field that v2 won't accept. if populated, pydantic will catch it.
+            if not dself.get("extras", True):
+                dself.pop("extras")
+
+            dself["molecule"] = self.molecule.convert_v(target_version)
+            dself["specification"] = self.specification.convert_v(target_version)
+
+            self_vN = qcmb.models.v2.ManyBodyInput(**dself)
+        else:
+            assert False, target_version
+
+        return self_vN
