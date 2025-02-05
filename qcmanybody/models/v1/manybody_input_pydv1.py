@@ -4,7 +4,6 @@ import warnings
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
-# v2: from pydantic import create_model, Field, field_validator, FieldValidationInfo
 from pydantic.v1 import Field, create_model, validator
 from qcelemental.models import DriverEnum, ProtoModel, Provenance
 
@@ -89,7 +88,6 @@ class ManyBodyProtocols(ProtoModel):
         ComponentResultsProtocolEnum.none, description=str(ComponentResultsProtocolEnum.__doc__)
     )
 
-    # v2: model_config = ExtendedConfigDict(force_skip_defaults=True)
     class Config:
         force_skip_defaults = True
 
@@ -220,7 +218,6 @@ class ManyBodyKeywords(ProtoModel):
         "``bsse_type`` as it cannot produce savings.",
     )
 
-    # v2: @field_validator("bsse_type", mode="before")
     @validator("bsse_type", pre=True)
     @classmethod
     def set_bsse_type(cls, v: Any) -> List[BsseEnum]:
@@ -264,7 +261,6 @@ class ManyBodySpecification(ProtoModel):
         description="Additional information to bundle with the computation. Use for schema development and scratch space.",
     )
 
-    # v2: @field_validator("specification", mode="before")
     @validator("specification", pre=True)
     @classmethod
     def set_specification(cls, v: Any) -> Dict[str, AtomicSpecification]:

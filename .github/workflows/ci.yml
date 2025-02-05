@@ -121,7 +121,7 @@ jobs:
       run: |
         conda remove qcelemental qcengine --force
         python -m pip install 'git+https://github.com/MolSSI/QCElemental.git@next2025' --no-deps
-        python -m pip install 'git+https://github.com/MolSSI/QCEngine.git@master' --no-deps
+        python -m pip install 'git+https://github.com/MolSSI/QCEngine.git@next2025' --no-deps
 
     - name: Environment Information
       run: |

@@ -5,9 +5,13 @@ import re
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
-from pydantic import Field, ValidationInfo, create_model, field_validator, model_validator
-from qcelemental.models.v2 import (
-    Array,
+try:
+    from pydantic import ValidationInfo
+except ImportError:
+    from pydantic import FieldValidationInfo as ValidationInfo
+
+from pydantic import Field, create_model, field_validator, model_validator
+from qcelemental.models.v2 import (  # Array,
     AtomicProperties,
     AtomicProtocols,
     AtomicResult,
@@ -19,6 +23,7 @@ from qcelemental.models.v2 import (
     Provenance,
 )
 from qcelemental.models.v2.basemodels import ExtendedConfigDict, ProtoModel, check_convertible_version
+from qcelemental.models.v2.types import Array  # return to above once qcel corrected
 
 # ====  Misplaced & Next Models  ================================================
 
