@@ -103,7 +103,7 @@ def schema_versions(request):
     elif request.param == "v2":
         try:
             import qcmanybody.models.v2
-        except ModuleNotFoundError:
+        except (ModuleNotFoundError, ImportError):
             pytest.skip("QCManyBody v2 not tested since QCElemental v2 not available.")
         return qcmanybody.models.v2
     else:

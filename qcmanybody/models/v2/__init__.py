@@ -1,4 +1,4 @@
-from .manybody import (
+from .many_body import (
     MAX_NBODY,
     BsseEnum,
     FragBasIndex,
