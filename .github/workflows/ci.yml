@@ -86,6 +86,7 @@ jobs:
           if [[ "${{ matrix.cfg.label }}" == "QCSk-next" ]]; then
               sed -i "s;pydantic;pydantic=2;g" export.yaml
               sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy2;- pydantic-settings;g" export.yaml
           fi
           # model sed for L/W
           #   sed -i "s;;;g" export.yaml

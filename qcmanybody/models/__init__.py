@@ -11,7 +11,7 @@ from . import v1
 # someday, `from . import v1, v2`. for now, this lets qcmb work with pre-next (v0.50) QCElemental
 try:
     from . import v2
-except ModuleNotFoundError:
+except (ModuleNotFoundError, ImportError):
     pass
 
 from .v1 import *
