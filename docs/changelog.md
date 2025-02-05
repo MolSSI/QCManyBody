@@ -24,7 +24,7 @@
 #### Breaking Changes
 
 #### New Features
- * [\#NN](https://github.com/MolSSI/QCManyBody/pull/NN) Feature -- beta ManyBody QCSchema v2 added
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Feature -- beta ManyBody QCSchema v2 added
    accessible through `from qcmanybody.models.v2 import ManyBodyInput` etc. Changes are:
    * ``ManyBodyResult.component_results`` in v1 is now in v2 ``ManyBodyResult.cluster_results``,
    * ``ManyBodyProtocols.component_results`` in v1 is now in v2 ``ManyBodyProtocols.cluster_results`` with the same default.
@@ -41,11 +41,13 @@
      ``ManyBodyResult.cluster_properties`` composed of ``AtomicProperties``.
 
 #### Enhancements
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Utils -- updated the precise math function
+   for arrays according to the NumPy deprecation warning.
 
 #### Bug Fixes
 
 #### Misc.
- * [\#NN](https://github.com/MolSSI/QCManyBody/pull/NN) Maint -- Pydantic package version must be v2
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Maint -- Pydantic package version must be v2
    or v1 >=1.10.17. This ensures the v2 API will be available for optional QCSchema v2, while QCManyBody
    remains on v1 API (importable from package v2).
 

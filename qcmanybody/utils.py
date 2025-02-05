@@ -221,7 +221,7 @@ def sum_cluster_data(
     shape = find_shape(data[first_key])
     ret = shaped_zero(shape)
 
-    precise_sum_func = math.fsum if isinstance(ret, float) else np.sum
+    precise_sum_func = math.fsum if isinstance(ret, float) else np.sum(np.fromiter)
     ret = precise_sum_func(
         (((-1) ** (nb - len(frag))) if vmfc else 1) * (data[labeler(mc_level_lbl, frag, bas)])
         for frag, bas in compute_list
