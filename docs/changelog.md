@@ -26,6 +26,11 @@
 #### New Features
  * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Feature -- beta ManyBody QCSchema v2 added
    accessible through `from qcmanybody.models.v2 import ManyBodyInput` etc. Changes are:
+   * In v2, ``ManyBodyResult`` gained ``native_files`` and ``molecule`` fields. The latter is
+     unchanged by QCManyBody from the input. Also, ``cluster_results`` became required so the
+     protocol can process it (can always be empty dict).
+   * In v2, ``ManyBodyInput`` gained ``provenance`` and ``id`` fields.
+   * In v2, ``ManyBodySpecification`` gained a ``program`` field, empty by default since prog may be supplied by argument.
    * ``ManyBodyResult.component_results`` in v1 is now in v2 ``ManyBodyResult.cluster_results``,
    * ``ManyBodyProtocols.component_results`` in v1 is now in v2 ``ManyBodyProtocols.cluster_results`` with the same default.
    * In v2, ``ManyBodyInput.extras`` field was removed. Extras should be on ``ManyBodySpecification``.

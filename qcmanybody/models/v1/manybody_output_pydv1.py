@@ -457,7 +457,8 @@ class ManyBodyResult(SuccessfulResultBase):
             # for input_data, work from model, not dict, to use convert_v
             dself["input_data"] = self.input_data.convert_v(target_version).model_dump()
 
-            # TODO no Molecule!!!
+            dself["molecule"] = self.input_data.molecule.convert_v(target_version)
+
             dself["cluster_properties"] = dself.pop("component_properties")
             dself["cluster_results"] = {
                 k: atres.convert_v(target_version) for k, atres in self.component_results.items()

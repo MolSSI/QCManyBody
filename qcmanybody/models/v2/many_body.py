@@ -25,6 +25,8 @@ from qcelemental.models.v2 import (  # Array,
 from qcelemental.models.v2.basemodels import ExtendedConfigDict, ProtoModel, check_convertible_version
 from qcelemental.models.v2.types import Array  # return to above once qcel corrected
 
+from ...utils import provenance_stamp
+
 # ====  Misplaced & Next Models  ================================================
 
 
@@ -219,9 +221,10 @@ class ManyBodySpecification(ProtoModel):
 
     schema_name: Literal["qcschema_many_body_specification"] = "qcschema_many_body_specification"
 
-    # provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
     keywords: ManyBodyKeywords = Field(..., description=ManyBodyKeywords.__doc__)
-    # program: str = Field(..., description="The program for which the Specification is intended.")  # TODO is qcmanybody
+    program: str = Field(
+        "", description="Many Body Expansion CMS code / QCEngine procedure with which to run the MB decomposition."
+    )
     protocols: ManyBodyProtocols = Field(ManyBodyProtocols(), description=str(ManyBodyProtocols.__doc__))
     driver: DriverEnum = Field(
         ...,
@@ -247,6 +250,11 @@ class ManyBodySpecification(ProtoModel):
         # print(f" ... setting v={v}")
         return v
 
+    @field_validator("program")
+    @classmethod
+    def _check_procedure(cls, v):
+        return v.lower()
+
     def convert_v(
         self, target_version: int, /
     ) -> Union["qcmanybody.models.v1.ManyBodySpecification", "qcmanybody.models.v2.ManyBodySpecification"]:
@@ -259,7 +267,6 @@ class ManyBodySpecification(ProtoModel):
         dself = self.model_dump()
         if target_version == 1:
             dself.pop("schema_name")
-
             dself["keywords"].pop("schema_name")
             try:
                 dself["specification"].pop("schema_name")
@@ -267,6 +274,7 @@ class ManyBodySpecification(ProtoModel):
                 for spec in dself["specification"].values():
                     spec.pop("schema_name")
 
+            dself.pop("program")  # not in v1
             dself["protocols"] = self.protocols.convert_v(target_version)
 
             self_vN = qcmb.models.v1.ManyBodySpecification(**dself)
@@ -284,7 +292,9 @@ class ManyBodyInput(ProtoModel):
         2,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
-    # provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=Provenance.__doc__)
+    provenance: Provenance = Field(Provenance(**provenance_stamp(__name__)), description=str(Provenance.__doc__))
+    id: Optional[str] = None
+
     specification: ManyBodySpecification = Field(
         ...,
         description="???",
@@ -307,6 +317,9 @@ class ManyBodyInput(ProtoModel):
         if target_version == 1:
             dself.pop("schema_name")
             dself.pop("schema_version")
+
+            dself.pop("id")  # not in v1
+            dself.pop("provenance")  # not in v1
 
             dself["molecule"] = self.molecule.convert_v(target_version)
             dself["specification"] = self.specification.convert_v(target_version)
@@ -698,12 +711,21 @@ class ManyBodyResult(SuccessfulResultBase):
         description="A boolean indicator that the operation succeeded or failed. Allows programmatic assessment of "
         "all results regardless of if they failed or succeeded by checking `result.success`.",
     )
+
+    # native_files placeholder for when any mbe programs supply extra files or need an input file. no protocol at present
+    native_files: Dict[str, Any] = Field({}, description="DSL files.")
+
+    molecule: Molecule = Field(
+        ...,
+        description="The molecule in results fragmentation and frame. Since QCManyBody doesn't disrupt the mol, should be identical to input_data.molecule.",
+    )
+
     properties: ManyBodyProperties = Field(..., description=str(ManyBodyProperties.__doc__))
     cluster_properties: Dict[str, AtomicProperties] = Field(
         ...,
         description="The key results for each subsystem species computed. Keys contain modelchem, real and ghost information (e.g., `'[\"(auto)\", [2], [1, 2, 3]]'`). Values are total e/g/H/property results. Array values, if present, are sized and shaped for the full supersystem.",
     )
-    cluster_results: Dict[str, AtomicResult] = Field({}, description="Detailed results")
+    cluster_results: Dict[str, AtomicResult] = Field(..., description="Detailed results")
     return_result: Union[float, Array[float], Dict[str, Any]] = Field(
         ...,
         description="The primary return specified by the :attr:`~qcelemental.models.AtomicInput.driver` field. Scalar if energy; array if gradient or hessian; dictionary with property keys if properties.",
@@ -741,8 +763,8 @@ class ManyBodyResult(SuccessfulResultBase):
             # for input_data, work from model, not dict, to use convert_v
             dself["input_data"] = self.input_data.convert_v(1).model_dump()  # exclude_unset=True, exclude_none=True
 
-            # TODO no Molecule!!!
-            # dself["molecule"] = self.molecule.convert_v(target_version)
+            dself.pop("native_files")
+            dself.pop("molecule")
 
             dself["component_properties"] = dself.pop("cluster_properties")
             dself["component_results"] = {
