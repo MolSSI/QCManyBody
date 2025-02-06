@@ -41,8 +41,6 @@
      ``ManyBodyResult.cluster_properties`` composed of ``AtomicProperties``.
 
 #### Enhancements
- * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Utils -- updated the precise math function
-   for arrays according to the NumPy deprecation warning.
 
 #### Bug Fixes
 
@@ -54,6 +52,8 @@
 #### MUST (Unmerged)
 
 #### WIP (Unmerged)
+ * WIP [\#NN](https://github.com/MolSSI/QCManyBody/pull/NN) Utils -- updated the precise math function
+   for arrays according to the NumPy deprecation warning.
 
 
 ## v0.4.0 / 2025-01-16
