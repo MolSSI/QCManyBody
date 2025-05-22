@@ -19,6 +19,7 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS",
+    "Framework :: Pydantic",
 ]
 dependencies = [
     "numpy",
