@@ -1,10 +1,6 @@
 from typing import Annotated, List, Literal, Union
 
-try:
-    from pydantic.v1 import Field
-except ImportError:
-    from pydantic import Field
-
+from pydantic.v1 import Field
 from qcelemental.models import AtomicResult, OptimizationInput, OptimizationResult
 from qcelemental.models.procedures import QCInputSpecification
 

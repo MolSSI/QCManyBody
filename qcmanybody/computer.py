@@ -17,15 +17,11 @@ from ast import literal_eval
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Mapping, Optional, Tuple, Union
 
 # v2: from pydantic import ConfigDict, field_validator, FieldValidationInfo, computed_field, BaseModel, Field
-try:
-    from pydantic.v1 import BaseModel, Field, create_model, validator
-except ImportError:
-    from pydantic import create_model, Field, validator, BaseModel
-
+from pydantic.v1 import BaseModel, Field, create_model, validator
 from qcelemental.models import AtomicInput, AtomicResult, DriverEnum, FailedOperation, Molecule, ProtoModel
 
 from qcmanybody import ManyBodyCore
-from qcmanybody.models import BsseEnum, ManyBodyInput, ManyBodyKeywords, ManyBodyResult, ManyBodyResultProperties
+from qcmanybody.models.v1 import BsseEnum, ManyBodyInput, ManyBodyKeywords, ManyBodyResult, ManyBodyResultProperties
 from qcmanybody.utils import delabeler, provenance_stamp
 
 if TYPE_CHECKING:

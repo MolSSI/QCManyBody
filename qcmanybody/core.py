@@ -11,7 +11,7 @@ import numpy as np
 from qcelemental.models import Molecule
 
 from qcmanybody.builder import build_nbody_compute_list
-from qcmanybody.models import BsseEnum, FragBasIndex
+from qcmanybody.models.v1 import BsseEnum
 from qcmanybody.utils import (
     all_same_shape,
     collect_vars,
@@ -150,7 +150,7 @@ class ManyBodyCore:
         return "supersystem" in self.levels
 
     @property
-    def compute_map(self) -> Dict[str, Dict[str, Dict[int, Set[FragBasIndex]]]]:
+    def compute_map(self) -> Dict[str, Dict[str, Dict[int, Set["FragBasIndex"]]]]:
         if self.mc_compute_dict is not None:
             return self.mc_compute_dict
 

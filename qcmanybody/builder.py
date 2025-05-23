@@ -3,19 +3,19 @@ from __future__ import annotations
 import itertools
 from typing import Dict, Iterable, List, Literal, Optional, Set, Union
 
-from qcmanybody.models import BsseEnum, FragBasIndex
+from qcmanybody.models.v1 import BsseEnum
 
 __all__ = ["build_nbody_compute_list"]
 
 
 def build_nbody_compute_list(
-    bsse_type: Iterable[BsseEnum],
+    bsse_type: Iterable["BsseEnum"],
     nfragments: int,
     nbodies: Iterable[Union[int, Literal["supersystem"]]],
     return_total_data: bool,
     supersystem_ie_only: bool,
     supersystem_max_nbody: Optional[int] = None,
-) -> Dict[str, Dict[int, Set[FragBasIndex]]]:
+) -> Dict[str, Dict[int, Set["FragBasIndex"]]]:
     """Generates lists of N-Body computations needed for requested BSSE treatments.
 
     Parameters
