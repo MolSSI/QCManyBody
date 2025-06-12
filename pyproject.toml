@@ -12,7 +12,7 @@ authors = [
 ]
 description='QCManyBody'
 readme = "README.md"
-license = { file="LICENSE" }
+license-files = [ "LICENSE" ]
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy",
-    "pydantic>=1.10.17",  # generally v1 API; v2 API features in beta
+    "pydantic>=1.10.17,<3",  # generally v1 API; v2 API features in beta
     "qcelemental>=0.28.0,<0.70.0",
 ]
 
@@ -46,6 +46,9 @@ docs = [
 dev = [
     "pre-commit",
 ]
+
+[tool.setuptools]
+packages = ["qcmanybody"]
 
 [tool.setuptools.package-data]
 
