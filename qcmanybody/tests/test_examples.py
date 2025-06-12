@@ -10,7 +10,7 @@ except ImportError:
 
 
 # * for anyone replicating this, note that Psi4 MP2 is density-fitted, and NWChem CCSD is conventional.
-# * Snippets refer to an imminent publication
+# * Snippets refer to publication J. Chem. Phys. 161, 152501 (2024) https://doi.org/10.1063/5.0231843
 
 
 @uusing("psi4")
