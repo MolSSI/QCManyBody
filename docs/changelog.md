@@ -46,20 +46,20 @@
      ``ManyBodyResult.cluster_properties`` composed of ``AtomicProperties``.
 
 #### Enhancements
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Utils -- updated the precise math function
+   for arrays according to the NumPy deprecation warning.
 
 #### Bug Fixes
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Docs -- Fix typos in core docs page.
 
 #### Misc.
  * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Maint -- Pydantic package version must be v2
    or v1 >=1.10.17. This ensures the v2 API will be available for optional QCSchema v2, while QCManyBody
    remains on v1 API (importable from package v2).
- * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Docs -- Fix typos in core docs page.
 
 #### MUST (Unmerged)
 
 #### WIP (Unmerged)
- * WIP [\#NN](https://github.com/MolSSI/QCManyBody/pull/NN) Utils -- updated the precise math function
-   for arrays according to the NumPy deprecation warning.
 
 
 ## v0.4.0 / 2025-01-16
