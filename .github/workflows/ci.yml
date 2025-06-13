@@ -24,20 +24,20 @@ jobs:
             runs-on: ubuntu-latest
             pytest: "-m 'not addon'"
 
-          #- label: Py-max
-          #  python-version: "3.13"
-          #  runs-on: ubuntu-latest
-          #  pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
+          - label: Py-max
+            python-version: "3.13"
+            runs-on: ubuntu-latest
+            pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
 
           - label: Demo
             python-version: "3.11"
             runs-on: ubuntu-latest
             pytest: "-k 'examples or (121-nwchem_psi4 and 4b)'"
 
-          #- label: QCSk-next
-          #  python-version: "3.12"
-          #  runs-on: ubuntu-latest
-          #  pytest: "-k '((not (he4 and (3b or 4b) and not sio)) or supersys) and not vmfc'"
+          - label: QCSk-next
+            python-version: "3.12"
+            runs-on: ubuntu-latest
+            pytest: "-k '((not (he4 and (3b or 4b) and not sio)) or supersys) and not vmfc'"
 
     name: "🐍 ${{ matrix.cfg.python-version }} • ${{ matrix.cfg.label }} • ${{ matrix.cfg.runs-on }}"
     runs-on: ${{ matrix.cfg.runs-on }}
@@ -218,7 +218,7 @@ jobs:
     - name: Build Documentation
       run: |
         python -m pip install . --no-deps
-        QCMANYBODY_MAX_NBODY=5 PYTHONPATH=docs/extensions mkdocs build
+        QCMANYBODY_MAX_NBODY=5 PYTHONPATH=docs/extensions mkdocs build --strict
         cd docs
 
     - name: GitHub Pages Deploy

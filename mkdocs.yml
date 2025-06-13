@@ -52,7 +52,7 @@ plugins:
           show_signature_annotations: true
           signature_crossrefs: true
           show_source: true
-        import:
+        inventories:
           - https://docs.python.org/3/objects.inv
           - https://numpy.org/doc/stable/objects.inv
           - https://docs.scipy.org/doc/scipy/objects.inv
@@ -77,6 +77,8 @@ nav:
 
 not_in_nav: |
   /changelog.md
+  /results.md
+  /keywords.md
 
 validation:
   omitted_files: warn
