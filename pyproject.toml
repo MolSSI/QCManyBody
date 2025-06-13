@@ -12,7 +12,7 @@ authors = [
 ]
 description='QCManyBody'
 readme = "README.md"
-license-files = [ "LICENSE" ]
+license = "BSD-3-Clause"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
