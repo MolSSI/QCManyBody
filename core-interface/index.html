@@ -693,9 +693,9 @@ the desired BSSE correction, levels of MBE, and other options of the MBE.</p>
                    <span class="n">levels</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;ccsd/cc-pvtz&quot;</span><span class="p">,</span>
                            <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;mp2/cc-pvdz&quot;</span><span class="p">,</span>
                            <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;mp2/cc-pvdz&quot;</span><span class="p">},</span>
-                   <span class="n">return_total_data</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                   <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                   <span class="n">embedding_charges</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
+                   <span class="n">return_total_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">supersystem_ie_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">embedding_charges</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>levels</code> option is a dictionary that specifies the n-body level as a key, then an arbitrary
 string as the description of the calculation to be performed at the n-body level. This string is
@@ -720,8 +720,53 @@ a tuple. This tuple contains</p>
 <span class="k">for</span> <span class="n">model_chemistry</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">mol_cluster</span> <span class="ow">in</span> <span class="n">mbc</span><span class="o">.</span><span class="n">iterate_molecules</span><span class="p">():</span>
     <span class="n">calculation_results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_calculation</span><span class="p">(</span><span class="n">mol_cluster</span><span class="p">,</span> <span class="n">model_chemistry</span><span class="p">)</span>
 </code></pre></div>
-<p>Note that it is entirely up to the user to run the calculation somehow - this level of interface
-does not provide any tools for running the calculations.</p>
+<p>Note that it is entirely up to the user to run the calculation somehow (<code>run_calculation</code>
+above is not a provided function) - this level of interface
+does not provide any tools for running the calculations.
+See <a href="https://github.com/MolSSI/QCManyBody/blob/main/qcmanybody/tests/test_examples.py">test_example.py</a>
+for a worked example or the below as a quick example of what <code>run_calculation</code> would look like using QCEngine.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">qcelemental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qcel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qcengine</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qcng</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qcmanybody</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qcmb</span>
+
+<span class="n">p4_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">He 0 0 0</span>
+<span class="s2">--</span>
+<span class="s2">Ne 1 0 0</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">bsse_type</span> <span class="o">=</span> <span class="s2">&quot;cp&quot;</span>
+<span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;mp2&quot;</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="s2">&quot;def2-svp&quot;</span>
+<span class="n">program</span> <span class="o">=</span> <span class="s2">&quot;psi4&quot;</span>
+
+<span class="n">mol</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">p4_string</span><span class="p">)</span>
+<span class="n">mbc</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">ManyBodyCore</span><span class="p">(</span>
+    <span class="n">molecule</span><span class="o">=</span><span class="n">mol</span><span class="p">,</span>
+    <span class="n">bsse_type</span><span class="o">=</span><span class="p">[</span><span class="n">bsse_type</span><span class="p">],</span>
+    <span class="n">levels</span><span class="o">=</span><span class="p">{</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">return_total_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">supersystem_ie_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">embedding_charges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">calculation_results</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">chem</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">imol</span> <span class="ow">in</span> <span class="n">mbc</span><span class="o">.</span><span class="n">iterate_molecules</span><span class="p">():</span>
+    <span class="n">mc</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">delabeler</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">atin</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">AtomicInput</span><span class="p">(</span>
+        <span class="n">molecule</span><span class="o">=</span><span class="n">imol</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span> <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="n">basis</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">atres</span> <span class="o">=</span> <span class="n">qcng</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">atin</span><span class="p">,</span> <span class="n">program</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">calculation_results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="n">atres</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">return_energy</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="n">final_results</span> <span class="o">=</span> <span class="n">mbc</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">calculation_results</span><span class="p">)</span>
+<span class="n">IE</span> <span class="o">=</span> <span class="n">final_results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_corrected_interaction_energy&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">IE</span><span class="p">)</span>
+<span class="c1">#&gt; 0.409787</span>
+</code></pre></div>
 <h3 id="results-dictionary">Results dictionary</h3>
 <p>The data returned from the calculations is expected to be stored in a nested dictionary.
 The level is the opaque label as given from the <code>QCManyBodyCore</code>.
@@ -776,7 +821,7 @@ of the MBE properties.</p>
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2024 QCManyBody Developers
+      Copyright &copy; 2024-2025 QCManyBody Developers
     </div>
   
   
