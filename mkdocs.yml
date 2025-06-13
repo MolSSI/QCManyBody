@@ -18,7 +18,6 @@ theme:
   - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: custom
-    #accent: pink
     toggle:
       icon: material/lightbulb-outline
       name: "Switch to dark mode"
@@ -75,3 +74,12 @@ nav:
   - QCSchema: qcschema.md
   - How-To Guides: how-to-guides.md
   - API Documentation: api.md
+
+not_in_nav: |
+  /changelog.md
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn

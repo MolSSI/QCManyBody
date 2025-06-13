@@ -46,6 +46,8 @@ For more information, see [Core interface](core-interface.md).
 4. [Results](results.md)
 5. [How-To Guides](how-to-guides.md)
 
+## [Changelog](changelog.md)
+
 <!--
 
 PYTHONPATH=docs/extensions:. mkdocs serve
