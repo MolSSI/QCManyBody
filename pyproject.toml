@@ -12,7 +12,7 @@ authors = [
 ]
 description='QCManyBody'
 readme = "README.md"
-license = "BSD-3-Clause"
+# license = "BSD-3-Clause"  # until setuptools gets its act together across python versions
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
