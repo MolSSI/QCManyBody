@@ -23,7 +23,6 @@ There are inadvertantly a few classes of tests:
 name: test
 channels:
   - conda-forge
-  - nodefaults
 dependencies:
   - python
   - qcmanybody

@@ -19,6 +19,50 @@
 -->
 
 
+## v0.5.0 / 2025-MM-DD (Unreleased)
+
+#### Breaking Changes
+
+#### New Features
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Feature -- beta ManyBody QCSchema v2 added
+   accessible through `from qcmanybody.models.v2 import ManyBodyInput` etc. Changes are:
+   * In v2, ``ManyBodyResult`` gained ``native_files`` and ``molecule`` fields. The latter is
+     unchanged by QCManyBody from the input. Also, ``cluster_results`` became required so the
+     protocol can process it (can always be empty dict).
+   * In v2, ``ManyBodyInput`` gained ``provenance`` and ``id`` fields.
+   * In v2, ``ManyBodySpecification`` gained a ``program`` field, empty by default since prog may be supplied by argument.
+   * ``ManyBodyResult.component_results`` in v1 is now in v2 ``ManyBodyResult.cluster_results``,
+   * ``ManyBodyProtocols.component_results`` in v1 is now in v2 ``ManyBodyProtocols.cluster_results`` with the same default.
+   * In v2, ``ManyBodyInput.extras`` field was removed. Extras should be on ``ManyBodySpecification``.
+   * In v2, ``ManyBodyProperties``, ``ManyBodyKeywords``, and ``ManyBodySpecification`` lost their ``schema_version`` field.
+   * All v2 models got their ``schema_name`` standardized to ``qcschema_many_body_<type>``.
+     ``ManyBodyProtocols`` got a ``schema_name`` for the first time.
+   * ``ManyBodyResult.success`` now in v2 is fixed True.
+   * ``ManyBodyResult.properties`` composed of ``ManyBodyResultProperties`` in v1 is now in v2
+     composed of ``ManyBodyProperties``.
+   * ``ManyBodySpecification.protocols`` composed of ``AtomicResultProtocols`` in v1 is now in v2
+     composed of ``AtomicProtocols``.
+   * ``ManyBodyResult.component_properties`` composed of ``AtomicResultProperties`` in v1 is now in v2
+     ``ManyBodyResult.cluster_properties`` composed of ``AtomicProperties``.
+
+#### Enhancements
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Utils -- updated the precise math function
+   for arrays according to the NumPy deprecation warning.
+
+#### Bug Fixes
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Docs -- Fix typos in core docs page.
+
+#### Misc.
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Maint -- Pydantic package version must be v2
+   or v1 >=1.10.17. This ensures the v2 API will be available for optional QCSchema v2, while QCManyBody
+   remains on v1 API (importable from package v2).
+ * [\#38](https://github.com/MolSSI/QCManyBody/pull/38) Maint -- Updated license and package spec.
+
+#### MUST (Unmerged)
+
+#### WIP (Unmerged)
+
+
 ## v0.4.0 / 2025-01-16
 
 #### Breaking Changes

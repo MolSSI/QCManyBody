@@ -1,44 +1,44 @@
 
 <!-- ====  Inputs  ================================================================= -->
 
-::: qcmanybody.models.BsseEnum
+::: qcmanybody.models.v1.BsseEnum
     options:
         show_root_heading: true
         show_source: true
 
 
-::: qcmanybody.models.ManyBodyKeywords
+::: qcmanybody.models.v1.ManyBodyKeywords
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyKeywords
+$pydantic: qcmanybody.models.v1.manybody_input_pydv1.ManyBodyKeywords
 
 
-::: qcmanybody.models.ManyBodySpecification
+::: qcmanybody.models.v1.ManyBodySpecification
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodySpecification
+$pydantic: qcmanybody.models.v1.manybody_input_pydv1.ManyBodySpecification
 
 
-::: qcmanybody.models.ManyBodyInput
+::: qcmanybody.models.v1.ManyBodyInput
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyInput
+$pydantic: qcmanybody.models.v1.manybody_input_pydv1.ManyBodyInput
 
 
 <!-- ====  Protocols  ============================================================== -->
 
 <!--
-::: qcmanybody.models.manybody_pydv1.ManyBodyProtocolEnum
+::: qcmanybody.models.v1.manybody_pydv1.ManyBodyProtocolEnum
 
 
-::: qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols
+::: qcmanybody.models.v1.manybody_input_pydv1.ManyBodyProtocols
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols
+$pydantic: qcmanybody.models.v1.manybody_input_pydv1.ManyBodyProtocols
 -->
 
 
@@ -60,23 +60,23 @@ $pydantic: qcmanybody.models.manybody_input_pydv1.ManyBodyProtocols
         #> 9
 
 
-::: qcmanybody.models.ManyBodyResultProperties
+::: qcmanybody.models.v1.ManyBodyResultProperties
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.ManyBodyResultProperties
+$pydantic: qcmanybody.models.v1.ManyBodyResultProperties
 
 
-::: qcmanybody.models.ManyBodyResult
+::: qcmanybody.models.v1.ManyBodyResult
     options:
         show_root_heading: true
 
-$pydantic: qcmanybody.models.ManyBodyResult
+$pydantic: qcmanybody.models.v1.ManyBodyResult
 
 
 <!-- ====  Misc.  ================================================================== -->
 
-<!-- $pydantic: qcmanybody.models.manybody_pydv1.AtomicSpecification -->
+<!-- $pydantic: qcmanybody.models.v1.manybody_pydv1.AtomicSpecification -->
 <!--
 AtomicSpecification
 ResultsBase

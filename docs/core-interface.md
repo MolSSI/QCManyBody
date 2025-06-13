@@ -40,9 +40,9 @@ mbc = ManyBodyCore(molecule=mol,
                    levels={1: "ccsd/cc-pvtz",
                            2: "mp2/cc-pvdz",
                            3: "mp2/cc-pvdz"},
-                   return_total_data: True,
-                   supersystem_ie_only: False,
-                   embedding_charges: None)
+                   return_total_data=True,
+                   supersystem_ie_only=False,
+                   embedding_charges=None)
 ```
 
 The `levels` option is a dictionary that specifies the n-body level as a key, then an arbitrary
@@ -73,8 +73,56 @@ for model_chemistry, label, mol_cluster in mbc.iterate_molecules():
     calculation_results[label] = run_calculation(mol_cluster, model_chemistry)
 ```
 
-Note that it is entirely up to the user to run the calculation somehow - this level of interface
+Note that it is entirely up to the user to run the calculation somehow (`run_calculation`
+above is not a provided function) - this level of interface
 does not provide any tools for running the calculations.
+See [test_example.py](https://github.com/MolSSI/QCManyBody/blob/main/qcmanybody/tests/test_examples.py)
+for a worked example or the below as a quick example of what `run_calculation` would look like using QCEngine.
+
+```python
+import qcelemental as qcel
+import qcengine as qcng
+import qcmanybody as qcmb
+
+p4_string = """
+He 0 0 0
+--
+Ne 1 0 0
+"""
+bsse_type = "cp"
+method = "mp2"
+basis = "def2-svp"
+program = "psi4"
+
+mol = qcel.models.Molecule.from_data(p4_string)
+mbc = qcmb.ManyBodyCore(
+    molecule=mol,
+    bsse_type=[bsse_type],
+    levels={
+        1: f"{method}/{basis}",
+        2: f"{method}/{basis}",
+    },
+    return_total_data=True,
+    supersystem_ie_only=False,
+    embedding_charges=None,
+)
+calculation_results = {}
+for chem, label, imol in mbc.iterate_molecules():
+    mc, real, bas = qcmb.utils.delabeler(label)
+    atin = qcel.models.AtomicInput(
+        molecule=imol, driver="energy", model={"method": method, "basis": basis}
+    )
+    atres = qcng.compute(atin, program, raise_error=True)
+    calculation_results[label] = {
+        "energy": atres.properties.return_energy,
+    }
+
+final_results = mbc.analyze(calculation_results)
+IE = final_results["results"][f"{bsse_type.lower()}_corrected_interaction_energy"]
+print(IE)
+#> 0.409787
+```
+
 
 ### Results dictionary
 

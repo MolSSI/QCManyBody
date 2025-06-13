@@ -10,8 +10,6 @@ from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, Set, T
 import numpy as np
 from qcelemental import constants
 
-from qcmanybody.models import FragBasIndex
-
 __all__ = [
     # "collect_vars",
     "delabeler",
@@ -179,7 +177,7 @@ def resize_hessian(
 
 def sum_cluster_data(
     data: Dict[str, Union[float, np.ndarray]],
-    compute_list: Set[FragBasIndex],
+    compute_list: Set["FragBasIndex"],
     mc_level_lbl: str,
     vmfc: bool = False,
     nb: int = 0,
@@ -223,7 +221,8 @@ def sum_cluster_data(
     shape = find_shape(data[first_key])
     ret = shaped_zero(shape)
 
-    precise_sum_func = math.fsum if isinstance(ret, float) else np.sum
+    # np.sum might be preferable for precision for G/H but np.sum(generator) ill-defined
+    precise_sum_func = math.fsum if isinstance(ret, float) else sum
     ret = precise_sum_func(
         (((-1) ** (nb - len(frag))) if vmfc else 1) * (data[labeler(mc_level_lbl, frag, bas)])
         for frag, bas in compute_list
@@ -533,7 +532,7 @@ def translate_qcvariables(varsmap: Mapping[str, Any]) -> Dict[str, Any]:
         varsmap with keys swapped to other set. Untranslatable keys are omitted.
 
     """
-    from qcmanybody.models import ManyBodyResultProperties
+    from qcmanybody.models.v1 import ManyBodyResultProperties
 
     # identify direction of translation
     qcv2skp = any([" " in lbl for lbl in varsmap])

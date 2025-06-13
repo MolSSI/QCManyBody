@@ -25,7 +25,7 @@ jobs:
             pytest: "-m 'not addon'"
 
           - label: Py-max
-            python-version: "3.12"
+            python-version: "3.13"
             runs-on: ubuntu-latest
             pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
 
@@ -53,7 +53,6 @@ jobs:
           name: test
           channels:
             - conda-forge
-            - nodefaults
           dependencies:
             # Build
             - setuptools
@@ -86,6 +85,7 @@ jobs:
           if [[ "${{ matrix.cfg.label }}" == "QCSk-next" ]]; then
               sed -i "s;pydantic;pydantic=2;g" export.yaml
               sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy2;- pydantic-settings;g" export.yaml
           fi
           # model sed for L/W
           #   sed -i "s;;;g" export.yaml
@@ -102,7 +102,8 @@ jobs:
         auto-activate-base: false
         show-channel-urls: true
         add-pip-as-python-dependency: true
-        channels: conda-forge,nodefaults
+        channels: conda-forge
+        conda-remove-defaults: true
 
     - name: Special Config - QCElemental Dep
       if: false
@@ -121,7 +122,7 @@ jobs:
       run: |
         conda remove qcelemental qcengine --force
         python -m pip install 'git+https://github.com/MolSSI/QCElemental.git@next2025' --no-deps
-        python -m pip install 'git+https://github.com/MolSSI/QCEngine.git@master' --no-deps
+        python -m pip install 'git+https://github.com/MolSSI/QCEngine.git@next2025' --no-deps
 
     - name: Environment Information
       run: |
@@ -182,7 +183,6 @@ jobs:
           name: test
           channels:
             - conda-forge
-            - nodefaults
           dependencies:
             # Build
             - setuptools
@@ -218,7 +218,7 @@ jobs:
     - name: Build Documentation
       run: |
         python -m pip install . --no-deps
-        QCMANYBODY_MAX_NBODY=5 PYTHONPATH=docs/extensions mkdocs build
+        QCMANYBODY_MAX_NBODY=5 PYTHONPATH=docs/extensions mkdocs build --strict
         cd docs
 
     - name: GitHub Pages Deploy

@@ -17,15 +17,11 @@ from ast import literal_eval
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Mapping, Optional, Tuple, Union
 
 # v2: from pydantic import ConfigDict, field_validator, FieldValidationInfo, computed_field, BaseModel, Field
-try:
-    from pydantic.v1 import BaseModel, Field, create_model, validator
-except ImportError:
-    from pydantic import create_model, Field, validator, BaseModel
-
+from pydantic.v1 import BaseModel, Field, create_model, validator
 from qcelemental.models import AtomicInput, AtomicResult, DriverEnum, FailedOperation, Molecule, ProtoModel
 
 from qcmanybody import ManyBodyCore
-from qcmanybody.models import BsseEnum, ManyBodyInput, ManyBodyKeywords, ManyBodyResult, ManyBodyResultProperties
+from qcmanybody.models.v1 import BsseEnum, ManyBodyInput, ManyBodyKeywords, ManyBodyResult, ManyBodyResultProperties
 from qcmanybody.utils import delabeler, provenance_stamp
 
 if TYPE_CHECKING:
@@ -107,7 +103,7 @@ class AtomicComputer(BaseComputerQCNG):
 
         return atomic_model
 
-    def compute(self, client: Optional["qcportal.FractalClient"] = None) -> None:
+    def compute(self, client: Optional["qcportal.client.PortalClient"] = None) -> None:
         """Run quantum chemistry single-point.
 
         NOTE: client logic removed (compared to psi4.driver.AtomicComputer)
@@ -130,7 +126,7 @@ class AtomicComputer(BaseComputerQCNG):
         # logger.debug(pp.pformat(self.result.model_dump()))
         self.computed = True
 
-    def get_results(self, client: Optional["qcportal.FractalClient"] = None) -> AtomicResult:
+    def get_results(self, client: Optional["qcportal.client.PortalClient"] = None) -> AtomicResult:
         """Return results as Atomic-flavored QCSchema.
 
         NOTE: client removed (compared to psi4.driver.AtomicComputer)
@@ -500,7 +496,7 @@ class ManyBodyComputer(BaseComputerQCNG):
         # uncalled function
         return [t.plan() for t in self.task_list.values()]
 
-    def compute(self, client: Optional["qcportal.FractalClient"] = None) -> None:
+    def compute(self, client: Optional["qcportal.client.PortalClient"] = None) -> None:
         """Run quantum chemistry.
 
         NOTE: client logic removed (compared to psi4.driver.ManyBodyComputer)
@@ -509,7 +505,7 @@ class ManyBodyComputer(BaseComputerQCNG):
             t.compute(client=client)
 
     def get_results(
-        self, external_results: Dict, component_results: Dict, client: Optional["qcportal.FractalClient"] = None
+        self, external_results: Dict, component_results: Dict, client: Optional["qcportal.client.PortalClient"] = None
     ) -> ManyBodyResult:
         """Return results as ManyBody-flavored QCSchema."""
 
