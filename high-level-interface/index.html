@@ -556,6 +556,26 @@
 
 
 <h1 id="high-level-interface">High-Level Interface</h1>
+<p>The high-level interface takes advantage of <a href="../qcschema/">QCSchema</a>
+data structures for input and output and defines an easy way to run
+the QC computations through QCEngine.
+The high-level interface uses the core-interface under the hood.
+See the <code>ManyBodyInput</code> QCSchema class for the input options <code>ManyBodyKeywords.
+Details on forming fragmented</code>Molecule`s are at
+<a href="../keywords/#molecule">moleule input</a></p>
+<p>The high-level interface defines a <code>ManyBodyComputer</code> class in
+computer.py whose input is <code>ManyBodyInput</code> schema and whose output is
+<code>ManyBodyResult</code> schema.
+It provides <code>ManyBodyComputer.from_manybodyinput()</code> to run through
+QCEngine.
+See <code>test_highlevel_interface_example()</code> in
+<a href="https://github.com/MolSSI/QCManyBody/blob/main/qcmanybody/tests/test_examples.py">test_example.py</a>
+for a working example.
+The <code>ManyBodyComputer</code> provides the missing link from the core interface
+to run QC computations. A strategy that Psi4 uses is to define its own
+<code>ManyBodyComputer</code> (inheriting from the high-level interface) that
+runs QC computations the way Psi4 wants to while still using all the
+validation and structure provided by the QCSchema I/O classes.</p>
 
 
 
