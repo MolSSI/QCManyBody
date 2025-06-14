@@ -248,7 +248,12 @@ class ManyBodyCore:
                     real_atoms_0 = [x - 1 for x in real_atoms]
                     ghost_atoms_0 = [x - 1 for x in ghost_atoms]
                     mol = self.molecule.get_fragment(real_atoms_0, ghost_atoms_0, orient=False, group_fragments=False)
-                    mol = mol.copy(update={"fix_com": True, "fix_orientation": True})
+                    updates = {"fix_com": True, "fix_orientation": True}
+                    if self.molecule.fix_symmetry == "c1":
+                        # symmetry in the parent usually irrelevant to symmetry in the fragments, but
+                        #   if parent symmetry is cancelled, catch that and pass it along
+                        updates["fix_symmetry"] = "c1"
+                    mol = mol.copy(update=updates)
 
                     if self.embedding_charges:
                         embedding_frags = list(set(range(1, self.nfragments + 1)) - set(basis_atoms))

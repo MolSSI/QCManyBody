@@ -44,8 +44,8 @@ keywords:
   - mbe
   - schema
 license: BSD-3-Clause
-version: 0.5.0
-date-released: '2025-06-13'
+version: 0.5.1
+date-released: '2025-06-14'
 preferred-citation:
   type: article
   authors:
