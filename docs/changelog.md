@@ -19,6 +19,13 @@
 -->
 
 
+## v0.5.1 / 2025-06-14
+
+#### Bug Fixes
+ * [\#40](https://github.com/MolSSI/QCManyBody/pull/40) Core -- Fix bug where an input
+   `fix_symmetry='c1'` molecule didn't apply no symmetry to its fragments.
+
+
 ## v0.5.0 / 2025-06-13
 
 #### Breaking Changes
