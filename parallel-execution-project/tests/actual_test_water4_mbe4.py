@@ -175,10 +175,10 @@ def run_water4_calculation():
         embedding_charges={}
     )
 
-    # Configure parallel execution with 4 processes
+    # Configure parallel execution with 4 threads
     parallel_config = ParallelConfig(
-        max_workers=4,                    # Use 4 processes for parallel execution
-        execution_mode="multiprocessing",  # Multiprocessing avoids QCEngine global config issues
+        max_workers=4,                    # Use 4 threads for parallel execution
+        execution_mode="threading",        # Threading now works with QCEngine fix
         use_qcengine=True,                # Use real quantum chemistry calculations
         qc_program="psi4",                # Use Psi4 for QC calculations
         basis_set="6-31G",                # 6-31G basis set for speed

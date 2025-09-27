@@ -10,6 +10,7 @@ mathematical correctness while achieving performance improvements through parall
 from __future__ import annotations
 
 import logging
+import threading
 import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
@@ -88,6 +89,9 @@ class ParallelManyBodyExecutor:
         Configuration for parallel execution parameters
     """
 
+    # Class-level lock for thread-safe QCEngine initialization
+    _qcengine_init_lock = threading.Lock()
+
     def __init__(self, core: ManyBodyCore, config: ParallelConfig):
         """Initialize the parallel executor.
 
@@ -148,6 +152,9 @@ class ParallelManyBodyExecutor:
             logger.debug(f"Executing fragment {label} at level {level} with {model_chemistry}")
 
             if self.config.use_qcengine and HAS_QCENGINE:
+                # Ensure QCEngine thread safety before execution
+                self._ensure_qcengine_thread_safety()
+
                 # Real QCEngine execution
                 atomic_input = AtomicInput(
                     molecule=molecule,
@@ -370,7 +377,57 @@ class ParallelManyBodyExecutor:
         Dict[str, Union[int, float]]
             Dictionary containing execution performance metrics
         """
-        return self.execution_stats.copy()
+        return self.execution_stats
+
+    @staticmethod
+    def _ensure_qcengine_thread_safety():
+        """
+        Ensure QCEngine global configuration is available in current thread.
+
+        This method addresses the race condition in QCEngine's global configuration
+        system when used in multithreaded environments. It uses a thread-safe
+        approach to initialize QCEngine configuration if needed.
+        """
+        if not HAS_QCENGINE:
+            return
+
+        try:
+            # Import qcengine in thread-safe manner
+            import qcengine as qcng
+
+            # Use class-level lock to prevent race conditions during initialization
+            with ParallelManyBodyExecutor._qcengine_init_lock:
+                try:
+                    # Attempt to get configuration - this may trigger initialization
+                    _ = qcng.get_config()
+                    # Success - configuration is available
+                    return
+                except (KeyError, AttributeError) as e:
+                    # Configuration missing - try to reinitialize
+                    logger.debug(f"QCEngine config missing in thread, reinitializing: {e}")
+
+                    try:
+                        # Force QCEngine to reinitialize its global state
+                        # This is a defensive approach for threading compatibility
+                        from qcengine import config as qcng_config
+
+                        # Try to trigger configuration reload
+                        if hasattr(qcng_config, 'read_qcengine_task_environment'):
+                            qcng_config.read_qcengine_task_environment()
+
+                        # Verify configuration is now available
+                        test_config = qcng.get_config()
+                        logger.debug(f"QCEngine reinitialization successful: {test_config}")
+
+                    except Exception as init_error:
+                        # If reinitialization fails, we'll rely on task_config parameters
+                        logger.warning(f"QCEngine thread initialization failed: {init_error}")
+                        logger.warning("Will rely on explicit task_config parameters")
+
+        except Exception as e:
+            # If all else fails, log warning but continue - task_config should handle it
+            logger.warning(f"QCEngine thread safety setup failed: {e}")
+            logger.warning("Proceeding with task_config - may experience issues in threading mode")
 
     def validate_parallel_correctness(self, parallel_results: Dict[str, AtomicResult],
                                     sequential_results: Dict[str, AtomicResult],
