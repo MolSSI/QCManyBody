@@ -109,7 +109,7 @@ class ManyBodyCore:
             for (k, v) in sorted(self.nbodies_per_mc_level.items(), key=lambda item: sorted(item[1] or [1000])[0])
         }
         assert self.mc_levels == set(self.nbodies_per_mc_level.keys())  # remove after some downstream testing
-        self.mc_levels = self.nbodies_per_mc_level.keys()
+        self.mc_levels = list(self.nbodies_per_mc_level.keys())
 
         for mc, nbs in self.nbodies_per_mc_level.items():
             if nbs and ((nbs[-1] - nbs[0]) != len(nbs) - 1):
