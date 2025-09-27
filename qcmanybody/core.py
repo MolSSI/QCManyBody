@@ -636,6 +636,47 @@ class ManyBodyCore:
             ```
         """
 
+        # Convert AtomicResult objects to property dictionaries if needed
+        # This handles both old format (Dict[str, Dict]) and new format (Dict[str, AtomicResult])
+        converted_results = {}
+        for label, result_data in component_results.items():
+            if hasattr(result_data, 'properties'):
+                # This is an AtomicResult object - extract properties
+                properties_dict = {}
+
+                # Always include the return_result (typically energy)
+                if hasattr(result_data, 'return_result') and result_data.return_result is not None:
+                    # Convert to float to ensure compatibility with analysis functions
+                    properties_dict['energy'] = float(result_data.return_result)
+
+                # Extract all non-None properties from the properties object
+                if result_data.properties is not None:
+                    props_dict = result_data.properties.dict()
+                    for prop_name, prop_value in props_dict.items():
+                        if prop_value is not None:
+                            # Convert numeric values to appropriate types
+                            if isinstance(prop_value, (int, float)):
+                                prop_value = float(prop_value)
+
+                            # Map common property names to expected format
+                            if prop_name == 'return_energy':
+                                properties_dict['energy'] = prop_value
+                            elif prop_name == 'return_gradient':
+                                properties_dict['gradient'] = prop_value
+                            elif prop_name == 'return_hessian':
+                                properties_dict['hessian'] = prop_value
+                            else:
+                                # Include other properties as-is
+                                properties_dict[prop_name] = prop_value
+
+                converted_results[label] = properties_dict
+            else:
+                # Already in the expected dictionary format
+                converted_results[label] = result_data
+
+        # Use converted results for the rest of the analysis
+        component_results = converted_results
+
         # All properties that were passed to us
         # * seed with "energy" so free/no-op jobs can process
         available_properties: Set[str] = {"energy"}

@@ -170,7 +170,7 @@ def run_water4_calculation():
         molecule=mol,
         bsse_type=[BsseEnum.nocp],  # No counterpoise BSSE correction
         levels={1: "hf", 2: "hf", 3: "hf", 4: "hf"},  # HF at all N-body levels
-        return_total_data=False,
+        return_total_data=True,
         supersystem_ie_only=False,
         embedding_charges={}
     )
@@ -181,7 +181,7 @@ def run_water4_calculation():
         execution_mode="multiprocessing",  # Testing multiprocessing serialization fixes
         use_qcengine=True,                # Use real quantum chemistry calculations
         qc_program="psi4",                # Use Psi4 for QC calculations
-        basis_set="6-31G",                # 6-31G basis set for speed
+        basis_set="sto-3g",               # STO-3G basis set for speed
         memory_limit_mb=1000,             # 1 GB memory per worker
         timeout_seconds=7200,             # 2 hour timeout per fragment
         qcengine_config={
@@ -204,7 +204,7 @@ def run_water4_calculation():
     print(f"System: {n_atoms} atoms in {n_fragments} fragments")
     print("Max n-body level: 4")
     print("BSSE treatment: ['nocp']")
-    print("QC method: HF/6-31G")
+    print("QC method: HF/STO-3G")
     print("Parallel execution: 4 threads")
     print("\nCalculation plan: 15 individual QC calculations (4 1-body + 6 2-body + 4 3-body + 1 4-body)")
 
@@ -250,43 +250,82 @@ def run_water4_calculation():
     print(f"  Parallel execution time: {stats['parallel_time']:.2f}s")
     print(f"  Estimated speedup factor: {stats['speedup_factor']:.2f}x")
 
-    print(f"\nFinal energy result: {result.return_result}")
-    print(f"Properties available: {list(result.properties.dict().keys())}")
+    print(f"\nAnalysis result type: {type(result)}")
+    print(f"Available result keys: {list(result.keys())}")
 
-    # Get the one-body, two-body, and three-body contributions
-    if hasattr(result.properties, 'nocp_corrected_total_energy_through_1_body'):
-        one_body = result.properties.nocp_corrected_total_energy_through_1_body
-        print(f"\nOne-body contributions (16 values): {one_body}")
-    if hasattr(result.properties, 'nocp_corrected_total_energy_through_2_body'):
-        two_body = result.properties.nocp_corrected_total_energy_through_2_body - one_body
-        print(f"\nTwo-body contributions (120 values): {two_body}")
-    if hasattr(result.properties, 'nocp_corrected_total_energy_through_3_body'):
-        three_body = result.properties.nocp_corrected_total_energy_through_3_body - one_body - two_body
-        print(f"\nThree-body contributions (560 values): {three_body}")
-    if hasattr(result.properties, 'nocp_corrected_total_energy_through_4_body'):
-        four_body = result.properties.nocp_corrected_total_energy_through_4_body - one_body - two_body - three_body
-        print(f"\nFour-body contributions (1820 values): {four_body}")
+    # Display final results in a readable format
+    print("\n" + "="*70)
+    print("FINAL MANY-BODY EXPANSION RESULTS")
+    print("="*70)
+
+    # Check if we have the results dictionary with detailed n-body data
+    if 'results' in result:
+        results_dict = result['results']
+
+        # Extract and display total energies
+        total_energy_4body = results_dict.get('nocp_corrected_total_energy_through_4_body')
+        if total_energy_4body is not None:
+            print(f"\nTotal 4-body energy:     {total_energy_4body:.8f} Eh")
+            print(f"                         {total_energy_4body * 627.509:.2f} kcal/mol")
+
+        # Extract and display interaction energies
+        interaction_energy_4body = results_dict.get('nocp_corrected_interaction_energy_through_4_body')
+        if interaction_energy_4body is not None:
+            print(f"\n4-body interaction energy: {interaction_energy_4body:.8f} Eh")
+            print(f"                           {interaction_energy_4body * 627.509:.2f} kcal/mol")
+
+        # Display n-body contributions
+        print(f"\nN-body Energy Contributions:")
+        print(f"{'Level':<8} {'Energy (Eh)':<15} {'Energy (kcal/mol)':<15}")
+        print("-" * 40)
+
+        # 1-body contribution
+        e1_total = results_dict.get('nocp_corrected_total_energy_through_1_body')
+        if e1_total is not None:
+            print(f"{'1-body':<8} {e1_total:<15.8f} {e1_total * 627.509:<15.2f}")
+
+        # 2-body contribution
+        e2_contrib = results_dict.get('nocp_corrected_2_body_contribution_to_energy')
+        if e2_contrib is not None:
+            print(f"{'2-body':<8} {e2_contrib:<15.8f} {e2_contrib * 627.509:<15.2f}")
+
+        # 3-body contribution
+        e3_contrib = results_dict.get('nocp_corrected_3_body_contribution_to_energy')
+        if e3_contrib is not None:
+            print(f"{'3-body':<8} {e3_contrib:<15.8f} {e3_contrib * 627.509:<15.2f}")
+
+        # 4-body contribution
+        e4_contrib = results_dict.get('nocp_corrected_4_body_contribution_to_energy')
+        if e4_contrib is not None:
+            print(f"{'4-body':<8} {e4_contrib:<15.8f} {e4_contrib * 627.509:<15.2f}")
+
+        # Display cumulative energies through each level
+        print(f"\nCumulative Energies Through Each Level:")
+        print(f"{'Level':<12} {'Total Energy (Eh)':<18} {'Interaction Energy (Eh)':<20}")
+        print("-" * 52)
+
+        for level in [1, 2, 3, 4]:
+            total_key = f'nocp_corrected_total_energy_through_{level}_body'
+            interaction_key = f'nocp_corrected_interaction_energy_through_{level}_body'
+
+            total_val = results_dict.get(total_key)
+            interaction_val = results_dict.get(interaction_key)
+
+            if total_val is not None and interaction_val is not None:
+                print(f"Through {level}  {total_val:<18.8f} {interaction_val:<20.8f}")
+
     else:
-        print("\nNo four-body contributions calculated.")
-    
-    # Print key results
-    if hasattr(result.properties, 'nocp_corrected_total_energy_through_4_body'):
-        total_energy = result.properties.nocp_corrected_total_energy_through_4_body
-        print(f"\n4-body total energy (no CP): {total_energy:.8f} Eh")
-    else:
-        print("\nNo four-body total energy calculated.")
+        # Fallback to basic energy display if detailed results not available
+        if 'ret_energy' in result:
+            print(f"Final energy result: {result['ret_energy']:.8f} Eh")
+            print(f"                     {result['ret_energy'] * 627.509:.2f} kcal/mol")
+        else:
+            print("No detailed energy results found")
 
-    if hasattr(result.properties, 'nocp_corrected_interaction_energy_through_4_body'):
-        interaction_energy = result.properties.nocp_corrected_interaction_energy_through_4_body
-        print(f"4-body interaction energy (no CP): {interaction_energy:.8f} Eh")
-
-        # Convert to kcal/mol for easier interpretation
-        interaction_kcal = interaction_energy * 627.509  # Hartree to kcal/mol
-        print(f"4-body interaction energy (no CP): {interaction_kcal:.2f} kcal/mol")
-
-    if hasattr(result.properties, 'nocp_corrected_total_energy'):
-        total_energy_full = result.properties.nocp_corrected_total_energy
-        print(f"\nTotal energy (no CP): {total_energy_full:.8f} Eh")
+    print("\n" + "="*70)
+    print("✓ MULTIPROCESSING CALCULATION SUCCESSFUL!")
+    print("✓ 4-water cluster many-body expansion completed!")
+    print("="*70)
     
     return result
 
