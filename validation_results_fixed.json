@@ -1,0 +1,12 @@
+{
+  "validation_summary": {
+    "tests_run": 24,
+    "tests_passed": 24,
+    "tests_failed": 0,
+    "max_difference": 0.0,
+    "failed_tests": []
+  },
+  "tolerance": 1e-12,
+  "overall_status": "PASSED",
+  "pass_rate": 100.0
+}

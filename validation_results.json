@@ -1,0 +1,157 @@
+{
+  "validation_summary": {
+    "tests_run": 24,
+    "tests_passed": 0,
+    "tests_failed": 24,
+    "max_difference": 0.0,
+    "failed_tests": [
+      {
+        "test_id": "simple_dimer_nocp_serial_1w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010779999999999124 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010779999999999124
+      },
+      {
+        "test_id": "simple_dimer_nocp_threading_1w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010779999999999124 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010779999999999124
+      },
+      {
+        "test_id": "simple_dimer_nocp_threading_2w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010779999999999124 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010779999999999124
+      },
+      {
+        "test_id": "simple_dimer_nocp_threading_4w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010779999999999124 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010779999999999124
+      },
+      {
+        "test_id": "simple_dimer_cp_serial_1w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "simple_dimer_cp_threading_1w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "simple_dimer_cp_threading_2w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "simple_dimer_cp_threading_4w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "water_dimer_nocp_serial_1w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_dimer_nocp_threading_1w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_dimer_nocp_threading_2w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_dimer_nocp_threading_4w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_dimer_cp_serial_1w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "water_dimer_cp_threading_1w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "water_dimer_cp_threading_2w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "water_dimer_cp_threading_4w",
+        "error": "Energy difference for [\"hf\", [1, 2], [1, 2]]: 0.0013279999999999959 > 1e-12",
+        "label": "[\"hf\", [1, 2], [1, 2]]",
+        "difference": 0.0013279999999999959
+      },
+      {
+        "test_id": "water_trimer_nocp_serial_1w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_trimer_nocp_threading_1w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_trimer_nocp_threading_2w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_trimer_nocp_threading_4w",
+        "error": "Energy difference for [\"hf\", [2], [2]]: 0.0010780000000001344 > 1e-12",
+        "label": "[\"hf\", [2], [2]]",
+        "difference": 0.0010780000000001344
+      },
+      {
+        "test_id": "water_trimer_cp_serial_1w",
+        "error": "Energy difference for [\"hf\", [2], [1, 2, 3]]: 0.0013299999999993872 > 1e-12",
+        "label": "[\"hf\", [2], [1, 2, 3]]",
+        "difference": 0.0013299999999993872
+      },
+      {
+        "test_id": "water_trimer_cp_threading_1w",
+        "error": "Energy difference for [\"hf\", [2], [1, 2, 3]]: 0.0013299999999993872 > 1e-12",
+        "label": "[\"hf\", [2], [1, 2, 3]]",
+        "difference": 0.0013299999999993872
+      },
+      {
+        "test_id": "water_trimer_cp_threading_2w",
+        "error": "Energy difference for [\"hf\", [2], [1, 2, 3]]: 0.0013299999999993872 > 1e-12",
+        "label": "[\"hf\", [2], [1, 2, 3]]",
+        "difference": 0.0013299999999993872
+      },
+      {
+        "test_id": "water_trimer_cp_threading_4w",
+        "error": "Energy difference for [\"hf\", [2], [1, 2, 3]]: 0.0013299999999993872 > 1e-12",
+        "label": "[\"hf\", [2], [1, 2, 3]]",
+        "difference": 0.0013299999999993872
+      }
+    ]
+  },
+  "tolerance": 1e-12,
+  "overall_status": "FAILED",
+  "pass_rate": 0.0
+}

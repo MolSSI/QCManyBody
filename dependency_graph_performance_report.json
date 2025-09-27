@@ -1,0 +1,178 @@
+{
+  "timestamp": "2025-09-26 15:06:50",
+  "scalability_results": [
+    {
+      "n_fragments": 2,
+      "max_nbody": 2,
+      "construction_time_avg": 0.0006212246565458676,
+      "construction_time_std": 0.00016630667121002296,
+      "memory_peak_avg_mb": 0.011710484822591146,
+      "memory_peak_std_mb": 0.00015836992876119247,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.0013554821955040098,
+      "level_method_time_avg": 0.001938391604926437,
+      "overhead_percentage": 43.00384109476877,
+      "fragments_count": 5,
+      "level_fragments_count": 5
+    },
+    {
+      "n_fragments": 4,
+      "max_nbody": 2,
+      "construction_time_avg": 0.0007417579957594475,
+      "construction_time_std": 0.00012538801571890698,
+      "memory_peak_avg_mb": 0.016950289408365887,
+      "memory_peak_std_mb": 2.808980564673681e-05,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.0037653455976396797,
+      "level_method_time_avg": 0.0037486680084839463,
+      "overhead_percentage": -0.4429231985023584,
+      "fragments_count": 14,
+      "level_fragments_count": 14
+    },
+    {
+      "n_fragments": 6,
+      "max_nbody": 2,
+      "construction_time_avg": 0.0008339333192755779,
+      "construction_time_std": 1.0539529521769923e-05,
+      "memory_peak_avg_mb": 0.027019500732421875,
+      "memory_peak_std_mb": 2.2460329351623145e-05,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.008949391590431333,
+      "level_method_time_avg": 0.008398217195644975,
+      "overhead_percentage": -6.158791792904359,
+      "fragments_count": 27,
+      "level_fragments_count": 27
+    },
+    {
+      "n_fragments": 8,
+      "max_nbody": 2,
+      "construction_time_avg": 0.0012313406720447044,
+      "construction_time_std": 7.388079444398624e-06,
+      "memory_peak_avg_mb": 0.03654193878173828,
+      "memory_peak_std_mb": 2.2460329351623145e-05,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.016250235214829444,
+      "level_method_time_avg": 0.017721577396150677,
+      "overhead_percentage": 9.054282364962528,
+      "fragments_count": 44,
+      "level_fragments_count": 44
+    },
+    {
+      "n_fragments": 10,
+      "max_nbody": 2,
+      "construction_time_avg": 0.0018742263588743906,
+      "construction_time_std": 2.648007482858146e-05,
+      "memory_peak_avg_mb": 0.046647071838378906,
+      "memory_peak_std_mb": 1.6481375880960746e-05,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.027790977200493217,
+      "level_method_time_avg": 0.026461973204277456,
+      "overhead_percentage": -4.78214201187634,
+      "fragments_count": 65,
+      "level_fragments_count": 65
+    },
+    {
+      "n_fragments": 12,
+      "max_nbody": 2,
+      "construction_time_avg": 0.0029866373515687883,
+      "construction_time_std": 0.00010135256313334047,
+      "memory_peak_avg_mb": 0.0752871831258138,
+      "memory_peak_std_mb": 1.903105360297618e-05,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.04337970981141552,
+      "level_method_time_avg": 0.04332305599236861,
+      "overhead_percentage": -0.13059981104807153,
+      "fragments_count": 90,
+      "level_fragments_count": 90
+    },
+    {
+      "n_fragments": 14,
+      "max_nbody": 2,
+      "construction_time_avg": 0.004528400332977374,
+      "construction_time_std": 0.0003603600267272204,
+      "memory_peak_avg_mb": 0.09104124704996745,
+      "memory_peak_std_mb": 1.4386124291718496e-05,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.06850456700194626,
+      "level_method_time_avg": 0.0819070411962457,
+      "overhead_percentage": 19.564351372250353,
+      "fragments_count": 119,
+      "level_fragments_count": 119
+    },
+    {
+      "n_fragments": 16,
+      "max_nbody": 2,
+      "construction_time_avg": 0.006916821682049583,
+      "construction_time_std": 0.0012299012873082922,
+      "memory_peak_avg_mb": 0.11456966400146484,
+      "memory_peak_std_mb": 1.0789593218788873e-05,
+      "total_fragments_analyzed": 0,
+      "original_method_time_avg": 0.09422846180386842,
+      "level_method_time_avg": 0.09125779600581155,
+      "overhead_percentage": -3.152620494050038,
+      "fragments_count": 152,
+      "level_fragments_count": 152
+    }
+  ],
+  "memory_results": [
+    {
+      "n_fragments": 2,
+      "memory_peak_tracemalloc_mb": 0.042214393615722656,
+      "memory_before_mb": 74.8046875,
+      "memory_after_mb": 74.8046875,
+      "memory_delta_mb": 0.0,
+      "fragments_processed": 5,
+      "dependency_levels": 2
+    },
+    {
+      "n_fragments": 4,
+      "memory_peak_tracemalloc_mb": 0.11307907104492188,
+      "memory_before_mb": 74.8046875,
+      "memory_after_mb": 74.8046875,
+      "memory_delta_mb": 0.0,
+      "fragments_processed": 14,
+      "dependency_levels": 2
+    },
+    {
+      "n_fragments": 8,
+      "memory_peak_tracemalloc_mb": 0.3546609878540039,
+      "memory_before_mb": 74.8046875,
+      "memory_after_mb": 74.8046875,
+      "memory_delta_mb": 0.0,
+      "fragments_processed": 44,
+      "dependency_levels": 2
+    },
+    {
+      "n_fragments": 12,
+      "memory_peak_tracemalloc_mb": 0.9884519577026367,
+      "memory_before_mb": 74.8046875,
+      "memory_after_mb": 74.8046875,
+      "memory_delta_mb": 0.0,
+      "fragments_processed": 90,
+      "dependency_levels": 2
+    },
+    {
+      "n_fragments": 16,
+      "memory_peak_tracemalloc_mb": 11.10915756225586,
+      "memory_before_mb": 74.8046875,
+      "memory_after_mb": 78.9453125,
+      "memory_delta_mb": 4.140625,
+      "fragments_processed": 152,
+      "dependency_levels": 2
+    },
+    {
+      "n_fragments": 20,
+      "memory_peak_tracemalloc_mb": 208.30175399780273,
+      "memory_before_mb": 78.2265625,
+      "memory_after_mb": 154.20703125,
+      "memory_delta_mb": 75.98046875,
+      "fragments_processed": 230,
+      "dependency_levels": 2
+    }
+  ],
+  "system_info": {
+    "python_version": "3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0]",
+    "total_memory_gb": 62.669044494628906,
+    "cpu_count": 28
+  }
+}

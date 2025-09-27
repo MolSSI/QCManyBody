@@ -11,6 +11,7 @@ import numpy as np
 from qcelemental.models import Molecule
 
 from qcmanybody.builder import build_nbody_compute_list
+from qcmanybody.dependency import NBodyDependencyGraph
 from qcmanybody.models.v1 import BsseEnum
 from qcmanybody.utils import (
     all_same_shape,
@@ -125,6 +126,7 @@ class ManyBodyCore:
 
         # To be built on the fly
         self.mc_compute_dict = None
+        self._dependency_graph = None
 
         if self.nfragments == 1:
             # Usually we try to "pass-through" edge cases, so a single-fragment mol would return 0 or ordinary energy,
@@ -169,6 +171,19 @@ class ManyBodyCore:
             )
 
         return self.mc_compute_dict
+
+    @property
+    def dependency_graph(self) -> NBodyDependencyGraph:
+        """Get the N-body dependency graph for level-ordered iteration.
+
+        Returns
+        -------
+        NBodyDependencyGraph
+            Dependency graph instance for level-by-level fragment iteration
+        """
+        if self._dependency_graph is None:
+            self._dependency_graph = NBodyDependencyGraph(self.compute_map)
+        return self._dependency_graph
 
     def format_calc_plan(self, sset: str = "all") -> Tuple[str, Dict[str, Dict[int, int]]]:
         """Formulate per-modelchem and per-body job count data and summary text.
@@ -265,6 +280,85 @@ class ManyBodyCore:
 
                     done_molecules.add(label)
                     yield mc, label, mol
+
+    def iterate_molecules_by_level(self) -> Iterable[Tuple[int, str, str, Molecule]]:
+        """Iterate over molecules needed for computation, grouped by N-body dependency level.
+
+        This method provides level-by-level iteration that respects mathematical dependencies:
+        monomers (level 1) → dimers (level 2) → trimers (level 3) → etc.
+
+        This enables safe parallel execution within each level while respecting dependencies
+        between levels.
+
+        Yields
+        ------
+        Tuple[int, str, str, Molecule]
+            Tuple of (level, model_chemistry, label, molecule) where:
+            - level: N-body dependency level (1, 2, 3, ...)
+            - model_chemistry: String identifying the quantum chemistry method
+            - label: Fragment label in JSON format
+            - molecule: QCElemental Molecule object for this fragment
+
+        Notes
+        -----
+        This method preserves the exact same molecule set as iterate_molecules(),
+        only changing the ordering to respect N-body dependencies. All fragments
+        yielded by iterate_molecules() will be yielded by this method exactly once.
+
+        Examples
+        --------
+        >>> mbc = ManyBodyCore(molecule, ["cp"], {1: "hf", 2: "mp2"})
+        >>> for level, mc, label, mol in mbc.iterate_molecules_by_level():
+        ...     print(f"Level {level}: {mc} calculation for {label}")
+        Level 1: hf calculation for ["hf", [1], [1]]
+        Level 1: hf calculation for ["hf", [2], [2]]
+        Level 2: mp2 calculation for ["mp2", [1, 2], [1, 2]]
+        """
+        done_molecules: Set[str] = set()
+
+        # Performance optimization: pre-compute common values
+        has_embedding = bool(self.embedding_charges)
+        fix_c1_symmetry = self.molecule.fix_symmetry == "c1"
+
+        # Base updates dict - avoid creating it for each molecule
+        base_updates = {"fix_com": True, "fix_orientation": True}
+        if fix_c1_symmetry:
+            base_updates["fix_symmetry"] = "c1"
+
+        # Use dependency graph to get level-ordered iteration
+        for level, fragments_at_level in self.dependency_graph.iterate_molecules_by_level():
+            for fragment_dep in fragments_at_level:
+                mc = fragment_dep.mc  # model chemistry
+                label = fragment_dep.label  # fragment label
+
+                if label in done_molecules:
+                    continue
+
+                # Performance optimization: use cached real_atoms and basis_atoms from FragmentDependency
+                real_atoms = fragment_dep.real_atoms
+                basis_atoms = fragment_dep.basis_atoms
+
+                # Performance optimization: use set difference for ghost atoms
+                ghost_atoms = list(set(basis_atoms) - set(real_atoms))
+
+                # Shift to zero-indexing
+                real_atoms_0 = [x - 1 for x in real_atoms]
+                ghost_atoms_0 = [x - 1 for x in ghost_atoms]
+                mol = self.molecule.get_fragment(real_atoms_0, ghost_atoms_0, orient=False, group_fragments=False)
+
+                # Use pre-computed updates
+                mol = mol.copy(update=base_updates)
+
+                if has_embedding:
+                    embedding_frags = list(set(range(1, self.nfragments + 1)) - set(basis_atoms))
+                    charges = []
+                    for ifr in embedding_frags:
+                        positions = self.molecule.get_fragment(ifr - 1).geometry.tolist()
+                        charges.extend([[chg, i] for i, chg in zip(positions, self.embedding_charges[ifr])])
+                    mol.extras["embedding_charges"] = charges
+
+                done_molecules.add(label)
+                yield level, mc, label, mol
 
     def _assemble_nbody_components(
         self,

@@ -162,3 +162,7 @@ cython_debug/
 # Psi4 stuff
 timer.dat
 psi.*.clean
+
+# Various local files
+CLAUDE.md
+./parallel_execution_project/*
