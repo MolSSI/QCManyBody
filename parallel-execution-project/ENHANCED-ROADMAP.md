@@ -51,6 +51,27 @@ Every parallel modification must reproduce original code results **exactly** (wi
 
 ---
 
+### **Phase 1a: Parallelism Execution Fixes (Week 3-4)** 🔧
+**Critical Bug Fix Phase - Added 2024-09-27**
+
+**Background**: During initial testing, critical parallelism issues were discovered that prevent real QC calculations.
+
+| Task | Owner | Effort | Priority | Issue Addressed |
+|------|--------|---------|----------|-----------------|
+| **P1A-001**: Fix Threading QCEngine Integration | Lead Developer | 2 days | HIGH | `KeyError: 'ncores'` in worker threads |
+| **P1A-002**: Fix Multiprocessing Serialization | Lead Developer | 3 days | HIGH | `TypeError: cannot pickle 'dict_keys'` |
+| **P1A-003**: Comprehensive Execution Mode Validation | QA Engineer | 2 days | MEDIUM | Validate all execution modes |
+
+**Testing Requirements**:
+- [ ] `test_threading_qcengine.py` - Threading works with real QC calculations
+- [ ] `test_multiprocessing_serialization.py` - All objects properly serializable
+- [ ] `test_execution_modes.py` - Mathematical correctness across all modes (1e-12 tolerance)
+- [ ] Performance benchmarks for mode selection guidance
+
+**Phase Gate**: ✅ All three execution modes (serial, threading, multiprocessing) pass identical test cases with real QC calculations
+
+---
+
 ### **Phase 2: Core Parallel Infrastructure (Week 3-7)** ⚡
 **Enhanced with Comprehensive Testing**
 

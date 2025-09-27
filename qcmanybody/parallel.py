@@ -160,10 +160,13 @@ class ParallelManyBodyExecutor:
                     protocols=self.config.qcengine_config.get("protocols", {})
                 )
 
-                # Configure QCEngine task configuration
+                # Configure QCEngine task configuration with complete settings
                 task_config = {
                     "memory": self.config.memory_limit_mb / 1024.0,  # Convert MB to GB for QCEngine
                     "ncores": 1,  # Use 1 core per fragment for parallel safety
+                    "nnodes": 1,  # Single node execution
+                    "cores_per_rank": 1,  # One core per rank
+                    "retries": 0,  # No retries for parallel safety
                     **self.config.qcengine_config.get("task_config", {})
                 }
 
