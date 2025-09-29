@@ -8,7 +8,7 @@ This plan tracks the follow-up work required to harden the `parallel_execution` 
 | --- | --- | --- | --- | --- | --- | --- |
 | T1 | High | QCEngine integration | ☑ Done | TBD | 2025-10-15 | Spec mapping + driver propagation covered by new executor + tests |
 | T2 | High | Multiprocessing | ☑ Done | TBD | 2025-10-18 | Spawn-safe worker refactor with regression test + docs |
-| T3 | Medium | Metrics | ☐ Not started | TBD | 2025-10-10 | Collect real serial baseline for speedup stats |
+| T3 | Medium | Metrics | ☑ Done | TBD | 2025-10-10 | Real serial baselines, per-level timings, histogram support |
 | T4 | Medium | Dependency validation | ☐ Not started | TBD | 2025-10-22 | Extend level batching tests (supersystem/VMFC) |
 | T5 | Low | Config UX | ☐ Not started | TBD | 2025-10-05 | Allow `ParallelConfig` without qcengine install when disabled |
 
@@ -77,9 +77,9 @@ Benchmarks and validation artifacts mislead stakeholders, obscuring performance 
 - Update benchmark scripts to visualize speedup and per-level critical path.
 
 **Deliverables**
-1. Enhanced statistics struct with serial baseline, per-level stats, optional histograms.  
-2. Updated `scripts/benchmark_parallel_performance.py` producing plots/tables using the new data.  
-3. Unit tests asserting non-trivial speedup values when parallel execution is faster than serial.
+1. Enhanced statistics struct with serial baseline, per-level stats, optional histograms. *(Implemented in `ParallelManyBodyExecutor` with level timing capture, serial baseline synthesis, and configurable histograms.)*  
+2. Updated `scripts/benchmark_parallel_performance.py` producing plots/tables using the new data. *(Script now consumes measured speedup/serial metrics and reports histogram-ready data.)*  
+3. Unit tests asserting non-trivial speedup values when parallel execution is faster than serial. *(See `TestParallelManyBodyExecutor::test_speedup_measurement_threading` and associated histogram/disable checks.)*
 
 **Dependencies**
 - None, but T1 ensures serial reference uses the same core path.

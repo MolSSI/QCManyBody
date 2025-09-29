@@ -69,6 +69,8 @@ class ParallelConfig:
     qc_program: Optional[str] = "psi4"
     basis_set: Optional[str] = "sto-3g"
     default_driver: str = "energy"
+    collect_fragment_timings: bool = True
+    histogram_bins: Optional[int] = None
 
     def __post_init__(self):
         if self.qcengine_config is None:
@@ -85,6 +87,9 @@ class ParallelConfig:
 
         if self.max_workers < 1:
             raise ValueError(f"max_workers must be >= 1, got {self.max_workers}")
+
+        if self.histogram_bins is not None and self.histogram_bins < 1:
+            raise ValueError("histogram_bins must be >= 1 when provided")
 
 
 @dataclass
@@ -143,6 +148,8 @@ class ParallelManyBodyExecutor:
         self.specifications = dict(specifications or {})
         self._dependency_graph = core.dependency_graph
 
+        self._reset_execution_stats()
+
         # Validation: ensure P1-002 foundation is available
         if not hasattr(core, 'iterate_molecules_by_level'):
             raise RuntimeError(
@@ -150,20 +157,29 @@ class ParallelManyBodyExecutor:
                 "P1-002 dependency graph foundation required."
             )
 
-        # Track execution statistics
-        self.execution_stats = {
-            "total_fragments": 0,
-            "levels_executed": 0,
-            "parallel_time": 0.0,
-            "sequential_time_estimate": 0.0,
-            "speedup_factor": 0.0
-        }
-
         logger.info(
             f"ParallelManyBodyExecutor initialized with {config.max_workers} workers "
             f"in {config.execution_mode} mode"
         )
         self._tasks_by_level = self._build_fragment_tasks()
+
+    def _reset_execution_stats(self) -> None:
+        """Reset execution metrics prior to a new run."""
+
+        serial_time = 0.0 if self.config.collect_fragment_timings else None
+
+        self.execution_stats = {
+            "total_fragments": 0,
+            "levels_executed": 0,
+            "parallel_time": 0.0,
+            "serial_time": serial_time,
+            "speedup_factor": None,
+            "levels": {},
+            "fragment_histogram": None,
+        }
+
+        self._all_fragment_durations: List[float] = []
+        self._serial_timings_available = self.config.collect_fragment_timings
 
     @classmethod
     def from_manybodyinput(cls, input_model: ManyBodyInput, config: ParallelConfig) -> "ParallelManyBodyExecutor":
@@ -390,28 +406,43 @@ class ParallelManyBodyExecutor:
             logger.warning(f"No fragments found at level {level}")
             return {}
 
-        level_results = {}
+        level_results: Dict[str, AtomicResult] = {}
         start_time = time.time()
+        level_fragment_durations: Optional[List[float]] = [] if self.config.collect_fragment_timings else None
+
+        if level_fragment_durations is None:
+            self._serial_timings_available = False
 
         if self.config.execution_mode == "serial":
             # Serial execution for debugging/comparison
             for fragment_task in fragments_at_level:
+                fragment_start = time.time()
                 label, result = self.execute_fragment(fragment_task)
                 level_results[label] = result
+                if level_fragment_durations is not None:
+                    level_fragment_durations.append(time.time() - fragment_start)
 
         elif self.config.execution_mode == "threading":
             # Thread-based parallel execution
+            def _thread_worker(task: FragmentTask) -> Tuple[str, AtomicResult, float]:
+                fragment_start = time.time()
+                label, result = self.execute_fragment(task)
+                duration = time.time() - fragment_start
+                return label, result, duration
+
             with ThreadPoolExecutor(max_workers=self.config.max_workers) as executor:
                 future_to_label = {
-                    executor.submit(self.execute_fragment, fragment_task): fragment_task.label
+                    executor.submit(_thread_worker, fragment_task): fragment_task.label
                     for fragment_task in fragments_at_level
                 }
 
                 for future in as_completed(future_to_label, timeout=self.config.timeout_seconds):
                     label = future_to_label[future]
                     try:
-                        result_label, result = future.result()
+                        result_label, result, duration = future.result()
                         level_results[result_label] = result
+                        if level_fragment_durations is not None:
+                            level_fragment_durations.append(duration)
                     except Exception as e:
                         logger.error(f"Fragment {label} failed in parallel execution: {e}")
                         raise RuntimeError(f"Parallel execution failed for fragment {label}: {e}")
@@ -433,8 +464,10 @@ class ParallelManyBodyExecutor:
                 for future in as_completed(future_to_label, timeout=self.config.timeout_seconds):
                     label = future_to_label[future]
                     try:
-                        result_label, result = future.result()
+                        result_label, result, duration = future.result()
                         level_results[result_label] = result
+                        if level_fragment_durations is not None:
+                            level_fragment_durations.append(duration)
                     except Exception as exc:
                         logger.error(f"Fragment {label} failed in parallel execution: {exc}")
                         raise RuntimeError(f"Parallel execution failed for fragment {label}: {exc}")
@@ -445,6 +478,20 @@ class ParallelManyBodyExecutor:
         # Update execution statistics
         self.execution_stats["total_fragments"] += len(fragments_at_level)
         self.execution_stats["parallel_time"] += execution_time
+
+        level_stats = self.execution_stats.setdefault("levels", {})
+        level_data = {
+            "fragment_count": len(fragments_at_level),
+            "parallel_time": execution_time,
+            "serial_time": None,
+            "fragment_durations": [] if level_fragment_durations is None else level_fragment_durations,
+        }
+
+        if level_fragment_durations is not None:
+            level_data["serial_time"] = sum(level_fragment_durations)
+            self._all_fragment_durations.extend(level_fragment_durations)
+
+        level_stats[level] = level_data
 
         return level_results
 
@@ -467,6 +514,8 @@ class ParallelManyBodyExecutor:
         logger.info("Starting full parallel many-body calculation")
         start_time = time.time()
 
+        self._reset_execution_stats()
+
         all_results: Dict[str, AtomicResult] = {}
 
         for level in sorted(self._tasks_by_level.keys()):
@@ -478,32 +527,53 @@ class ParallelManyBodyExecutor:
         total_time = time.time() - start_time
         self.execution_stats["parallel_time"] = total_time
 
-        # Estimate sequential time for speedup calculation
-        # This is a rough estimate based on fragment count and average time per fragment
-        avg_fragment_time = total_time / max(self.execution_stats["total_fragments"], 1)
-        self.execution_stats["sequential_time_estimate"] = (
-            avg_fragment_time * self.execution_stats["total_fragments"]
-        )
+        if self._serial_timings_available:
+            serial_time = 0.0
+            for level_data in self.execution_stats["levels"].values():
+                if level_data.get("serial_time") is None:
+                    self._serial_timings_available = False
+                    break
+                serial_time += level_data.get("serial_time", 0.0)
 
-        if self.execution_stats["parallel_time"] > 0:
-            self.execution_stats["speedup_factor"] = (
-                self.execution_stats["sequential_time_estimate"] / self.execution_stats["parallel_time"]
-            )
+            if self._serial_timings_available:
+                self.execution_stats["serial_time"] = serial_time
+                if self.execution_stats["parallel_time"] > 0:
+                    self.execution_stats["speedup_factor"] = serial_time / self.execution_stats["parallel_time"]
+
+                if self.config.histogram_bins and self._all_fragment_durations:
+                    counts, bin_edges = np.histogram(
+                        self._all_fragment_durations,
+                        bins=self.config.histogram_bins
+                    )
+                    self.execution_stats["fragment_histogram"] = {
+                        "counts": counts.tolist(),
+                        "bin_edges": bin_edges.tolist(),
+                    }
+            else:
+                self.execution_stats["serial_time"] = None
+                self.execution_stats["speedup_factor"] = None
+        else:
+            self.execution_stats["serial_time"] = None
+            self.execution_stats["speedup_factor"] = None
 
         logger.info(f"Parallel calculation completed in {total_time:.2f}s")
         logger.info(f"Executed {self.execution_stats['total_fragments']} fragments "
                    f"across {self.execution_stats['levels_executed']} levels")
-        logger.info(f"Estimated speedup: {self.execution_stats['speedup_factor']:.2f}x")
+        if self.execution_stats["speedup_factor"] is not None:
+            logger.info(f"Measured speedup: {self.execution_stats['speedup_factor']:.2f}x")
+        else:
+            logger.info("Speedup unavailable (fragment timings disabled)")
 
         return all_results
 
-    def get_execution_statistics(self) -> Dict[str, Union[int, float]]:
-        """Get detailed execution statistics.
+    def get_execution_statistics(self) -> Dict[str, Any]:
+        """Get detailed execution statistics collected during the last run.
 
         Returns
         -------
-        Dict[str, Union[int, float]]
-            Dictionary containing execution performance metrics
+        Dict[str, Any]
+            Dictionary containing aggregated execution metrics, per-level
+            timings, and optional histogram buckets when enabled.
         """
         return self.execution_stats
 
@@ -631,11 +701,14 @@ def _multiprocessing_worker_initializer(config: ParallelConfig) -> None:
     _WORKER_CONTEXT["config"] = config
 
 
-def _execute_fragment_worker(task: FragmentTask) -> Tuple[str, AtomicResult]:
+def _execute_fragment_worker(task: FragmentTask) -> Tuple[str, AtomicResult, float]:
     """ProcessPoolExecutor entry point that executes a fragment using cached config."""
 
     config = _WORKER_CONTEXT.get("config")
     if config is None:
         raise RuntimeError("Parallel worker received task before configuration initialization.")
 
-    return ParallelManyBodyExecutor._execute_fragment_static(task, config)
+    fragment_start = time.time()
+    label, result = ParallelManyBodyExecutor._execute_fragment_static(task, config)
+    duration = time.time() - fragment_start
+    return label, result, duration

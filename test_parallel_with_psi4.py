@@ -119,7 +119,12 @@ def test_parallel_with_real_qc():
         print(f"  Total fragments: {stats['total_fragments']}")
         print(f"  Levels executed: {stats['levels_executed']}")
         print(f"  Parallel time: {stats['parallel_time']:.3f}s")
-        print(f"  Estimated speedup: {stats['speedup_factor']:.2f}x")
+        serial_time = stats.get("serial_time")
+        if serial_time is not None:
+            print(f"  Serial baseline: {serial_time:.3f}s")
+        speedup = stats.get("speedup_factor")
+        if speedup is not None:
+            print(f"  Measured speedup: {speedup:.2f}x")
 
         return True
 

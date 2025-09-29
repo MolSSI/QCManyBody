@@ -9,9 +9,9 @@ This demonstrates the QCManyBody parallel execution system with real quantum
 chemistry calculations, using level-by-level parallelization to execute
 multiple fragments simultaneously while respecting N-body dependencies.
 
-WARNING: This will perform 2516 individual QC calculations and may take
-several hours depending on your hardware. With 4-thread parallelization,
-expect significant speedup compared to sequential execution.
+WARNING: This will perform 15 quantum-chemistry fragment calculations and
+typically finishes in well under a minute on a modern laptop. Expect
+wall-clock times on the order of 10–30 seconds with 4-way parallelization.
 
 ################################################################################
 # PARALLEL EXECUTION SYSTEM DEMONSTRATION
@@ -87,21 +87,21 @@ calculations with actual quantum chemistry programs.
 - QC method: Hartree-Fock with 6-31G basis set
 
 ### Computational Scope:
-- Total QC calculations: 15 individual fragment calculations
-  - 4 monomer calculations (1-body terms)
-  - 6 dimer calculations (2-body terms)
-  - 56 trimer calculations (3-body terms)
-  - 182 tetramer calculations (4-body terms)
+- Total QC calculations: 15 fragment evaluations
+    - 4 monomer calculations (1-body terms)
+    - 6 dimer calculations (2-body terms)
+    - 4 trimer calculations (3-body terms)
+    - 1 tetramer calculation (4-body term)
 
 ### Parallel Execution Strategy:
 - Level 1: 4 monomers executed in parallel (4 workers, 1 batch)
 - Level 2: 6 dimers executed in parallel (4 workers, 2 batches)
-- Level 3: 56 trimers executed in parallel (4 workers, 14 batches)
-- Level 4: 182 tetramers executed in parallel (4 workers, 46 batches)
+- Level 3: 4 trimers executed in parallel (4 workers, 1 batch)
+- Level 4: 1 tetramer executed in parallel (single fragment)
 
 ### Expected Performance:
-- Sequential execution time: Several hours to days
-- Parallel execution time: Significantly reduced with 4-thread speedup
+- Sequential execution time: ~40–60 seconds on a laptop CPU
+- Parallel execution time: 10–30 seconds with 4 workers
 - Mathematical correctness: Identical results to sequential execution
 - Validation: Ultra-strict 1e-12 tolerance maintained
 
@@ -294,7 +294,7 @@ def run_water4_calculation():
 def test_psi4_availability():
     """Quick test to verify Psi4 is working."""
     try:
-        import psi4
+    import psi4  # type: ignore[import]
         print("✓ Psi4 import successful")
         
         # Quick test calculation

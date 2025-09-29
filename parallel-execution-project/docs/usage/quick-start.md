@@ -105,7 +105,12 @@ print(f"\nExecution Statistics:")
 print(f"  Total fragments: {stats['total_fragments']}")
 print(f"  Levels executed: {stats['levels_executed']}")
 print(f"  Execution time: {stats['parallel_time']:.3f}s")
-print(f"  Estimated speedup: {stats['speedup_factor']:.2f}x")
+serial_time = stats.get('serial_time')
+if serial_time is not None:
+    print(f"  Serial baseline: {serial_time:.3f}s")
+speedup = stats.get('speedup_factor')
+if speedup is not None:
+    print(f"  Measured speedup: {speedup:.2f}x")
 ```
 
 ## ✅ Complete First Example
@@ -158,6 +163,12 @@ for label, result in results.items():
 stats = executor.get_execution_statistics()
 print(f"\n📊 Statistics:")
 print(f"Fragments: {stats['total_fragments']}, Time: {stats['parallel_time']:.3f}s")
+serial_time = stats.get('serial_time')
+if serial_time is not None:
+    print(f"Serial baseline: {serial_time:.3f}s")
+speedup = stats.get('speedup_factor')
+if speedup is not None:
+    print(f"Measured speedup: {speedup:.2f}x")
 ```
 
 **Expected Output:**

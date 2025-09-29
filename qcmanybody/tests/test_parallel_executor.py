@@ -5,6 +5,7 @@ including unit tests, integration tests, and validation against sequential execu
 """
 
 import copy
+import time
 
 import pytest
 import numpy as np
@@ -30,6 +31,8 @@ class TestParallelConfig:
         assert config.basis_set == "sto-3g"
         assert config.qcengine_config == {}
         assert config.default_driver == "energy"
+        assert config.collect_fragment_timings is True
+        assert config.histogram_bins is None
 
     def test_custom_config(self):
         """Test custom configuration values."""
@@ -40,7 +43,9 @@ class TestParallelConfig:
             timeout_seconds=1800,
             use_qcengine=False,
             qc_program="nwchem",
-            basis_set="6-31g"
+            basis_set="6-31g",
+            collect_fragment_timings=False,
+            histogram_bins=12,
         )
         assert config.max_workers == 8
         assert config.execution_mode == "threading"
@@ -50,6 +55,8 @@ class TestParallelConfig:
         assert config.qc_program == "nwchem"
         assert config.basis_set == "6-31g"
         assert config.default_driver == "energy"
+        assert config.collect_fragment_timings is False
+        assert config.histogram_bins == 12
 
     def test_invalid_execution_mode(self):
         """Test validation of execution mode."""
@@ -60,6 +67,11 @@ class TestParallelConfig:
         """Test validation of max_workers."""
         with pytest.raises(ValueError, match="max_workers must be >= 1"):
             ParallelConfig(max_workers=0)
+
+    def test_invalid_histogram_bins(self):
+        """Histogram bins must be positive when provided."""
+        with pytest.raises(ValueError, match="histogram_bins must be >= 1"):
+            ParallelConfig(histogram_bins=0)
 
 
 class TestParallelManyBodyExecutor:
@@ -258,10 +270,20 @@ class TestParallelManyBodyExecutor:
 
         # Check execution statistics
         stats = executor.get_execution_statistics()
-        assert stats["total_fragments"] > 0
-        assert stats["levels_executed"] > 0
+        assert stats["total_fragments"] == 3
+        assert stats["levels_executed"] == 2
         assert stats["parallel_time"] > 0
-        assert stats["speedup_factor"] >= 0
+        assert stats["serial_time"] == pytest.approx(stats["parallel_time"], rel=1e-3, abs=1e-4)
+        assert stats["speedup_factor"] == pytest.approx(1.0, rel=5e-3, abs=5e-3)
+        assert isinstance(stats["levels"], dict)
+        assert 1 in stats["levels"]
+        level_one_stats = stats["levels"][1]
+        assert level_one_stats["fragment_count"] == 2
+        assert len(level_one_stats["fragment_durations"]) == 2
+        assert level_one_stats["serial_time"] == pytest.approx(
+            sum(level_one_stats["fragment_durations"]), rel=1e-6
+        )
+        assert stats["fragment_histogram"] is None
 
     def test_validation_framework(self, simple_manybody_core, simple_specifications):
         """Test parallel vs sequential validation framework."""
@@ -331,6 +353,7 @@ class TestParallelManyBodyExecutor:
         assert stats["total_fragments"] == 0
         assert stats["levels_executed"] == 0
         assert stats["parallel_time"] == 0.0
+        assert stats["speedup_factor"] is None
 
         # After execution
         executor.execute_full_calculation()
@@ -338,7 +361,60 @@ class TestParallelManyBodyExecutor:
         assert stats["total_fragments"] > 0
         assert stats["levels_executed"] > 0
         assert stats["parallel_time"] > 0
-        assert stats["speedup_factor"] >= 0
+        assert stats["speedup_factor"] == pytest.approx(1.0, rel=5e-3, abs=5e-3)
+        assert stats["serial_time"] == pytest.approx(stats["parallel_time"], rel=1e-3, abs=1e-4)
+
+    def test_speedup_measurement_threading(self, simple_manybody_core, simple_specifications, monkeypatch):
+        """Ensure measured speedup uses real fragment timings."""
+
+        config = ParallelConfig(
+            use_qcengine=False,
+            execution_mode="threading",
+            max_workers=2,
+        )
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
+
+        original_sleep = time.sleep
+
+        def slower_sleep(seconds: float) -> None:
+            original_sleep(seconds * 3.0)
+
+        monkeypatch.setattr(time, "sleep", slower_sleep)
+
+        executor.execute_full_calculation()
+        stats = executor.get_execution_statistics()
+
+        assert stats["speedup_factor"] > 1.0
+        assert stats["serial_time"] > stats["parallel_time"]
+
+    def test_histogram_generation(self, simple_manybody_core, simple_specifications):
+        """Histogram bins are produced when requested."""
+
+        config = ParallelConfig(
+            use_qcengine=False,
+            execution_mode="serial",
+            histogram_bins=4,
+        )
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
+
+        executor.execute_full_calculation()
+        stats = executor.get_execution_statistics()
+
+        histogram = stats["fragment_histogram"]
+        assert histogram is not None
+        assert len(histogram["counts"]) == 4
+        assert len(histogram["bin_edges"]) == 5
+        assert sum(histogram["counts"]) == stats["total_fragments"]
 
 
 @pytest.mark.skipif(
@@ -394,31 +470,46 @@ class TestQCEngineIntegration:
 class TestParallelPerformance:
     """Test performance characteristics of parallel execution."""
 
-    def test_speedup_calculation(self):
-        """Test speedup calculation in execution statistics."""
-        config = ParallelConfig(use_qcengine=False)
+    def test_speedup_disabled_when_fragment_timings_off(self):
+        """Disabling fragment timings removes serial baseline data."""
 
-        # Create a mock executor to test speedup calculation
-        class MockExecutor(ParallelManyBodyExecutor):
-            def __init__(self, config):
-                self.config = config
-                self.execution_stats = {
-                    "total_fragments": 10,
-                    "levels_executed": 3,
-                    "parallel_time": 5.0,
-                    "sequential_time_estimate": 15.0,
-                    "speedup_factor": 0.0
-                }
+        molecule = Molecule.from_data(
+            """
+            O  0.0000  0.0000  0.0000
+            H  0.7570  0.5860  0.0000
+            H -0.7570  0.5860  0.0000
+            --
+            O  2.5000  0.0000  0.0000
+            H  3.2570  0.5860  0.0000
+            H  1.7430  0.5860  0.0000
+            """
+        )
+        if not molecule.fragments:
+            molecule = molecule.copy(update={"fragments": [[0, 1, 2], [3, 4, 5]]})
 
-        executor = MockExecutor(config)
-
-        # Manual speedup calculation
-        executor.execution_stats["speedup_factor"] = (
-            executor.execution_stats["sequential_time_estimate"] /
-            executor.execution_stats["parallel_time"]
+        core = ManyBodyCore(
+            molecule=molecule,
+            bsse_type=[BsseEnum.nocp],
+            levels={1: "hf", 2: "hf"},
+            return_total_data=False,
+            supersystem_ie_only=False,
+            embedding_charges={},
         )
 
-        assert executor.execution_stats["speedup_factor"] == 3.0
+        config = ParallelConfig(
+            use_qcengine=False,
+            execution_mode="threading",
+            max_workers=2,
+            collect_fragment_timings=False,
+        )
+
+        executor = ParallelManyBodyExecutor(core, config, driver="energy", specifications={})
+        executor.execute_full_calculation()
+        stats = executor.get_execution_statistics()
+
+        assert stats["serial_time"] is None
+        assert stats["speedup_factor"] is None
+        assert all(level_data["serial_time"] is None for level_data in stats["levels"].values())
 
     def test_empty_level_handling(self):
         """Test handling of empty levels in parallel execution."""

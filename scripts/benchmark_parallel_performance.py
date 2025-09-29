@@ -216,9 +216,12 @@ def validate_correctness(sequential_results: Dict, parallel_results: Dict, toler
     # Convert parallel AtomicResult objects to comparable format
     parallel_simplified = {}
     for label, result in parallel_results.items():
+        model_method = getattr(result.model, "method", None)
+        if model_method is None and isinstance(result.model, dict):
+            model_method = result.model.get("method")
         parallel_simplified[label] = {
             "energy": result.return_result,
-            "mc": result.model["method"],
+            "mc": model_method,
             "natoms": len(result.molecule.symbols)
         }
 
@@ -293,10 +296,21 @@ def analyze_scalability(system_name: str, molecule: Molecule, worker_counts: Lis
         is_correct = validate_correctness(sequential_results, parallel_results)
 
         # Calculate speedup
-        speedup = sequential_time / stats["actual_execution_time"] if stats["actual_execution_time"] > 0 else 0
+        if stats.get("speedup_factor") is not None:
+            speedup = stats["speedup_factor"]
+        elif stats["actual_execution_time"] > 0:
+            speedup = sequential_time / stats["actual_execution_time"]
+        else:
+            speedup = 0
 
         # Calculate efficiency
         efficiency = speedup / worker_count if worker_count > 0 else 0
+
+        serial_time = stats.get("serial_time")
+        if serial_time is None and stats.get("speedup_factor") is not None:
+            serial_time = stats["speedup_factor"] * stats["actual_execution_time"]
+        if serial_time is None:
+            serial_time = sequential_time
 
         scalability_results["worker_results"][worker_count] = {
             "execution_time": stats["actual_execution_time"],
@@ -305,7 +319,8 @@ def analyze_scalability(system_name: str, molecule: Molecule, worker_counts: Lis
             "speedup": speedup,
             "efficiency": efficiency,
             "is_correct": is_correct,
-            "parallel_overhead": stats["actual_execution_time"] - (sequential_time / worker_count) if worker_count > 0 else 0
+            "serial_time": serial_time,
+            "parallel_overhead": serial_time - stats["actual_execution_time"]
         }
 
         logging.info(f"  Workers: {worker_count}, Time: {stats['actual_execution_time']:.3f}s, "

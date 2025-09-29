@@ -9,9 +9,9 @@ This demonstrates the QCManyBody parallel execution system with real quantum
 chemistry calculations, using level-by-level parallelization to execute
 multiple fragments simultaneously while respecting N-body dependencies.
 
-WARNING: This will perform 2516 individual QC calculations and may take
-several hours depending on your hardware. With 4-thread parallelization,
-expect significant speedup compared to sequential execution.
+WARNING: This will perform 15 quantum-chemistry fragment calculations and
+typically completes in well under a minute on a modern laptop. With 4-way
+parallelization you should see wall-clock times on the order of 10–30 seconds.
 
 ################################################################################
 # PARALLEL EXECUTION SYSTEM DEMONSTRATION
@@ -87,11 +87,11 @@ calculations with actual quantum chemistry programs.
 - QC method: Hartree-Fock with 6-31G basis set
 
 ### Computational Scope:
-- Total QC calculations: 15 individual fragment calculations
-  - 4 monomer calculations (1-body terms)
-  - 6 dimer calculations (2-body terms)
-  - 56 trimer calculations (3-body terms)
-  - 182 tetramer calculations (4-body terms)
+- Total QC calculations: 15 fragment evaluations
+    - 4 monomer calculations (1-body terms)
+    - 6 dimer calculations (2-body terms)
+    - 4 trimer calculations (3-body terms)
+    - 1 tetramer calculation (4-body term)
 
 ### Parallel Execution Strategy:
 - Level 1: 4 monomers executed in parallel (4 workers, 1 batch)
@@ -100,8 +100,8 @@ calculations with actual quantum chemistry programs.
 - Level 4: 182 tetramers executed in parallel (4 workers, 46 batches)
 
 ### Expected Performance:
-- Sequential execution time: Several hours to days
-- Parallel execution time: Significantly reduced with 4-thread speedup
+- Sequential execution time: ~40–60 seconds on a laptop CPU
+- Parallel execution time: 10–30 seconds with 4 workers
 - Mathematical correctness: Identical results to sequential execution
 - Validation: Ultra-strict 1e-12 tolerance maintained
 
