@@ -197,6 +197,28 @@ for label, result in results.items():
     print(f"{label}: {result.return_result:.8f} hartree")
 ```
 
+## ⚙️ Multiprocessing start methods
+
+QCManyBody now supports Python's ``spawn`` start method for multiprocessing,
+which is the default on Windows and macOS and available on modern Linux
+distributions. The parallel executor ships with a lightweight initializer that
+hydrates worker processes with the serialized ``ParallelConfig`` so fragment
+payloads remain picklable under both ``fork`` and ``spawn``.
+
+- **Testing tip:** use ``ParallelConfig(use_qcengine=False)`` to exercise the
+    placeholder workflow without requiring Psi4. The regression test
+    ``qcmanybody/tests/test_multiprocessing_serialization.py`` loads the
+    real ``test_water4_mbe4_multiprocessing.py`` example and validates spawn-mode
+    execution against a serial baseline.
+- **Production tip:** set the start method explicitly early in your program via
+    ``multiprocessing.set_start_method("spawn", force=True)`` when targeting
+    heterogeneous platforms, and ensure any heavy dependencies are imported
+    inside worker initializers rather than at module scope.
+
+When ``use_qcengine=True``, the executor continues to require the relevant
+quantum-chemistry backends (Psi4, NWChem, etc.) to be installed in the runtime
+environment.
+
 ## 🔍 Validation Example
 
 Verify that parallel execution gives identical results to sequential:

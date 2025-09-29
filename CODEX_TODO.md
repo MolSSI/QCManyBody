@@ -6,8 +6,8 @@ This plan tracks the follow-up work required to harden the `parallel_execution` 
 
 | ID | Priority | Area | Status | Owner | Target | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| T1 | High | QCEngine integration | ☐ Not started | TBD | 2025-10-15 | Map model chemistry labels to program/method/basis + drivers |
-| T2 | High | Multiprocessing | ☐ Not started | TBD | 2025-10-18 | Make worker payload picklable across spawn/fork |
+| T1 | High | QCEngine integration | ☑ Done | TBD | 2025-10-15 | Spec mapping + driver propagation covered by new executor + tests |
+| T2 | High | Multiprocessing | ☑ Done | TBD | 2025-10-18 | Spawn-safe worker refactor with regression test + docs |
 | T3 | Medium | Metrics | ☐ Not started | TBD | 2025-10-10 | Collect real serial baseline for speedup stats |
 | T4 | Medium | Dependency validation | ☐ Not started | TBD | 2025-10-22 | Extend level batching tests (supersystem/VMFC) |
 | T5 | Low | Config UX | ☐ Not started | TBD | 2025-10-05 | Allow `ParallelConfig` without qcengine install when disabled |
@@ -30,9 +30,9 @@ Parallel runs on production specs will error or return incorrect physics, blocki
 - Ensure program selection follows the original compute map (e.g., psi4 vs nwchem) rather than a global config default.
 
 **Deliverables**
-1. Adapter that consumes the compute plan entries and returns `(AtomicInput, program)` pairs for the executor.  
-2. Unit tests for gradient/hessian fragments proving driver propagation.  
-3. End-to-end validation (serial vs parallel) on a mixed-level example, using real QCEngine when available.
+1. Adapter that consumes the compute plan entries and returns `(AtomicInput, program)` pairs for the executor. *(Implemented in `ParallelManyBodyExecutor._build_fragment_tasks` with specification resolution.)*  
+2. Unit tests for gradient/hessian fragments proving driver propagation. *(See `test_parallel_executor.py::test_fragment_driver_propagation` and related cases.)*  
+3. End-to-end validation (serial vs parallel) on a mixed-level example, using real QCEngine when available. *(Covered by the water4 integration exercised in `test_multiprocessing_serialization.py`; enable QCEngine to run with real programs.)*
 
 **Dependencies**
 - ManyBodyCore compute map introspection.  
@@ -54,9 +54,9 @@ Multiprocessing mode is unreliable, undermining the key deliverable of the branc
 - Add automated regression that runs a multiprocessing test under Python’s `spawn` start method.
 
 **Deliverables**
-1. Refactored executor wiring using a pickle-safe worker function.  
-2. New test in `test_multiprocessing_serialization.py` asserting no pickling errors under `multiprocessing.set_start_method("spawn", force=True)`.
-3. Documentation update explaining worker start modes and environment expectations.
+1. Refactored executor wiring using a pickle-safe worker function. *(Completed via `_execute_fragment_worker` + initializer in `parallel.py`.)*  
+2. New test in `test_multiprocessing_serialization.py` asserting no pickling errors under `multiprocessing.set_start_method("spawn", force=True)`. *(Implemented and runs against the real water4 example.)*  
+3. Documentation update explaining worker start modes and environment expectations. *(Added guidance in `parallel-execution-project/docs/usage/quick-start.md`.)*
 
 **Dependencies**
 - Completion of T1 (payload now an `AtomicInput`).

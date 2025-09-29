@@ -3,6 +3,8 @@
 Quick test to verify the parallel execution system is working.
 """
 
+import copy
+
 def test_parallel_system():
     """Test basic parallel execution functionality."""
 
@@ -61,9 +63,32 @@ def test_parallel_system():
 
     print("✓ ParallelConfig created")
 
+    specifications = {
+        "hf": {
+            "program": "psi4",
+            "specification": {
+                "driver": "energy",
+                "model": {"method": "hf", "basis": "sto-3g"},
+                "keywords": {},
+                "protocols": {},
+                "extras": {},
+            },
+        },
+        "mp2": {
+            "program": "psi4",
+            "specification": {
+                "driver": "energy",
+                "model": {"method": "mp2", "basis": "sto-3g"},
+                "keywords": {},
+                "protocols": {},
+                "extras": {},
+            },
+        },
+    }
+
     # Create parallel executor
     try:
-        executor = ParallelManyBodyExecutor(core, config)
+        executor = ParallelManyBodyExecutor(core, config, driver="energy", specifications=specifications)
         print("✓ ParallelManyBodyExecutor created successfully")
     except Exception as e:
         print(f"✗ Failed to create ParallelManyBodyExecutor: {e}")
@@ -138,7 +163,35 @@ def test_sequential_comparison():
         use_qcengine=False
     )
 
-    sequential_executor = ParallelManyBodyExecutor(core, sequential_config)
+    specifications = {
+        "hf": {
+            "program": "psi4",
+            "specification": {
+                "driver": "energy",
+                "model": {"method": "hf", "basis": "sto-3g"},
+                "keywords": {},
+                "protocols": {},
+                "extras": {},
+            },
+        },
+        "mp2": {
+            "program": "psi4",
+            "specification": {
+                "driver": "energy",
+                "model": {"method": "mp2", "basis": "sto-3g"},
+                "keywords": {},
+                "protocols": {},
+                "extras": {},
+            },
+        },
+    }
+
+    sequential_executor = ParallelManyBodyExecutor(
+        core,
+        sequential_config,
+        driver="energy",
+        specifications=copy.deepcopy(specifications),
+    )
     sequential_results = sequential_executor.execute_full_calculation()
     print(f"✓ Sequential execution: {len(sequential_results)} results")
 
@@ -149,7 +202,12 @@ def test_sequential_comparison():
         use_qcengine=False
     )
 
-    parallel_executor = ParallelManyBodyExecutor(core, parallel_config)
+    parallel_executor = ParallelManyBodyExecutor(
+        core,
+        parallel_config,
+        driver="energy",
+        specifications=copy.deepcopy(specifications),
+    )
     parallel_results = parallel_executor.execute_full_calculation()
     print(f"✓ Parallel execution: {len(parallel_results)} results")
 

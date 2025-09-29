@@ -4,6 +4,10 @@ Test QCManyBody parallel execution with real Psi4 calculations.
 This uses a small system to verify the parallel system works with actual QC.
 """
 
+import copy
+import time
+
+
 def test_parallel_with_real_qc():
     """Test parallel execution using real Psi4 calculations on a small system."""
 
@@ -21,7 +25,6 @@ def test_parallel_with_real_qc():
     from qcmanybody import ManyBodyCore, BsseEnum
     from qcmanybody.parallel import ParallelManyBodyExecutor, ParallelConfig
     from qcelemental.models import Molecule
-    import time
 
     # Create a very small test system (helium dimer)
     # This will be fast but still use real QC calculations
@@ -76,8 +79,21 @@ def test_parallel_with_real_qc():
 
     print("✓ ParallelConfig created for real QCEngine calculations")
 
+    specifications = {
+        "hf": {
+            "program": "psi4",
+            "specification": {
+                "driver": "energy",
+                "model": {"method": "hf", "basis": "sto-3g"},
+                "keywords": {'scf_type': 'df', 'maxiter': 50, 'e_convergence': 1e-06, 'd_convergence': 1e-06},
+                "protocols": {"stdout": False},
+                "extras": {},
+            },
+        },
+    }
+
     # Create executor
-    executor = ParallelManyBodyExecutor(core, config)
+    executor = ParallelManyBodyExecutor(core, config, driver="energy", specifications=specifications)
     print("✓ ParallelManyBodyExecutor created")
 
     # Run the calculation
@@ -168,7 +184,25 @@ def test_comparison_with_real_qc():
         **qc_config
     )
 
-    sequential_executor = ParallelManyBodyExecutor(core, sequential_config)
+    specifications = {
+        "hf": {
+            "program": "psi4",
+            "specification": {
+                "driver": "energy",
+                "model": {"method": "hf", "basis": "sto-3g"},
+                "keywords": {'scf_type': 'df'},
+                "protocols": {"stdout": False},
+                "extras": {},
+            },
+        },
+    }
+
+    sequential_executor = ParallelManyBodyExecutor(
+        core,
+        sequential_config,
+        driver="energy",
+        specifications=copy.deepcopy(specifications),
+    )
     sequential_results = sequential_executor.execute_full_calculation()
     print(f"✓ Sequential: {len(sequential_results)} results")
 
@@ -180,7 +214,12 @@ def test_comparison_with_real_qc():
         **qc_config
     )
 
-    parallel_executor = ParallelManyBodyExecutor(core, parallel_config)
+    parallel_executor = ParallelManyBodyExecutor(
+        core,
+        parallel_config,
+        driver="energy",
+        specifications=copy.deepcopy(specifications),
+    )
     parallel_results = parallel_executor.execute_full_calculation()
     print(f"✓ Parallel: {len(parallel_results)} results")
 

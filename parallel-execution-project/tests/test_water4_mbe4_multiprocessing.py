@@ -127,33 +127,41 @@ The parallel execution system demonstrates the successful implementation of:
 ################################################################################
 """
 
-# Add project root to Python path to use development version
 import sys
 import os
+from typing import Optional
+
+# Add project root to Python path to use development version
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, project_root)
 
+from qcelemental.models import Molecule
 
-def run_water4_calculation():
-    """Run the many-body expansion calculation for 16-water cluster with parallel execution."""
+from qcmanybody import BsseEnum, ManyBodyCore
+from qcmanybody.parallel import ParallelConfig, ParallelManyBodyExecutor
 
-    # Create the 16-water cluster molecule
-    from qcelemental.models import Molecule
 
-    # Molecular system with 4 water fragments (12 atoms total)
+def build_water4_molecule() -> Molecule:
+    """Construct the four-water cluster molecule used in multiprocessing tests."""
+
     symbols = ['O', 'H', 'H', 'O', 'H', 'H', 'O', 'H', 'H', 'O', 'H', 'H']
-    # Geometry in Bohr (from HMBE input)
-    geometry = [0.069765, -3.765074, -0.092294, -0.748399, -4.102246, -0.457193, 
-                -0.205709, -3.169585, 0.604654, 2.608892, -2.675449, 2.890175, 
-                2.427245, -3.533869, 2.507619, 2.493361, -2.060559, 2.16575, 
-                0.0, 0.0, 0.0, -0.900139, -0.263684, 0.190917, 0.092177, -0.127148, 
-                -0.944228, 2.450667, -1.324316, 0.643786, 2.758818, -1.643552, 
-                -0.204364, 1.562815, -1.009682, 0.473627]
-
-    # Fragment definitions - each water molecule is a separate fragment
+    geometry = [
+        0.069765, -3.765074, -0.092294,
+        -0.748399, -4.102246, -0.457193,
+        -0.205709, -3.169585, 0.604654,
+        2.608892, -2.675449, 2.890175,
+        2.427245, -3.533869, 2.507619,
+        2.493361, -2.060559, 2.16575,
+        0.0, 0.0, 0.0,
+        -0.900139, -0.263684, 0.190917,
+        0.092177, -0.127148, -0.944228,
+        2.450667, -1.324316, 0.643786,
+        2.758818, -1.643552, -0.204364,
+        1.562815, -1.009682, 0.473627,
+    ]
     fragments = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10, 11]]
 
-    mol = Molecule(
+    return Molecule(
         symbols=symbols,
         geometry=geometry,
         fragments=fragments,
@@ -161,102 +169,105 @@ def run_water4_calculation():
         molecular_multiplicity=1
     )
 
-    # Set up parallel many-body calculation using the new parallel execution API
-    from qcmanybody import ManyBodyCore, BsseEnum
-    from qcmanybody.parallel import ParallelManyBodyExecutor, ParallelConfig
 
-    # Create ManyBodyCore with calculation parameters
-    core = ManyBodyCore(
+def build_manybody_core(molecule: Optional[Molecule] = None) -> ManyBodyCore:
+    """Create a ManyBodyCore for the water4 cluster."""
+
+    mol = molecule or build_water4_molecule()
+    return ManyBodyCore(
         molecule=mol,
-        bsse_type=[BsseEnum.nocp],  # No counterpoise BSSE correction
-        levels={1: "hf", 2: "hf", 3: "hf", 4: "hf"},  # HF at all N-body levels
+        bsse_type=[BsseEnum.nocp],
+        levels={1: "hf", 2: "hf", 3: "hf", 4: "hf"},
         return_total_data=True,
         supersystem_ie_only=False,
         embedding_charges={}
     )
 
-    # Configure parallel execution with 4 processes
-    parallel_config = ParallelConfig(
-        max_workers=4,                    # Use 4 processes for parallel execution
-        execution_mode="multiprocessing",  # Testing multiprocessing serialization fixes
-        use_qcengine=True,                # Use real quantum chemistry calculations
-        qc_program="psi4",                # Use Psi4 for QC calculations
-        basis_set="sto-3g",               # STO-3G basis set for speed
-        memory_limit_mb=1000,             # 1 GB memory per worker
-        timeout_seconds=7200,             # 2 hour timeout per fragment
+
+def build_default_parallel_config() -> ParallelConfig:
+    """Return the production multiprocessing configuration for the water4 example."""
+
+    return ParallelConfig(
+        max_workers=4,
+        execution_mode="multiprocessing",
+        use_qcengine=True,
+        qc_program="psi4",
+        basis_set="sto-3g",
+        memory_limit_mb=1000,
+        timeout_seconds=7200,
         qcengine_config={
             "keywords": {
-                'scf_type': 'df',         # Density fitting for speed
-                'maxiter': 100,
-                'e_convergence': 1e-06,
-                'd_convergence': 1e-06
+                "scf_type": "df",
+                "maxiter": 100,
+                "e_convergence": 1e-06,
+                "d_convergence": 1e-06,
             },
             "protocols": {
-                "stdout": False          # Suppress output for cleaner parallel execution
-            }
-        }
+                "stdout": False,
+            },
+        },
     )
-    
-    # Store molecule info before creating the computer
+
+
+def run_water4_calculation(parallel_config: Optional[ParallelConfig] = None, *, quiet: bool = False):
+    """Run the many-body expansion calculation for the 4-water cluster."""
+
+    mol = build_water4_molecule()
+    core = build_manybody_core(mol)
+    config = parallel_config or build_default_parallel_config()
+
+    printer = print if not quiet else (lambda *args, **kwargs: None)
+
     n_atoms = len(mol.symbols)
     n_fragments = len(mol.fragments)
-    
-    print(f"System: {n_atoms} atoms in {n_fragments} fragments")
-    print("Max n-body level: 4")
-    print("BSSE treatment: ['nocp']")
-    print("QC method: HF/STO-3G")
-    print("Parallel execution: 4 threads")
-    print("\nCalculation plan: 15 individual QC calculations (4 1-body + 6 2-body + 4 3-body + 1 4-body)")
 
-    # Create parallel executor
-    executor = ParallelManyBodyExecutor(core, parallel_config)
+    printer(f"System: {n_atoms} atoms in {n_fragments} fragments")
+    printer("Max n-body level: 4")
+    printer("BSSE treatment: ['nocp']")
+    printer("QC method: HF/STO-3G")
+    printer(f"Parallel execution: {config.execution_mode} mode with {config.max_workers} workers")
+    printer("\nCalculation plan: 15 individual QC calculations (4 1-body + 6 2-body + 4 3-body + 1 4-body)")
 
-    # Run the parallel computation
-    print("\n" + "="*60)
-    print("STARTING PARALLEL MANY-BODY EXPANSION CALCULATION")
-    print("Using QCManyBody Parallel Execution System")
-    print("This will perform individual QC calculations using 4 parallel processes!")
-    print("Level-by-level parallel execution: monomers → dimers → trimers → tetramers")
-    print("Estimated time: Several hours (significant speedup expected)")
-    print("="*60)
+    executor = ParallelManyBodyExecutor(core, config)
+
+    printer("\n" + "=" * 60)
+    printer("STARTING PARALLEL MANY-BODY EXPANSION CALCULATION")
+    printer("Using QCManyBody Parallel Execution System")
+    printer("This will perform individual QC calculations using parallel processes!")
+    printer("Level-by-level parallel execution: monomers → dimers → trimers → tetramers")
+    printer("=" * 60)
 
     import time
+
     start_time = time.time()
 
-    print("Setting up parallel many-body expansion calculation...")
-    print("Executing fragments in parallel while respecting N-body dependencies...")
+    printer("Setting up parallel many-body expansion calculation...")
+    printer("Executing fragments in parallel while respecting N-body dependencies...")
 
-    # Execute the full calculation with parallel execution
     fragment_results = executor.execute_full_calculation()
-
-    # Get execution statistics
     stats = executor.get_execution_statistics()
 
-    # Now process results through ManyBodyCore to get final many-body properties
-    print("Processing fragment results to compute many-body properties...")
+    printer("Processing fragment results to compute many-body properties...")
     result = core.analyze(fragment_results)
-    
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    
-    print("\n" + "="*60)
-    print("PARALLEL CALCULATION COMPLETED!")
-    print(f"Total time: {elapsed_time:.2f} seconds")
 
-    # Display parallel execution statistics
-    print(f"\nParallel Execution Statistics:")
-    print(f"  Total fragments executed: {stats['total_fragments']}")
-    print(f"  N-body levels processed: {stats['levels_executed']}")
-    print(f"  Parallel execution time: {stats['parallel_time']:.2f}s")
-    print(f"  Estimated speedup factor: {stats['speedup_factor']:.2f}x")
+    elapsed_time = time.time() - start_time
 
-    print(f"\nAnalysis result type: {type(result)}")
-    print(f"Available result keys: {list(result.keys())}")
+    printer("\n" + "=" * 60)
+    printer("PARALLEL CALCULATION COMPLETED!")
+    printer(f"Total time: {elapsed_time:.2f} seconds")
 
-    # Display final results in a readable format
-    print("\n" + "="*70)
-    print("FINAL MANY-BODY EXPANSION RESULTS")
-    print("="*70)
+    printer(f"\nParallel Execution Statistics:")
+    printer(f"  Total fragments executed: {stats['total_fragments']}")
+    printer(f"  N-body levels processed: {stats['levels_executed']}")
+    printer(f"  Parallel execution time: {stats['parallel_time']:.2f}s")
+    printer(f"  Estimated speedup factor: {stats['speedup_factor']:.2f}x")
+
+    printer(f"\nAnalysis result type: {type(result)}")
+    printer(f"Available result keys: {list(result.keys())}")
+
+    printer("\n" + "=" * 70)
+    printer("FINAL MANY-BODY EXPANSION RESULTS")
+    printer("=" * 70)
 
     # Check if we have the results dictionary with detailed n-body data
     if 'results' in result:
@@ -265,44 +276,44 @@ def run_water4_calculation():
         # Extract and display total energies
         total_energy_4body = results_dict.get('nocp_corrected_total_energy_through_4_body')
         if total_energy_4body is not None:
-            print(f"\nTotal 4-body energy:     {total_energy_4body:.8f} Eh")
-            print(f"                         {total_energy_4body * 627.509:.2f} kcal/mol")
+            printer(f"\nTotal 4-body energy:     {total_energy_4body:.8f} Eh")
+            printer(f"                         {total_energy_4body * 627.509:.2f} kcal/mol")
 
         # Extract and display interaction energies
         interaction_energy_4body = results_dict.get('nocp_corrected_interaction_energy_through_4_body')
         if interaction_energy_4body is not None:
-            print(f"\n4-body interaction energy: {interaction_energy_4body:.8f} Eh")
-            print(f"                           {interaction_energy_4body * 627.509:.2f} kcal/mol")
+            printer(f"\n4-body interaction energy: {interaction_energy_4body:.8f} Eh")
+            printer(f"                           {interaction_energy_4body * 627.509:.2f} kcal/mol")
 
         # Display n-body contributions
-        print(f"\nN-body Energy Contributions:")
-        print(f"{'Level':<8} {'Energy (Eh)':<15} {'Energy (kcal/mol)':<15}")
-        print("-" * 40)
+        printer(f"\nN-body Energy Contributions:")
+        printer(f"{'Level':<8} {'Energy (Eh)':<15} {'Energy (kcal/mol)':<15}")
+        printer("-" * 40)
 
         # 1-body contribution
         e1_total = results_dict.get('nocp_corrected_total_energy_through_1_body')
         if e1_total is not None:
-            print(f"{'1-body':<8} {e1_total:<15.8f} {e1_total * 627.509:<15.2f}")
+            printer(f"{'1-body':<8} {e1_total:<15.8f} {e1_total * 627.509:<15.2f}")
 
         # 2-body contribution
         e2_contrib = results_dict.get('nocp_corrected_2_body_contribution_to_energy')
         if e2_contrib is not None:
-            print(f"{'2-body':<8} {e2_contrib:<15.8f} {e2_contrib * 627.509:<15.2f}")
+            printer(f"{'2-body':<8} {e2_contrib:<15.8f} {e2_contrib * 627.509:<15.2f}")
 
         # 3-body contribution
         e3_contrib = results_dict.get('nocp_corrected_3_body_contribution_to_energy')
         if e3_contrib is not None:
-            print(f"{'3-body':<8} {e3_contrib:<15.8f} {e3_contrib * 627.509:<15.2f}")
+            printer(f"{'3-body':<8} {e3_contrib:<15.8f} {e3_contrib * 627.509:<15.2f}")
 
         # 4-body contribution
         e4_contrib = results_dict.get('nocp_corrected_4_body_contribution_to_energy')
         if e4_contrib is not None:
-            print(f"{'4-body':<8} {e4_contrib:<15.8f} {e4_contrib * 627.509:<15.2f}")
+            printer(f"{'4-body':<8} {e4_contrib:<15.8f} {e4_contrib * 627.509:<15.2f}")
 
         # Display cumulative energies through each level
-        print(f"\nCumulative Energies Through Each Level:")
-        print(f"{'Level':<12} {'Total Energy (Eh)':<18} {'Interaction Energy (Eh)':<20}")
-        print("-" * 52)
+        printer(f"\nCumulative Energies Through Each Level:")
+        printer(f"{'Level':<12} {'Total Energy (Eh)':<18} {'Interaction Energy (Eh)':<20}")
+        printer("-" * 52)
 
         for level in [1, 2, 3, 4]:
             total_key = f'nocp_corrected_total_energy_through_{level}_body'
@@ -312,20 +323,20 @@ def run_water4_calculation():
             interaction_val = results_dict.get(interaction_key)
 
             if total_val is not None and interaction_val is not None:
-                print(f"Through {level}  {total_val:<18.8f} {interaction_val:<20.8f}")
+                printer(f"Through {level}  {total_val:<18.8f} {interaction_val:<20.8f}")
 
     else:
         # Fallback to basic energy display if detailed results not available
         if 'ret_energy' in result:
-            print(f"Final energy result: {result['ret_energy']:.8f} Eh")
-            print(f"                     {result['ret_energy'] * 627.509:.2f} kcal/mol")
+            printer(f"Final energy result: {result['ret_energy']:.8f} Eh")
+            printer(f"                     {result['ret_energy'] * 627.509:.2f} kcal/mol")
         else:
-            print("No detailed energy results found")
+            printer("No detailed energy results found")
 
-    print("\n" + "="*70)
-    print("✓ MULTIPROCESSING CALCULATION SUCCESSFUL!")
-    print("✓ 4-water cluster many-body expansion completed!")
-    print("="*70)
+    printer("\n" + "=" * 70)
+    printer("✓ MULTIPROCESSING CALCULATION SUCCESSFUL!")
+    printer("✓ 4-water cluster many-body expansion completed!")
+    printer("=" * 70)
     
     return result
 
@@ -333,7 +344,7 @@ def run_water4_calculation():
 def test_psi4_availability():
     """Quick test to verify Psi4 is working."""
     try:
-        import psi4
+        import psi4  # type: ignore[import]
         print("✓ Psi4 import successful")
         
         # Quick test calculation

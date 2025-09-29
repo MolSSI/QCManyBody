@@ -4,6 +4,8 @@ This module implements comprehensive testing of the ParallelManyBodyExecutor,
 including unit tests, integration tests, and validation against sequential execution.
 """
 
+import copy
+
 import pytest
 import numpy as np
 from qcelemental.models import Molecule
@@ -27,6 +29,7 @@ class TestParallelConfig:
         assert config.qc_program == "psi4"
         assert config.basis_set == "sto-3g"
         assert config.qcengine_config == {}
+        assert config.default_driver == "energy"
 
     def test_custom_config(self):
         """Test custom configuration values."""
@@ -46,6 +49,7 @@ class TestParallelConfig:
         assert config.use_qcengine is False
         assert config.qc_program == "nwchem"
         assert config.basis_set == "6-31g"
+        assert config.default_driver == "energy"
 
     def test_invalid_execution_mode(self):
         """Test validation of execution mode."""
@@ -91,17 +95,39 @@ class TestParallelManyBodyExecutor:
             embedding_charges={}
         )
 
-    def test_executor_initialization(self, simple_manybody_core):
+    @pytest.fixture
+    def simple_specifications(self):
+        """Provide a minimal specification mapping for placeholder execution."""
+        spec = {
+            "hf": {
+                "program": "psi4",
+                "specification": {
+                    "driver": "energy",
+                    "model": {"method": "hf", "basis": "sto-3g"},
+                    "keywords": {},
+                    "protocols": {},
+                    "extras": {},
+                },
+            }
+        }
+        return copy.deepcopy(spec)
+
+    def test_executor_initialization(self, simple_manybody_core, simple_specifications):
         """Test ParallelManyBodyExecutor initialization."""
         config = ParallelConfig(use_qcengine=False)  # Disable QCEngine for testing
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
 
         assert executor.core is simple_manybody_core
         assert executor.config is config
         assert hasattr(executor, '_dependency_graph')
         assert executor.execution_stats["total_fragments"] == 0
 
-    def test_executor_initialization_missing_dependency_graph(self):
+    def test_executor_initialization_missing_dependency_graph(self, simple_specifications):
         """Test initialization with missing dependency graph methods."""
         # Create a mock core without iterate_molecules_by_level
         class MockCore:
@@ -113,38 +139,80 @@ class TestParallelManyBodyExecutor:
         config = ParallelConfig(use_qcengine=False)
 
         with pytest.raises(RuntimeError, match="P1-002 dependency graph foundation required"):
-            ParallelManyBodyExecutor(mock_core, config)
+            ParallelManyBodyExecutor(
+                mock_core,
+                config,
+                driver="energy",
+                specifications=simple_specifications,
+            )
 
-    def test_execute_fragment_placeholder(self, simple_manybody_core):
+    def test_execute_fragment_placeholder(self, simple_manybody_core, simple_specifications):
         """Test fragment execution with placeholder (no QCEngine)."""
         config = ParallelConfig(use_qcengine=False)
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
 
-        # Create a test fragment specification
-        molecule = simple_manybody_core.molecule.get_fragment(0)
-        fragment_spec = (1, "hf", '["hf", [1], [1]]', molecule)
-
-        label, result = executor.execute_fragment(fragment_spec)
+        fragment_task = executor._tasks_by_level[1][0]
+        label, result = executor.execute_fragment(fragment_task)
 
         assert label == '["hf", [1], [1]]'
         assert result.success is True
         assert result.driver == "energy"
-        assert result.model["method"] == "hf"
-        assert result.model["basis"] == "sto-3g"
+        assert result.model.method == "hf"
+        assert result.model.basis == "sto-3g"
         assert isinstance(result.return_result, (int, float))
 
-    def test_execute_level_parallel_serial_mode(self, simple_manybody_core):
+    def test_fragment_driver_propagation(self, water_dimer_molecule):
+        """Ensure driver selection propagates into AtomicInput and results."""
+        core = ManyBodyCore(
+            molecule=water_dimer_molecule,
+            bsse_type=[BsseEnum.nocp],
+            levels={1: "hf", 2: "hf"},
+            return_total_data=True,
+            supersystem_ie_only=False,
+            embedding_charges={},
+        )
+
+        specifications = {
+            "hf": {
+                "program": "psi4",
+                "specification": {
+                    "driver": "gradient",
+                    "model": {"method": "hf", "basis": "sto-3g"},
+                    "keywords": {},
+                    "protocols": {},
+                    "extras": {},
+                },
+            }
+        }
+
+        config = ParallelConfig(use_qcengine=False)
+        executor = ParallelManyBodyExecutor(core, config, driver="gradient", specifications=specifications)
+
+        fragment_task = executor._tasks_by_level[1][0]
+        assert fragment_task.atomic_input.driver == "gradient"
+
+        label, result = executor.execute_fragment(fragment_task)
+        assert label == fragment_task.label
+        assert result.driver == "gradient"
+        assert result.return_result.shape == (len(fragment_task.atomic_input.molecule.symbols), 3)
+        assert np.allclose(result.return_result, 0.0)
+
+    def test_execute_level_parallel_serial_mode(self, simple_manybody_core, simple_specifications):
         """Test level execution in serial mode."""
         config = ParallelConfig(use_qcengine=False, execution_mode="serial")
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
 
-        # Create test fragments for level 1
-        molecule1 = simple_manybody_core.molecule.get_fragment(0)
-        molecule2 = simple_manybody_core.molecule.get_fragment(1)
-        fragments_at_level = [
-            (1, "hf", '["hf", [1], [1]]', molecule1),
-            (1, "hf", '["hf", [2], [2]]', molecule2),
-        ]
+        fragments_at_level = executor._tasks_by_level[1]
 
         results = executor.execute_level_parallel(1, fragments_at_level)
 
@@ -153,18 +221,17 @@ class TestParallelManyBodyExecutor:
         assert '["hf", [2], [2]]' in results
         assert all(result.success for result in results.values())
 
-    def test_execute_level_parallel_threading_mode(self, simple_manybody_core):
+    def test_execute_level_parallel_threading_mode(self, simple_manybody_core, simple_specifications):
         """Test level execution in threading mode."""
         config = ParallelConfig(use_qcengine=False, execution_mode="threading", max_workers=2)
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
 
-        # Create test fragments for level 1
-        molecule1 = simple_manybody_core.molecule.get_fragment(0)
-        molecule2 = simple_manybody_core.molecule.get_fragment(1)
-        fragments_at_level = [
-            (1, "hf", '["hf", [1], [1]]', molecule1),
-            (1, "hf", '["hf", [2], [2]]', molecule2),
-        ]
+        fragments_at_level = executor._tasks_by_level[1]
 
         results = executor.execute_level_parallel(1, fragments_at_level)
 
@@ -173,10 +240,15 @@ class TestParallelManyBodyExecutor:
         assert '["hf", [2], [2]]' in results
         assert all(result.success for result in results.values())
 
-    def test_execute_full_calculation(self, simple_manybody_core):
+    def test_execute_full_calculation(self, simple_manybody_core, simple_specifications):
         """Test full parallel calculation execution."""
         config = ParallelConfig(use_qcengine=False, execution_mode="serial")
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
 
         results = executor.execute_full_calculation()
 
@@ -191,26 +263,41 @@ class TestParallelManyBodyExecutor:
         assert stats["parallel_time"] > 0
         assert stats["speedup_factor"] >= 0
 
-    def test_validation_framework(self, simple_manybody_core):
+    def test_validation_framework(self, simple_manybody_core, simple_specifications):
         """Test parallel vs sequential validation framework."""
         config = ParallelConfig(use_qcengine=False, execution_mode="serial")
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=copy.deepcopy(simple_specifications),
+        )
 
         # Execute twice to simulate parallel vs sequential
         results1 = executor.execute_full_calculation()
 
         # Reset executor and execute again
-        executor2 = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor2 = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=copy.deepcopy(simple_specifications),
+        )
         results2 = executor2.execute_full_calculation()
 
         # Validate results match within tolerance
         is_valid = executor.validate_parallel_correctness(results1, results2, tolerance=1e-12)
         assert is_valid is True
 
-    def test_validation_framework_mismatch(self, simple_manybody_core):
+    def test_validation_framework_mismatch(self, simple_manybody_core, simple_specifications):
         """Test validation framework with mismatched results."""
         config = ParallelConfig(use_qcengine=False)
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
 
         results1 = executor.execute_full_calculation()
 
@@ -219,18 +306,25 @@ class TestParallelManyBodyExecutor:
         if results2:
             first_key = next(iter(results2.keys()))
             # Modify the first result to create a mismatch
-            modified_result = results2[first_key].copy()
-            modified_result.return_result = modified_result.return_result + 1.0
+            original_result = results2[first_key]
+            modified_result = original_result.copy(update={
+                "return_result": original_result.return_result + 1.0
+            })
             results2[first_key] = modified_result
 
             # Should detect the mismatch
             with pytest.raises(ValueError, match="Energy difference.*exceeds tolerance"):
                 executor.validate_parallel_correctness(results1, results2, tolerance=1e-12)
 
-    def test_execution_statistics_tracking(self, simple_manybody_core):
+    def test_execution_statistics_tracking(self, simple_manybody_core, simple_specifications):
         """Test that execution statistics are properly tracked."""
         config = ParallelConfig(use_qcengine=False, execution_mode="serial")
-        executor = ParallelManyBodyExecutor(simple_manybody_core, config)
+        executor = ParallelManyBodyExecutor(
+            simple_manybody_core,
+            config,
+            driver="energy",
+            specifications=simple_specifications,
+        )
 
         # Initial state
         stats = executor.get_execution_statistics()
@@ -257,7 +351,11 @@ class TestQCEngineIntegration:
     @pytest.fixture
     def small_molecule(self):
         """Create a very small molecule for quick QCEngine tests."""
-        return Molecule.from_data("H 0 0 0")
+        return Molecule(
+            symbols=["H", "H"],
+            geometry=[0.0, 0.0, 0.0, 0.0, 0.0, 0.74],
+            fragments=[[0], [1]],
+        )
 
     def test_qcengine_execution_disabled(self, small_molecule):
         """Test that QCEngine execution can be disabled."""
@@ -271,14 +369,25 @@ class TestQCEngineIntegration:
         )
 
         config = ParallelConfig(use_qcengine=False)
-        executor = ParallelManyBodyExecutor(simple_core, config)
+        specifications = {
+            "hf": {
+                "program": "psi4",
+                "specification": {
+                    "driver": "energy",
+                    "model": {"method": "hf", "basis": "sto-3g"},
+                    "keywords": {},
+                    "protocols": {},
+                    "extras": {},
+                },
+            }
+        }
+        executor = ParallelManyBodyExecutor(simple_core, config, driver="energy", specifications=specifications)
 
-        # Should use placeholder execution
-        fragment_spec = (1, "hf", '["hf", [1], [1]]', small_molecule)
-        label, result = executor.execute_fragment(fragment_spec)
+        fragment_task = executor._tasks_by_level[1][0]
+        label, result = executor.execute_fragment(fragment_task)
 
         assert result.success is True
-        assert "placeholder" in result.provenance["creator"]
+        assert "placeholder" in result.provenance.creator
 
 
 # Performance and integration tests that don't require external dependencies
@@ -323,24 +432,10 @@ class TestParallelPerformance:
 
             @property
             def dependency_graph(self):
-                return None
-
-        # Remove the validation check for this test
-        class TestExecutor(ParallelManyBodyExecutor):
-            def __init__(self, core, config):
-                self.core = core
-                self.config = config
-                self._dependency_graph = core.dependency_graph
-                self.execution_stats = {
-                    "total_fragments": 0,
-                    "levels_executed": 0,
-                    "parallel_time": 0.0,
-                    "sequential_time_estimate": 0.0,
-                    "speedup_factor": 0.0
-                }
+                return self
 
         mock_core = MockCore()
-        executor = TestExecutor(mock_core, config)
+        executor = ParallelManyBodyExecutor(mock_core, config, driver="energy", specifications={})
 
         # Should handle empty iteration gracefully
         results = executor.execute_full_calculation()

@@ -176,7 +176,12 @@ def benchmark_parallel_execution(core: ManyBodyCore, config: ParallelConfig) -> 
     Tuple[Dict, Dict]
         Parallel results and execution statistics
     """
-    executor = ParallelManyBodyExecutor(core, config)
+    executor = ParallelManyBodyExecutor(
+        core,
+        config,
+        driver=config.default_driver,
+        specifications={},
+    )
 
     start_time = time.time()
     parallel_results = executor.execute_full_calculation()
