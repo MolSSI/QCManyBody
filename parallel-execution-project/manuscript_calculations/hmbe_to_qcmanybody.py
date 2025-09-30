@@ -61,7 +61,7 @@ import pprint
 def _format_literal(value: object) -> str:
     """Return a literal string suitable for embedding in generated code."""
 
-    literal = pprint.pformat(value, width=100, compact=False)
+    literal = pprint.pformat(value, width=79, compact=False)
     if "\n" not in literal:
         return literal
 
@@ -213,17 +213,26 @@ def convert_hmbe_to_qcmanybody(
             '''#!/usr/bin/env python3
 from __future__ import annotations
 
+import sys
 import time
+from pathlib import Path
 from typing import Dict
 
-from qcelemental.models import Molecule
-from qcmanybody.models import (
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from qcelemental.models import Molecule  # noqa: E402
+from qcmanybody.models import (  # noqa: E402
     AtomicSpecification,
     ManyBodyInput,
     ManyBodyKeywords,
     ManyBodySpecification,
 )
-from qcmanybody.parallel import ParallelConfig, ParallelManyBodyExecutor
+from qcmanybody.parallel import (  # noqa: E402
+    ParallelConfig,
+    ParallelManyBodyExecutor,
+)
 
 SYMBOLS = $symbols_literal
 GEOMETRY = $geometry_literal
@@ -320,7 +329,7 @@ def run_parallel_calculation():
     stats = executor.get_execution_statistics()
     elapsed = time.time() - start
 
-    print("QCManyBody parallel calculation complete!\n")
+    print("QCManyBody parallel calculation complete!")
     total_fragments = stats.get("total_fragments")
     if total_fragments is not None:
         print(f"Total fragments executed: {total_fragments}")
@@ -336,7 +345,7 @@ def run_parallel_calculation():
     speedup_factor = stats.get("speedup_factor")
     if speedup_factor:
         print(f"Measured speedup: {speedup_factor:.2f}x")
-    print(f"Elapsed (wall clock): {elapsed:.2f} s\n")
+    print(f"Elapsed (wall clock): {elapsed:.2f} s")
 
     analysis = executor.core.analyze(fragment_results)
     results = analysis.get("results", {}) if isinstance(analysis, dict) else {}
