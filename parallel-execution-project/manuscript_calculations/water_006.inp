@@ -1,0 +1,391 @@
+{
+  "filename": "water16.006.inp",
+  "chemical_system": {
+    "fragments": [
+      {
+        "id": "PF1",
+        "fragments": [
+          {
+            "id": "PF1_SF1",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              3.68185,
+              2.794538,
+              2.87362,
+              4.384392,
+              2.652901,
+              3.570615,
+              3.165972,
+              1.941682,
+              2.886895
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF1_SF2",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -0.053172,
+              3.157496,
+              3.266603,
+              0.717892,
+              3.414325,
+              2.733982,
+              -0.635022,
+              2.787117,
+              2.600566
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF1_SF3",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              3.610915,
+              -0.105882,
+              1.14047,
+              3.524493,
+              0.806244,
+              0.770659,
+              4.436671,
+              -0.349155,
+              0.799986
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF1_SF4",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              0.590179,
+              1.882994,
+              0.637364,
+              0.315494,
+              1.757073,
+              -0.266175,
+              0.618286,
+              0.943263,
+              0.890515
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          }
+        ],
+        "molecular_charge": 0,
+        "molecular_multiplicity": 1
+      },
+      {
+        "id": "PF2",
+        "fragments": [
+          {
+            "id": "PF2_SF1",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              0.837336,
+              -3.628563,
+              -4.785764,
+              0.320134,
+              -4.419663,
+              -5.094024,
+              0.941009,
+              -3.156434,
+              -5.599088
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF2_SF2",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              1.921641,
+              -3.324268,
+              0.489865,
+              1.180185,
+              -3.856223,
+              0.830424,
+              1.419522,
+              -2.561692,
+              0.124298
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF2_SF3",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -0.192274,
+              -2.240961,
+              -1.377005,
+              -0.300864,
+              -3.125943,
+              -1.011494,
+              -0.143242,
+              -2.431526,
+              -2.316201
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF2_SF4",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -0.833612,
+              -3.149459,
+              1.321281,
+              -1.643781,
+              -3.488354,
+              1.820147,
+              -0.131056,
+              -3.399989,
+              1.941079
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          }
+        ],
+        "molecular_charge": 0,
+        "molecular_multiplicity": 1
+      },
+      {
+        "id": "PF3",
+        "fragments": [
+          {
+            "id": "PF3_SF1",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -1.038049,
+              -0.280804,
+              1.997115,
+              -0.382953,
+              -0.880978,
+              2.386893,
+              -1.77891,
+              -0.846288,
+              1.701345
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF3_SF2",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -2.425465,
+              2.065041,
+              4.506157,
+              -2.801669,
+              1.675718,
+              5.32788,
+              -1.480343,
+              1.745413,
+              4.557121
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF3_SF3",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -3.414001,
+              -3.584178,
+              2.350093,
+              -3.691525,
+              -2.84867,
+              1.868624,
+              -4.21641,
+              -3.893299,
+              2.798711
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF3_SF4",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              0.73216,
+              -1.67768,
+              3.534502,
+              1.475958,
+              -1.422415,
+              3.016006,
+              0.409495,
+              -0.806013,
+              3.894856
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          }
+        ],
+        "molecular_charge": 0,
+        "molecular_multiplicity": 1
+      },
+      {
+        "id": "PF4",
+        "fragments": [
+          {
+            "id": "PF4_SF1",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -3.830254,
+              2.057838,
+              -0.157201,
+              -3.141579,
+              1.769266,
+              0.478199,
+              -4.132481,
+              2.811528,
+              0.361495
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF4_SF2",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              0.195532,
+              3.55846,
+              -2.177552,
+              0.538395,
+              3.13683,
+              -1.383304,
+              1.027023,
+              3.739625,
+              -2.662518
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF4_SF3",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -2.849135,
+              -1.48901,
+              -0.018304,
+              -3.439426,
+              -1.959073,
+              -0.56605,
+              -2.110085,
+              -2.024567,
+              -0.045657
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          },
+          {
+            "id": "PF4_SF4",
+            "symbols": [
+              "O",
+              "H",
+              "H"
+            ],
+            "geometry": [
+              -2.693852,
+              1.234169,
+              -2.488064,
+              -3.317738,
+              1.520489,
+              -1.840472,
+              -1.828107,
+              1.575626,
+              -2.229886
+            ],
+            "molecular_charge": 0,
+            "molecular_multiplicity": 1
+          }
+        ],
+        "molecular_charge": 0,
+        "molecular_multiplicity": 1
+      }
+    ]
+  },
+  "runtime_params": {
+    "hmbe_order": 2,
+    "mbe_orders": [
+      2,
+      3
+    ],
+    "driver": "energy",
+    "model": {
+      "method": "MP2",
+      "basis": "aug-cc-pVDZ"
+    },
+    "keywords": {
+      "scf_type": "df",
+      "maxiter": 100,
+      "e_convergence": 1e-06,
+      "d_convergence": 1e-06
+    },
+    "program": "psi4",
+    "parallel": false
+  }
+}
