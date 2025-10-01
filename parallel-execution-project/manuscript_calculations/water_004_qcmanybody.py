@@ -264,10 +264,21 @@ def run_parallel_calculation():
     results = analysis.get("results", {}) if isinstance(analysis, dict) else {}
     if results:
         for n_body in range(1, MAX_NBODY + 1):
-            n_body_key = f"nocp_{n_body}_body_energy"
+            n_body_key = f"nocp_corrected_total_energy_through_{n_body}_body"
             n_body_energy = results.get(n_body_key)
             if n_body_energy is not None:
                 print(f"{n_body}-body energy: {float(n_body_energy):.12f} Eh")
+                contribution_key = (
+                    "nocp_corrected_"
+                    f"{n_body}_body_contribution_to_energy"
+                )
+                contribution = results.get(contribution_key)
+                if contribution is not None:
+                    print(
+                        "  "
+                        f"Contribution from {n_body}-body order: "
+                        f"{float(contribution):.12f} Eh"
+                    )
         total_key = f"nocp_corrected_total_energy_through_{MAX_NBODY}_body"
         interaction_key = (
             f"nocp_corrected_interaction_energy_through_{MAX_NBODY}_body"
