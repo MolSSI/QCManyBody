@@ -1,9 +1,16 @@
 QCManyBody parallel calculation complete!
 Total fragments executed: 3364
 Levels processed: 4
-Parallel wall time: 690.05 s
-Serial baseline: 8238.60 s
-Measured speedup: 11.94x
-Elapsed (wall clock): 690.05 s
-Total energy (through 4-body): -1193.802385817467 Eh
-Interaction energy (through 4-body): 3.144308938136 Eh
+Parallel wall time: 702.84 s
+Serial baseline: 8403.04 s
+Measured speedup: 11.96x
+Elapsed (wall clock): 702.84 s
+1-body energy: -1196.946694755603 Eh
+2-body energy: -1193.612390528568 Eh
+  Contribution from 2-body order: 3.334304227036 Eh
+3-body energy: -1193.767990958280 Eh
+  Contribution from 3-body order: -0.155600429713 Eh
+4-body energy: -1193.802385894174 Eh
+  Contribution from 4-body order: -0.034394935894 Eh
+Total energy (through 4-body): -1193.802385894174 Eh
+Interaction energy (through 4-body): 3.144308861429 Eh
