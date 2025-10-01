@@ -148,7 +148,7 @@ SPEC_KEYWORDS = {
     'scf_type': 'df',
 }
 BSSE_TYPES = ['nocp']
-MAX_NBODY = 3
+MAX_NBODY = 4
 RETURN_TOTAL_DATA = True
 SUPERSYSTEM_IE_ONLY = False
 TOTAL_CHARGE = 0
@@ -208,7 +208,7 @@ def create_parallel_config() -> ParallelConfig:
     """Return the parallel execution configuration."""
 
     return ParallelConfig(
-        max_workers=6,
+        max_workers=12,
         execution_mode="multiprocessing",
         use_qcengine=True,
         qc_program="psi4",
@@ -258,6 +258,11 @@ def run_parallel_calculation():
     analysis = executor.core.analyze(fragment_results)
     results = analysis.get("results", {}) if isinstance(analysis, dict) else {}
     if results:
+        for n_body in range(1, MAX_NBODY + 1):
+            n_body_key = f"nocp_{n_body}_body_energy"
+            n_body_energy = results.get(n_body_key)
+            if n_body_energy is not None:
+                print(f"{n_body}-body energy: {float(n_body_energy):.12f} Eh")
         total_key = f"nocp_corrected_total_energy_through_{MAX_NBODY}_body"
         interaction_key = (
             f"nocp_corrected_interaction_energy_through_{MAX_NBODY}_body"
