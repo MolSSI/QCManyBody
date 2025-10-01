@@ -164,6 +164,8 @@ def convert_hmbe_to_qcmanybody(
         level_orders = list(range(1, len(fragments) + 1))
     max_nbody = max(level_orders) if level_orders else len(fragments)
 
+    all_levels = set(level_orders) | set(range(1, max_nbody + 1))
+
     driver = runtime_params.get("driver", "energy").lower()
     model_params = runtime_params.get("model", {})
     method = model_params.get("method", "hf").lower()
@@ -172,10 +174,8 @@ def convert_hmbe_to_qcmanybody(
 
     level_to_spec = {
         int(level): f"{base_label}_lvl{int(level)}"
-        for level in level_orders
+        for level in sorted(all_levels)
     }
-    if not level_to_spec:
-        level_to_spec[1] = f"{base_label}_lvl1"
 
     program_map = {
         "psi4": "psi4",

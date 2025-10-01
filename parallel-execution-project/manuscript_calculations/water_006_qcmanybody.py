@@ -140,7 +140,12 @@ FRAGMENTS = (
      [42, 43, 44],
      [45, 46, 47]]
 )
-LEVEL_TO_SPEC = {2: 'mp2_aug_cc_pvdz_lvl2', 3: 'mp2_aug_cc_pvdz_lvl3'}
+LEVEL_TO_SPEC = {
+    1: 'mp2_aug_cc_pvdz_lvl1',
+    2: 'mp2_aug_cc_pvdz_lvl2',
+    3: 'mp2_aug_cc_pvdz_lvl3',
+    4: 'mp2_aug_cc_pvdz_lvl4',
+}
 SPEC_KEYWORDS = {
     'd_convergence': 1e-06,
     'e_convergence': 1e-06,

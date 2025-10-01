@@ -1,0 +1,9 @@
+QCManyBody parallel calculation complete!
+Total fragments executed: 3364
+Levels processed: 4
+Parallel wall time: 690.52 s
+Serial baseline: 8258.59 s
+Measured speedup: 11.96x
+Elapsed (wall clock): 690.52 s
+Total energy (through 4-body): -1193.802385865762 Eh
+Interaction energy (through 4-body): 3.144308889842 Eh
