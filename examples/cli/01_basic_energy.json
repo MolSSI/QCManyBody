@@ -1,0 +1,39 @@
+{
+  "schema_name": "qcmanybody_cli_input",
+  "schema_version": 1,
+  "molecule": {
+    "source": "inline",
+    "inline": {
+      "symbols": ["He", "He", "He"],
+      "geometry": [
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 2.0],
+        [0.0, 0.0, 4.0]
+      ],
+      "fragments": [[0], [1], [2]],
+      "molecular_charge": 0.0,
+      "molecular_multiplicity": 1,
+      "units": "angstrom"
+    }
+  },
+  "calculation": {
+    "type": "single",
+    "single": {
+      "driver": "energy",
+      "method": "mp2",
+      "basis": "cc-pvdz",
+      "program": "psi4"
+    }
+  },
+  "bsse": {
+    "type": ["cp"]
+  },
+  "manybody": {
+    "max_nbody": 3,
+    "return_total_data": false
+  },
+  "output": {
+    "format": "json",
+    "pretty": true
+  }
+}

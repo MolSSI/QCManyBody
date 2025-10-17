@@ -1,0 +1,56 @@
+{
+  "schema_name": "qcmanybody_cli_input",
+  "schema_version": 1,
+  "molecule": {
+    "source": "inline",
+    "inline": {
+      "symbols": ["Ne", "Ne", "Ne"],
+      "geometry": [
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 2.0],
+        [0.0, 0.0, 4.0]
+      ],
+      "fragments": [[0], [1], [2]],
+      "units": "angstrom"
+    }
+  },
+  "calculation": {
+    "type": "multi",
+    "multi": {
+      "driver": "gradient",
+      "levels": {
+        "1": {
+          "method": "ccsd(t)",
+          "basis": "cc-pvtz",
+          "program": "nwchem"
+        },
+        "2": {
+          "method": "mp2",
+          "basis": "cc-pvdz",
+          "program": "psi4"
+        },
+        "3": {
+          "method": "mp2",
+          "basis": "cc-pvdz",
+          "program": "psi4"
+        }
+      }
+    }
+  },
+  "bsse": {
+    "type": ["cp", "vmfc"]
+  },
+  "manybody": {
+    "max_nbody": 3,
+    "return_total_data": true
+  },
+  "program": {
+    "keywords": {
+      "ccsd__thresh": 1e-7
+    }
+  },
+  "output": {
+    "format": "json",
+    "pretty": true
+  }
+}

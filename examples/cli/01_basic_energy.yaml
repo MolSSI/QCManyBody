@@ -1,0 +1,40 @@
+# Basic many-body energy calculation with 3 He atoms
+# This example demonstrates the simplest possible MBE calculation
+
+schema_name: qcmanybody_cli_input
+schema_version: 1
+
+molecule:
+  source: inline
+  inline:
+    symbols: [He, He, He]
+    geometry:
+      - [0.0, 0.0, 0.0]  # He1
+      - [0.0, 0.0, 2.0]  # He2
+      - [0.0, 0.0, 4.0]  # He3
+    fragments:
+      - [0]  # Fragment 1: He1
+      - [1]  # Fragment 2: He2
+      - [2]  # Fragment 3: He3
+    molecular_charge: 0.0
+    molecular_multiplicity: 1
+    units: angstrom
+
+calculation:
+  type: single
+  single:
+    driver: energy        # Calculate energies only
+    method: mp2          # Use MP2 method
+    basis: cc-pvdz       # Use cc-pVDZ basis set
+    program: psi4        # Use Psi4 program
+
+bsse:
+  type: [cp]             # Counterpoise correction
+
+manybody:
+  max_nbody: 3           # Calculate up to 3-body
+  return_total_data: false  # Return interaction energy (not total)
+
+output:
+  format: json           # Output as JSON
+  pretty: true           # Pretty-print output
