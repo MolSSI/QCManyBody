@@ -1,0 +1,37 @@
+{
+  "schema_name": "qcmanybody_cli_input",
+  "schema_version": 1,
+  "molecule": {
+    "source": "inline",
+    "inline": {
+      "symbols": ["Ne", "Ne", "Ne"],
+      "geometry": [
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 2.0],
+        [0.0, 0.0, 4.0]
+      ],
+      "fragments": [[0], [1], [2]],
+      "units": "angstrom"
+    }
+  },
+  "calculation": {
+    "type": "single",
+    "single": {
+      "driver": "gradient",
+      "method": "mp2",
+      "basis": "cc-pvdz",
+      "program": "psi4"
+    }
+  },
+  "bsse": {
+    "type": ["cp", "nocp"]
+  },
+  "manybody": {
+    "max_nbody": 3,
+    "return_total_data": true
+  },
+  "output": {
+    "format": "json",
+    "pretty": true
+  }
+}
