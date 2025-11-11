@@ -184,9 +184,9 @@ class CheckpointManager:
                     result = TaskResult(
                         task_id=result_dict["task_id"],
                         success=result_dict["success"],
-                        error=result_dict.get("error"),
-                        result_data=result_dict.get("result_data"),
-                        execution_time=result_dict.get("execution_time"),
+                        error_message=result_dict.get("error_message"),
+                        atomic_result=result_dict.get("atomic_result"),
+                        execution_time=result_dict.get("execution_time", 0.0),
                         worker_id=result_dict.get("worker_id")
                     )
                     results.append(result)
@@ -428,8 +428,8 @@ class CheckpointManager:
         return {
             "task_id": result.task_id,
             "success": result.success,
-            "error": result.error,
-            "result_data": result.result_data,
+            "error_message": result.error_message,
+            "atomic_result": result.atomic_result,
             "execution_time": result.execution_time,
             "worker_id": result.worker_id
         }

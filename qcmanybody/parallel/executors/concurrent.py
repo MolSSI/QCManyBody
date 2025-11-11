@@ -6,14 +6,13 @@ module, which offers a simpler API than multiprocessing with both thread and
 process-based execution.
 """
 
-from typing import List, Optional
+from typing import List, Optional, Callable
 import logging
 import concurrent.futures
 from dataclasses import dataclass
 
-from ..base import BaseParallelExecutor
+from ..base import BaseParallelExecutor, ExecutorConfig
 from ..task import ParallelTask, TaskResult
-from ..config import ExecutorConfig
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +120,7 @@ class ConcurrentExecutor(BaseParallelExecutor):
         self._executor: Optional[concurrent.futures.Executor] = None
         self._n_workers: int = 0
 
-    def _initialize_resources(self) -> None:
+    def initialize(self) -> None:
         """
         Initialize executor resources.
 
@@ -154,18 +153,29 @@ class ConcurrentExecutor(BaseParallelExecutor):
                 "Must be 'process' or 'thread'."
             )
 
-    def _cleanup_resources(self) -> None:
-        """
-        Clean up executor resources.
+        self._is_initialized = True
+        logger.info(f"ConcurrentExecutor initialized with {self.config.executor_type} backend")
 
-        Shuts down the executor and waits for workers to complete.
+    def shutdown(self, wait: bool = True) -> None:
+        """
+        Shutdown executor and clean up resources.
+
+        Parameters
+        ----------
+        wait : bool
+            If True, wait for all workers to finish cleanly
         """
         if self._executor is not None:
             logger.info("Shutting down concurrent.futures executor")
-            self._executor.shutdown(wait=True)
+            self._executor.shutdown(wait=wait)
             self._executor = None
+            self._is_initialized = False
 
-    def _execute_tasks_impl(self, tasks: List[ParallelTask]) -> List[TaskResult]:
+    def execute(
+        self,
+        tasks: List[ParallelTask],
+        progress_callback: Optional[Callable[[str, int, int], None]] = None
+    ) -> List[TaskResult]:
         """
         Execute tasks using concurrent.futures.
 
@@ -277,17 +287,6 @@ class ConcurrentExecutor(BaseParallelExecutor):
             Number of workers (0 if using default)
         """
         return self._n_workers
-
-    def is_initialized(self) -> bool:
-        """
-        Check if executor is initialized.
-
-        Returns
-        -------
-        bool
-            True if executor is ready to execute tasks
-        """
-        return self._executor is not None
 
 
 def create_concurrent_executor(
