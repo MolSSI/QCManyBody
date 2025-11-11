@@ -7,6 +7,7 @@ del version
 from .core import ManyBodyCalculator  # legacy near-alias to ManyBodyCore
 from .core import ManyBodyCore
 from .computer import ManyBodyComputer
+from .parallel import ParallelManyBodyComputer
 
 # isort: on
 from .models import BsseEnum

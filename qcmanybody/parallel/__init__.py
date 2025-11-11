@@ -28,15 +28,19 @@ Advanced Usage
 """
 
 from .base import BaseParallelExecutor, ExecutorConfig
-from .task import ParallelTask, TaskResult
+from .task import ParallelTask, TaskResult, TaskStatus
 from .executors.sequential import SequentialExecutor
+from .computer_parallel import ParallelManyBodyComputer, parallel_compute_from_manybodyinput
 
 __all__ = [
     "BaseParallelExecutor",
     "ExecutorConfig",
     "ParallelTask",
     "TaskResult",
+    "TaskStatus",
     "SequentialExecutor",
+    "ParallelManyBodyComputer",
+    "parallel_compute_from_manybodyinput",
 ]
 
 # Conditionally import multiprocessing executor
