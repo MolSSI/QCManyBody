@@ -382,7 +382,46 @@ class ManyBodyComputer(BaseComputerQCNG):
         return sio
 
     @classmethod
-    def from_manybodyinput(cls, input_model: ManyBodyInput, build_tasks: bool = True):
+    def from_manybodyinput(
+        cls,
+        input_model: ManyBodyInput,
+        build_tasks: bool = True,
+        parallel: bool = False,
+        n_workers: Optional[int] = None,
+        executor: Optional[Any] = None,
+    ):
+        """Create ManyBodyComputer from ManyBodyInput and execute.
+
+        Parameters
+        ----------
+        input_model : ManyBodyInput
+            Input specification for many-body calculation
+        build_tasks : bool
+            If True, build and execute tasks. Default: True
+        parallel : bool
+            If True, use parallel execution. Requires ParallelManyBodyComputer.
+            Default: False
+        n_workers : Optional[int]
+            Number of parallel workers (only used if parallel=True). Default: None
+        executor : Optional[BaseParallelExecutor]
+            Custom executor for parallel execution. Default: None
+
+        Returns
+        -------
+        ManyBodyResult or ManyBodyComputer
+            If build_tasks=True, returns ManyBodyResult. Otherwise returns
+            ManyBodyComputer instance.
+        """
+        # Delegate to ParallelManyBodyComputer if parallel execution requested
+        if parallel or executor is not None:
+            from .parallel import ParallelManyBodyComputer
+            return ParallelManyBodyComputer.from_manybodyinput(
+                input_model,
+                build_tasks=build_tasks,
+                parallel=parallel,
+                n_workers=n_workers,
+                executor=executor,
+            )
 
         computer_model = cls(
             molecule=input_model.molecule,
