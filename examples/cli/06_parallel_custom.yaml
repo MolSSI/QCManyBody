@@ -1,0 +1,49 @@
+schema_name: qcmanybody_cli_input
+schema_version: 1
+
+molecule:
+  source: inline
+  inline:
+    symbols: ["O", "H", "H", "O", "H", "H"]
+    geometry:
+      # Water 1
+      - [0.0, 0.0, 0.0]
+      - [0.0, 0.757, 0.586]
+      - [0.0, -0.757, 0.586]
+      # Water 2
+      - [3.0, 0.0, 0.0]
+      - [3.0, 0.757, 0.586]
+      - [3.0, -0.757, 0.586]
+    fragments: [[0, 1, 2], [3, 4, 5]]
+    molecular_charge: 0.0
+    molecular_multiplicity: 1
+    units: angstrom
+
+calculation:
+  type: single
+  single:
+    driver: energy
+    method: hf
+    basis: sto-3g
+    program: psi4
+
+bsse:
+  type: [cp, nocp]
+
+manybody:
+  max_nbody: 2
+  return_total_data: true
+
+# Parallel execution configuration
+execution:
+  parallel: true
+  n_workers: 4
+  executor_type: multiprocessing
+  timeout_per_task: 1800.0
+  max_retries: 2
+
+output:
+  format: yaml
+  file: water_dimer_parallel_results.yaml
+  pretty: true
+  include_timings: true

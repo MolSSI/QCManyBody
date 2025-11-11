@@ -53,6 +53,14 @@ class OutputFormatEnum(str, Enum):
     text = "text"
 
 
+class ExecutorTypeEnum(str, Enum):
+    """Parallel executor types."""
+
+    sequential = "sequential"
+    multiprocessing = "multiprocessing"
+    # Future: mpi, dask, ray
+
+
 # ==================== Molecule Specification ====================
 
 
@@ -332,6 +340,47 @@ class ProgramKeywordsSchema(BaseModel):
 # ==================== Output Options ====================
 
 
+class ExecutionSchema(BaseModel):
+    """Parallel execution configuration."""
+
+    parallel: Optional[bool] = Field(
+        False,
+        description="Enable parallel execution. Default: False (sequential).",
+    )
+    n_workers: Optional[int] = Field(
+        None,
+        description="Number of parallel workers. If None, auto-detect from CPU count. Only used when parallel=True.",
+    )
+    executor_type: Optional[ExecutorTypeEnum] = Field(
+        ExecutorTypeEnum.multiprocessing,
+        description="Type of parallel executor to use. Default: multiprocessing.",
+    )
+    timeout_per_task: Optional[float] = Field(
+        3600.0,
+        description="Maximum time (in seconds) allowed for each task. Default: 3600.0 (1 hour).",
+    )
+    max_retries: Optional[int] = Field(
+        2,
+        description="Maximum number of retry attempts for failed tasks. Default: 2.",
+    )
+
+    @validator("n_workers")
+    @classmethod
+    def validate_n_workers(cls, v):
+        """Ensure n_workers is positive if specified."""
+        if v is not None and v < 1:
+            raise ValueError(f"n_workers must be >= 1, got {v}")
+        return v
+
+    @validator("timeout_per_task")
+    @classmethod
+    def validate_timeout(cls, v):
+        """Ensure timeout is positive."""
+        if v is not None and v <= 0:
+            raise ValueError(f"timeout_per_task must be > 0, got {v}")
+        return v
+
+
 class OutputSchema(BaseModel):
     """Output configuration."""
 
@@ -385,6 +434,10 @@ class QCManyBodyInput(BaseModel):
     program: Optional[ProgramKeywordsSchema] = Field(
         ProgramKeywordsSchema(),
         description="Program-specific keywords.",
+    )
+    execution: Optional[ExecutionSchema] = Field(
+        ExecutionSchema(),
+        description="Parallel execution configuration.",
     )
     output: Optional[OutputSchema] = Field(
         OutputSchema(),

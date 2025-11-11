@@ -109,6 +109,28 @@ For more information, visit: https://github.com/MolSSI/QCManyBody
         help="Override output format (json, yaml, text)",
     )
 
+    # Parallel execution options
+    parallel_group = run_parser.add_argument_group("parallel execution options")
+    parallel_group.add_argument(
+        "--parallel",
+        action="store_true",
+        default=None,
+        help="Enable parallel execution (overrides input file setting)",
+    )
+    parallel_group.add_argument(
+        "--no-parallel",
+        action="store_false",
+        dest="parallel",
+        help="Disable parallel execution (force sequential mode)",
+    )
+    parallel_group.add_argument(
+        "--n-workers",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Number of parallel workers (overrides input file setting, auto-detect if not specified)",
+    )
+
     # Logging options
     log_group = run_parser.add_argument_group("logging options")
     log_group.add_argument("--log", help="Log file path")

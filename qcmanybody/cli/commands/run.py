@@ -70,14 +70,57 @@ def handle_run(args: Namespace) -> int:
         logger.error("Failed to convert input: %s", exc)
         return 1
 
-    # Step 3: Execute calculation via ManyBodyComputer
+    # Step 3: Execute calculation via ManyBodyComputer (with parallel support)
     try:
-        from qcmanybody import ManyBodyComputer
+        # Determine execution configuration
+        execution_config = cli_input.execution or {}
+        parallel = getattr(execution_config, 'parallel', False)
+        n_workers = getattr(execution_config, 'n_workers', None)
+        executor_type = getattr(execution_config, 'executor_type', 'multiprocessing')
+        timeout = getattr(execution_config, 'timeout_per_task', 3600.0)
+        max_retries = getattr(execution_config, 'max_retries', 2)
 
-        logger.info("Initializing ManyBodyComputer and starting calc...")
-        # Note: from_manybodyinput with build_tasks=True (default) executes
-        # the calculation and returns a ManyBodyResult, not a ManyBodyComputer
-        result = ManyBodyComputer.from_manybodyinput(mb_input)
+        # Override with command-line arguments if provided
+        if hasattr(args, 'parallel') and args.parallel is not None:
+            parallel = args.parallel
+        if hasattr(args, 'n_workers') and args.n_workers is not None:
+            n_workers = args.n_workers
+
+        # Import appropriate computer class
+        if parallel:
+            from qcmanybody.parallel import ParallelManyBodyComputer, ExecutorConfig
+            from qcmanybody.parallel.executors import MultiprocessingExecutor, SequentialExecutor
+
+            logger.info("Initializing ParallelManyBodyComputer...")
+            logger.info(f"  Parallel execution: enabled")
+            logger.info(f"  Workers: {n_workers if n_workers else 'auto-detect'}")
+            logger.info(f"  Executor type: {executor_type}")
+
+            # Create executor config
+            config = ExecutorConfig(
+                n_workers=n_workers,
+                timeout_per_task=timeout,
+                max_retries=max_retries,
+            )
+
+            # Create executor
+            if executor_type == 'sequential':
+                executor = SequentialExecutor(config)
+            else:  # multiprocessing (default)
+                executor = MultiprocessingExecutor(config)
+
+            # Execute with parallel computer
+            result = ParallelManyBodyComputer.from_manybodyinput(
+                mb_input,
+                executor=executor
+            )
+        else:
+            from qcmanybody import ManyBodyComputer
+
+            logger.info("Initializing ManyBodyComputer (sequential mode)...")
+            # Note: from_manybodyinput with build_tasks=True (default) executes
+            # the calculation and returns a ManyBodyResult, not a ManyBodyComputer
+            result = ManyBodyComputer.from_manybodyinput(mb_input)
 
         logger.info("✓ Calculation completed successfully")
 

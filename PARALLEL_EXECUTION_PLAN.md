@@ -15,6 +15,8 @@ This document outlines the comprehensive development plan for adding parallel ex
 
 **Target:** 10-100x speedup for typical MBE calculations depending on system size and available resources.
 
+**CLI Integration Status (2025-11-11):** The CLI has been merged into main. Parallel execution must now be integrated with the CLI to allow users to specify parallel execution options via input files and command-line arguments.
+
 ---
 
 ## Table of Contents
@@ -95,65 +97,90 @@ class ParallelManyBodyComputer(ManyBodyComputer):
 
 ## Project Milestones
 
-### Milestone 1: Foundation & Planning ✅
+### Milestone 1: Foundation & Planning ✅ COMPLETE
 **Duration:** 2 weeks
-**Status:** Current Phase
+**Status:** Complete (2025-11-11)
 
 **Deliverables:**
 - ✅ Codebase analysis complete
-- [ ] Development plan approved
-- [ ] Architecture design finalized
-- [ ] Team training materials prepared
-- [ ] Development environment setup guide
+- ✅ Development plan created
+- ✅ Architecture design finalized
+- ✅ Parallel module structure created
+- ✅ CLI merged into main branch
 
 **Exit Criteria:**
-- All team members understand current architecture
-- Parallel module structure agreed upon
-- First sprint backlog populated
+- ✅ All team members understand current architecture
+- ✅ Parallel module structure agreed upon
+- ✅ CLI integration needs identified
 
 ---
 
-### Milestone 2: Skeleton & Infrastructure
+### Milestone 2: Skeleton & Infrastructure ✅ COMPLETE
 **Duration:** 3 weeks
-**Target Date:** Week 5
+**Status:** Complete (2025-11-11)
 
 **Deliverables:**
-- [ ] `/qcmanybody/parallel/` folder structure created
-- [ ] `BaseParallelExecutor` abstract class implemented
-- [ ] `SequentialExecutor` (no-op wrapper) implemented
-- [ ] `ParallelTask` and `TaskResult` data models
+- ✅ `/qcmanybody/parallel/` folder structure created
+- ✅ `BaseParallelExecutor` abstract class implemented
+- ✅ `SequentialExecutor` (no-op wrapper) implemented
+- ✅ `MultiprocessingExecutor` implemented
+- ✅ `ParallelTask` and `TaskResult` data models
+- ✅ `ParallelManyBodyComputer` class implemented
+- ✅ Worker functions implemented
 - [ ] Basic test harness for executors
 - [ ] CI integration for parallel module
 
 **Exit Criteria:**
-- All base classes pass type checking
-- SequentialExecutor produces identical results to original code
-- 80%+ code coverage for base classes
+- ✅ All base classes pass type checking
+- ✅ Core parallel execution infrastructure complete
+- [ ] 80%+ code coverage for base classes
 
 ---
 
-### Milestone 3: Multiprocessing Executor (MVP)
-**Duration:** 4 weeks
-**Target Date:** Week 9
+### Milestone 3: CLI Integration & Testing 🎯 CURRENT
+**Duration:** 2 weeks
+**Target Date:** Week 7
+**Status:** In Progress
 
 **Deliverables:**
-- [ ] `MultiprocessingExecutor` fully implemented
-- [ ] Task serialization/deserialization
-- [ ] Error handling and task retry logic
-- [ ] Progress tracking and logging
-- [ ] `ParallelManyBodyComputer` class
-- [ ] Integration with existing `ManyBodyComputer`
+- [ ] Add `ExecutionSchema` to CLI input schema for parallel configuration
+- [ ] Update `run.py` to use `ParallelManyBodyComputer`
+- [ ] Add `--parallel` and `--n-workers` CLI arguments
+- [ ] Add parallel execution examples (JSON/YAML input files)
+- [ ] Basic test harness for executors
+- [ ] Integration tests with CLI
+- [ ] Update CLI documentation for parallel execution
 - [ ] Performance benchmarks vs. sequential
 
 **Exit Criteria:**
-- All existing tests pass with MultiprocessingExecutor
-- 2x+ speedup on 4-core system
-- No memory leaks in long-running calculations
-- Comprehensive error handling tested
+- CLI can execute calculations with parallel flag
+- All existing CLI tests pass with parallel execution
+- 2x+ speedup on 4-core system for CLI-based runs
+- Documentation includes parallel execution examples
 
 ---
 
-### Milestone 4: Advanced Features & Optimization
+### Milestone 4: Multiprocessing Executor (Completion)
+**Duration:** 2 weeks
+**Target Date:** Week 9
+
+**Deliverables:**
+- ✅ `MultiprocessingExecutor` fully implemented
+- ✅ Task serialization/deserialization
+- [ ] Advanced error handling and task retry logic
+- [ ] Progress tracking and logging enhancements
+- [ ] Comprehensive unit tests
+- [ ] Memory leak testing
+- [ ] Error scenario testing
+
+**Exit Criteria:**
+- All existing tests pass with MultiprocessingExecutor
+- No memory leaks in long-running calculations
+- 90%+ code coverage for parallel module
+
+---
+
+### Milestone 5: Advanced Features & Optimization
 **Duration:** 3 weeks
 **Target Date:** Week 12
 
@@ -173,7 +200,7 @@ class ParallelManyBodyComputer(ManyBodyComputer):
 
 ---
 
-### Milestone 5: MPI Support (Distributed Computing)
+### Milestone 6: MPI Support (Distributed Computing)
 **Duration:** 4 weeks
 **Target Date:** Week 16
 
@@ -193,7 +220,7 @@ class ParallelManyBodyComputer(ManyBodyComputer):
 
 ---
 
-### Milestone 6: Production Readiness
+### Milestone 7: Production Readiness
 **Duration:** 2 weeks
 **Target Date:** Week 18
 
@@ -300,6 +327,55 @@ class ParallelManyBodyComputer(ManyBodyComputer):
    - **Points:** 5
 
 **Total Points:** 21
+
+---
+
+### Sprint 2.5: CLI Integration (Week 5) 🎯 CURRENT SPRINT
+**Goal:** Integrate parallel execution with CLI
+
+**Stories:**
+
+1. **[CLI-1] Add ExecutionSchema to input schema**
+   - Create `ExecutionSchema` class in `input_schema.py`
+   - Add fields: `parallel`, `n_workers`, `executor_type`, `timeout`
+   - Add to `QCManyBodyInput` model
+   - Update schema validation
+   - **Points:** 3
+
+2. **[CLI-2] Update CLI run command**
+   - Modify `run.py` to import ParallelManyBodyComputer
+   - Extract execution config from CLI input
+   - Pass execution parameters to computer
+   - Handle both parallel and sequential modes
+   - **Points:** 5
+
+3. **[CLI-3] Add command-line arguments**
+   - Add `--parallel` flag to run command
+   - Add `--n-workers` argument
+   - Add `--executor-type` argument
+   - CLI args override input file settings
+   - **Points:** 2
+
+4. **[CLI-4] Create parallel execution examples**
+   - Add `examples/cli/parallel_basic.json`
+   - Add `examples/cli/parallel_custom.yaml`
+   - Update examples README
+   - **Points:** 2
+
+5. **[CLI-5] Update CLI documentation**
+   - Add parallel execution section to `cli_guide.md`
+   - Document execution schema fields
+   - Document CLI arguments
+   - Add troubleshooting section
+   - **Points:** 3
+
+6. **[TEST-CLI] Integration tests**
+   - Test CLI with parallel execution enabled
+   - Test CLI argument overrides
+   - Verify results match sequential
+   - **Points:** 5
+
+**Total Points:** 20
 
 ---
 
@@ -1697,7 +1773,68 @@ def process_results(
 
 ---
 
-**Document Version:** 1.0
+## Current Status Summary (2025-11-11)
+
+### ✅ Completed Work
+1. **Parallel Module Infrastructure**
+   - Base executor interface (`BaseParallelExecutor`, `ExecutorConfig`)
+   - Task models (`ParallelTask`, `TaskResult`)
+   - Sequential executor (reference implementation)
+   - Multiprocessing executor (core functionality)
+   - ParallelManyBodyComputer class
+   - Worker execution functions
+   - Utility functions
+
+2. **CLI Merge**
+   - Complete CLI system merged into main
+   - Input file parsing (JSON/YAML)
+   - Commands: run, validate, plan, convert
+   - Input schema for molecule, calculation, BSSE, output
+
+### 🎯 Current Sprint: CLI Integration
+**Priority Tasks:**
+1. Add `ExecutionSchema` to CLI input schema
+2. Update `run.py` to use `ParallelManyBodyComputer`
+3. Add `--parallel` and `--n-workers` CLI flags
+4. Create parallel execution examples
+5. Write integration tests
+6. Update documentation
+
+### 📋 Next Steps (In Order)
+1. **Implement CLI Integration (Sprint 2.5)**
+   - Add execution configuration to input schema
+   - Modify run command to support parallel execution
+   - Add CLI arguments for parallel options
+   - Create examples and documentation
+
+2. **Complete Testing & Validation (Milestone 4)**
+   - Unit tests for all executors
+   - Integration tests with CLI
+   - Performance benchmarking
+   - Memory leak testing
+
+3. **Advanced Features (Milestone 5)**
+   - Load balancing
+   - Checkpointing
+   - Result caching
+   - Performance optimization
+
+4. **MPI Support (Milestone 6)** - Future
+5. **Production Release (Milestone 7)** - Future
+
+### 🔗 Dependencies & Blockers
+**No blockers.** CLI and parallel execution have been cleanly merged. Ready to proceed with integration.
+
+### 📊 Progress Metrics
+- **Milestones Complete:** 2 of 7 (29%)
+- **Sprints Complete:** 2 of 10 (20%)
+- **Core Infrastructure:** 90% complete
+- **CLI Integration:** 0% complete (next focus)
+- **Testing Coverage:** ~10% (needs expansion)
+
+---
+
+**Document Version:** 1.1
 **Last Updated:** 2025-11-11
-**Next Review:** Start of each milestone
+**Next Review:** End of Sprint 2.5 (CLI Integration)
 **Maintained By:** QCManyBody Development Team
