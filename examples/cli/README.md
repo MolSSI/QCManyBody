@@ -66,6 +66,45 @@ cd examples/cli
 qcmanybody run 04_from_xyz.json
 ```
 
+### 05_parallel_basic - Basic Parallel Execution
+**File**: `05_parallel_basic.json`
+
+Simple parallel execution with auto-detected worker count.
+Demonstrates:
+- Enabling parallel execution in input file
+- Auto-detection of CPU cores
+- Same molecule as 01_basic_energy for comparison
+
+**Usage**:
+```bash
+qcmanybody run 05_parallel_basic.json
+```
+
+### 06_parallel_custom - Custom Parallel Configuration
+**File**: `06_parallel_custom.yaml`
+
+Advanced parallel configuration with custom settings.
+Demonstrates:
+- Specifying number of workers
+- Setting executor type
+- Configuring timeout and retries
+- Water dimer calculation with parallel execution
+- Multiple BSSE types with parallelization
+
+**Usage**:
+```bash
+qcmanybody run 06_parallel_custom.yaml
+```
+
+**Alternative** (override settings via command line):
+```bash
+# Force 8 workers regardless of input file
+qcmanybody run 06_parallel_custom.yaml --n-workers 8
+
+# Disable parallel execution
+qcmanybody run 06_parallel_custom.yaml --no-parallel
+```
+
 ## Input File Format
 
 ### JSON Format
@@ -126,8 +165,11 @@ qcmanybody convert input.json input.yaml
 # Save output to file
 qcmanybody run input.json -o results.json
 
-# Use multiple processors
-qcmanybody run input.json --parallel multiprocessing --nproc 4
+# Enable parallel execution with auto-detected workers
+qcmanybody run input.json --parallel
+
+# Use specific number of workers
+qcmanybody run input.json --parallel --n-workers 4
 
 # Verbose output
 qcmanybody -vv run input.json
@@ -214,6 +256,37 @@ qcmanybody -q run input.json
 }
 ```
 
+### Parallel Execution Configuration
+```json
+// Basic parallel execution (auto-detect workers)
+"execution": {
+  "parallel": true
+}
+
+// Custom parallel configuration
+"execution": {
+  "parallel": true,
+  "n_workers": 4,
+  "executor_type": "multiprocessing",
+  "timeout_per_task": 3600.0,
+  "max_retries": 2
+}
+
+// Sequential execution (default)
+"execution": {
+  "parallel": false
+}
+```
+
+**Command-line overrides:**
+```bash
+# Enable parallel execution (overrides input file)
+qcmanybody run input.json --parallel --n-workers 8
+
+# Force sequential execution
+qcmanybody run input.json --no-parallel
+```
+
 ## Troubleshooting
 
 ### Validation Errors
@@ -232,10 +305,12 @@ If calculation fails:
 
 ### Performance
 For large calculations:
-- Use `--parallel multiprocessing --nproc N`
+- Enable parallel execution: `--parallel --n-workers N` or add `"execution": {"parallel": true}` to input file
 - Set `max_nbody` to limit n-body levels
 - Use `supersystem_ie_only: true` to skip intermediate bodies
 - Consider multi-level: expensive method only for 1-body
+- Auto-detect optimal workers: omit `n_workers` to let QCManyBody choose based on CPU count
+- For systems with >20 tasks, parallel execution can provide 2-10x speedup
 
 ## More Information
 

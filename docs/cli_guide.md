@@ -450,6 +450,84 @@ Control output formatting:
 
 ---
 
+### Parallel Execution Configuration
+
+QCManyBody supports parallel execution of quantum chemistry tasks to significantly speed up calculations.
+
+#### Basic Configuration
+
+Enable parallel execution with auto-detected worker count:
+
+```json
+"execution": {
+  "parallel": true
+}
+```
+
+#### Advanced Configuration
+
+Customize parallel execution settings:
+
+```json
+"execution": {
+  "parallel": true,
+  "n_workers": 4,
+  "executor_type": "multiprocessing",
+  "timeout_per_task": 3600.0,
+  "max_retries": 2
+}
+```
+
+**Fields:**
+- `parallel`: Enable parallel execution (default: false)
+- `n_workers`: Number of parallel workers. If null, auto-detect from CPU count (default: null)
+- `executor_type`: Type of executor - "sequential" or "multiprocessing" (default: "multiprocessing")
+- `timeout_per_task`: Maximum time per task in seconds (default: 3600.0)
+- `max_retries`: Number of retry attempts for failed tasks (default: 2)
+
+#### Command-Line Override
+
+You can override execution settings via command-line arguments:
+
+```bash
+# Enable parallel execution (overrides input file)
+qcmanybody run input.json --parallel
+
+# Set specific number of workers
+qcmanybody run input.json --parallel --n-workers 8
+
+# Force sequential execution
+qcmanybody run input.json --no-parallel
+```
+
+#### When to Use Parallel Execution
+
+**Benefits:**
+- 2-10x speedup for calculations with many independent tasks
+- Efficient use of multi-core systems
+- Automatic load balancing across workers
+
+**Best suited for:**
+- Systems with >5 fragments
+- Multiple n-body levels (max_nbody ≥ 3)
+- Multiple BSSE types
+- Calculations requiring many independent QC tasks
+
+**Not recommended for:**
+- Small systems (<5 fragments)
+- Single fragment calculations
+- Systems limited by QC program threading (e.g., Psi4 already using all cores)
+
+#### Performance Tips
+
+1. **Worker Count**: Start with `n_workers` = number of CPU cores
+2. **Memory**: Reduce workers if running out of memory (each worker needs RAM for its tasks)
+3. **Task Granularity**: Parallel execution is most efficient when tasks take >10 seconds each
+4. **Auto-detection**: Omit `n_workers` to let QCManyBody choose optimal count
+5. **Monitoring**: Use `-v` or `-vv` flags to see parallel execution progress
+
+---
+
 ## Examples
 
 ### Example 1: Basic Energy Calculation
@@ -628,6 +706,76 @@ H    2.243    0.586    0.000
   }
 }
 ```
+
+---
+
+### Example 5: Parallel Execution
+
+Water dimer with parallel execution enabled:
+
+```json
+{
+  "schema_name": "qcmanybody_cli_input",
+  "schema_version": 1,
+  "molecule": {
+    "source": "inline",
+    "inline": {
+      "symbols": ["O", "H", "H", "O", "H", "H"],
+      "geometry": [
+        [0.0, 0.0, 0.0],
+        [0.0, 0.757, 0.586],
+        [0.0, -0.757, 0.586],
+        [3.0, 0.0, 0.0],
+        [3.0, 0.757, 0.586],
+        [3.0, -0.757, 0.586]
+      ],
+      "fragments": [[0, 1, 2], [3, 4, 5]],
+      "units": "angstrom"
+    }
+  },
+  "calculation": {
+    "type": "single",
+    "single": {
+      "driver": "energy",
+      "method": "hf",
+      "basis": "sto-3g",
+      "program": "psi4"
+    }
+  },
+  "bsse": {
+    "type": ["cp", "nocp"]
+  },
+  "manybody": {
+    "max_nbody": 2
+  },
+  "execution": {
+    "parallel": true,
+    "n_workers": 4,
+    "executor_type": "multiprocessing"
+  },
+  "output": {
+    "format": "json",
+    "include_timings": true
+  }
+}
+```
+
+**Run:**
+```bash
+# Use parallel settings from input file
+qcmanybody run example5.json -o results5.json
+
+# Override with command-line options
+qcmanybody run example5.json --n-workers 8 -o results5.json -v
+
+# Disable parallel execution
+qcmanybody run example5.json --no-parallel
+```
+
+**Expected output includes timing for parallel execution:**
+- Number of workers used
+- Total execution time
+- Per-task timing information
 
 ---
 
