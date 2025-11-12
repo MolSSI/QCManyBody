@@ -120,8 +120,16 @@ class MPIExecutor(BaseParallelExecutor):
         """
         if not MPI_AVAILABLE:
             raise ImportError(
-                "mpi4py is required for MPIExecutor. "
-                "Install with: pip install qcmanybody[mpi]"
+                "mpi4py is required for MPIExecutor but is not installed.\n\n"
+                "To use MPI-based parallel execution:\n"
+                "1. Install a system MPI implementation (OpenMPI, MPICH, Intel MPI, etc.)\n"
+                "   - Ubuntu/Debian: sudo apt-get install libopenmpi-dev openmpi-bin\n"
+                "   - CentOS/RHEL: sudo yum install openmpi-devel\n"
+                "   - macOS: brew install open-mpi\n"
+                "2. Install qcmanybody with MPI support:\n"
+                "   pip install qcmanybody[mpi]\n\n"
+                "For more information, see the parallel execution documentation:\n"
+                "https://molssi.github.io/QCManyBody/parallel_execution_guide.html"
             )
 
         super().__init__(config or ExecutorConfig())
@@ -133,8 +141,17 @@ class MPIExecutor(BaseParallelExecutor):
 
         if self.size < 2:
             raise RuntimeError(
-                "MPIExecutor requires at least 2 MPI processes "
-                "(1 master + 1 worker). Run with: mpirun -np N python script.py"
+                "MPIExecutor requires at least 2 MPI processes (1 master + 1 worker).\n\n"
+                "Current MPI size: 1 process\n\n"
+                "To run with MPI:\n"
+                "  mpirun -np <N> python your_script.py\n"
+                "  # or with mpiexec:\n"
+                "  mpiexec -n <N> python your_script.py\n\n"
+                "Where <N> is the number of processes (e.g., 4, 8, 16).\n"
+                "Example: mpirun -np 4 python your_script.py\n\n"
+                "For HPC clusters, use your batch system (SLURM, PBS, etc.):\n"
+                "  sbatch job_script.sh  # SLURM\n"
+                "  qsub job_script.pbs   # PBS/Torque"
             )
 
         self.is_master = (self.rank == 0)

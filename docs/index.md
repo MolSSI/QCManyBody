@@ -38,13 +38,26 @@ the user to run them themselves.
 
 For more information, see [Core interface](core-interface.md).
 
+QCManyBody supports **parallel execution** for many-body calculations, enabling significant speedups by running independent
+quantum chemistry tasks concurrently. The parallel execution module provides multiple backends including multiprocessing
+for single-node parallelism and MPI for distributed HPC clusters.
+
+For more information, see [Parallel Execution Guide](parallel_execution_guide.md).
+
 ## Table of Contents
 
 1. [Common Keywords and Options](keywords.md)
 2. [High-level Interface](high-level-interface.md)
 3. [Core Interface](core-interface.md)
-4. [Results](results.md)
-5. [How-To Guides](how-to-guides.md)
+4. [Command-Line Interface](cli_guide.md)
+5. [Results](results.md)
+6. [How-To Guides](how-to-guides.md)
+
+### Parallel Execution
+
+7. [Parallel Execution Guide](parallel_execution_guide.md) - Getting started with parallel calculations
+8. [Parallel API Reference](parallel_api_reference.md) - Complete API documentation
+9. [Parallel Migration Guide](parallel_migration_guide.md) - Migrating existing code to use parallel execution
 
 ## [Changelog](changelog.md)
 
