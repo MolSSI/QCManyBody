@@ -36,6 +36,23 @@ class ConcurrentExecutorConfig(ExecutorConfig):
     max_workers: Optional[int] = None
     """Maximum number of workers (None = use default from concurrent.futures)"""
 
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        # Call parent validation first
+        super().__post_init__()
+
+        # Validate executor_type
+        valid_types = {"process", "thread"}
+        if self.executor_type not in valid_types:
+            raise ValueError(
+                f"Invalid executor_type '{self.executor_type}'. "
+                f"Must be one of: {', '.join(sorted(valid_types))}"
+            )
+
+        # Validate max_workers
+        if self.max_workers is not None and self.max_workers < 1:
+            raise ValueError(f"max_workers must be >= 1 or None, got {self.max_workers}")
+
 
 class ConcurrentExecutor(BaseParallelExecutor):
     """

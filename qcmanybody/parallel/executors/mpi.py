@@ -22,13 +22,12 @@ Usage
 mpirun -np 16 python your_script.py
 """
 
-from typing import List, Optional
+from typing import List, Optional, Callable
 import logging
 import os
 
-from ..base import BaseParallelExecutor
+from ..base import BaseParallelExecutor, ExecutorConfig
 from ..task import ParallelTask, TaskResult
-from ..config import ExecutorConfig
 
 logger = logging.getLogger(__name__)
 
@@ -179,7 +178,11 @@ class MPIExecutor(BaseParallelExecutor):
         # Barrier to ensure all processes reach cleanup
         self.comm.Barrier()
 
-    def _execute_tasks_impl(self, tasks: List[ParallelTask]) -> List[TaskResult]:
+    def execute(
+        self,
+        tasks: List[ParallelTask],
+        progress_callback: Optional[Callable[[str, int, int], None]] = None
+    ) -> List[TaskResult]:
         """
         Execute tasks using MPI master-worker pattern.
 
@@ -190,6 +193,9 @@ class MPIExecutor(BaseParallelExecutor):
         ----------
         tasks : List[ParallelTask]
             Tasks to execute
+        progress_callback : Optional[Callable[[str, int, int], None]]
+            Optional callback function called as:
+            progress_callback(task_id, completed_count, total_count)
 
         Returns
         -------
@@ -197,12 +203,16 @@ class MPIExecutor(BaseParallelExecutor):
             Results from task execution
         """
         if self.is_master:
-            return self._master_execute(tasks)
+            return self._master_execute(tasks, progress_callback)
         else:
             self._worker_loop()
             return []  # Workers don't return results
 
-    def _master_execute(self, tasks: List[ParallelTask]) -> List[TaskResult]:
+    def _master_execute(
+        self,
+        tasks: List[ParallelTask],
+        progress_callback: Optional[Callable[[str, int, int], None]] = None
+    ) -> List[TaskResult]:
         """
         Master process: Distribute tasks and collect results.
 
@@ -251,6 +261,13 @@ class MPIExecutor(BaseParallelExecutor):
                 f"from worker {worker_rank} "
                 f"(success: {result.success})"
             )
+
+            # Call progress callback
+            if progress_callback:
+                try:
+                    progress_callback(result.task_id, len(results), len(tasks))
+                except Exception as e:
+                    logger.warning(f"Progress callback failed: {e}")
 
             # Send next task to this worker or mark idle
             if task_queue:
