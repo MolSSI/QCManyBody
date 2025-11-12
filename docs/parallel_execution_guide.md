@@ -93,10 +93,11 @@ Executors manage how tasks are executed:
   - Pros: True parallelism, scales with CPU cores
   - Cons: Process overhead, requires pickleable data
 
-- **MPIExecutor** *(planned for Milestone 6)*: Distributed execution across nodes
+- **MPIExecutor**: Distributed execution across nodes using MPI
   - Use for: HPC clusters, very large calculations
-  - Pros: Scales to hundreds of cores
-  - Cons: Requires MPI setup, more complex
+  - Pros: Scales to hundreds of cores, efficient inter-node communication
+  - Cons: Requires MPI setup (mpi4py), batch system configuration
+  - Installation: `pip install qcmanybody[mpi]`
 
 ### Task Parallelization
 
@@ -584,7 +585,7 @@ result = ParallelManyBodyComputer.from_manybodyinput(
 )
 ```
 
-### Example 3: HPC Batch Script
+### Example 3: HPC Batch Script (Multiprocessing)
 
 ```bash
 #!/bin/bash
@@ -608,6 +609,68 @@ qcmanybody run input.json \
     --n-workers $SLURM_CPUS_PER_TASK \
     --output results.json
 ```
+
+### Example 4: MPI Distributed Execution
+
+For multi-node HPC clusters, use the MPI executor:
+
+**Python script (mpi_calculation.py):**
+```python
+from qcmanybody import ParallelManyBodyComputer
+from qcmanybody.parallel import MPIExecutor, ExecutorConfig
+from qcmanybody.models import ManyBodyInput
+
+# Load your input
+mb_input = ManyBodyInput.from_file("input.json")
+
+# Create MPI executor (n_workers determined by MPI size)
+config = ExecutorConfig(
+    timeout_per_task=3600.0,
+    max_retries=2
+)
+executor = MPIExecutor(config)
+
+# Run calculation (master distributes, workers execute)
+with executor:
+    result = ParallelManyBodyComputer.from_manybodyinput(
+        mb_input,
+        executor=executor
+    )
+
+# Save results (only master saves)
+if executor.is_master:
+    result.write_to_file("results.json")
+```
+
+**SLURM batch script:**
+```bash
+#!/bin/bash
+#SBATCH --job-name=qcmb_mpi
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=8
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=4GB
+
+# Load modules
+module load python/3.11
+module load openmpi/4.1
+module load psi4/1.8
+
+# Activate environment
+source ~/.venvs/qcmanybody/bin/activate
+
+# Install MPI support (if not already installed)
+# pip install qcmanybody[mpi]
+
+# Run with MPI (32 total processes: 1 master + 31 workers)
+mpirun -np 32 python mpi_calculation.py
+```
+
+**Key differences from multiprocessing:**
+- Use `mpirun -np <N>` to launch (not just `python script.py`)
+- Executor automatically uses MPI size (no need to specify `n_workers`)
+- Scales across multiple compute nodes
+- Requires `mpi4py` installation: `pip install qcmanybody[mpi]`
 
 ---
 

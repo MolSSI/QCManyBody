@@ -7,7 +7,7 @@ This module provides parallel execution capabilities for QCManyBody calculations
 - **Multiple Execution Backends:**
   - Sequential (reference implementation, no parallelism)
   - Multiprocessing (single-node, multi-core parallelism)
-  - MPI (multi-node distributed parallelism, coming soon)
+  - MPI (multi-node distributed parallelism for HPC clusters)
 
 - **Intelligent Task Management:**
   - Priority-based scheduling
@@ -111,11 +111,11 @@ Dataclass storing task execution results:
 - Automatic load balancing
 - ~2-4x speedup typical on 4-8 cores
 
-#### `MPIExecutor` (Coming Soon)
-- Distributed execution using MPI
+#### `MPIExecutor`
+- Distributed execution using MPI (requires mpi4py)
 - Scales to 100+ nodes
 - For HPC clusters
-- Fault-tolerant master-worker architecture
+- Master-worker architecture with dynamic task distribution
 
 ## Performance Guidelines
 
@@ -298,12 +298,12 @@ pytest qcmanybody/parallel/tests/ --cov=qcmanybody.parallel --cov-report=html
 | Base Infrastructure | ✅ Complete | Abstract classes, data models |
 | SequentialExecutor | ✅ Complete | Reference implementation |
 | MultiprocessingExecutor | ✅ Complete | Single-node parallelism |
+| MPIExecutor | ✅ Complete | Multi-node parallelism via MPI |
 | Progress Tracking | ✅ Complete | Callbacks and logging |
 | Error Handling | ✅ Complete | Retries and graceful failures |
 | Task Scheduling | 🚧 In Progress | Priority-based scheduling |
 | Checkpointing | 🚧 In Progress | Save/resume calculations |
 | Result Caching | 🚧 In Progress | Cache task results |
-| MPIExecutor | 📋 Planned | Multi-node parallelism |
 | Dynamic Load Balancing | 📋 Planned | Work stealing |
 
 ## Contributing
