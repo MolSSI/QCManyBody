@@ -127,6 +127,33 @@ def execute_single_task(task: ParallelTask, config: ExecutorConfig) -> TaskResul
         )
 
 
+def execute_task(task: ParallelTask) -> TaskResult:
+    """Execute a single task with default configuration.
+
+    This is a convenience wrapper around execute_single_task that uses
+    default configuration. It's designed for use with concurrent.futures
+    and MPI executors where passing config is inconvenient.
+
+    Parameters
+    ----------
+    task : ParallelTask
+        Task to execute
+
+    Returns
+    -------
+    TaskResult
+        Result of task execution
+
+    Notes
+    -----
+    This function uses default ExecutorConfig values. For more control,
+    use execute_single_task directly with a custom config.
+    """
+    # Use default config
+    config = ExecutorConfig()
+    return execute_single_task(task, config)
+
+
 def validate_environment() -> bool:
     """Validate that worker environment is properly configured.
 

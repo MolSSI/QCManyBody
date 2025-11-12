@@ -33,6 +33,7 @@ from .task import ParallelTask, TaskResult, TaskStatus
 from .executors.sequential import SequentialExecutor
 from .computer_parallel import ParallelManyBodyComputer, parallel_compute_from_manybodyinput
 from .checkpoint import CheckpointManager, CheckpointMetadata, create_checkpoint_manager
+from .scheduler import TaskScheduler, SchedulingStrategy, assign_task_priorities, estimate_load_balance
 
 __all__ = [
     "BaseParallelExecutor",
@@ -46,6 +47,10 @@ __all__ = [
     "CheckpointManager",
     "CheckpointMetadata",
     "create_checkpoint_manager",
+    "TaskScheduler",
+    "SchedulingStrategy",
+    "assign_task_priorities",
+    "estimate_load_balance",
 ]
 
 # Conditionally import multiprocessing executor
