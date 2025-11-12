@@ -40,6 +40,10 @@ cli = [
     "pyyaml>=5.0",  # For YAML input file support (JSON works without it)
     "rich>=10.0",   # For enhanced terminal output (improves UX)
 ]
+mpi = [
+    # MPI support for distributed parallel execution
+    "mpi4py>=3.0",  # Required for MPIExecutor
+]
 tests = [
     "pytest",
     "zstandard",
