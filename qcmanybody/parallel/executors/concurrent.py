@@ -36,6 +36,23 @@ class ConcurrentExecutorConfig(ExecutorConfig):
     max_workers: Optional[int] = None
     """Maximum number of workers (None = use default from concurrent.futures)"""
 
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        # Call parent validation first
+        super().__post_init__()
+
+        # Validate executor_type
+        valid_types = {"process", "thread"}
+        if self.executor_type not in valid_types:
+            raise ValueError(
+                f"Invalid executor_type '{self.executor_type}'. "
+                f"Must be one of: {', '.join(sorted(valid_types))}"
+            )
+
+        # Validate max_workers
+        if self.max_workers is not None and self.max_workers < 1:
+            raise ValueError(f"max_workers must be >= 1 or None, got {self.max_workers}")
+
 
 class ConcurrentExecutor(BaseParallelExecutor):
     """
@@ -230,7 +247,14 @@ class ConcurrentExecutor(BaseParallelExecutor):
                         logger.debug(f"Task {task.task_id} completed successfully")
                     else:
                         failed += 1
-                        logger.warning(f"Task {task.task_id} failed: {result.error}")
+                        logger.warning(f"Task {task.task_id} failed: {result.error_message}")
+
+                    # Call progress callback
+                    if progress_callback:
+                        try:
+                            progress_callback(task.task_id, completed + failed, len(tasks))
+                        except Exception as e:
+                            logger.warning(f"Progress callback failed: {e}")
 
                 except concurrent.futures.TimeoutError:
                     failed += 1
@@ -239,9 +263,16 @@ class ConcurrentExecutor(BaseParallelExecutor):
                     results.append(TaskResult(
                         task_id=task.task_id,
                         success=False,
-                        error=error_msg,
-                        result_data=None
+                        error_message=error_msg,
+                        atomic_result=None
                     ))
+
+                    # Call progress callback
+                    if progress_callback:
+                        try:
+                            progress_callback(task.task_id, completed + failed, len(tasks))
+                        except Exception as e:
+                            logger.warning(f"Progress callback failed: {e}")
 
                 except Exception as e:
                     failed += 1
@@ -250,9 +281,16 @@ class ConcurrentExecutor(BaseParallelExecutor):
                     results.append(TaskResult(
                         task_id=task.task_id,
                         success=False,
-                        error=error_msg,
-                        result_data=None
+                        error_message=error_msg,
+                        atomic_result=None
                     ))
+
+                    # Call progress callback
+                    if progress_callback:
+                        try:
+                            progress_callback(task.task_id, completed + failed, len(tasks))
+                        except Exception as e:
+                            logger.warning(f"Progress callback failed: {e}")
 
         except concurrent.futures.TimeoutError:
             # Overall timeout exceeded
@@ -266,8 +304,8 @@ class ConcurrentExecutor(BaseParallelExecutor):
                     results.append(TaskResult(
                         task_id=task.task_id,
                         success=False,
-                        error="Execution cancelled due to timeout",
-                        result_data=None
+                        error_message="Execution cancelled due to timeout",
+                        atomic_result=None
                     ))
 
         logger.info(

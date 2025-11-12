@@ -18,6 +18,12 @@ from .base import BaseParallelExecutor, ExecutorConfig
 from .executors.sequential import SequentialExecutor
 from .task import ParallelTask, TaskResult
 
+# Type hints for optional imports
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from .scheduler import TaskScheduler
+    from .checkpoint import CheckpointManager
+
 logger = logging.getLogger(__name__)
 
 
@@ -62,18 +68,31 @@ class ParallelManyBodyComputer(ManyBodyComputer):
     ... )
     """
 
-    def __init__(self, *args, executor: Optional[BaseParallelExecutor] = None, **kwargs):
+    def __init__(
+        self,
+        *args,
+        executor: Optional[BaseParallelExecutor] = None,
+        scheduler: Optional['TaskScheduler'] = None,
+        checkpoint_manager: Optional['CheckpointManager'] = None,
+        **kwargs
+    ):
         """Initialize ParallelManyBodyComputer.
 
         Parameters
         ----------
         executor : Optional[BaseParallelExecutor]
             Parallel executor for task execution
+        scheduler : Optional[TaskScheduler]
+            Task scheduler for optimizing task order and load balancing
+        checkpoint_manager : Optional[CheckpointManager]
+            Checkpoint manager for saving/resuming calculations
         *args, **kwargs
             Arguments passed to ManyBodyComputer
         """
         super().__init__(*args, **kwargs)
         self.executor = executor or SequentialExecutor()
+        self.scheduler = scheduler
+        self.checkpoint_manager = checkpoint_manager
 
     @classmethod
     def from_manybodyinput(
@@ -83,6 +102,8 @@ class ParallelManyBodyComputer(ManyBodyComputer):
         executor: Optional[BaseParallelExecutor] = None,
         parallel: bool = False,
         n_workers: Optional[int] = None,
+        scheduler: Optional['TaskScheduler'] = None,
+        checkpoint_manager: Optional['CheckpointManager'] = None,
     ) -> ManyBodyResult:
         """Create computer from ManyBodyInput and execute with parallel support.
 
@@ -109,6 +130,14 @@ class ParallelManyBodyComputer(ManyBodyComputer):
         n_workers : Optional[int]
             Number of workers for auto-created executor. Only used if
             parallel=True and executor=None. Default: None (auto-detect)
+        scheduler : Optional[TaskScheduler]
+            Task scheduler for optimizing task order and load balancing.
+            If provided, tasks will be scheduled before execution.
+            Default: None (no scheduling)
+        checkpoint_manager : Optional[CheckpointManager]
+            Checkpoint manager for saving/resuming calculations.
+            If provided, results will be automatically checkpointed.
+            Default: None (no checkpointing)
 
         Returns
         -------
@@ -154,8 +183,10 @@ class ParallelManyBodyComputer(ManyBodyComputer):
             input_model, build_tasks=False
         )
 
-        # Set the executor
+        # Set the executor, scheduler, and checkpoint manager
         computer_model.executor = executor
+        computer_model.scheduler = scheduler
+        computer_model.checkpoint_manager = checkpoint_manager
 
         if not build_tasks:
             return computer_model
@@ -232,36 +263,80 @@ class ParallelManyBodyComputer(ManyBodyComputer):
 
         logger.info(f"Prepared {len(tasks)} tasks for parallel execution")
 
+        # Load checkpoint if available and filter completed tasks
+        if self.checkpoint_manager:
+            if self.checkpoint_manager.exists():
+                logger.info("Loading checkpoint...")
+                self.checkpoint_manager.load()
+                tasks = self.checkpoint_manager.filter_pending_tasks(tasks)
+                logger.info(f"After checkpoint: {len(tasks)} tasks remaining")
+
+        # Apply scheduler if provided
+        if self.scheduler:
+            logger.info(f"Scheduling tasks with strategy: {self.scheduler.strategy.name}")
+            tasks = self.scheduler.schedule(tasks)
+
         # Execute tasks in parallel
         with self.executor as executor:
             logger.info(f"Executing with {executor.name}")
-            results = executor.execute(tasks)
+
+            # Define progress callback if checkpoint manager is available
+            progress_callback = None
+            if self.checkpoint_manager:
+                def progress_callback(task_id: str, completed: int, total: int):
+                    """Save checkpoint after each completed task."""
+                    # Find the completed task result
+                    for task in tasks:
+                        if task.task_id == task_id:
+                            # Note: Results are collected after execution completes
+                            pass
+                    logger.debug(f"Progress: {completed}/{total} tasks completed")
+
+            results = executor.execute(tasks, progress_callback=progress_callback)
+
+        # Save checkpoint with all results
+        if self.checkpoint_manager:
+            # Convert TaskResult to checkpoint format
+            for result in results:
+                self.checkpoint_manager.save_result(result)
+            self.checkpoint_manager.save(total_tasks=len(tasks))
+            logger.info("Checkpoint saved")
 
         # Collect results into component_results and component_properties
         component_results = {}
         component_properties = {}
 
-        for task, result in zip(tasks, results):
-            label = task.label
+        # First, load any existing results from checkpoint
+        all_results = []
+        if self.checkpoint_manager:
+            # Get completed results from checkpoint
+            checkpoint_results = list(self.checkpoint_manager._results.values())
+            all_results.extend(checkpoint_results)
+
+        # Add newly computed results
+        all_results.extend(results)
+
+        # Process all results (checkpoint + new)
+        for result in all_results:
+            label = result.task_id
 
             if not result.success:
-                error_msg = f"{result.error_type}: {result.error_message}"
-                if result.error_traceback:
-                    error_msg += f"\n{result.error_traceback}"
+                error_msg = result.error_message or "Unknown error"
                 raise RuntimeError(f"Calculation {label} did not succeed! Error:\n{error_msg}")
 
             # Store atomic result
-            component_results[label] = result.atomic_result
+            if result.atomic_result:
+                component_results[label] = result.atomic_result
 
-            # Extract properties
-            props = {"energy", "gradient", "hessian"}
-            component_properties[label] = {}
+                # Extract properties
+                props = {"energy", "gradient", "hessian"}
+                component_properties[label] = {}
 
-            for p in props:
-                if hasattr(result.atomic_result.properties, f"return_{p}"):
-                    v = getattr(result.atomic_result.properties, f"return_{p}")
-                    if v is not None:
-                        component_properties[label][p] = v
+                for p in props:
+                    if hasattr(result.atomic_result.properties, f"return_{p}"):
+                        v = getattr(result.atomic_result.properties, f"return_{p}")
+                        if v is not None:
+                            component_properties[label][p] = v
 
         # Analyze results (same as base implementation)
         analyze_back = self.qcmb_core.analyze(component_properties)

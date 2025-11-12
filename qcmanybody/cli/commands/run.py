@@ -88,7 +88,13 @@ def handle_run(args: Namespace) -> int:
 
         # Import appropriate computer class
         if parallel:
-            from qcmanybody.parallel import ParallelManyBodyComputer, ExecutorConfig
+            from qcmanybody.parallel import (
+                ParallelManyBodyComputer,
+                ExecutorConfig,
+                TaskScheduler,
+                SchedulingStrategy,
+                CheckpointManager
+            )
             from qcmanybody.parallel.executors import MultiprocessingExecutor, SequentialExecutor
 
             logger.info("Initializing ParallelManyBodyComputer...")
@@ -96,11 +102,38 @@ def handle_run(args: Namespace) -> int:
             logger.info(f"  Workers: {n_workers if n_workers else 'auto-detect'}")
             logger.info(f"  Executor type: {executor_type}")
 
+            # Create scheduler if strategy specified
+            scheduler = None
+            if hasattr(args, 'schedule_strategy') and args.schedule_strategy:
+                logger.info(f"  Scheduling strategy: {args.schedule_strategy}")
+                strategy = SchedulingStrategy(name=args.schedule_strategy)
+                scheduler = TaskScheduler(strategy=strategy, n_workers=n_workers or 1)
+
+            # Create checkpoint manager if checkpoint file specified
+            checkpoint_manager = None
+            if hasattr(args, 'checkpoint_file') and args.checkpoint_file:
+                logger.info(f"  Checkpoint file: {args.checkpoint_file}")
+                checkpoint_manager = CheckpointManager(
+                    checkpoint_file=args.checkpoint_file,
+                    auto_save=True,
+                    save_interval=10
+                )
+
+                # Load checkpoint if resume flag is set
+                if hasattr(args, 'resume') and args.resume and checkpoint_manager.exists():
+                    logger.info("  Resuming from existing checkpoint...")
+                    try:
+                        existing_results = checkpoint_manager.load()
+                        logger.info(f"  Loaded {len(existing_results)} previous results")
+                    except Exception as e:
+                        logger.warning(f"  Failed to load checkpoint: {e}. Starting fresh.")
+
             # Create executor config
             config = ExecutorConfig(
                 n_workers=n_workers,
                 timeout_per_task=timeout,
                 max_retries=max_retries,
+                checkpoint_file=args.checkpoint_file if hasattr(args, 'checkpoint_file') else None
             )
 
             # Create executor
@@ -112,7 +145,9 @@ def handle_run(args: Namespace) -> int:
             # Execute with parallel computer
             result = ParallelManyBodyComputer.from_manybodyinput(
                 mb_input,
-                executor=executor
+                executor=executor,
+                scheduler=scheduler,
+                checkpoint_manager=checkpoint_manager
             )
         else:
             from qcmanybody import ManyBodyComputer

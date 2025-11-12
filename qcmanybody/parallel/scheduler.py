@@ -30,6 +30,21 @@ class SchedulingStrategy:
     reorder_tasks: bool = True
     """Allow reordering tasks for optimization"""
 
+    def __post_init__(self):
+        """Validate strategy configuration."""
+        valid_strategies = {"priority_first", "cost_first", "nbody_first", "dependency_aware", "fifo"}
+        if self.name not in valid_strategies:
+            raise ValueError(
+                f"Invalid scheduling strategy '{self.name}'. "
+                f"Must be one of: {', '.join(sorted(valid_strategies))}"
+            )
+
+        if self.chunk_size is not None and self.chunk_size < 1:
+            raise ValueError(f"chunk_size must be >= 1, got {self.chunk_size}")
+
+        if self.name == "fifo" and self.reorder_tasks:
+            logger.warning("FIFO strategy ignores reorder_tasks=True, tasks will not be reordered")
+
 
 class TaskScheduler:
     """
@@ -70,7 +85,15 @@ class TaskScheduler:
             Scheduling strategy configuration
         n_workers : int
             Number of workers (for load balancing)
+
+        Raises
+        ------
+        ValueError
+            If n_workers < 1
         """
+        if n_workers < 1:
+            raise ValueError(f"n_workers must be >= 1, got {n_workers}")
+
         self.strategy = strategy or SchedulingStrategy()
         self.n_workers = n_workers
         self._scheduling_stats: Dict[str, Any] = {}

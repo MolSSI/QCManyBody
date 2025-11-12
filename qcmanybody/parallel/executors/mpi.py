@@ -22,13 +22,12 @@ Usage
 mpirun -np 16 python your_script.py
 """
 
-from typing import List, Optional
+from typing import List, Optional, Callable
 import logging
 import os
 
-from ..base import BaseParallelExecutor
+from ..base import BaseParallelExecutor, ExecutorConfig
 from ..task import ParallelTask, TaskResult
-from ..config import ExecutorConfig
 
 logger = logging.getLogger(__name__)
 
@@ -121,8 +120,16 @@ class MPIExecutor(BaseParallelExecutor):
         """
         if not MPI_AVAILABLE:
             raise ImportError(
-                "mpi4py is required for MPIExecutor. "
-                "Install with: pip install qcmanybody[mpi]"
+                "mpi4py is required for MPIExecutor but is not installed.\n\n"
+                "To use MPI-based parallel execution:\n"
+                "1. Install a system MPI implementation (OpenMPI, MPICH, Intel MPI, etc.)\n"
+                "   - Ubuntu/Debian: sudo apt-get install libopenmpi-dev openmpi-bin\n"
+                "   - CentOS/RHEL: sudo yum install openmpi-devel\n"
+                "   - macOS: brew install open-mpi\n"
+                "2. Install qcmanybody with MPI support:\n"
+                "   pip install qcmanybody[mpi]\n\n"
+                "For more information, see the parallel execution documentation:\n"
+                "https://molssi.github.io/QCManyBody/parallel_execution_guide.html"
             )
 
         super().__init__(config or ExecutorConfig())
@@ -134,8 +141,17 @@ class MPIExecutor(BaseParallelExecutor):
 
         if self.size < 2:
             raise RuntimeError(
-                "MPIExecutor requires at least 2 MPI processes "
-                "(1 master + 1 worker). Run with: mpirun -np N python script.py"
+                "MPIExecutor requires at least 2 MPI processes (1 master + 1 worker).\n\n"
+                "Current MPI size: 1 process\n\n"
+                "To run with MPI:\n"
+                "  mpirun -np <N> python your_script.py\n"
+                "  # or with mpiexec:\n"
+                "  mpiexec -n <N> python your_script.py\n\n"
+                "Where <N> is the number of processes (e.g., 4, 8, 16).\n"
+                "Example: mpirun -np 4 python your_script.py\n\n"
+                "For HPC clusters, use your batch system (SLURM, PBS, etc.):\n"
+                "  sbatch job_script.sh  # SLURM\n"
+                "  qsub job_script.pbs   # PBS/Torque"
             )
 
         self.is_master = (self.rank == 0)
@@ -179,7 +195,11 @@ class MPIExecutor(BaseParallelExecutor):
         # Barrier to ensure all processes reach cleanup
         self.comm.Barrier()
 
-    def _execute_tasks_impl(self, tasks: List[ParallelTask]) -> List[TaskResult]:
+    def execute(
+        self,
+        tasks: List[ParallelTask],
+        progress_callback: Optional[Callable[[str, int, int], None]] = None
+    ) -> List[TaskResult]:
         """
         Execute tasks using MPI master-worker pattern.
 
@@ -190,6 +210,9 @@ class MPIExecutor(BaseParallelExecutor):
         ----------
         tasks : List[ParallelTask]
             Tasks to execute
+        progress_callback : Optional[Callable[[str, int, int], None]]
+            Optional callback function called as:
+            progress_callback(task_id, completed_count, total_count)
 
         Returns
         -------
@@ -197,12 +220,16 @@ class MPIExecutor(BaseParallelExecutor):
             Results from task execution
         """
         if self.is_master:
-            return self._master_execute(tasks)
+            return self._master_execute(tasks, progress_callback)
         else:
             self._worker_loop()
             return []  # Workers don't return results
 
-    def _master_execute(self, tasks: List[ParallelTask]) -> List[TaskResult]:
+    def _master_execute(
+        self,
+        tasks: List[ParallelTask],
+        progress_callback: Optional[Callable[[str, int, int], None]] = None
+    ) -> List[TaskResult]:
         """
         Master process: Distribute tasks and collect results.
 
@@ -251,6 +278,13 @@ class MPIExecutor(BaseParallelExecutor):
                 f"from worker {worker_rank} "
                 f"(success: {result.success})"
             )
+
+            # Call progress callback
+            if progress_callback:
+                try:
+                    progress_callback(result.task_id, len(results), len(tasks))
+                except Exception as e:
+                    logger.warning(f"Progress callback failed: {e}")
 
             # Send next task to this worker or mark idle
             if task_queue:

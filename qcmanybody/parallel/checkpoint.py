@@ -16,6 +16,13 @@ from .task import ParallelTask, TaskResult, TaskStatus
 
 logger = logging.getLogger(__name__)
 
+# Get package version
+try:
+    from importlib.metadata import version
+    _QCMANYBODY_VERSION = version("qcmanybody")
+except Exception:
+    _QCMANYBODY_VERSION = "0.1.0"  # Fallback
+
 
 @dataclass
 class CheckpointMetadata:
@@ -247,7 +254,7 @@ class CheckpointManager:
         # Create metadata
         metadata = CheckpointMetadata(
             created_at=datetime.now().isoformat(),
-            qcmanybody_version="0.1.0",  # TODO: Get from package
+            qcmanybody_version=_QCMANYBODY_VERSION,
             total_tasks=total,
             completed_tasks=completed,
             failed_tasks=failed,

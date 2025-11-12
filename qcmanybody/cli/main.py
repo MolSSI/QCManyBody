@@ -130,6 +130,25 @@ For more information, visit: https://github.com/MolSSI/QCManyBody
         metavar="N",
         help="Number of parallel workers (overrides input file setting, auto-detect if not specified)",
     )
+    parallel_group.add_argument(
+        "--schedule-strategy",
+        choices=["priority_first", "cost_first", "nbody_first", "dependency_aware", "fifo"],
+        default=None,
+        help="Task scheduling strategy for parallel execution (default: priority_first)",
+    )
+    parallel_group.add_argument(
+        "--checkpoint-file",
+        type=str,
+        default=None,
+        metavar="FILE",
+        help="Path to checkpoint file for saving/resuming progress",
+    )
+    parallel_group.add_argument(
+        "--resume",
+        action="store_true",
+        default=False,
+        help="Resume from checkpoint file if it exists (requires --checkpoint-file)",
+    )
 
     # Logging options
     log_group = run_parser.add_argument_group("logging options")
