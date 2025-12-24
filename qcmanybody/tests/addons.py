@@ -1,3 +1,4 @@
+import sys
 from typing import List
 
 import pytest
@@ -96,15 +97,19 @@ def using(program: str) -> List:
 
 @pytest.fixture(scope="function", params=[None, "v1", "v2"])
 def schema_versions(request):
+    import qcelemental
+
     import qcmanybody
 
     if request.param == "v1":
-        return qcmanybody.models.v1
+        if sys.version_info >= (3, 14):
+            pytest.skip("no QCSchema v1 with py314+")
+        else:
+            return qcmanybody.models.v1, qcmanybody.v1.ManyBodyComputer, qcelemental.models.v1
     elif request.param == "v2":
-        try:
-            import qcmanybody.models.v2
-        except (ModuleNotFoundError, ImportError):
-            pytest.skip("QCManyBody v2 not tested since QCElemental v2 not available.")
-        return qcmanybody.models.v2
+        return qcmanybody.models.v2, qcmanybody.v2.ManyBodyComputer, qcelemental.models.v2
     else:
-        return qcmanybody.models
+        if sys.version_info >= (3, 14):
+            pytest.skip("no QCSchema v1 with py314+")
+        else:
+            return qcmanybody.models, qcmanybody.ManyBodyComputer, qcelemental.models

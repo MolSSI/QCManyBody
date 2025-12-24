@@ -3,16 +3,13 @@ import re
 
 import pytest
 from qcelemental import constants
-from qcelemental.models import Molecule
 
 # v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcelemental.testing import compare_recursive, compare_values
 
-from qcmanybody import ManyBodyComputer
-from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywords, ManyBodyResultProperties
 from qcmanybody.utils import translate_qcvariables
 
-from .addons import using, uusing
+from .addons import schema_versions, using, uusing
 
 he4_refs_species = {
     "NO": ('[\"(auto)\", [1, 2, 4], [1, 2, 4]]', -8.644153798224503),
@@ -388,7 +385,7 @@ sumdict = {
 @pytest.fixture
 def he_tetramer():
     a2 = 2 / constants.bohr2angstroms
-    return Molecule(symbols=["He", "He", "He", "He"], fragments=[[0], [1], [2], [3]], geometry=[0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2])
+    return {"symbols": ["He", "He", "He", "He"], "fragments": [[0], [1], [2], [3]], "geometry": [0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2]}
 
 
 @uusing("qcengine")
@@ -612,13 +609,25 @@ def he_tetramer():
         4,  # maybe TODO this could be 0 but rtd hasn't be used to winnow vmfc
         id="1b_vmfc"),
 ])
-def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodykeys, outstrs, calcinfo_nmbe, he_tetramer, request):
+def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodykeys, outstrs, calcinfo_nmbe, he_tetramer, request, schema_versions):
     #! MP2/aug-cc-pvDZ many body energies of an arbitrary Helium complex,
     #   addressing 4-body formulas
     # e, wfn = energy('MP2/aug-cc-pVDZ', molecule=he_tetramer, ...)
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+    if "v2" in request.node.name:
+        AtomicSpecification = _qcel.AtomicSpecification
+        subres = "cluster_results"
+        subprop = "cluster_properties"
+    else:
+        AtomicSpecification = _qcmb.AtomicSpecification
+        subres = "component_results"
+        subprop = "component_properties"
+    he_tet = _qcel.Molecule(**he_tetramer)
+    he_tet = _qcel.Molecule(**he_tetramer)
 
     atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": basis}, program=program, driver="energy", keywords=keywords, protocols={"stdout": False})
-    mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy", "protocols": {"component_results": "all"}}, molecule=he_tetramer)
+    mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy", "protocols": {subres: "all"}}, molecule=he_tet)
 
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
     ret = ManyBodyComputer.from_manybodyinput(mbe_model)
@@ -630,10 +639,13 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
     qcvars = translate_qcvariables(ret.properties.dict())
 
-    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+    if "v2" in request.node.name:
+        skprop = _qcmb.ManyBodyProperties.to_qcvariables(reverse=True)
+    else:
+        skprop = _qcmb.ManyBodyResultProperties.to_qcvariables(reverse=True)
 
     _inner = request.node.name.split("[")[1].split("]")[0]
-    kwdsln, progln = _inner.split("-")
+    schver, kwdsln, progln = _inner.split("-")
     refs = he4_refs_df if progln == "psi4_df" else he4_refs_conv
     ans = refs[anskey]
     ref_nmbe = calcinfo_nmbe
@@ -660,7 +672,7 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
 
     if "3b" in kwdsln and not progln.endswith("df"):
         k, v = he4_refs_species[anskey[:2]]
-        assert compare_values(v, ret.component_properties[k].return_energy, atol=atol, label=f"[h] species {k}")
+        assert compare_values(v, getattr(ret, subprop)[k].return_energy, atol=atol, label=f"[h] species {k}")
 
     for qcv, ref in {
         "CURRENT ENERGY": ans,
@@ -671,9 +683,10 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     assert compare_values(ans, ret.return_result, atol=atol, label=f"[g] ret")
 
     assert ret.properties.calcinfo_nmbe == ref_nmbe, f"[i] {ret.properties.calcinfo_nmbe=} != {ref_nmbe}"
-    assert len(ret.component_results) == ref_nmbe, f"[k] {len(ret.component_results)=} != {ref_nmbe}; mbe protocol did not take"
+    ret_subres = getattr(ret, subres)
+    assert len(ret_subres) == ref_nmbe, f"[k] len(ret.cluster_results)={len(ret_subres)} != {ref_nmbe}; mbe protocol did not take"
     if ref_nmbe > 0:
-        an_atres = next(iter(ret.component_results.values()))
+        an_atres = next(iter(ret_subres.values()))
         assert an_atres.stdout is None, f"[l] atomic protocol did not take"
 
     if outstrs and progln != "psi4_df":

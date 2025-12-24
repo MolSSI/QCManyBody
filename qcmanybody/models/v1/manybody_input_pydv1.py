@@ -6,16 +6,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Uni
 
 from pydantic.v1 import Field, create_model, validator
 from qcelemental.models import DriverEnum, ProtoModel, Provenance
-
-# from .basemodels import ExtendedConfigDict, ProtoModel
-with warnings.catch_warnings():
-    # keeping longstanding imports for compatibility with pre-next qcelemental
-    warnings.simplefilter("ignore")
-
-    from qcelemental.models.common_models import Model
-    from qcelemental.models.molecule import Molecule
-    from qcelemental.models.results import AtomicResultProperties, AtomicResultProtocols
-    from qcelemental.models.types import Array
+from qcelemental.models.v1 import Array, AtomicResultProperties, AtomicResultProtocols, Model, Molecule
 
 if TYPE_CHECKING:
     import qcmanybody
@@ -299,6 +290,8 @@ class ManyBodySpecification(ProtoModel):
                 for spec in dself["specification"].values():
                     spec.pop("schema_name")
                     spec.pop("schema_version")
+
+            dself["protocols"] = self.protocols.convert_v(target_version)
 
             self_vN = qcmb.models.v2.ManyBodySpecification(**dself)
         else:

@@ -1,7 +1,7 @@
 import pytest
 
 from qcmanybody import ManyBodyCalculator  # test old name still operational
-from qcmanybody.models import BsseEnum
+from qcmanybody.models.v2 import BsseEnum  # always available
 
 from .common import mol_h2o_3
 from .utils import compare_results, load_component_data, load_ref_data

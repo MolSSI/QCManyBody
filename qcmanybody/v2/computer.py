@@ -88,9 +88,11 @@ class AtomicComputer(BaseComputerQCNG):
         atomic_model = AtomicInput(
             **{
                 "molecule": self.molecule,
-                "driver": self.driver,
-                "model": {"method": self.method, "basis": self.basis},
-                "keywords": self.keywords,
+                "specification": {
+                    "driver": self.driver,
+                    "model": {"method": self.method, "basis": self.basis},
+                    "keywords": self.keywords,
+                },
             }
         )
 
@@ -335,7 +337,8 @@ class ManyBodyComputer(BaseComputerQCNG):
         sio = v
         _nfr = len(info.data["molecule"].fragments)
 
-        _max_nbody = info.data["max_nbody"]
+        _dummy_mnb = -10  # handle case when ValidationError previously raised in max_nbody generation
+        _max_nbody = info.data.get("max_nbody", _dummy_mnb)
         if (sio is True) and (_max_nbody != _nfr):
             raise ValueError(f"Cannot skip intermediate n-body jobs when max_nbody={_max_nbody} != nfragments={_nfr}.")
 
@@ -371,7 +374,7 @@ class ManyBodyComputer(BaseComputerQCNG):
 
         specifications = {}
         for mtd, spec in computer_model.input_data.specification.specification.items():
-            spec = spec.dict()
+            spec = spec.model_dump()
             specifications[mtd] = {}
             specifications[mtd]["program"] = spec.pop("program")
             specifications[mtd]["specification"] = spec
@@ -412,15 +415,15 @@ class ManyBodyComputer(BaseComputerQCNG):
         component_results = {}
 
         for chem, label, imol in computer_model.qcmb_core.iterate_molecules():
-            inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
-            # inp = AtomicInput(molecule=imol, **specifications[chem]["specification"], extras={"psiapi": True})  # faster for p4
+            inp = AtomicInput(molecule=imol, specification=specifications[chem]["specification"])
+            # inp = AtomicInput(molecule=imol, specification=specifications[chem]["specification"], extras={"psiapi": True})  # faster for p4
 
             if imol.extras.get("embedding_charges"):  # or test on self.embedding_charges ?
                 if specifications[chem]["program"] == "psi4":
                     charges = imol.extras["embedding_charges"]
-                    fkw = inp.keywords.get("function_kwargs", {})
+                    fkw = inp.specification.keywords.get("function_kwargs", {})
                     fkw.update({"external_potentials": charges})
-                    inp.keywords["function_kwargs"] = fkw
+                    inp.specification.keywords["function_kwargs"] = fkw
                 else:
                     raise RuntimeError(
                         f"Don't know how to handle external charges in {specifications[chem]['program']}"
@@ -521,11 +524,11 @@ class ManyBodyComputer(BaseComputerQCNG):
         nbody_model = ManyBodyResult(
             **{
                 "input_data": self.input_data,
-                #'molecule': self.molecule,
+                "molecule": self.molecule,
                 # v2: 'properties': {**atprop.model_dump(), **properties},
                 "properties": {**external_results["results"], **properties},
-                "component_properties": component_properties,
-                "component_results": component_results,
+                "cluster_properties": component_properties,
+                "cluster_results": component_results,
                 "provenance": provenance_stamp(__name__),
                 "return_result": ret_ptype,
                 "stdout": stdout,

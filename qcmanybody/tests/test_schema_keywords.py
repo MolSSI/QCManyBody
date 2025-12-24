@@ -7,15 +7,14 @@ import pytest
 from qcelemental.models import Molecule
 
 # qcng: from qcengine.procedures.manybody import ManyBodyComputer
-from qcmanybody.computer import ManyBodyComputer
-from qcmanybody.models import BsseEnum, ManyBodyInput
+from qcmanybody.models.v2 import BsseEnum  # always available
 
 from .addons import schema_versions
 
 
 @pytest.fixture(scope="function")
 def mbe_data():
-    henehh = Molecule(symbols=["He", "Ne", "H", "H"], fragments=[[0], [1], [2, 3]], geometry=[0, 0, 0, 2, 0, 0, 0, 1, 0, 0, -1, 0])
+    henehh = {"symbols": ["He", "Ne", "H", "H"], "fragments": [[0], [1], [2, 3]], "geometry": [0, 0, 0, 2, 0, 0, 0, 1, 0, 0, -1, 0]}
     return {
         "specification": {
             "specification": {
@@ -37,7 +36,7 @@ def mbe_data():
 
 @pytest.fixture(scope="function")
 def mbe_data_multilevel():
-    henehh = Molecule(symbols=["He", "Ne", "H", "H"], fragments=[[0], [1], [2, 3]], geometry=[0, 0, 0, 2, 0, 0, 0, 1, 0, 0, -1, 0])
+    henehh = {"symbols": ["He", "Ne", "H", "H"], "fragments": [[0], [1], [2, 3]], "geometry": [0, 0, 0, 2, 0, 0, 0, 1, 0, 0, -1, 0]}
     return {
         "specification": {
             "specification": {
@@ -92,7 +91,10 @@ def mbe_data_multilevel():
     pytest.param("hessian", {"return_total_data": True}, True),
     pytest.param("hessian", {"return_total_data": False}, False),
 ])
-def test_mbe_rtd(mbe_data, driver, kws, ans):
+def test_mbe_rtd(mbe_data, driver, kws, ans, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+
     mbe_data["specification"]["driver"] = driver
     mbe_data["specification"]["keywords"] = kws
 
@@ -138,7 +140,10 @@ def test_mbe_rtd(mbe_data, driver, kws, ans):
 
     #pytest.param({}, [ , {}, [] ]),
 ])
-def test_mbe_level_bodies(mbe_data, kws, ans):
+def test_mbe_level_bodies(mbe_data, kws, ans, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+
     mbe_data["specification"]["keywords"] = kws
 
     input_model = ManyBodyInput(**mbe_data)
@@ -164,7 +169,11 @@ def test_mbe_level_bodies(mbe_data, kws, ans):
 
     pytest.param({"levels": {3: "md", 1: "lo", 4: "hi"}}, [4, {1: "lo", 3: "md", 4: "hi"}, [[1], [2, 3], [4]] ]),
 ])
-def test_mbe_level_5mer(mbe_data, kws, ans):
+def test_mbe_level_5mer(mbe_data, kws, ans, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+    Molecule = _qcel.Molecule
+
     he3ne2 = Molecule(symbols=["He", "He", "He", "Ne", "Ne"], fragments=[[0], [1], [2], [3], [4]], geometry=[0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 2, 0, 0, -2, 0])
     mbe_data["molecule"] = he3ne2
     mbe_data["specification"]["keywords"] = kws
@@ -189,11 +198,13 @@ def test_mbe_level_5mer(mbe_data, kws, ans):
     pytest.param({"levels": {3: "ccsd", 2: "ccsd"}}, "Cannot have duplicate model chemistries in levels"),  #[3, {2: "ccsd", 3: "ccsd"}, [[1, 2, 3]] ]),
     pytest.param({"max_nbody": 3, "levels": {3: "ccsd", 2: "ccsd"}}, "Cannot have duplicate model chemistries in levels"),  #[3, {2: "ccsd", 3: "ccsd"}, [[1, 2, 3]] ]),
 ])
-def test_mbe_level_fails(mbe_data, kws, errmsg):
+def test_mbe_level_fails(mbe_data, kws, errmsg, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+
     mbe_data["specification"]["keywords"] = kws
 
-    # v2: with pytest.raises(Exception):
-    with pytest.raises(pydantic.v1.ValidationError) as e:
+    with pytest.raises((pydantic.v1.ValidationError, pydantic.ValidationError)) as e:
         input_model = ManyBodyInput(**mbe_data)
         ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
@@ -201,7 +212,7 @@ def test_mbe_level_fails(mbe_data, kws, errmsg):
 
 
 @pytest.mark.parametrize("kws,ans", [
-    pytest.param({}, [BsseEnum.cp]),
+    pytest.param({}, ["cp"]),
     pytest.param({"bsse_type": "CP"}, [BsseEnum.cp]),
     pytest.param({"bsse_type": "nocp"}, [BsseEnum.nocp]),
     pytest.param({"bsse_type": ["vmfc"]}, [BsseEnum.vmfc]),
@@ -214,15 +225,22 @@ def test_mbe_level_fails(mbe_data, kws, errmsg):
     pytest.param({"bsse_type": "mycp"}, "error"),
     pytest.param({"bsse_type": ["CP", "mycp"]}, "error"),
 ])
-def test_mbe_bsse_type(mbe_data, kws, ans):
+def test_mbe_bsse_type(mbe_data, kws, ans, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+    BsseEnum = _qcmb.BsseEnum
+
     mbe_data["specification"]["keywords"] = kws
 
     if ans == "error":
-        with pytest.raises(pydantic.v1.ValidationError) as e:
+        with pytest.raises((pydantic.v1.ValidationError, pydantic.ValidationError)) as e:
             input_model = ManyBodyInput(**mbe_data)
 
-        assert "not a valid enumeration member; permitted: 'nocp', 'cp', 'vmfc'" in str(e.value)
+        assert "not a valid enumeration member; permitted: 'nocp', 'cp', 'vmfc'" in str(e.value) or \
+               "Input should be 'nocp', 'cp', 'vmfc'" in str(e.value)
         return
+
+    ans = [getattr(BsseEnum, bit) for bit in ans]
 
     input_model = ManyBodyInput(**mbe_data)
     comp_model = ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
@@ -241,12 +259,15 @@ def test_mbe_bsse_type(mbe_data, kws, ans):
     pytest.param({"bsse_type": ["cp", "Vmfc"], "supersystem_ie_only": True},
         "Cannot skip intermediate n-body jobs when VMFC in bsse_type"),
 ])
-def test_mbe_sie(mbe_data, kws, ans):
+def test_mbe_sie(mbe_data, kws, ans, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+
     mbe_data["specification"]["keywords"] = kws
 
     if isinstance(ans, str):
         input_model = ManyBodyInput(**mbe_data)
-        with pytest.raises(pydantic.v1.ValidationError) as e:
+        with pytest.raises((pydantic.v1.ValidationError, pydantic.ValidationError)) as e:
             ManyBodyComputer.from_manybodyinput(input_model, build_tasks=False)
 
         assert ans in str(e.value)
@@ -283,20 +304,21 @@ def test_mbe_sie(mbe_data, kws, ans):
     }, "Field names not allowed"),
 ])
 def test_mbproperties_expansion(kws, ans, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
 
     if isinstance(ans, str):
         with pytest.raises((pydantic.ValidationError, pydantic.v1.ValidationError)) as e:
             try:
-                schema_versions.ManyBodyResultProperties(**kws)
+                _qcmb.ManyBodyResultProperties(**kws)
             except AttributeError:
-                schema_versions.ManyBodyProperties(**kws)
+                _qcmb.ManyBodyProperties(**kws)
 
         assert ans in str(e.value)
         return
 
     try:
-        input_model = schema_versions.ManyBodyResultProperties(**kws)
+        input_model = _qcmb.ManyBodyResultProperties(**kws)
     except AttributeError:
-        input_model = schema_versions.ManyBodyProperties(**kws)
+        input_model = _qcmb.ManyBodyProperties(**kws)
 
     assert len(input_model.dict()) == ans

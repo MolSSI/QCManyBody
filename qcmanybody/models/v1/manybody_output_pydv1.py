@@ -5,9 +5,7 @@ import re
 from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Union
 
 from pydantic.v1 import Field, create_model, root_validator, validator
-from qcelemental.models import ProtoModel, Provenance
-from qcelemental.models.results import AtomicResult, AtomicResultProperties
-from qcelemental.models.types import Array
+from qcelemental.models import Array, AtomicResult, AtomicResultProperties, ProtoModel, Provenance
 
 from .manybody_input_pydv1 import ManyBodyInput, SuccessfulResultBase
 

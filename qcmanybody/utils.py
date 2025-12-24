@@ -422,7 +422,7 @@ def collect_vars(
     supersystem_ie_only: bool = False,
     has_supersystem: bool = False,
 ) -> Dict:
-    """From *body_dict*, construct data for ManyBodyResultProperties.
+    """From *body_dict*, construct data for ManyBodyResultProperties/ManyBodyProperties.
 
     Parameters
     ----------
@@ -521,7 +521,7 @@ def translate_qcvariables(varsmap: Mapping[str, Any]) -> Dict[str, Any]:
     Parameters
     ----------
     varsmap
-        Dictionary with keys all members of QCVariables or ManyBodyResultProperties and arbitrary values.
+        Dictionary with keys all members of QCVariables or ManyBodyProperties/ManyBodyResultProperties and arbitrary values.
 
     Returns
     -------
@@ -529,11 +529,17 @@ def translate_qcvariables(varsmap: Mapping[str, Any]) -> Dict[str, Any]:
         varsmap with keys swapped to other set. Untranslatable keys are omitted.
 
     """
-    from qcmanybody.models.v1 import ManyBodyResultProperties
-
     # identify direction of translation
     qcv2skp = any([" " in lbl for lbl in varsmap])
-    labelmap = ManyBodyResultProperties.to_qcvariables(reverse=qcv2skp)
+    # to_variables are exactly the same at present. still, try more restrictive first
+    try:
+        from qcmanybody.models.v1 import ManyBodyResultProperties
+
+        labelmap = ManyBodyResultProperties.to_qcvariables(reverse=qcv2skp)
+    except Exception:
+        from qcmanybody.models.v2 import ManyBodyProperties
+
+        labelmap = ManyBodyProperties.to_qcvariables(reverse=qcv2skp)
 
     return {labelmap[lbl]: data for lbl, data in varsmap.items() if lbl in labelmap}
 
