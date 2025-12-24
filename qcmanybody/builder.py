@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 import itertools
+import sys
 from typing import Dict, Iterable, List, Literal, Optional, Set, Tuple, Union
 
-from qcmanybody.models.v1 import BsseEnum
+# only the values of BsseEnum matter, so import any ver that's available
+if sys.version_info >= (3, 14):
+    from qcmanybody.models.v2 import BsseEnum
+else:
+    from qcmanybody.models.v1 import BsseEnum
 
 __all__ = ["build_nbody_compute_list"]
 

@@ -12,13 +12,10 @@ nppp = partial(np.array_str, max_line_width=120, precision=8, suppress_small=Tru
 nppp10 = partial(np.array_str, max_line_width=120, precision=10, suppress_small=True)
 
 from ast import literal_eval
-
-# v2: from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Tuple, Union, Literal, Optional
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Mapping, Optional, Tuple, Union
 
-# v2: from pydantic import ConfigDict, field_validator, FieldValidationInfo, computed_field, BaseModel, Field
 from pydantic.v1 import BaseModel, Field, create_model, validator
-from qcelemental.models import AtomicInput, AtomicResult, DriverEnum, FailedOperation, Molecule, ProtoModel
+from qcelemental.models.v1 import AtomicInput, AtomicResult, DriverEnum, FailedOperation, Molecule, ProtoModel
 
 from qcmanybody import ManyBodyCore
 from qcmanybody.models.v1 import BsseEnum, ManyBodyInput, ManyBodyKeywords, ManyBodyResult, ManyBodyResultProperties
@@ -42,15 +39,8 @@ class BaseComputerQCNG(ProtoModel):
     def plan(self):
         pass
 
-    # TODO can remove?
-    #
-    # v2: model_config = ConfigDict(
-    # v2:     extra="allow",
-    # v2:     frozen=False,
-    # v2: )
     class Config:
         extra = "allow"
-        # v2: frozen = False
         allow_mutation = True
 
 
@@ -71,19 +61,16 @@ class AtomicComputer(BaseComputerQCNG):
     result: Any = Field(default_factory=dict, description=":py:class:`~qcelemental.models.AtomicResult` return.")
     result_id: Optional[str] = Field(None, description="The optional ID for the computation.")
 
-    # v2: @field_validator("basis")
     @validator("basis")
     @classmethod
     def set_basis(cls, basis):
         return basis.lower()
 
-    # v2: @field_validator("method")
     @validator("method")
     @classmethod
     def set_method(cls, method):
         return method.lower()
 
-    # v2: @field_validator("keywords")
     @validator("keywords")
     @classmethod
     def set_keywords(cls, keywords):
@@ -145,7 +132,6 @@ class ManyBodyComputer(BaseComputerQCNG):
     )
     bsse_type: List[BsseEnum] = Field(
         [BsseEnum.cp],
-        # v2: description=ManyBodyKeywords.model_fields["bsse_type"].description,
         description=ManyBodyKeywords.__fields__["bsse_type"].field_info.description,
     )
     molecule: Molecule = Field(
@@ -172,13 +158,11 @@ class ManyBodyComputer(BaseComputerQCNG):
     return_total_data: Optional[bool] = Field(  # after driver, embedding_charges
         None,
         validate_default=True,
-        # v2: description=ManyBodyKeywords.model_fields["return_total_data"].description,
         description=ManyBodyKeywords.__fields__["return_total_data"].field_info.description,
     )
     levels: Optional[Dict[Union[int, Literal["supersystem"]], str]] = Field(
         None,
         validate_default=True,
-        # v2: description=ManyBodyKeywords.model_fields["levels"].description + \
         description=ManyBodyKeywords.__fields__["levels"].field_info.description
         + "Examples above are processed in the ManyBodyComputer, and once processed, only the values should be used. "
         "The keys turn into nbodies_per_mc_level, as notated below. "
@@ -188,13 +172,11 @@ class ManyBodyComputer(BaseComputerQCNG):
     max_nbody: Optional[int] = Field(
         None,
         validate_default=True,
-        # v2: description=ManyBodyKeywords.model_fields["max_nbody"].description,
         description=ManyBodyKeywords.__fields__["max_nbody"].field_info.description,
     )
     supersystem_ie_only: Optional[bool] = Field(  # after max_nbody
         False,
         validate_default=True,
-        # v2: description=ManyBodyKeywords.model_fields["supersystem_ie_only"].description,
         description=ManyBodyKeywords.__fields__["supersystem_ie_only"].field_info.description,
     )
     task_list: Dict[str, Any] = {}  # MBETaskComputers] = {}
@@ -208,7 +190,6 @@ class ManyBodyComputer(BaseComputerQCNG):
     def nfragments(self) -> int:
         return len(self.molecule.fragments)
 
-    # v2: @field_validator("bsse_type", mode="before")
     @validator("bsse_type", pre=True)
     @classmethod
     def set_bsse_type(cls, v: Any) -> List[BsseEnum]:
@@ -225,45 +206,36 @@ class ManyBodyComputer(BaseComputerQCNG):
             )
         )
 
-    # v2: @field_validator("embedding_charges")
     @validator("embedding_charges", pre=True)
     @classmethod
-    # v2: def set_embedding_charges(cls, v: Any, info: FieldValidationInfo) -> Dict[int, List[float]]:
     def set_embedding_charges(cls, v, values):  # -> Dict[int, List[float]]:
         # print(f"hit embedding_charges validator with {v}", end="")
         nfr = len(values["molecule"].fragments)
-        # v2: if len(v) != info.data["nfragments"]:
         if v and len(v) != nfr:
             raise ValueError(f"embedding_charges dict should have entries for each 1-indexed fragment ({nfr})")
 
         # print(f" ... setting embedding_charges={v}")
         return v
 
-    # v2: @field_validator("return_total_data")
     @validator("return_total_data", always=True)
     @classmethod
-    # v2: def set_return_total_data(cls, v: Optional[bool], info: FieldValidationInfo) -> bool:
     def set_return_total_data(cls, v: Optional[bool], values) -> bool:
         # print(f"hit return_total_data validator with {v}", end="")
         if v is not None:
             rtd = v
-        # v2: elif info.data["driver"] in ["gradient", "hessian"]:
         elif values["driver"] in ["gradient", "hessian"]:
             rtd = True
         else:
             rtd = False
 
-        # v2: if info.data.get("embedding_charges", False) and rtd is False:
         if values.get("embedding_charges", False) and rtd is False:
             raise ValueError("Cannot return interaction data when using embedding scheme.")
 
         # print(f" ... setting rtd={rtd}")
         return rtd
 
-    # v2: @field_validator("levels")
     @validator("levels", always=True)
     @classmethod
-    # v2: def set_levels(cls, v: Any, info: FieldValidationInfo) -> Dict[Union[int, Literal["supersystem"]], str]:
     def set_levels(cls, v: Any, values) -> Dict[Union[int, Literal["supersystem"]], str]:
         # print(f"hit levels validator with {v}", end="")
 
@@ -272,7 +244,6 @@ class ManyBodyComputer(BaseComputerQCNG):
             # TODO levels = {plan.max_nbody: method}
             # v = {info.data["nfragments"]: "???method???"}
             # v = {len(info.data["molecule"].fragments): "???method???"}
-            # v2: v = {len(info.data["molecule"].fragments): "(auto)"}
             v = {len(values["molecule"].fragments): "(auto)"}
         else:
             # rearrange bodies in order with supersystem last lest body count fail in organization loop below
@@ -316,14 +287,10 @@ class ManyBodyComputer(BaseComputerQCNG):
         # print(f" ... setting nbodies_per_mc_level={nbodies_per_mc_level}")
         return nbodies_per_mc_level
 
-    # v2: @field_validator("max_nbody")
     @validator("max_nbody", always=True)
     @classmethod
-    # v2: def set_max_nbody(cls, v: Any, info: FieldValidationInfo) -> int:
     def set_max_nbody(cls, v: Any, values) -> int:
         # print(f"hit max_nbody validator with {v}", end="")
-        # v2: levels_max_nbody = max(nb for nb in info.data["levels"] if nb != "supersystem")
-        # v2: nfr = len(info.data["molecule"].fragments)
         levels_max_nbody = max(nb for nb in values["levels"] if nb != "supersystem")
         nfr = len(values["molecule"].fragments)
         # print(f" {levels_max_nbody=} {nfr=}", end="")
@@ -339,7 +306,6 @@ class ManyBodyComputer(BaseComputerQCNG):
         elif v != levels_max_nbody:
             # raise ValueError(f"levels={levels_max_nbody} contradicts user max_nbody={v}.")
             # TODO reconsider logic. move this from levels to here?
-            # v2: info.data["levels"] = {v: "(auto)"}
             values["levels"] = {v: "(auto)"}
         else:
             pass
@@ -357,17 +323,13 @@ class ManyBodyComputer(BaseComputerQCNG):
 
     # TODO also, perhaps change nbodies_per_mc_level into dict of lists so that pos'n/label indexing coincides
 
-    # v2: @field_validator("supersystem_ie_only")
     @validator("supersystem_ie_only", always=True)
     @classmethod
-    # v2: def set_supersystem_ie_only(cls, v: Optional[bool], info: FieldValidationInfo) -> bool:
     def set_supersystem_ie_only(cls, v: Optional[bool], values) -> bool:
         # print(f"hit supersystem_ie_only validator with {v}", end="")
         sio = v
-        # v2: _nfr = len(info.data["molecule"].fragments)
         _nfr = len(values["molecule"].fragments)
 
-        # v2: _max_nbody = info.data["max_nbody"]
         # get(..., None) b/c in v1, all fields processed even if max_nbody previously failed
         _max_nbody = values.get("max_nbody", None)
         if (sio is True) and (_max_nbody != _nfr):
@@ -387,14 +349,12 @@ class ManyBodyComputer(BaseComputerQCNG):
         computer_model = cls(
             molecule=input_model.molecule,
             driver=input_model.specification.driver,
-            # v2: **input_model.specification.keywords.model_dump(exclude_unset=True),
             **input_model.specification.keywords.dict(exclude_unset=True),
             input_data=input_model,  # storage, to reconstitute ManyBodyResult
         )
         nb_per_mc = computer_model.nbodies_per_mc_level
 
         # print("\n<<<  (ZZ 1) QCEngine harness ManyBodyComputerQCNG.from_qcschema_ben  >>>")
-        # v2: pprint.pprint(computer_model.model_dump(), width=200)
         # pprint.pprint(computer_model.dict(), width=200)
         # print(f"nbodies_per_mc_level={nb_per_mc}")
 
@@ -549,7 +509,6 @@ class ManyBodyComputer(BaseComputerQCNG):
         # print("QCVARS PRESCREEN")
         # pp.pprint(qcvars)
 
-        # v2: component_results = self.model_dump()['task_list']  # TODO when/where include the indiv outputs
         # ?component_results = self.dict()['task_list']  # TODO when/where include the indiv outputs
         #        for k, val in component_results.items():
         #            val['molecule'] = val['molecule'].to_schema(dtype=2)
@@ -558,7 +517,6 @@ class ManyBodyComputer(BaseComputerQCNG):
             **{
                 "input_data": self.input_data,
                 #'molecule': self.molecule,
-                # v2: 'properties': {**atprop.model_dump(), **properties},
                 "properties": {**external_results["results"], **properties},
                 "component_properties": component_properties,
                 "component_results": component_results,

@@ -4,14 +4,24 @@ import logging
 import math
 import os
 import string
+import sys
 from collections import Counter, defaultdict
 from typing import Any, Dict, Iterable, Literal, Mapping, Sequence, Set, Tuple, Union
 
 import numpy as np
-from qcelemental.models import Molecule
+
+if sys.version_info >= (3, 14):
+    from qcmanybody.models.v2 import BsseEnum
+else:
+    from qcmanybody.models.v1 import BsseEnum
+
+import qcelemental
+from qcelemental.models.v1 import Molecule as Molecule_v1
+from qcelemental.models.v2 import Molecule as Molecule_v2
+
+Molecules = Union[qcelemental.models.v1.Molecule, qcelemental.models.v2.Molecule]
 
 from qcmanybody.builder import build_nbody_compute_list
-from qcmanybody.models.v1 import BsseEnum
 from qcmanybody.utils import (
     all_same_shape,
     collect_vars,
@@ -39,7 +49,7 @@ FragBasIndex = Tuple[Tuple[int], Tuple[int]]
 class ManyBodyCore:
     def __init__(
         self,
-        molecule: Molecule,
+        molecule: Molecules,
         bsse_type: Sequence[BsseEnum],
         levels: Mapping[Union[int, Literal["supersystem"]], str],
         *,
@@ -55,9 +65,10 @@ class ManyBodyCore:
                 )
 
         if isinstance(molecule, dict):
-            mol = Molecule(**molecule)
-        elif isinstance(molecule, Molecule):
-            mol = molecule.copy()
+            mol = Molecule_v2(**molecule)
+        elif isinstance(molecule, (Molecule_v1, Molecule_v2)):
+            # model_copy aliased to copy for v1
+            mol = molecule.model_copy()
         else:
             raise ValueError(f"Molecule input type of {type(molecule)} not understood.")
         self.molecule = mol
@@ -229,7 +240,7 @@ class ManyBodyCore:
     def resize_hessian(self, hess: np.ndarray, bas: Tuple[int, ...], *, reverse: bool = False) -> np.ndarray:
         return resize_hessian(hess, bas, self.fragment_size_dict, self.fragment_slice_dict, reverse=reverse)
 
-    def iterate_molecules(self) -> Iterable[Tuple[str, str, Molecule]]:
+    def iterate_molecules(self) -> Iterable[Tuple[str, str, Molecules]]:
         """Iterate over all the molecules needed for the computation.
 
         Yields model chemistry, label, and molecule.
@@ -256,7 +267,7 @@ class ManyBodyCore:
                         # symmetry in the parent usually irrelevant to symmetry in the fragments, but
                         #   if parent symmetry is cancelled, catch that and pass it along
                         updates["fix_symmetry"] = "c1"
-                    mol = mol.copy(update=updates)
+                    mol = mol.model_copy(update=updates)
 
                     if self.embedding_charges:
                         embedding_frags = list(set(range(1, self.nfragments + 1)) - set(basis_atoms))
@@ -627,7 +638,7 @@ class ManyBodyCalculator(ManyBodyCore):
     # retire after a grace period
     def __init__(
         self,
-        molecule: Molecule,
+        molecule: Molecules,
         bsse_type: Sequence[BsseEnum],
         levels: Mapping[Union[int, Literal["supersystem"]], str],
         return_total_data: bool,
