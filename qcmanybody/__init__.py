@@ -9,5 +9,13 @@ from .core import ManyBodyCore
 from .computer import ManyBodyComputer
 
 # isort: on
-from .models import BsseEnum
+# BsseEnum used mostly for values, not object, so ensure available. v1 to minimize surprise.
+import sys
+
+if sys.version_info < (3, 14):
+    from .models.v1 import BsseEnum
+else:
+    from .models.v2 import BsseEnum
+del sys
+
 from .utils import delabeler, labeler, resize_gradient, resize_hessian
