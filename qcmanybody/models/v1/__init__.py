@@ -50,7 +50,6 @@ def _make_placeholder(name: str):
 # Names this module should export (keeps parity with the previous file layout)
 _EXPORT_NAMES = [
     "AtomicSpecification",
-    "BsseEnum",
     "FragBasIndex",
     "ManyBodyInput",
     "ManyBodyKeywords",
@@ -74,14 +73,13 @@ def _use_real_if_possible():
     # Map where names are defined in the original layout. Import cautiously.
     mapping = {
         "AtomicSpecification": (".manybody_input_pydv1", "AtomicSpecification"),
-        "BsseEnum": (".manybody_input_pydv1", "BsseEnum"),
         "FragBasIndex": (".manybody_input_pydv1", "FragBasIndex"),
         "ManyBodyInput": (".manybody_input_pydv1", "ManyBodyInput"),
         "ManyBodyKeywords": (".manybody_input_pydv1", "ManyBodyKeywords"),
         "ManyBodyProtocols": (".manybody_input_pydv1", "ManyBodyProtocols"),
         "ManyBodySpecification": (".manybody_input_pydv1", "ManyBodySpecification"),
         "MAX_NBODY": (".manybody_output_pydv1", "MAX_NBODY"),
-        "ManyBodyResults": (".manybody_output_pydv1", "ManyBodyResult"),
+        "ManyBodyResult": (".manybody_output_pydv1", "ManyBodyResult"),
         "ManyBodyResultProperties": (".manybody_output_pydv1", "ManyBodyResultProperties"),
     }
 
@@ -106,3 +104,6 @@ for _n in _EXPORT_NAMES:
 
 # Then attempt to shadow them with real implementations when available
 _use_real_if_possible()
+
+# This one is pydantic-free and much-used
+from ..v2.many_body import BsseEnum

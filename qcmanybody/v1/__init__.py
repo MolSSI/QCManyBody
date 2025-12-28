@@ -32,7 +32,13 @@ def _make_placeholder(name: str):
     def __repr__(self):
         return f"<Unavailable QCSchema v1 model {name}>"
 
-    return type(name, (), {"__init__": __init__, "__repr__": __repr__})
+    def from_manybodyinput(self, *args, **kwargs):
+        raise RuntimeError(_MSG2)
+
+    if name == "ManyBodyComputer":
+        return type(name, (), {"__init__": __init__, "__repr__": __repr__, "from_manybodyinput": from_manybodyinput})
+    else:
+        return type(name, (), {"__init__": __init__, "__repr__": __repr__})
 
 
 # Names this module should export (keeps parity with the previous file layout)

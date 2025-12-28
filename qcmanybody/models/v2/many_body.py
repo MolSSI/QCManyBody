@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import re
-from enum import Enum, IntEnum
+from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
 try:

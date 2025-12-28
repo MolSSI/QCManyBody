@@ -354,6 +354,9 @@ class ManyBodyComputer(BaseComputerQCNG):
     @classmethod
     def from_manybodyinput(cls, input_model: ManyBodyInput, build_tasks: bool = True):
 
+        if isinstance(input_model, dict):
+            input_model = ManyBodyInput(**input_model)
+
         computer_model = cls(
             molecule=input_model.molecule,
             driver=input_model.specification.driver,

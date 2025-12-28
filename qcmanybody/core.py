@@ -4,20 +4,15 @@ import logging
 import math
 import os
 import string
-import sys
 from collections import Counter, defaultdict
 from typing import Any, Dict, Iterable, Literal, Mapping, Sequence, Set, Tuple, Union
 
 import numpy as np
-
-if sys.version_info >= (3, 14):
-    from qcmanybody.models.v2 import BsseEnum
-else:
-    from qcmanybody.models.v1 import BsseEnum
-
 import qcelemental
 from qcelemental.models.v1 import Molecule as Molecule_v1
 from qcelemental.models.v2 import Molecule as Molecule_v2
+
+from qcmanybody.models.v2 import BsseEnum
 
 Molecules = Union[qcelemental.models.v1.Molecule, qcelemental.models.v2.Molecule]
 
