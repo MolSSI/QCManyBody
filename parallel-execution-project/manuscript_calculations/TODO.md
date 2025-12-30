@@ -1,0 +1,1 @@
+Calculations using MBE4 match well to HMBE calculations, but reference RI-MP2 calculations are approximately 7-8 Ha lower in total energy. Need to trace calculations out, and run with BSSE, to determine origin.
