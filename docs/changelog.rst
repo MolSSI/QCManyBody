@@ -2,6 +2,51 @@
 Changelog
 =========
 
+.. v0.x.0 / 2026-MM-DD (Unreleased)
+.. ===================
+..
+.. `Docs <https://MolSSI/github.io/QCManyBody/v0.x.0/>`_
+..
+.. Breaking Changes
+.. ----------------
+..
+.. New Features
+.. ------------
+..  * :pr:`43` Schema -- QCSchema v2 compatible and adds QCManyBody schema and Computer interface.
+..
+.. Enhancements
+.. ------------
+..
+.. Bug Fixes
+.. ---------
+..
+.. Misc.
+.. -----
+..
+.. MUST (Unmerged)
+.. ---------------
+..
+.. WIP (Unmerged)
+.. --------------
+
+.. _`sec:cl060`:
+
+v0.6.0 / 2026-MM-DD (Unreleased)
+===================
+
+`Docs <https://MolSSI/github.io/QCManyBody/v0.6.0/>`_
+
+Breaking Changes
+----------------
+
+New Features
+------------
+ * :pr:`43` Schema -- QCSchema v2 compatible and adds QCManyBody schema and Computer interface.
+
+Enhancements
+------------
+
+
 .. _`sec:cl052`:
 
 v0.5.2 / 2026-02-16
