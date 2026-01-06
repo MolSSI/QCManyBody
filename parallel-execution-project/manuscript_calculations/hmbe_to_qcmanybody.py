@@ -248,11 +248,22 @@ TOTAL_MULTIPLICITY = $total_multiplicity
 
 
 def create_molecule() -> Molecule:
-    """Construct the fragmented molecular system."""
-
+    """Construct the fragmented molecular system.
+    
+    Note: GEOMETRY from HMBE input is in Angstrom but QCElemental Molecule expects Bohr.
+    We must convert Angstrom -> Bohr.
+    """
+    from qcelemental import constants
+    
+    # Convert geometry from Angstrom (HMBE input) to Bohr (QCElemental default)
+    geometry_bohr = [
+        [x / constants.bohr2angstroms, y / constants.bohr2angstroms, z / constants.bohr2angstroms]
+        for x, y, z in GEOMETRY
+    ]
+    
     return Molecule(
         symbols=SYMBOLS,
-        geometry=GEOMETRY,
+        geometry=geometry_bohr,
         fragments=FRAGMENTS,
         molecular_charge=TOTAL_CHARGE,
         molecular_multiplicity=TOTAL_MULTIPLICITY,
