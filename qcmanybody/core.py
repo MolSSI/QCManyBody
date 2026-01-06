@@ -11,6 +11,7 @@ import numpy as np
 from qcelemental.models import Molecule
 
 from qcmanybody.builder import build_nbody_compute_list
+from qcmanybody.dependency import NBodyDependencyGraph
 from qcmanybody.models.v1 import BsseEnum
 from qcmanybody.utils import (
     all_same_shape,
@@ -108,7 +109,7 @@ class ManyBodyCore:
             for (k, v) in sorted(self.nbodies_per_mc_level.items(), key=lambda item: sorted(item[1] or [1000])[0])
         }
         assert self.mc_levels == set(self.nbodies_per_mc_level.keys())  # remove after some downstream testing
-        self.mc_levels = self.nbodies_per_mc_level.keys()
+        self.mc_levels = list(self.nbodies_per_mc_level.keys())
 
         for mc, nbs in self.nbodies_per_mc_level.items():
             if nbs and ((nbs[-1] - nbs[0]) != len(nbs) - 1):
@@ -125,6 +126,7 @@ class ManyBodyCore:
 
         # To be built on the fly
         self.mc_compute_dict = None
+        self._dependency_graph = None
 
         if self.nfragments == 1:
             # Usually we try to "pass-through" edge cases, so a single-fragment mol would return 0 or ordinary energy,
@@ -169,6 +171,19 @@ class ManyBodyCore:
             )
 
         return self.mc_compute_dict
+
+    @property
+    def dependency_graph(self) -> NBodyDependencyGraph:
+        """Get the N-body dependency graph for level-ordered iteration.
+
+        Returns
+        -------
+        NBodyDependencyGraph
+            Dependency graph instance for level-by-level fragment iteration
+        """
+        if self._dependency_graph is None:
+            self._dependency_graph = NBodyDependencyGraph(self.compute_map)
+        return self._dependency_graph
 
     def format_calc_plan(self, sset: str = "all") -> Tuple[str, Dict[str, Dict[int, int]]]:
         """Formulate per-modelchem and per-body job count data and summary text.
@@ -265,6 +280,85 @@ class ManyBodyCore:
 
                     done_molecules.add(label)
                     yield mc, label, mol
+
+    def iterate_molecules_by_level(self) -> Iterable[Tuple[int, str, str, Molecule]]:
+        """Iterate over molecules needed for computation, grouped by N-body dependency level.
+
+        This method provides level-by-level iteration that respects mathematical dependencies:
+        monomers (level 1) → dimers (level 2) → trimers (level 3) → etc.
+
+        This enables safe parallel execution within each level while respecting dependencies
+        between levels.
+
+        Yields
+        ------
+        Tuple[int, str, str, Molecule]
+            Tuple of (level, model_chemistry, label, molecule) where:
+            - level: N-body dependency level (1, 2, 3, ...)
+            - model_chemistry: String identifying the quantum chemistry method
+            - label: Fragment label in JSON format
+            - molecule: QCElemental Molecule object for this fragment
+
+        Notes
+        -----
+        This method preserves the exact same molecule set as iterate_molecules(),
+        only changing the ordering to respect N-body dependencies. All fragments
+        yielded by iterate_molecules() will be yielded by this method exactly once.
+
+        Examples
+        --------
+        >>> mbc = ManyBodyCore(molecule, ["cp"], {1: "hf", 2: "mp2"})
+        >>> for level, mc, label, mol in mbc.iterate_molecules_by_level():
+        ...     print(f"Level {level}: {mc} calculation for {label}")
+        Level 1: hf calculation for ["hf", [1], [1]]
+        Level 1: hf calculation for ["hf", [2], [2]]
+        Level 2: mp2 calculation for ["mp2", [1, 2], [1, 2]]
+        """
+        done_molecules: Set[str] = set()
+
+        # Performance optimization: pre-compute common values
+        has_embedding = bool(self.embedding_charges)
+        fix_c1_symmetry = self.molecule.fix_symmetry == "c1"
+
+        # Base updates dict - avoid creating it for each molecule
+        base_updates = {"fix_com": True, "fix_orientation": True}
+        if fix_c1_symmetry:
+            base_updates["fix_symmetry"] = "c1"
+
+        # Use dependency graph to get level-ordered iteration
+        for level, fragments_at_level in self.dependency_graph.iterate_molecules_by_level():
+            for fragment_dep in fragments_at_level:
+                mc = fragment_dep.mc  # model chemistry
+                label = fragment_dep.label  # fragment label
+
+                if label in done_molecules:
+                    continue
+
+                # Performance optimization: use cached real_atoms and basis_atoms from FragmentDependency
+                real_atoms = fragment_dep.real_atoms
+                basis_atoms = fragment_dep.basis_atoms
+
+                # Performance optimization: use set difference for ghost atoms
+                ghost_atoms = list(set(basis_atoms) - set(real_atoms))
+
+                # Shift to zero-indexing
+                real_atoms_0 = [x - 1 for x in real_atoms]
+                ghost_atoms_0 = [x - 1 for x in ghost_atoms]
+                mol = self.molecule.get_fragment(real_atoms_0, ghost_atoms_0, orient=False, group_fragments=False)
+
+                # Use pre-computed updates
+                mol = mol.copy(update=base_updates)
+
+                if has_embedding:
+                    embedding_frags = list(set(range(1, self.nfragments + 1)) - set(basis_atoms))
+                    charges = []
+                    for ifr in embedding_frags:
+                        positions = self.molecule.get_fragment(ifr - 1).geometry.tolist()
+                        charges.extend([[chg, i] for i, chg in zip(positions, self.embedding_charges[ifr])])
+                    mol.extras["embedding_charges"] = charges
+
+                done_molecules.add(label)
+                yield level, mc, label, mol
 
     def _assemble_nbody_components(
         self,
@@ -541,6 +635,47 @@ class ManyBodyCore:
             }
             ```
         """
+
+        # Convert AtomicResult objects to property dictionaries if needed
+        # This handles both old format (Dict[str, Dict]) and new format (Dict[str, AtomicResult])
+        converted_results = {}
+        for label, result_data in component_results.items():
+            if hasattr(result_data, 'properties'):
+                # This is an AtomicResult object - extract properties
+                properties_dict = {}
+
+                # Always include the return_result (typically energy)
+                if hasattr(result_data, 'return_result') and result_data.return_result is not None:
+                    # Convert to float to ensure compatibility with analysis functions
+                    properties_dict['energy'] = float(result_data.return_result)
+
+                # Extract all non-None properties from the properties object
+                if result_data.properties is not None:
+                    props_dict = result_data.properties.dict()
+                    for prop_name, prop_value in props_dict.items():
+                        if prop_value is not None:
+                            # Convert numeric values to appropriate types
+                            if isinstance(prop_value, (int, float)):
+                                prop_value = float(prop_value)
+
+                            # Map common property names to expected format
+                            if prop_name == 'return_energy':
+                                properties_dict['energy'] = prop_value
+                            elif prop_name == 'return_gradient':
+                                properties_dict['gradient'] = prop_value
+                            elif prop_name == 'return_hessian':
+                                properties_dict['hessian'] = prop_value
+                            else:
+                                # Include other properties as-is
+                                properties_dict[prop_name] = prop_value
+
+                converted_results[label] = properties_dict
+            else:
+                # Already in the expected dictionary format
+                converted_results[label] = result_data
+
+        # Use converted results for the rest of the analysis
+        component_results = converted_results
 
         # All properties that were passed to us
         # * seed with "energy" so free/no-op jobs can process
