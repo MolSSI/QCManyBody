@@ -163,6 +163,5 @@ cython_debug/
 timer.dat
 psi.*.clean
 
-# Various local files
+# AI Tools
 CLAUDE.md
-./parallel_execution_project/*

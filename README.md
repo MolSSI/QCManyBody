@@ -36,6 +36,77 @@ To install the latest development version directly from
 pip install git+https://github.com/MolSSI/QCManyBody.git
 ```
 
+### Optional Dependencies
+
+```bash
+# For YAML input file support (recommended)
+pip install pyyaml
+
+# For QC program execution
+pip install qcengine
+```
+
+## Command-Line Interface (CLI)
+
+QCManyBody provides a command-line interface for running many-body calculations without writing Python code.
+
+### Quick Start
+
+Create an input file (`input.json`):
+
+```json
+{
+  "schema_name": "qcmanybody_cli_input",
+  "schema_version": 1,
+  "molecule": {
+    "source": "inline",
+    "inline": {
+      "symbols": ["He", "He", "He"],
+      "geometry": [[0.0, 0.0, 0.0], [0.0, 0.0, 3.0], [0.0, 0.0, 6.0]],
+      "fragments": [[0], [1], [2]],
+      "units": "angstrom"
+    }
+  },
+  "calculation": {
+    "type": "single",
+    "single": {
+      "driver": "energy",
+      "method": "mp2",
+      "basis": "cc-pvdz",
+      "program": "psi4"
+    }
+  },
+  "bsse": {
+    "type": ["cp"]
+  },
+  "manybody": {
+    "max_nbody": 3
+  }
+}
+```
+
+Run the calculation:
+
+```bash
+# Validate input
+qcmanybody validate input.json
+
+# Preview execution plan
+qcmanybody plan input.json
+
+# Run calculation
+qcmanybody run input.json -o results.json
+```
+
+### Available Commands
+
+- **`qcmanybody run`**: Execute many-body calculations
+- **`qcmanybody plan`**: Show execution plan without running
+- **`qcmanybody validate`**: Validate input files
+- **`qcmanybody convert`**: Convert between JSON and YAML formats
+
+See the [CLI User Guide](docs/cli_guide.md) for comprehensive documentation.
+
 ## Documentation
 
 Full documentation is available at [https://molssi.github.io/QCManyBody/](https://molssi.github.io/QCManyBody/)

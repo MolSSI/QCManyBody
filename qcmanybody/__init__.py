@@ -7,7 +7,13 @@ del version
 from .core import ManyBodyCalculator  # legacy near-alias to ManyBodyCore
 from .core import ManyBodyCore
 from .computer import ManyBodyComputer
-from .parallel import ParallelManyBodyExecutor, ParallelConfig
+from .parallel import (
+    ParallelManyBodyComputer,
+    TaskScheduler,
+    SchedulingStrategy,
+    CheckpointManager,
+    create_checkpoint_manager,
+)
 
 # isort: on
 from .models import BsseEnum

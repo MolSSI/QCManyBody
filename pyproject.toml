@@ -27,10 +27,22 @@ dependencies = [
     "qcelemental>=0.28.0,<0.70.0",
 ]
 
+[project.scripts]
+qcmanybody = "qcmanybody.cli.main:main"
+
 [project.optional-dependencies]
 standard = [
     # needed for continuous hi-lvl interface: `mbres = ManyBodyComputer.from_manybodyinput(mbin)`
     "qcengine",
+]
+cli = [
+    # Optional enhancements for CLI (CLI works without these)
+    "pyyaml>=5.0",  # For YAML input file support (JSON works without it)
+    "rich>=10.0",   # For enhanced terminal output (improves UX)
+]
+mpi = [
+    # MPI support for distributed parallel execution
+    "mpi4py>=3.0",  # Required for MPIExecutor
 ]
 tests = [
     "pytest",

@@ -1,0 +1,29 @@
+{
+  "schema_name": "qcmanybody_cli_input",
+  "schema_version": 1,
+  "molecule": {
+    "source": "xyz",
+    "file": "water_dimer.xyz",
+    "fragments": [[0, 1, 2], [3, 4, 5]]
+  },
+  "calculation": {
+    "type": "single",
+    "single": {
+      "driver": "energy",
+      "method": "scf",
+      "basis": "sto-3g",
+      "program": "psi4"
+    }
+  },
+  "bsse": {
+    "type": ["cp"]
+  },
+  "manybody": {
+    "max_nbody": 2,
+    "return_total_data": false
+  },
+  "output": {
+    "format": "text",
+    "pretty": true
+  }
+}
