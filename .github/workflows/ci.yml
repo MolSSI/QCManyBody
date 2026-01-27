@@ -58,13 +58,14 @@ jobs:
           name: test
           channels:
             - conda-forge
+            - conda-forge/label/qcelemental_dev
           dependencies:
             # Build
             - setuptools
             - setuptools-scm
             # Core
             - python
-            - qcelemental
+            - qcelemental >=0.50rc1
             - pydantic
             # Testing
             - pytest
