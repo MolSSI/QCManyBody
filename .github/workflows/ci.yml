@@ -25,7 +25,7 @@ jobs:
       matrix:
         cfg:
           - label: Py-min
-            python-version: "3.8"
+            python-version: "3.9"
             runs-on: ubuntu-latest
             pytest: "-m 'not addon'"
 
@@ -39,8 +39,9 @@ jobs:
             runs-on: ubuntu-latest
             pytest: "-k 'examples or (121-nwchem_psi4 and 4b)'"
 
-          - label: QCSk-next
-            python-version: "3.12"
+          #- label: QCSk-next
+          - label: Py-314
+            python-version: "3.14"
             runs-on: ubuntu-latest
             pytest: "-k '((not (he4 and (3b or 4b) and not sio)) or supersys) and not vmfc'"
 
@@ -59,6 +60,7 @@ jobs:
           channels:
             - conda-forge
             - conda-forge/label/qcelemental_dev
+            - conda-forge/label/qcengine_dev
           dependencies:
             # Build
             - setuptools
@@ -79,7 +81,8 @@ jobs:
             #- nwchem  # lands on different he4 soln
           EOF
           if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
-              sed -i "s;pydantic;pydantic=1;g" export.yaml
+            :
+              #sed -i "s;pydantic;pydantic=1;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "Py-max" ]]; then
               sed -i "s;#- dummy1;- psi4;g" export.yaml

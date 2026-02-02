@@ -13,7 +13,7 @@ authors = [
 description='QCManyBody'
 readme = "README.md"
 # license = "BSD-3-Clause"  # until setuptools gets its act together across python versions
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Intended Audience :: Science/Research",
@@ -24,13 +24,13 @@ classifiers = [
 dependencies = [
     "numpy",
     "pydantic >=2.12",
-    "qcelemental>=0.50rc1,<0.70.0",
+    "qcelemental>=0.50.0rc1,<0.70.0",
 ]
 
 [project.optional-dependencies]
 standard = [
     # needed for continuous hi-lvl interface: `mbres = ManyBodyComputer.from_manybodyinput(mbin)`
-    "qcengine",
+    "qcengine>=0.50.0rc1,<0.70.0",
 ]
 tests = [
     "pytest",
