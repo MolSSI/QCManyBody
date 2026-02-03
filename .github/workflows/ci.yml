@@ -25,7 +25,7 @@ jobs:
       matrix:
         cfg:
           - label: Py-min
-            python-version: "3.9"
+            python-version: "3.10"
             runs-on: ubuntu-latest
             pytest: "-m 'not addon'"
 
@@ -98,6 +98,9 @@ jobs:
               sed -i "s;pydantic;pydantic=2;g" export.yaml
               sed -i "s;#- dummy1;- psi4;g" export.yaml
               sed -i "s;#- dummy2;- pydantic-settings;g" export.yaml
+          fi
+          if [[ "${{ matrix.cfg.label }}" == "Py-314" ]]; then
+              sed -i "s;#- dummy2;- nwchem;g" export.yaml
           fi
           # model sed for L/W
           #   sed -i "s;;;g" export.yaml
