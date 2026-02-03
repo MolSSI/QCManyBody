@@ -192,7 +192,7 @@ jobs:
             - setuptools
             - setuptools-scm
             # Core
-            - python
+            - python=3.13
             - qcelemental >=0.50.0rc1
             # Docs
             - numpydoc
