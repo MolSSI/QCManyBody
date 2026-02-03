@@ -68,6 +68,7 @@ jobs:
             # Core
             - python
             - qcelemental >=0.50rc1
+            - qcengine >=0.50rc1  # TODO temp
             - pydantic
             # Testing
             - pytest
