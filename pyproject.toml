@@ -41,14 +41,14 @@ tests = [
 docs = [
     "numpydoc",
     "docutils",
-    "sphinx >=7.0.0,<8",  # <8 for autodoc-pydantic=1
+    "sphinx >=7.0.0"
     "sphinxcontrib-napoleon",
     "sphinx-rtd-theme",
-    "autodoc-pydantic <2",
+    "autodoc-pydantic >=2",
     "sphinx-automodapi",
     "sphinx-autodoc-typehints",
     "pydantic",
-    # "pydantic-settings",
+    "pydantic-settings",
 ]
 dev = [
     "pre-commit",

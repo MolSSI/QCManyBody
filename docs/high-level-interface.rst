@@ -6,19 +6,19 @@ The high-level interface takes advantage of :doc:`qcschema`
 data structures for input and output and defines an easy way to run
 the QC computations through QCEngine.
 The high-level interface uses the core-interface under the hood.
-See the :class:`~qcmanybody.models.ManyBodyInput` QCSchema class for the input options :class:`~qcmanybody.models.ManyBodyKeywords`.
+See the :class:`~qcmanybody.models.v2.ManyBodyInput` QCSchema class for the input options :class:`~qcmanybody.models.v2.ManyBodyKeywords`.
 Details on forming fragmented ``Molecule`` s are at
 :ref:`molecule input <keywords:molecule>`
 
 The high-level interface defines a :class:`~qcmanybody.computer.ManyBodyComputer` class in
-computer.py whose input is :class:`~qcmanybody.models.ManyBodyInput` schema and whose output is
-:class:`~qcmanybody.models.ManyBodyResult` schema.
+computer.py whose input is :class:`~qcmanybody.models.v2.ManyBodyInput` schema and whose output is
+:class:`~qcmanybody.models.v2.ManyBodyResult` schema.
 It provides :func:`qcmanybody.computer.ManyBodyComputer.from_manybodyinput()` to run through
 QCEngine.
 See ``test_highlevel_interface_example()`` in
 `test_example.py <https://github.com/MolSSI/QCManyBody/blob/main/qcmanybody/tests/test_examples.py>`_
 for a working example.
-The :class:`~qcmanybody.models.ManyBodyComputer` provides the missing link from the core interface
+The :class:`~qcmanybody.models.v2.ManyBodyComputer` provides the missing link from the core interface
 to run QC computations. A strategy that Psi4 uses is to define its own
 ``ManyBodyComputer`` (inheriting from the high-level interface) that
 runs QC computations the way Psi4 wants to while still using all the

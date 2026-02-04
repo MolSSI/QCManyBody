@@ -24,7 +24,7 @@ The first step is to create a molecule. This molecule is a
 
 .. code-block:: python
 
-    from qcelemental.models import Molecule
+    from qcelemental.models.v2 import Molecule
 
     # Create a molecule with 3 neon atoms, each as its own fragment
 
@@ -98,7 +98,7 @@ for a worked example or the below as a quick example of what ``run_calculation``
     basis = "def2-svp"
     program = "psi4"
 
-    mol = qcel.models.Molecule.from_data(p4_string)
+    mol = qcel.models.v2.Molecule.from_data(p4_string)
     mbc = qcmb.ManyBodyCore(
         molecule=mol,
         bsse_type=[bsse_type],
@@ -113,8 +113,8 @@ for a worked example or the below as a quick example of what ``run_calculation``
     calculation_results = {}
     for chem, label, imol in mbc.iterate_molecules():
         mc, real, bas = qcmb.utils.delabeler(label)
-        atin = qcel.models.AtomicInput(
-            molecule=imol, driver="energy", model={"method": method, "basis": basis}
+        atin = qcel.models.v2.AtomicInput(
+            molecule=imol, specification={"driver": "energy", "model": {"method": method, "basis": basis}}
         )
         atres = qcng.compute(atin, program, raise_error=True)
         calculation_results[label] = {
