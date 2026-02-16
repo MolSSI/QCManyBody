@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QCManyBody Documentation &mdash; QCManyBody 0.1.dev1+g16cf35718 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=46835a7a"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/version-switcher.js?v=55f02482"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="High-Level Interface" href="high-level-interface.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            QCManyBody
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qcschema.html">QCSchema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">QCManyBody API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">QCManyBody Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="qcmanybody-documentation">
+<h1>QCManyBody Documentation<a class="headerlink" href="#qcmanybody-documentation" title="Link to this heading"></a></h1>
+<p>QCManyBody is a python package for running quantum chemistry many-body expansions and interaction calculations in a
+package-independent way.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>QCManyBody is available from <a class="reference external" href="https://pypi.org/project/qcmanybody">PyPI</a> and from
+<a class="reference external" href="https://anaconda.org/conda-forge/qcmanybody">conda-forge</a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Installation from PyPI</span>
+pip<span class="w"> </span>install<span class="w"> </span>qcmanybody
+
+<span class="c1"># Installation from conda-forge</span>
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>qcmanybody
+</pre></div>
+</div>
+<p>To install the latest development version directly from
+<a class="reference external" href="https://github.com/MolSSI/QCManyBody">GitHub</a>, you can use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MolSSI/QCManyBody.git
+</pre></div>
+</div>
+</section>
+<section id="package-overview">
+<h2>Package Overview<a class="headerlink" href="#package-overview" title="Link to this heading"></a></h2>
+<p>The package has two main interfaces. The high-level interface allows for a comprehensive workflow, where the user
+provides complete information about the calculation, including the full specification (method, basis set, etc.) of the
+many-body calculation. This is designed to work with <a class="reference external" href="https://github.com/MolSSI/QCEngine">QCEngine</a> or other packages
+that implement the <a class="reference external" href="https://github.com/MolSSI/QCSchema">QCSchema</a>.</p>
+<p>For more information, see <a class="reference internal" href="high-level-interface.html"><span class="doc">High-Level Interface</span></a>.</p>
+<p>QCManyBody also has a low-level <em>core</em> interface that allows for more flexibility in how the calculations are run. This
+interface generally takes a molecule and an arbitrary definition of quantum chemistry specifications, and expects
+the user to run them themselves.</p>
+<p>For more information, see <a class="reference internal" href="core-interface.html"><span class="doc">Core Interface</span></a>.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core-interface.html">Core Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core-interface.html#using-the-core-interface">Using the core interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core-interface.html#results-dictionary">Results dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core-interface.html#analysis">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="qcschema.html">QCSchema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="qcschema.html#inputs">Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qcschema.html#properties-outputs">Properties/Outputs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">QCManyBody API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-qcmanybody">qcmanybody Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-qcmanybody.core">qcmanybody.core Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-qcmanybody.computer">qcmanybody.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-qcmanybody.builder">qcmanybody.builder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-qcmanybody.utils">qcmanybody.utils Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-qcmanybody.models">qcmanybody.models Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Keywords and Options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keywords.html#required">Required</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keywords.html#id1">Keywords and Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="results.html#fields">Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-5-2-2026-02-16">v0.5.2 / 2026-02-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-5-1-2025-06-14">v0.5.1 / 2025-06-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-5-0-2025-06-13">v0.5.0 / 2025-06-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-4-0-2025-01-16">v0.4.0 / 2025-01-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-3-0-2024-07-21">v0.3.0 / 2024-07-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-2-1-2024-05-14">v0.2.1 / 2024-05-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-2-0-2024-05-13">v0.2.0 / 2024-05-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-1-0-2024-04-24">v0.1.0 / 2024-04-24</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="high-level-interface.html" class="btn btn-neutral float-right" title="High-Level Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

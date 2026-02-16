@@ -1,0 +1,6 @@
+modelchem_labels
+================
+
+.. currentmodule:: qcmanybody.utils
+
+.. autofunction:: modelchem_labels

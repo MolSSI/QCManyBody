@@ -1,0 +1,6 @@
+AtomicSpecification
+===================
+
+.. currentmodule:: qcmanybody.models
+
+.. autopydantic_model:: AtomicSpecification

@@ -1,0 +1,337 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Changelog &mdash; QCManyBody 0.1.dev1+g16cf35718 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=46835a7a"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/version-switcher.js?v=55f02482"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Results" href="results.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            QCManyBody
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qcschema.html">QCSchema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">QCManyBody API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v0-5-2-2026-02-16">v0.5.2 / 2026-02-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-5-1-2025-06-14">v0.5.1 / 2025-06-14</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-5-0-2025-06-13">v0.5.0 / 2025-06-13</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#breaking-changes">Breaking Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enhancements">Enhancements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#misc">Misc.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-4-0-2025-01-16">v0.4.0 / 2025-01-16</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Breaking Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Enhancements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Misc.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-3-0-2024-07-21">v0.3.0 / 2024-07-21</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Breaking Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Enhancements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-1-2024-05-14">v0.2.1 / 2024-05-14</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Enhancements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-0-2024-05-13">v0.2.0 / 2024-05-13</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id11">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">Enhancements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">Misc.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-1-0-2024-04-24">v0.1.0 / 2024-04-24</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id15">New Features</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Changelog</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/changelog.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<section id="v0-5-2-2026-02-16">
+<h2>v0.5.2 / 2026-02-16<a class="headerlink" href="#v0-5-2-2026-02-16" title="Link to this heading"></a></h2>
+</section>
+<section id="v0-5-1-2025-06-14">
+<h2>v0.5.1 / 2025-06-14<a class="headerlink" href="#v0-5-1-2025-06-14" title="Link to this heading"></a></h2>
+<section id="bug-fixes">
+<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/40">GH#40</a> Core – Fix bug where an input <code class="docutils literal notranslate"><span class="pre">fix_symmetry='c1'</span></code> molecule didn’t apply no symmetry to its fragments.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-5-0-2025-06-13">
+<h2>v0.5.0 / 2025-06-13<a class="headerlink" href="#v0-5-0-2025-06-13" title="Link to this heading"></a></h2>
+<section id="breaking-changes">
+<h3>Breaking Changes<a class="headerlink" href="#breaking-changes" title="Link to this heading"></a></h3>
+</section>
+<section id="new-features">
+<h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/38">GH#38</a> Feature – alpha ManyBody QCSchema v2 added accessible through <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">qcmanybody.models.v2</span> <span class="pre">import</span> <span class="pre">ManyBodyInput</span></code> etc. Changes are:</p>
+<ul>
+<li><p>In v2, <code class="docutils literal notranslate"><span class="pre">ManyBodyResult</span></code> gained <code class="docutils literal notranslate"><span class="pre">native_files</span></code> and <code class="docutils literal notranslate"><span class="pre">molecule</span></code> fields. The latter is unchanged by QCManyBody from the input. Also, <code class="docutils literal notranslate"><span class="pre">cluster_results</span></code> became required so the protocol can process it (can always be empty dict).</p></li>
+<li><p>In v2, <code class="docutils literal notranslate"><span class="pre">ManyBodyInput</span></code> gained <code class="docutils literal notranslate"><span class="pre">provenance</span></code> and <code class="docutils literal notranslate"><span class="pre">id</span></code> fields.</p></li>
+<li><p>In v2, <code class="docutils literal notranslate"><span class="pre">ManyBodySpecification</span></code> gained a <code class="docutils literal notranslate"><span class="pre">program</span></code> field, empty by default since prog may be supplied by argument.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ManyBodyResult.component_results</span></code> in v1 is now in v2 <code class="docutils literal notranslate"><span class="pre">ManyBodyResult.cluster_results</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ManyBodyProtocols.component_results</span></code> in v1 is now in v2 <code class="docutils literal notranslate"><span class="pre">ManyBodyProtocols.cluster_results</span></code> with the same default.</p></li>
+<li><p>In v2, <code class="docutils literal notranslate"><span class="pre">ManyBodyInput.extras</span></code> field was removed. Extras should be on <code class="docutils literal notranslate"><span class="pre">ManyBodySpecification</span></code>.</p></li>
+<li><p>In v2, <code class="docutils literal notranslate"><span class="pre">ManyBodyProperties</span></code>, <code class="docutils literal notranslate"><span class="pre">ManyBodyKeywords</span></code>, and <code class="docutils literal notranslate"><span class="pre">ManyBodySpecification</span></code> lost their <code class="docutils literal notranslate"><span class="pre">schema_version</span></code> field.</p></li>
+<li><p>All v2 models got their <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> standardized to <code class="docutils literal notranslate"><span class="pre">qcschema_many_body_&lt;type&gt;</span></code>. <code class="docutils literal notranslate"><span class="pre">ManyBodyProtocols</span></code> got a <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> for the first time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ManyBodyResult.success</span></code> now in v2 is fixed True.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ManyBodyResult.properties</span></code> composed of <code class="docutils literal notranslate"><span class="pre">ManyBodyResultProperties</span></code> in v1 is now in v2 composed of <code class="docutils literal notranslate"><span class="pre">ManyBodyProperties</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ManyBodySpecification.protocols</span></code> composed of <code class="docutils literal notranslate"><span class="pre">AtomicResultProtocols</span></code> in v1 is now in v2 composed of <code class="docutils literal notranslate"><span class="pre">AtomicProtocols</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ManyBodyResult.component_properties</span></code> composed of <code class="docutils literal notranslate"><span class="pre">AtomicResultProperties</span></code> in v1 is now in v2 <code class="docutils literal notranslate"><span class="pre">ManyBodyResult.cluster_properties</span></code> composed of <code class="docutils literal notranslate"><span class="pre">AtomicProperties</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="enhancements">
+<h3>Enhancements<a class="headerlink" href="#enhancements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/38">GH#38</a> Utils – updated the precise math function for arrays according to the NumPy deprecation warning.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/39">GH#39</a> Docs – Added high-level interface overview.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>Bug Fixes<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/38">GH#38</a> Docs – Fix typos in core docs page.</p></li>
+</ul>
+</section>
+<section id="misc">
+<h3>Misc.<a class="headerlink" href="#misc" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/38">GH#38</a> Maint – Pydantic package version must be v2 or v1 &gt;=1.10.17. This ensures the v2 API will be available for optional QCSchema v2, while QCManyBody remains on v1 API (importable from package v2).</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/38">GH#38</a> Maint – Updated license and package spec.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-4-0-2025-01-16">
+<h2>v0.4.0 / 2025-01-16<a class="headerlink" href="#v0-4-0-2025-01-16" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>Breaking Changes<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/36">GH#36</a> Feature – as the embedded point charges aren’t fully validated and (in the QCEngine computer function of the high-level interface) only work with Psi4 anyways, they are now hidden. Set environment variable <code class="docutils literal notranslate"><span class="pre">QCMANYBODY_EMBEDDING_CHARGES=1</span></code> to access functionality.</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>New Features<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+</section>
+<section id="id4">
+<h3>Enhancements<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/36">GH#36</a> Utils – when adding up results from many molecular species, now the compensated sums <code class="docutils literal notranslate"><span class="pre">math.fsum</span></code> or <code class="docutils literal notranslate"><span class="pre">numpy.sum</span></code> are used.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Bug Fixes<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+</section>
+<section id="id6">
+<h3>Misc.<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Maint – pinned to QCElemental &lt;0.70 to use only QCSchema v1.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-3-0-2024-07-21">
+<h2>v0.3.0 / 2024-07-21<a class="headerlink" href="#v0-3-0-2024-07-21" title="Link to this heading"></a></h2>
+<section id="id7">
+<h3>Breaking Changes<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/28">GH#28</a> Intf – low-level “core” interface renamed from <code class="docutils literal notranslate"><span class="pre">ManyBodyCalculator</span></code> to <code class="docutils literal notranslate"><span class="pre">ManyBodyCore</span></code>. The old name will continue to work for a few months. Also, its file changed from <code class="docutils literal notranslate"><span class="pre">manybody.py</span></code> to <code class="docutils literal notranslate"><span class="pre">core.py</span></code> but it was already a top-level import.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/30">GH#30</a> Intf – low-level “core” interface now requires named arguments beyond the first recognizable ones (mol, bsse_type, levels).</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/32">GH#32</a> Intf – “high-level” interface now no longer stores QCVariables (or any other results dicts) in extras.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/32">GH#32</a> Utils – <code class="docutils literal notranslate"><span class="pre">qcmanybody.utils.collect_vars</span></code> now returns with keys from ManyBodyResultProperties rather than QCVariables.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/32">GH#32</a> Utils – arguments rearranged in <code class="docutils literal notranslate"><span class="pre">qcmanybody.tests.utils.run_qcengine</span></code> (use serial backend for core interface) to align with <code class="docutils literal notranslate"><span class="pre">ManyBodyCore</span></code> init arguments.</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>New Features<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/32">GH#32</a> Schema – a new function <code class="docutils literal notranslate"><span class="pre">ManyBodyResultProperties.to_qcvariables()</span></code> returns a translation map to QCVariables keys.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/32">GH#32</a> Schema – a new function <code class="docutils literal notranslate"><span class="pre">qcmanybody.utils.translate_qcvariables(map)</span></code> switches between QCVariable and QCSchema keys.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/33">GH#33</a> Schema – <code class="docutils literal notranslate"><span class="pre">ManyBodySpecification.extras</span></code> added.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Schema – Add schema_version to <code class="docutils literal notranslate"><span class="pre">AtomicSpecification</span></code>, <code class="docutils literal notranslate"><span class="pre">ManyBodySpecification</span></code>, <code class="docutils literal notranslate"><span class="pre">ManyBodyKeywords</span></code>, <code class="docutils literal notranslate"><span class="pre">ManyBodyInput</span></code>, and <code class="docutils literal notranslate"><span class="pre">ManyBodyResultProperties</span></code>.</p></li>
+</ul>
+</section>
+<section id="id9">
+<h3>Enhancements<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/28">GH#28</a> Intf – high-level interface is now importable from the top level module.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/29">GH#29</a> Maint – QCEngine is needed only for the continuous running function of the high-level interface, so making it an optional dependency.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/30">GH#30</a> Intf – low-level “core” interface now accepts a molecule in partial schema dictionary format rather than requiring a constructed <code class="docutils literal notranslate"><span class="pre">qcelemental.Molecule</span></code> object. If the molecule is a single large fragment, an error is thrown.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/30">GH#30</a> Docs – add end-to-end demos in test_examples.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/31">GH#31</a> Schema – add “none” as a bsse_type alias to “nocp”.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Schema – Allow environment variable QCMANYBODY_MAX_NBODY to influence the body-level to which <code class="docutils literal notranslate"><span class="pre">ManyBodyResultProperties</span></code> is defined added.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Schema – added discriminator to input for <code class="docutils literal notranslate"><span class="pre">GeneralizedOptimizationInput</span></code> and <code class="docutils literal notranslate"><span class="pre">GeneralizedOptimizationResult</span></code> models to allow input from dicts (rather than models) in OptKing. Further specialized QCElemental.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Schema – <code class="docutils literal notranslate"><span class="pre">ManyBodyResultProperties</span></code> is still only explicitly enumerated up to tetramers, but now it allows through higher-body fields when they match a pattern.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Maint – start testing optimizations through QCEngine.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Util – add <code class="docutils literal notranslate"><span class="pre">labeler(...,</span> <span class="pre">opaque=False)</span></code> option to produce eye-friendly <code class="docutils literal notranslate"><span class="pre">(1)&#64;(1,</span> <span class="pre">2)</span></code> style labels as well as the semi-opaque internal style. Also always convert single ints to tuples now. Function <code class="docutils literal notranslate"><span class="pre">delabeler</span></code> can decode the new style.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Intf – sort “core” <code class="docutils literal notranslate"><span class="pre">nbodies_per_mc_level</span></code> dictionary so model chemistries are in a predictable 1b, 2b, …, supersystem order. Check that high-level (different data structure) agrees.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Util – add short ordinal model chemistry level (e.g., §A) to the <code class="docutils literal notranslate"><span class="pre">format_calc_plan</span></code> and <code class="docutils literal notranslate"><span class="pre">print_nbody_energy</span></code> summaries.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/34">GH#34</a> Util – add function <code class="docutils literal notranslate"><span class="pre">modelchem_labels</span></code> to associate n-body level, model chemistry level, one-char ordinal modelchem label, and n-bodies-covered modelchem label.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-2-1-2024-05-14">
+<h2>v0.2.1 / 2024-05-14<a class="headerlink" href="#v0-2-1-2024-05-14" title="Link to this heading"></a></h2>
+<section id="id10">
+<h3>Enhancements<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/27">GH#27</a> Intf – move high-level interface from <code class="docutils literal notranslate"><span class="pre">qcmb.qcng_computer.ManyBodyComputerQCNG</span></code> to <code class="docutils literal notranslate"><span class="pre">qcmb.computer.ManyBodyComputer</span></code>. Suppressed remaining printing.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-2-0-2024-05-13">
+<h2>v0.2.0 / 2024-05-13<a class="headerlink" href="#v0-2-0-2024-05-13" title="Link to this heading"></a></h2>
+<section id="id11">
+<h3>New Features<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/25">GH#25</a> Schema – added a new field <code class="docutils literal notranslate"><span class="pre">ManyBodyResults.component_results</span></code> to store subsystem <code class="docutils literal notranslate"><span class="pre">AtomicResult</span></code> s (or other Result if layered computation). By default this is not stored, but it can be with <code class="docutils literal notranslate"><span class="pre">ManyBodyInput.protocols.component_results</span> <span class="pre">=</span> <span class="pre">&quot;all&quot;</span></code>.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/25">GH#25</a> Schema – added <code class="docutils literal notranslate"><span class="pre">GeneralizedOptimizationInput</span></code> and <code class="docutils literal notranslate"><span class="pre">GeneralizedOptimizationResult</span></code> models as temporary extensions of <code class="docutils literal notranslate"><span class="pre">OptimizationInput/Result</span></code> when the optimizer can run <code class="docutils literal notranslate"><span class="pre">ManyBodyInput</span></code> s through QCEngine, not just <code class="docutils literal notranslate"><span class="pre">AtomicInput</span></code> s. Needs special QCElemental, QCEngine, and OptKing to work for now.</p></li>
+</ul>
+</section>
+<section id="id12">
+<h3>Enhancements<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/22">GH#22</a> Intf – move high-level interface to main directory and remove unused functions. Most common route into interface is now: <code class="docutils literal notranslate"><span class="pre">qcmb.ManyBodyComputerQCNG.from_manybodyinput</span></code>.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/25">GH#25</a> Schema – <code class="docutils literal notranslate"><span class="pre">AtomicSpecification.protocols</span></code> set in <code class="docutils literal notranslate"><span class="pre">ManyBodySpecification.specification</span></code> will now be observed.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/26">GH#26</a> Schema – add <code class="docutils literal notranslate"><span class="pre">AtomicSpecification.extras</span></code>.</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3>Bug Fixes<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/25">GH#25</a> Schema – <code class="docutils literal notranslate"><span class="pre">ManyBodyKeywords.embedding_charges</span></code> now default to None rather than empty dict.</p></li>
+</ul>
+</section>
+<section id="id14">
+<h3>Misc.<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/21">GH#21</a> Docs – installation and molecule.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/24">GH#24</a> Intf – release “frozen” pydantic on high-level ManyBodyComputerQCNG, so core-interface ManyBodyCalculator can live on the class.</p></li>
+<li><p><a class="extlink-pr reference external" href="https://github.com/MolSSI/QCManyBody/pull/26">GH#26</a> Cleanup – remove most debug printing.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-1-0-2024-04-24">
+<h2>v0.1.0 / 2024-04-24<a class="headerlink" href="#v0-1-0-2024-04-24" title="Link to this heading"></a></h2>
+<section id="id15">
+<h3>New Features<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Runs CP, NoCP, VMFC energies, gradients, and Hessians.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="results.html" class="btn btn-neutral float-left" title="Results" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+delabeler
+=========
+
+.. currentmodule:: qcmanybody
+
+.. autofunction:: delabeler

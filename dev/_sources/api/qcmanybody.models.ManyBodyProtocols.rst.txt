@@ -1,0 +1,6 @@
+ManyBodyProtocols
+=================
+
+.. currentmodule:: qcmanybody.models
+
+.. autopydantic_model:: ManyBodyProtocols

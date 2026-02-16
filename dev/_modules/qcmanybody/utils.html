@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qcmanybody.utils &mdash; QCManyBody 0.1.dev1+g16cf35718 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=46835a7a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/version-switcher.js?v=55f02482"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QCManyBody
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../qcschema.html">QCSchema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">QCManyBody API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qcmanybody.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qcmanybody.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># &quot;collect_vars&quot;,</span>
+    <span class="s2">&quot;delabeler&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;labeler&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;print_nbody_energy&quot;,</span>
+    <span class="s2">&quot;modelchem_labels&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;provenance_stamp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;resize_gradient&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;resize_hessian&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;sum_cluster_data&quot;,</span>
+    <span class="s2">&quot;translate_qcvariables&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_shape</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">shaped_zero</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,):</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">copy_value</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">all_same_shape</span><span class="p">(</span><span class="n">it</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if all elements of an iterable have the same shape.&quot;&quot;&quot;</span>
+
+    <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">it</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">first</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">it</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected float or np.ndarray, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">first</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="resize_gradient">
+<a class="viewcode-back" href="../../api/qcmanybody.utils.resize_gradient.html#qcmanybody.resize_gradient">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resize_gradient</span><span class="p">(</span>
+    <span class="n">grad</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="n">fragment_size_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">fragment_slice_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">slice</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Pads or extracts a gradient array between subsystem and full supersystem sizes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grad</span>
+<span class="sd">        Gradient matrix of natural size for *bas*, (3 * _&lt;nat in bas\&gt;_, 3).</span>
+<span class="sd">        If `reverse=True`, gradient matrix of supersystem size, (3 * _&lt;nat of all fragments\&gt;_, 3).</span>
+<span class="sd">    bas</span>
+<span class="sd">        1-indexed fragments active in *grad*.</span>
+<span class="sd">        If `reverse=True`, 1-indexed fragments to be extracted from *grad*.</span>
+<span class="sd">    fragment_size_dict</span>
+<span class="sd">        Dictionary containing the number of atoms of each 1-indexed fragment.</span>
+<span class="sd">        For He--HOOH--Me cluster, `{1: 1, 2: 4, 3: 5}`.</span>
+<span class="sd">    fragment_slice_dict</span>
+<span class="sd">        Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.</span>
+<span class="sd">        For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.</span>
+<span class="sd">    reverse</span>
+<span class="sd">        If True, contract *grad* from supersystem size and shape to that which is natural for *bas*.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Gradient array padded with zeros to supersystem size, (3 * _&lt;nat of supersystem\&gt;_, 3).</span>
+<span class="sd">        If reverse=True, gradient array extracted to natural size, (3 * _&lt;nat in bas\&gt;_, 3).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+        <span class="n">nat</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span> <span class="k">for</span> <span class="n">ifr</span> <span class="ow">in</span> <span class="n">bas</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nat</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fragment_size_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nat</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">ifr</span> <span class="ow">in</span> <span class="n">bas</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+            <span class="n">ret</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="n">fragment_slice_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span><span class="p">[</span><span class="n">fragment_slice_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]]</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="n">start</span> <span class="o">+=</span> <span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<div class="viewcode-block" id="resize_hessian">
+<a class="viewcode-back" href="../../api/qcmanybody.utils.resize_hessian.html#qcmanybody.resize_hessian">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resize_hessian</span><span class="p">(</span>
+    <span class="n">hess</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="n">fragment_size_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">fragment_slice_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">slice</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Pads or extracts a Hessian array between subsystem and full supersystem sizes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hess</span>
+<span class="sd">        Hessian matrix of natural size for *bas*, (3 * _&lt;nat in bas\&gt;_, 3 * _&lt;nat in bas\&gt;_).</span>
+<span class="sd">        If `reverse=True`, Hessian matrix of supersystem size, (3 * _&lt;nat of all fragments\&gt;_,</span>
+<span class="sd">        3 * _&lt;nat of all fragments\&gt;_).</span>
+<span class="sd">    bas</span>
+<span class="sd">        1-indexed fragments active in *hess*.</span>
+<span class="sd">        If `reverse=True`, 1-indexed fragments to be extracted from *hess*.</span>
+<span class="sd">    fragment_size_dict</span>
+<span class="sd">        Dictionary containing the number of atoms of each 1-indexed fragment.</span>
+<span class="sd">        For He--HOOH--Me cluster, `{1: 1, 2: 4, 3: 5}`.</span>
+<span class="sd">    fragment_slice_dict</span>
+<span class="sd">        Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.</span>
+<span class="sd">        For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.</span>
+<span class="sd">    reverse</span>
+<span class="sd">        If True, contract *hess* from supersystem size and shape to that which is natural for *bas*.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Hessian array padded with zeros to supersystem size, (3 * _&lt;nat of supersystem\&gt;_,</span>
+<span class="sd">        3 * _&lt;nat of supersystem\&gt;_). If reverse=True, Hessian array extracted to natural size,</span>
+<span class="sd">        (3 * _&lt;nat in bas\&gt;_, 3 * _&lt;nat in bas\&gt;_).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+        <span class="n">nat</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span> <span class="k">for</span> <span class="n">ifr</span> <span class="ow">in</span> <span class="n">bas</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nat</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fragment_size_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nat</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">nat</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="c1"># Build up start and end slices</span>
+    <span class="n">abs_start</span><span class="p">,</span> <span class="n">rel_start</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">abs_slices</span><span class="p">,</span> <span class="n">rel_slices</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ifr</span> <span class="ow">in</span> <span class="n">bas</span><span class="p">:</span>
+        <span class="n">rel_end</span> <span class="o">=</span> <span class="n">rel_start</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span>
+        <span class="n">rel_slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">rel_start</span><span class="p">,</span> <span class="n">rel_end</span><span class="p">))</span>
+        <span class="n">rel_start</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">fragment_size_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span>
+
+        <span class="n">tmp_slice</span> <span class="o">=</span> <span class="n">fragment_slice_dict</span><span class="p">[</span><span class="n">ifr</span><span class="p">]</span>
+        <span class="n">abs_slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">tmp_slice</span><span class="o">.</span><span class="n">start</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">tmp_slice</span><span class="o">.</span><span class="n">stop</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">abs_sl1</span><span class="p">,</span> <span class="n">rel_sl1</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">abs_slices</span><span class="p">,</span> <span class="n">rel_slices</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">abs_sl2</span><span class="p">,</span> <span class="n">rel_sl2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">abs_slices</span><span class="p">,</span> <span class="n">rel_slices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+                <span class="n">ret</span><span class="p">[</span><span class="n">rel_sl1</span><span class="p">,</span> <span class="n">rel_sl2</span><span class="p">]</span> <span class="o">=</span> <span class="n">hess</span><span class="p">[</span><span class="n">abs_sl1</span><span class="p">,</span> <span class="n">abs_sl2</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ret</span><span class="p">[</span><span class="n">abs_sl1</span><span class="p">,</span> <span class="n">abs_sl2</span><span class="p">]</span> <span class="o">=</span> <span class="n">hess</span><span class="p">[</span><span class="n">rel_sl1</span><span class="p">,</span> <span class="n">rel_sl2</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sum_cluster_data</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
+    <span class="n">compute_list</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;FragBasIndex&quot;</span><span class="p">],</span>
+    <span class="n">mc_level_lbl</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">vmfc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">nb</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum (direct or alternate weight by n-body) like data from</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data</span>
+<span class="sd">        Dictionary containing computed property (e/g/H/etc.) for each subsystem/component computation.</span>
+<span class="sd">    compute_list</span>
+<span class="sd">        A list of (frag, bas) tuples notating all the required computations for the desired sum.</span>
+<span class="sd">    mc_level_lbl</span>
+<span class="sd">        User label for what modelchem level results should be pulled out of *data*.</span>
+<span class="sd">    vmfc</span>
+<span class="sd">        Is this a vmfc calculation, by default False?</span>
+<span class="sd">    nb</span>
+<span class="sd">        1-indexed n-body level only used when `vmfc=True`, by default 0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Union[float, np.ndarray]</span>
+<span class="sd">        Scalar or array containing summed energy, gradient, Hessian, or other result.</span>
+<span class="sd">        Usually (nocp or cp; `vmfc=False`), compute_list defines all fragments of a given number of</span>
+<span class="sd">        active fragments and active basis fragments, so the return is the 3b@3b sum, for example.</span>
+<span class="sd">        Other times (`vmfc=True`), compute list defines all fragments of a given number of active basis</span>
+<span class="sd">        fragments. Then alternating weighting is applied so if `nb=3`, the return is the quantity</span>
+<span class="sd">        (3b@3b sum - 2b@3b sum + 1b@3b sum), for example.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the shapes of all the `data` values aren&#39;t the same. No summing energies with gradients.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_same_shape</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All values in data dictionary must have the same shape.&quot;</span><span class="p">)</span>
+
+    <span class="n">first_key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">find_shape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">first_key</span><span class="p">])</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">shaped_zero</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># np.sum might be preferable for precision for G/H but np.sum(generator) ill-defined</span>
+    <span class="n">precise_sum_func</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">fsum</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">else</span> <span class="nb">sum</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">precise_sum_func</span><span class="p">(</span>
+        <span class="p">(((</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">nb</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)))</span> <span class="k">if</span> <span class="n">vmfc</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">labeler</span><span class="p">(</span><span class="n">mc_level_lbl</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span><span class="p">)])</span>
+        <span class="k">for</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span> <span class="ow">in</span> <span class="n">compute_list</span>
+    <span class="p">)</span>
+
+    <span class="c1"># A more readable format for the above but not ammenable to using specialty summation functions</span>
+    <span class="c1"># ```</span>
+    <span class="c1"># for frag, bas in compute_list:</span>
+    <span class="c1">#     egh = data[labeler(mc_level_lbl, frag, bas)]</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if vmfc:</span>
+    <span class="c1">#         sign = (-1) ** (nb - len(frag))</span>
+    <span class="c1">#</span>
+    <span class="c1">#     ret += sign * egh</span>
+    <span class="c1"># ```</span>
+
+    <span class="k">return</span> <span class="n">ret</span>
+
+
+<div class="viewcode-block" id="labeler">
+<a class="viewcode-back" href="../../api/qcmanybody.utils.labeler.html#qcmanybody.labeler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">labeler</span><span class="p">(</span>
+    <span class="n">mc_level_lbl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">frag</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">bas</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">opaque</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Form label from model chemistry id and fragment and basis indices.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mc_level_lbl</span>
+<span class="sd">        Key identifying the model chemistry. May be `&quot;(auto)&quot;`. Often the</span>
+<span class="sd">        ManyBodyInput.specification.specification keys.</span>
+<span class="sd">        When `opaque=False`, result is for pretty printing so instead of a string,</span>
+<span class="sd">        `mc_level_lbl` might be an integer index (apply 1-indexing beforehand)</span>
+<span class="sd">        or None (if the model chemistry part is unwanted because single-level).</span>
+<span class="sd">    frag</span>
+<span class="sd">        List of 1-indexed fragments active in the supersystem.</span>
+<span class="sd">    bas</span>
+<span class="sd">        List of 1-indexed fragments with active basis sets in the supersystem.</span>
+<span class="sd">        All those in *frag* plus any ghost.</span>
+<span class="sd">    opaque</span>
+<span class="sd">        Toggle whether to return JSON-friendly semi-opaque internal str label (True) or</span>
+<span class="sd">        eye-friendly label with @ for basis and § for model chemistry (False).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        JSON string from inputs::</span>
+
+<span class="sd">          labeler(&quot;mp2&quot;, 1, (1, 2))</span>
+<span class="sd">          #&gt; &#39;[&quot;mp2&quot;, [1], [1, 2]]&#39;</span>
+<span class="sd">          labeler(&quot;mp2&quot;, 1, (1, 2), opaque=False)</span>
+<span class="sd">          #&gt; &#39;§mp2_(1)@(1, 2)&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">frag</span> <span class="o">=</span> <span class="p">(</span><span class="n">frag</span><span class="p">,)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bas</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">bas</span> <span class="o">=</span> <span class="p">(</span><span class="n">bas</span><span class="p">,)</span>
+
+    <span class="k">if</span> <span class="n">opaque</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">mc_level_lbl</span><span class="p">),</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mc_pre</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">mc_level_lbl</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;§</span><span class="si">{</span><span class="n">mc_level_lbl</span><span class="si">}</span><span class="s2">_&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mc_pre</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">frag</span><span class="p">))</span><span class="si">}</span><span class="s2">)@(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">bas</span><span class="p">))</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="delabeler">
+<a class="viewcode-back" href="../../api/qcmanybody.utils.delabeler.html#qcmanybody.delabeler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">delabeler</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Back-form from label into tuple.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mcfragbas</span>
+<span class="sd">        Tuple of opaque or pretty-print model chemistry (may be None for latter),</span>
+<span class="sd">        fragments and bases (1-indexed by convention). ::</span>
+
+<span class="sd">          delabeler(&#39;[&quot;mp2&quot;, [1], [1, 2]]&#39;)</span>
+<span class="sd">          #&gt; (&#39;mp2&#39;, [1], [1, 2])</span>
+<span class="sd">          delabeler(&quot;§mp2_(1)@(1, 2)&quot;)</span>
+<span class="sd">          #&gt; (&#39;mp2&#39;, [1], [1, 2])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+        <span class="n">mc</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">mc</span><span class="p">),</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mobj</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?:§(?P&lt;mc&gt;\S*)_)?(?P&lt;frag&gt;.*)@(?P&lt;bas&gt;.*)&quot;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="n">mc</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">mobj</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="c1"># want lists and avoids (1) non-iterable error</span>
+        <span class="n">frag</span> <span class="o">=</span> <span class="n">frag</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span>
+        <span class="n">bas</span> <span class="o">=</span> <span class="n">bas</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mc</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">frag</span><span class="p">),</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">bas</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_nbody_energy</span><span class="p">(</span>
+    <span class="n">energy_body_dict</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">nfragments</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">modelchem_labels</span><span class="p">,</span>
+    <span class="n">embedding</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">supersystem_beyond</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format summary string for energies of a single bsse_type. Logs and returns output.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    energy_body_dict</span>
+<span class="sd">        Input data.</span>
+<span class="sd">    header</span>
+<span class="sd">        Specialization for table title.</span>
+<span class="sd">    nfragments</span>
+<span class="sd">        Number of lines in table is number of fragments.</span>
+<span class="sd">    modelchem_labels</span>
+<span class="sd">        Dictionary mapping active nbody-levels to a tuple with first element the</span>
+<span class="sd">        full model chemistry key and second element a short label. A suitable</span>
+<span class="sd">        dictionary is `modelchem_labels(manybodycore_instance.nbodies_per_mc_level)`.</span>
+<span class="sd">    embedding</span>
+<span class="sd">        Whether charge embedding present suppress printing, usually False</span>
+<span class="sd">    supersystem_ie_only</span>
+<span class="sd">        Whether only 1-body and nfragments-body levels are available, usually False.</span>
+<span class="sd">    supersystem_beyond</span>
+<span class="sd">        If not None, the number of nbody-levels computed by MBE explicitly. Beyond this gets supersystem SS label.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        A text table in Hartrees and kcal/mol</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        ==&gt; N-Body: Counterpoise Corrected (CP) energies &lt;==&#39;</span>
+
+<span class="sd">                n-Body     Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy&#39;</span>
+<span class="sd">                           [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]&#39;</span>
+<span class="sd">                     1     -386.455609352609        0.000000000000        0.000000000000        0.000000000000        0.000000000000&#39;</span>
+<span class="sd">                     2     -384.203153844163        2.252455508446     1413.437170812134        2.252455508446     1413.437170812134&#39;</span>
+<span class="sd">          FULL/RTN   3     -384.128628718676        2.326980633933     1460.202393089624        0.074525125487       46.765222277490&#39;</span>
+<span class="sd">        ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">   ==&gt; N-Body: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s2"> energies &lt;==</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;        </span><span class="si">{</span><span class="s2">&quot;MC n-Body&quot;</span><span class="si">:</span><span class="s2">&gt;15</span><span class="si">}</span><span class="s2">  Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;                         [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">previous_e</span> <span class="o">=</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tot_e</span> <span class="o">=</span> <span class="n">previous_e</span> <span class="o">!=</span> <span class="mf">0.0</span>
+    <span class="n">nbody_range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">energy_body_dict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">supersystem_ie_only</span><span class="p">:</span>
+        <span class="n">nbody_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">nfragments</span><span class="p">]</span>
+    <span class="n">nbody_range</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nfragments</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">lbl</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">supersystem_beyond</span> <span class="ow">and</span> <span class="n">nb</span> <span class="o">&gt;</span> <span class="n">supersystem_beyond</span><span class="p">:</span>
+            <span class="n">lbl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;SS&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nb</span> <span class="o">==</span> <span class="n">nfragments</span><span class="p">:</span>
+            <span class="n">lbl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;FULL&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nb</span> <span class="o">==</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbody_range</span><span class="p">):</span>
+            <span class="n">lbl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;RTN&quot;</span><span class="p">)</span>
+        <span class="n">lbl</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lbl</span><span class="p">)</span>
+
+        <span class="n">mclbl</span> <span class="o">=</span> <span class="n">modelchem_labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbody_range</span><span class="p">:</span>
+            <span class="n">delta_e</span> <span class="o">=</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">previous_e</span>
+            <span class="n">delta_e_kcal</span> <span class="o">=</span> <span class="n">delta_e</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">hartree2kcalmol</span>
+            <span class="k">if</span> <span class="n">embedding</span><span class="p">:</span>
+                <span class="n">int_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">int_e_kcal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">int_e</span> <span class="o">=</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">int_e_kcal</span> <span class="o">=</span> <span class="n">int_e</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">hartree2kcalmol</span>
+            <span class="k">if</span> <span class="n">supersystem_ie_only</span> <span class="ow">and</span> <span class="n">nb</span> <span class="o">==</span> <span class="n">nfragments</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
+                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">embedding</span><span class="p">:</span>
+                        <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mclbl</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">14</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">int_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">delta_e_kcal</span><span class="si">:</span><span class="s2">20.12f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+            <span class="n">previous_e</span> <span class="o">=</span> <span class="n">energy_body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  </span><span class="si">{</span><span class="n">lbl</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s2">&quot;&quot;</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nb</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s2">&quot;N/A&quot;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+
+    <span class="n">mc_legend</span> <span class="o">=</span> <span class="p">{</span><span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">modelchem_labels</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+    <span class="n">mc_legend</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">: &quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mc_legend</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+    <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   MC Legend: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mc_legend</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">info</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_vars</span><span class="p">(</span>
+    <span class="n">bsse</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">prop</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">body_dict</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
+    <span class="n">max_nbody</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">embedding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">has_supersystem</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;From *body_dict*, construct data for ManyBodyResultProperties.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bsse</span>
+<span class="sd">        Label for a single many-body treatment, generally a value of BsseEnum.</span>
+<span class="sd">    prop</span>
+<span class="sd">        Label for a single property, generally a value of DriverEnum.</span>
+<span class="sd">    body_dict</span>
+<span class="sd">        Dictionary of minimal per-body info already specialized for property *prop* and treatment</span>
+<span class="sd">        *bsse*. May contain either total data or interaction data (cummulative, not additive) from</span>
+<span class="sd">        1-body to max_nbody-body (see also *supersystem_ie_only*). Interaction data signaled by zero</span>
+<span class="sd">        float or array for 1-body. May contain data from multiple model chemistry levels.</span>
+<span class="sd">    max_nbody</span>
+<span class="sd">        _description_</span>
+<span class="sd">    embedding</span>
+<span class="sd">        Is charge embedding enabled, by default False?</span>
+<span class="sd">    supersystem_ie_only</span>
+<span class="sd">        Is data available in *body_dict* only for 1-body (possibly zero) and nfr-body levels?</span>
+<span class="sd">        By default False: data is available for consecutive levels, up to max_nbody-body.</span>
+<span class="sd">    has_supersystem</span>
+<span class="sd">        Whether contributions higher than max_nbody are a summary correction.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        _description_. Empty return if *embedding* enabled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bsse</span> <span class="o">=</span> <span class="n">bsse</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">prop</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">previous_e</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">property_shape</span> <span class="o">=</span> <span class="n">find_shape</span><span class="p">(</span><span class="n">previous_e</span><span class="p">)</span>
+    <span class="n">tot_e</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">previous_e</span><span class="p">))</span>
+    <span class="n">nbody_range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">body_dict</span><span class="p">)</span>
+    <span class="n">nbody_range</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
+        <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_total_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">max_nbody</span><span class="p">]</span>
+    <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_interaction_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">max_nbody</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_interaction_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_1_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shaped_zero</span><span class="p">(</span><span class="n">property_shape</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">supersystem_ie_only</span><span class="p">:</span>
+        <span class="n">nfr</span> <span class="o">=</span> <span class="n">nbody_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="p">[</span><span class="n">nfr</span><span class="p">]:</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_interaction_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">nb</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body_contribution_to_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">nfr</span><span class="p">]:</span>
+                <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_total_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">has_supersystem</span><span class="p">:</span>
+        <span class="n">nfr</span> <span class="o">=</span> <span class="n">nbody_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_interaction_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nfr</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># reset</span>
+        <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_nbody</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_interaction_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body_contribution_to_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="p">[</span><span class="n">nfr</span><span class="p">]:</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_interaction_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body_contribution_to_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">max_nbody</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_total_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nfr</span><span class="p">]</span>  <span class="c1"># reset</span>
+            <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbody_range</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_total_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbody_range</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_interaction_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body_contribution_to_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">tot_e</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbody_range</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse</span><span class="si">}</span><span class="s2">_corrected_total_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_dict</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">embedding</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s2">&quot;interaction&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">k</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">res</span>
+
+
+<div class="viewcode-block" id="provenance_stamp">
+<a class="viewcode-back" href="../../api/qcmanybody.utils.provenance_stamp.html#qcmanybody.provenance_stamp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">provenance_stamp</span><span class="p">(</span><span class="n">routine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return dictionary satisfying QCSchema,</span>
+<span class="sd">    https://github.com/MolSSI/QCSchema/blob/master/qcschema/dev/definitions.py#L23-L41</span>
+<span class="sd">    with QCManyBody&#39;s credentials for creator and version. The</span>
+<span class="sd">    generating routine&#39;s name is passed in through `routine`. ::</span>
+
+<span class="sd">      qcmb.utils.provenance_stamp(__name__)</span>
+<span class="sd">      #&gt; {&#39;creator&#39;: &#39;QCManyBody&#39;, &#39;version&#39;: &#39;0.2.2&#39;, &#39;routine&#39;: &#39;__main__&#39;}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">qcmanybody</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;QCManyBody&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">qcmanybody</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;routine&quot;</span><span class="p">:</span> <span class="n">routine</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="translate_qcvariables">
+<a class="viewcode-back" href="../../api/qcmanybody.utils.translate_qcvariables.html#qcmanybody.translate_qcvariables">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">translate_qcvariables</span><span class="p">(</span><span class="n">varsmap</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate between ManyBody results in Psi4/QCDB terminology (qcvars) and QCSchema terminology (skprops).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    varsmap</span>
+<span class="sd">        Dictionary with keys all members of QCVariables or ManyBodyResultProperties and arbitrary values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        varsmap with keys swapped to other set. Untranslatable keys are omitted.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">qcmanybody.models.v1</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManyBodyResultProperties</span>
+
+    <span class="c1"># identify direction of translation</span>
+    <span class="n">qcv2skp</span> <span class="o">=</span> <span class="nb">any</span><span class="p">([</span><span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">lbl</span> <span class="k">for</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="n">varsmap</span><span class="p">])</span>
+    <span class="n">labelmap</span> <span class="o">=</span> <span class="n">ManyBodyResultProperties</span><span class="o">.</span><span class="n">to_qcvariables</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="n">qcv2skp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">labelmap</span><span class="p">[</span><span class="n">lbl</span><span class="p">]:</span> <span class="n">data</span> <span class="k">for</span> <span class="n">lbl</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">varsmap</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="n">labelmap</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="modelchem_labels">
+<a class="viewcode-back" href="../../api/qcmanybody.utils.modelchem_labels.html#qcmanybody.modelchem_labels">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">modelchem_labels</span><span class="p">(</span>
+    <span class="n">nb_per_mc</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]]]],</span> <span class="n">presorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Form ordinal and letter labels for model chemistries.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nb_per_mc</span>
+<span class="sd">        Dictionary mapping model chemistries to lists of n-body levels computed.</span>
+<span class="sd">        If a model chemistry is supersystem, the value should be [&quot;supersystem&quot;].</span>
+<span class="sd">        Generally, this is the `ManyBodyCore.nbodies_per_mc_level` data structure.</span>
+<span class="sd">    presorted</span>
+<span class="sd">        If True, the input dictionary keys and values are already sorted by increasing n-body level.</span>
+<span class="sd">        This is the case when the input is `ManyBodyCore.nbodies_per_mc_level`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mc_per_nb</span>
+<span class="sd">        Dictionary mapping n-body levels to a tuple of full model chemistry label,</span>
+<span class="sd">        single-letter ordinal label, and n-body-levels-covered label. ::</span>
+
+<span class="sd">          modelchem_labels({&#39;ccsd&#39;: [1], &#39;mp2&#39;: [2, 3], &#39;hf&#39;: [4]})</span>
+<span class="sd">          #&gt; {1: (&#39;ccsd&#39;, &#39;§A&#39;, &#39;§1&#39;), 2: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 3: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 4: (&#39;hf&#39;, &#39;§C&#39;, &#39;§4&#39;)}</span>
+
+<span class="sd">          modelchem_labels({&#39;hi&#39;: [1, 2, 3], &#39;md&#39;: [4], &#39;md2&#39;: [5, 6, 7, 8, 9, 10], &#39;lo&#39;: [&#39;supersystem&#39;]})</span>
+<span class="sd">          #&gt; {1: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 2: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 3: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;),</span>
+<span class="sd">          #   4: (&#39;md&#39;, &#39;§B&#39;, &#39;§4&#39;),</span>
+<span class="sd">          #   5: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 6: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 7: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 8: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 9: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 10: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;),</span>
+<span class="sd">          #   &quot;supersystem&quot;: (&#39;lo&#39;, &#39;§D&#39;, &#39;§SS&#39;)}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorted_nb_per_mc</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">nb_per_mc</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">mc_nbs</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">([</span><span class="mi">1000</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">mc_nbs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">])</span> <span class="k">else</span> <span class="n">mc_nbs</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">presorted</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">sorted_nb_per_mc</span> <span class="o">==</span> <span class="n">nb_per_mc</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;If presorted, input dictionary should be sorted. </span><span class="si">{</span><span class="n">nb_per_mc</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">sorted_nb_per_mc</span><span class="si">}</span><span class="s2">   &quot;</span>
+
+    <span class="n">lvl_lbl</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">nbs</span> <span class="ow">in</span> <span class="n">sorted_nb_per_mc</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">nbs</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]:</span>
+            <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;§SS&quot;</span>
+        <span class="k">elif</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;§&lt;</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">nbs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;§</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="nb">sorted</span><span class="p">(</span><span class="n">nbs</span><span class="p">)))</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">indexed_mc</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sorted_nb_per_mc</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
+
+    <span class="n">mc_per_nb</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">nb</span><span class="p">:</span> <span class="p">(</span><span class="n">mc</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;§</span><span class="si">{</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span><span class="p">[</span><span class="n">indexed_mc</span><span class="p">[</span><span class="n">mc</span><span class="p">]]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">lvl_lbl</span><span class="p">[</span><span class="n">mc</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">mc</span><span class="p">,</span> <span class="n">nbs</span> <span class="ow">in</span> <span class="n">sorted_nb_per_mc</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbs</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">mc_per_nb</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

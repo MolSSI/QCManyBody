@@ -1,0 +1,6 @@
+ManyBodyInput
+=============
+
+.. currentmodule:: qcmanybody.models
+
+.. autopydantic_model:: ManyBodyInput

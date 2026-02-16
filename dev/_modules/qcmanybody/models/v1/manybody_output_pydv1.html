@@ -1,0 +1,592 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qcmanybody.models.v1.manybody_output_pydv1 &mdash; QCManyBody 0.1.dev1+g16cf35718 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=46835a7a"></script>
+      <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/version-switcher.js?v=55f02482"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            QCManyBody
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../qcschema.html">QCSchema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">QCManyBody API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qcmanybody.models.v1.manybody_output_pydv1</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qcmanybody.models.v1.manybody_output_pydv1</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic.v1</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">create_model</span><span class="p">,</span> <span class="n">root_validator</span><span class="p">,</span> <span class="n">validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtoModel</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models.results</span><span class="w"> </span><span class="kn">import</span> <span class="n">AtomicResult</span><span class="p">,</span> <span class="n">AtomicResultProperties</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.manybody_input_pydv1</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManyBodyInput</span><span class="p">,</span> <span class="n">SuccessfulResultBase</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">qcmanybody</span>
+
+<span class="c1"># ====  Properties  =============================================================</span>
+
+<span class="c1"># class ManyBodyResultProperties defined through create_model</span>
+
+<span class="n">manybodyresultproperties_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Named properties of manybody computations following the MolSSI QCSchema.</span>
+
+<span class="s2">    All arrays are stored flat but must be reshapable into the dimensions in attribute ``shape``, with abbreviations as follows:</span>
+
+<span class="s2">    * nat: number of atoms = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_natom`</span>
+<span class="s2">    * nmc: number of model chemistries = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nmc`</span>
+<span class="s2">    * nfr: number of fragments = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nfr`</span>
+<span class="s2">    * nmbe: number of jobs = :attr:`~qcelemental.models.ManyBodyResultProperties.calcinfo_nmbe`</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="n">MAX_NBODY</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;QCMANYBODY_MAX_NBODY&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>  <span class="c1"># 5 covers tetramers</span>
+
+
+<span class="n">json_schema_extras</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;E_h&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;gradient&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;E_h/a0&quot;</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;nat&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="s2">&quot;Hessian&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;E_h/a0^2&quot;</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;nat&quot;</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;nat&quot;</span> <span class="o">*</span> <span class="mi">3</span><span class="p">]},</span>
+<span class="p">}</span>
+
+<span class="n">mbprop</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;schema_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;qcschema_manybodyproperties&quot;</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;qcschema_manybodyproperties&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;schema_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Literal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The version number of ``schema_name`` to which this model conforms.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># ========  Calcinfo  ===========================================================</span>
+
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;calcinfo_nmc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The number of model chemistries applied to n-body levels of the computation.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;calcinfo_nfr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The number of fragments in the molecule for the computation.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;calcinfo_natom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The number of atoms in the computation.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>  <span class="c1"># alias nat</span>
+
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;calcinfo_nmbe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The number of real/ghost molecule patterns for the computation.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>  <span class="c1"># alias NBODY NUMBER</span>
+
+<span class="c1"># ========  Canonical  ==========================================================</span>
+
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;nuclear_repulsion_energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The nuclear repulsion energy.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># ret_energy</span>
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;return_energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;The interaction energy of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Always available. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`</span><span class="se">\\</span><span class="s2"> =</span><span class="se">\\</span><span class="s2"> :attr:`~qcelemental.models.DriverEnum.energy` computations.&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;E_h&quot;</span><span class="p">},</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># ret_gradient</span>
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;return_gradient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;The interaction gradient of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Available when driver is g/h. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`</span><span class="se">\\</span><span class="s2"> =</span><span class="se">\\</span><span class="s2"> :attr:`~qcelemental.models.DriverEnum.gradient` computations.&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">json_schema_extras</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># ret_hessian</span>
+<span class="n">mbprop</span><span class="p">[</span><span class="s2">&quot;return_hessian&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+    <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;The interaction Hessian of the requested method: IE or total (depending on return_total_data) with cp/nocp/vmfc treatment (dep. on first of bsse_type). Available when driver is h. Identical to :attr:`~qcelemental.models.ManyBodyResult.return_result` for :attr:`~qcelemental.models.AtomicInput.driver`</span><span class="se">\\</span><span class="s2"> =</span><span class="se">\\</span><span class="s2"> :attr:`~qcelemental.models.DriverEnum.hessian` computations.&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">json_schema_extras</span><span class="p">[</span><span class="s2">&quot;Hessian&quot;</span><span class="p">],</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># ========  CP E/G/H summary data  ==============================================</span>
+
+<span class="k">for</span> <span class="n">singular</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="s2">&quot;gradient&quot;</span><span class="p">,</span> <span class="s2">&quot;Hessian&quot;</span><span class="p">]:</span>
+    <span class="n">jse</span> <span class="o">=</span> <span class="n">json_schema_extras</span><span class="p">[</span><span class="n">singular</span><span class="p">]</span>
+    <span class="n">egh</span> <span class="o">=</span> <span class="n">singular</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">typ</span> <span class="o">=</span> <span class="nb">float</span> <span class="k">if</span> <span class="n">singular</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span> <span class="k">else</span> <span class="n">Array</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">plural</span> <span class="o">=</span> <span class="s2">&quot;energies&quot;</span> <span class="k">if</span> <span class="n">singular</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span> <span class="k">else</span> <span class="n">singular</span> <span class="o">+</span> <span class="s2">&quot;s&quot;</span>
+    <span class="n">availability_of_derivative</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gradient&quot;</span><span class="p">:</span> <span class="s2">&quot; &amp; driver is g/h&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Hessian&quot;</span><span class="p">:</span> <span class="s2">&quot; &amp; driver is h&quot;</span><span class="p">,</span>
+    <span class="p">}[</span><span class="n">singular</span><span class="p">]</span>
+
+    <span class="c1"># CP-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;cp_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;MBE sum of subsystems of </span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body or fewer (cumulative); summed are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> w/ cp treatment. Available when cp in bsse_type &amp; rtd=T &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># CP-CORRECTED TOTAL ENERGY</span>
+    <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;cp_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Best available total </span><span class="si">{</span><span class="n">singular</span><span class="si">}</span><span class="s2"> with cp treatment: cp_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="se">{{</span><span class="s2">max_nbody</span><span class="se">}}</span><span class="s2">_body. Available when cp in bsse_type &amp; rtd=T</span><span class="si">{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># CP-CORRECTED INTERACTION ENERGY THROUGH {nb}-BODY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;cp_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body total data less 1-body total data for cumulative IE; inputs are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> with cp treatment. Available when when cp in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">. The 1-body quantity is zero by definition.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># CP-CORRECTED INTERACTION ENERGY</span>
+    <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;cp_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Best available interaction </span><span class="si">{</span><span class="n">singular</span><span class="si">}</span><span class="s2"> with cp treatment: cp_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="se">{{</span><span class="s2">max_nbody</span><span class="se">}}</span><span class="s2">_body. Available when cp in bsse_type</span><span class="si">{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># CP-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;cp_corrected_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body_contribution_to_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body total data less (</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-1)-body data for partial IE; inputs are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> w/ cp treat. Available when cp in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># ========  NOCP E/G/H summary data  ============================================</span>
+
+    <span class="c1"># NOCP-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;nocp_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;MBE sum of subsystems of </span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body or fewer (cumulative); summed are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> without cp treatment. Available when nocp in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># NOCP-CORRECTED TOTAL ENERGY</span>
+    <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;nocp_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Best available total </span><span class="si">{</span><span class="n">singular</span><span class="si">}</span><span class="s2"> without cp treatment: nocp_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="se">{{</span><span class="s2">max_nbody</span><span class="se">}}</span><span class="s2">_body. Available when nocp in bsse_type</span><span class="si">{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># NOCP-CORRECTED INTERATION ENERGY THROUGH {nb}-BODY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;nocp_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body total data less 1-body total data for cumulative IE; inputs are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> without cp treatment. Available when when nocp in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">. The 1-body quantity is zero by definition.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># TODO note htat TOT 1BODY cp=nocp=vmfc</span>
+    <span class="c1"># TODO note that summ INTERACTION ENERGY props (w/o explicit -BODY) return 0.0 for max_nbody=1 for completeness</span>
+
+    <span class="c1"># NOCP-CORRECTED INTERACTION ENERGY</span>
+    <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;nocp_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Best available interaction </span><span class="si">{</span><span class="n">singular</span><span class="si">}</span><span class="s2"> without cp treatment: nocp_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="se">{{</span><span class="s2">max_nbody</span><span class="se">}}</span><span class="s2">_body. Available when nocp in bsse_type</span><span class="si">{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># NOCP-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;nocp_corrected_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body_contribution_to_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body total data less (</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-1)-body data for partial IE; inputs are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> w/o cp treatment. Available when nocp in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># ========  VMFC E/G/H summary data  ============================================</span>
+
+    <span class="c1"># VMFC-CORRECTED TOTAL ENERGY THROUGH {nb}-BODY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;vmfc_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;MBE sum of subsystems of </span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body or fewer (cumulative); summed are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> with vmfc treatment. Available when vmfc in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># VMFC-CORRECTED TOTAL ENERGY</span>
+    <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;vmfc_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Best available total </span><span class="si">{</span><span class="n">singular</span><span class="si">}</span><span class="s2"> with vmfc treatment: vmfc_corrected_total_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="se">{{</span><span class="s2">max_nbody</span><span class="se">}}</span><span class="s2">_body. Available when vmfc in bsse_type</span><span class="si">{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># VMFC-CORRECTED INTERATION ENERGY THROUGH {nb}-BODY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;vmfc_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body total data less 1-body total data for cumulative IE; inputs are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> w/ vmfc treatment. Available when when vmfc in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">. The 1-body quantity is zero by definition.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># VMFC-CORRECTED INTERACTION ENERGY</span>
+    <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;vmfc_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Best available interaction </span><span class="si">{</span><span class="n">singular</span><span class="si">}</span><span class="s2"> with vmfc treatment: vmfc_corrected_interaction_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">_through_</span><span class="se">{{</span><span class="s2">max_nbody</span><span class="se">}}</span><span class="s2">_body. Available when vmfc in bsse_type</span><span class="si">{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># VMFC-CORRECTED {nb}-BODY CONTRIBUTION TO ENERGY</span>
+    <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">MAX_NBODY</span><span class="p">):</span>
+        <span class="n">mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;vmfc_corrected_</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">_body_contribution_to_</span><span class="si">{</span><span class="n">egh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Optional</span><span class="p">[</span><span class="n">typ</span><span class="p">],</span>
+            <span class="n">Field</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-body total data less (</span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2">-1)-body total data for partial IE; inputs are total </span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> w/ vmfc treatment. Available when vmfc in bsse_type &amp; max_nbody&gt;=</span><span class="si">{</span><span class="n">nb</span><span class="si">}{</span><span class="n">availability_of_derivative</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">json_schema_extra</span><span class="o">=</span><span class="n">jse</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_arb_max_nbody_fieldnames</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+
+    <span class="n">ok_field_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+        <span class="c1"># fmt: off</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?:cp|nocp|vmfc)_corrected_((?:total|interaction)_(?:energy|gradient|hessian)&quot;</span> <span class="o">+</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:_through_\d+_body)?|\d+_body_contribution_to_(?:energy|gradient|hessian))$&quot;</span>
+        <span class="c1"># fmt: on</span>
+    <span class="p">)</span>
+
+    <span class="n">extra_fields</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__fields__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">baduns</span> <span class="o">=</span> <span class="p">[</span><span class="n">xtra</span> <span class="k">for</span> <span class="n">xtra</span> <span class="ow">in</span> <span class="n">extra_fields</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">ok_field_name</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">xtra</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">baduns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field names not allowed: </span><span class="si">{</span><span class="n">baduns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">values</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProtoModelSkipDefaults</span><span class="p">(</span><span class="n">ProtoModel</span><span class="p">):</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">(</span><span class="n">ProtoModel</span><span class="o">.</span><span class="n">Config</span><span class="p">):</span>
+        <span class="n">serialize_skip_defaults</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">force_skip_defaults</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">extra</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;allow&quot;</span>  <span class="c1"># fields filtered in root_validator</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="n">ManyBodyResultProperties</span> <span class="o">=</span> <span class="n">ProtoModelSkipDefaults</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># if/else suppresses a warning about using a dynamically generated class as Field type in ManyBodyResults</span>
+    <span class="n">ManyBodyResultProperties</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span>
+        <span class="s2">&quot;ManyBodyResultProperties&quot;</span><span class="p">,</span>
+        <span class="c1"># __doc__=manybodyresultproperties_doc,  # needs later pydantic</span>
+        <span class="n">__base__</span><span class="o">=</span><span class="n">ProtoModelSkipDefaults</span><span class="p">,</span>
+        <span class="n">__validators__</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;validator1&quot;</span><span class="p">:</span> <span class="n">root_validator</span><span class="p">(</span><span class="n">_validate_arb_max_nbody_fieldnames</span><span class="p">)},</span>
+        <span class="o">**</span><span class="n">mbprop</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_qcvars_translator</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Form translation map between many-body results QCSchema and Psi4/QCDB terminologies.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    reverse</span>
+<span class="sd">        Keys are QCVariable names (`reverse=True`) rather than QCSchema names (default; `reverse=False`).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Map from ManyBodyResultProperties field names to QCVariable names, or reverse.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">qcvars_to_mbprop</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">skprop</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__fields__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">qcvar</span> <span class="o">=</span> <span class="n">skprop</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_body&quot;</span><span class="p">,</span> <span class="s2">&quot;-body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_corr&quot;</span><span class="p">,</span> <span class="s2">&quot;-corr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">qcvars_to_mbprop</span><span class="p">[</span><span class="n">qcvar</span><span class="p">]</span> <span class="o">=</span> <span class="n">skprop</span>
+    <span class="k">for</span> <span class="n">ret</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="s2">&quot;gradient&quot;</span><span class="p">,</span> <span class="s2">&quot;hessian&quot;</span><span class="p">]:</span>
+        <span class="n">qcvars_to_mbprop</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CURRENT </span><span class="si">{</span><span class="n">ret</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;return_</span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">qcvars_to_mbprop</span><span class="p">[</span><span class="s2">&quot;NBODY NUMBER&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;calcinfo_nmbe&quot;</span>
+
+    <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">qcvars_to_mbprop</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">qcvars_to_mbprop</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+<span class="n">ManyBodyResultProperties</span><span class="o">.</span><span class="n">to_qcvariables</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">_qcvars_translator</span><span class="p">)</span>
+
+
+<span class="c1"># ====  Results  ================================================================</span>
+
+
+<div class="viewcode-block" id="ManyBodyResult">
+<a class="viewcode-back" href="../../../../qcschema.html#qcmanybody.models.ManyBodyResult">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ManyBodyResult</span><span class="p">(</span><span class="n">SuccessfulResultBase</span><span class="p">):</span>
+
+    <span class="n">schema_name</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;qcschema_manybodyresult&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;qcschema_manybodyresult&quot;</span>
+    <span class="n">schema_version</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The version number of ``schema_name`` to which this model conforms.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The optional ID for the object.&quot;</span><span class="p">)</span>
+    <span class="n">extras</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="p">{},</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Additional information to bundle with the object. Use for schema development and scratch space.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">provenance</span><span class="p">:</span> <span class="n">Provenance</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">Provenance</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">))</span>
+    <span class="n">input_data</span><span class="p">:</span> <span class="n">ManyBodyInput</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A boolean indicator that the operation succeeded or failed. Allows programmatic assessment of &quot;</span>
+        <span class="s2">&quot;all results regardless of if they failed or succeeded by checking `result.success`.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">properties</span><span class="p">:</span> <span class="n">ManyBodyResultProperties</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">ManyBodyResultProperties</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">))</span>
+    <span class="n">component_properties</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AtomicResultProperties</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The key results for each subsystem species computed. Keys contain modelchem, real and ghost information (e.g., `&#39;[</span><span class="se">\&quot;</span><span class="s2">(auto)</span><span class="se">\&quot;</span><span class="s2">, [2], [1, 2, 3]]&#39;`). Values are total e/g/H/property results. Array values, if present, are sized and shaped for the full supersystem.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">component_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AtomicResult</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">({},</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Detailed results&quot;</span><span class="p">)</span>
+    <span class="n">return_result</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Array</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The primary return specified by the :attr:`~qcelemental.models.AtomicInput.driver` field. Scalar if energy; array if gradient or hessian; dictionary with property keys if properties.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stdout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The primary logging output of the program, whether natively standard output or a file. Presence vs. absence (or null-ness?) configurable by protocol.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stderr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The standard error of the program execution.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;component_results&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_component_results</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">crp</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;input_data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">protocols</span><span class="o">.</span><span class="n">component_results</span>
+        <span class="k">if</span> <span class="n">crp</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="n">crp</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Protocol `component_resutls:</span><span class="si">{</span><span class="n">crp</span><span class="si">}</span><span class="s2">` is not understood&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ManyBodyResult.convert_v">
+<a class="viewcode-back" href="../../../../qcschema.html#qcmanybody.models.ManyBodyResult.convert_v">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_v</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">target_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;qcmanybody.models.v1.ManyBodyResult&quot;</span><span class="p">,</span> <span class="s2">&quot;qcmanybody.models.v2.ManyBodyResult&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to instance of particular QCSchema version.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target_version</span>
+<span class="sd">            The version to convert to.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ManyBodyResult</span>
+<span class="sd">            Returns self (not a copy) if ``target_version`` already satisfied.</span>
+<span class="sd">            Returns a new ManyBodyResult of ``target_version`` otherwise.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models.v1.basemodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_convertible_version</span>
+
+        <span class="kn">import</span><span class="w"> </span><span class="nn">qcmanybody</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qcmb</span>
+
+        <span class="k">if</span> <span class="n">check_convertible_version</span><span class="p">(</span><span class="n">target_version</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ManyBodyResult&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="n">dself</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">target_version</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">dself</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;schema_name&quot;</span><span class="p">)</span>  <span class="c1"># changed in v2</span>
+            <span class="n">dself</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;schema_version&quot;</span><span class="p">)</span>  <span class="c1"># changed in v2</span>
+
+            <span class="c1"># for input_data, work from model, not dict, to use convert_v</span>
+            <span class="n">dself</span><span class="p">[</span><span class="s2">&quot;input_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="o">.</span><span class="n">convert_v</span><span class="p">(</span><span class="n">target_version</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+            <span class="n">dself</span><span class="p">[</span><span class="s2">&quot;molecule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">convert_v</span><span class="p">(</span><span class="n">target_version</span><span class="p">)</span>
+
+            <span class="n">dself</span><span class="p">[</span><span class="s2">&quot;cluster_properties&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dself</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;component_properties&quot;</span><span class="p">)</span>
+            <span class="n">dself</span><span class="p">[</span><span class="s2">&quot;cluster_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">atres</span><span class="o">.</span><span class="n">convert_v</span><span class="p">(</span><span class="n">target_version</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">atres</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_results</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="n">dself</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;component_results&quot;</span><span class="p">)</span>
+
+            <span class="n">self_vN</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">ManyBodyResult</span><span class="p">(</span><span class="o">**</span><span class="n">dself</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="n">target_version</span>
+
+        <span class="k">return</span> <span class="n">self_vN</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
