@@ -2,8 +2,17 @@
 Changelog
 =========
 
+.. _`sec:cl052`:
+
 v0.5.2 / 2026-02-16
 ===================
+
+`Docs <https://MolSSI.github.io/QCManyBody/v0.5.2/>`_
+
+Enhancements
+------------
+* :pr:`45` Maint -- Switch from mkdocs back to Sphinx for Pydantic formatting and cross-project compatibility.
+
 
 v0.5.1 / 2025-06-14
 ===================
