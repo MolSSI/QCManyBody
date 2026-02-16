@@ -9,6 +9,7 @@ Inputs
    :members: BsseEnum, ManyBodyKeywords, ManyBodyProtocols, ManyBodySpecification, ManyBodyInput
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 
 Properties/Outputs
@@ -36,3 +37,4 @@ Properties/Outputs
    :members: ManyBodyResultProperties, ManyBodyResult
    :undoc-members:
    :show-inheritance:
+   :noindex:

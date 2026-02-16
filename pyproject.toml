@@ -48,7 +48,7 @@ docs = [
     "sphinx-automodapi",
     "sphinx-autodoc-typehints",
     "pydantic",
-    "pydantic-settings",
+    # "pydantic-settings",
 ]
 dev = [
     "pre-commit",
