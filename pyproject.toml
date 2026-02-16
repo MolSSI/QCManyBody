@@ -44,7 +44,7 @@ docs = [
     "sphinx >=7.0.0,<8",  # <8 for autodoc-pydantic=1
     "sphinxcontrib-napoleon",
     "sphinx-rtd-theme",
-    "autodoc-pydantic=1",
+    "autodoc-pydantic <2",
     "sphinx-automodapi",
     "sphinx-autodoc-typehints",
     "pydantic",
