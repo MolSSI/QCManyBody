@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keywords and Options &mdash; QCManyBody 0.5.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8e576371"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/version-switcher.js?v=55f02482"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Results" href="results.html" />
+    <link rel="prev" title="ManyBodySpecification" href="api/qcmanybody.models.ManyBodySpecification.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            QCManyBody
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qcschema.html">QCSchema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">QCManyBody API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Keywords and Options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#required">Required</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#molecule">Molecule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bsse-type">bsse_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#levels-and-max-nbody">levels and max_nbody</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Keywords and Options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#return-total-data">return_total_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#supersystem-ie-only">supersystem_ie_only</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Keywords and Options</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/keywords.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="keywords-and-options">
+<h1>Keywords and Options<a class="headerlink" href="#keywords-and-options" title="Link to this heading"></a></h1>
+<section id="required">
+<h2>Required<a class="headerlink" href="#required" title="Link to this heading"></a></h2>
+<section id="molecule">
+<h3>Molecule<a class="headerlink" href="#molecule" title="Link to this heading"></a></h3>
+<p>The molecule used by QCManyBody is a <a class="reference external" href="https://molssi.github.io/QCElemental/model_molecule.html">QCElemental Molecule object</a>.
+The only requirement for use in QCManyBody is that the molecule has multiple fragments. It is these fragments
+that will be used in the many-body expansion.</p>
+<p>Examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span>
+
+<span class="c1"># Molecule with 3 neon atoms, each as its own fragment</span>
+<span class="n">ne3</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">],</span>
+               <span class="n">geometry</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span>
+               <span class="n">fragments</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+
+<span class="c1"># Water tetramer</span>
+<span class="n">water4</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">],</span>
+                  <span class="n">geometry</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">2.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span>  <span class="mf">1.1</span><span class="p">],</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">2.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1</span><span class="p">],</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">2.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.1</span><span class="p">],</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">2.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.1</span><span class="p">]],</span>
+                          <span class="n">fragments</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">]])</span>
+
+<span class="c1"># Water trimer, using the from_data function</span>
+<span class="c1"># the -- is used to separate fragments</span>
+<span class="n">water3</span> <span class="o">=</span> <span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">O      -2.76373224  -1.24377706  -0.15444566</span>
+<span class="sd">H      -1.12357791  -2.06227970  -0.05243799</span>
+<span class="sd">H      -3.80792362  -2.08705525   1.06090407</span>
+<span class="sd">--</span>
+<span class="sd">O       2.46924614  -1.75437739  -0.17092884</span>
+<span class="sd">H       3.76368260  -2.21425403   1.00846104</span>
+<span class="sd">H       2.30598330   0.07098445  -0.03942473</span>
+<span class="sd">--</span>
+<span class="sd">O       0.29127930   3.00875625   0.20308515</span>
+<span class="sd">H      -1.21253048   1.95820900   0.10303324</span>
+<span class="sd">H       0.10002049   4.24958115  -1.10222079</span>
+<span class="sd">units bohr</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="bsse-type">
+<h3>bsse_type<a class="headerlink" href="#bsse-type" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">bsse_type</span></code> parameter specifies the type of correction for basis set superposition error (BSSE). Multiple
+types can be specified, in which case the <a class="reference internal" href="results.html"><span class="doc">Results</span></a> will include separate fields for each type of
+correction.</p>
+<p>Valid types are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nocp</span></code> - No counterpoise or other corrections applied</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cp</span></code> - Counterpoise correction</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vmfc</span></code> - Valiron-Mayer function counterpoise correction</p></li>
+</ul>
+</section>
+<section id="levels-and-max-nbody">
+<h3>levels and max_nbody<a class="headerlink" href="#levels-and-max-nbody" title="Link to this heading"></a></h3>
+<p>Dictionary of different levels of theory for different levels of expansion. The keys are integers or “supersystem”,
+and the values are arbitrary strings that represent the model chemistry or level of theory to use for that level.
+This string is arbitrary and only has meaning to the user - the user is expected to map these strings to some
+meaningful definition of a calculation.</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">supersystem</span></code> key is present, all higher order n-body effects up to <code class="docutils literal notranslate"><span class="pre">max_nbody</span></code> will be computed.</p>
+<p>In the <a class="reference internal" href="core-interface.html"><span class="doc">Core Interface</span></a>, all levels must be accounted for (that is, keys must go
+from 1 to the maximum), and <code class="docutils literal notranslate"><span class="pre">max_nbody</span></code> cannot be specified. In the high-level interface, a computational model
+fills in for any lower unlisted n-body levels.</p>
+<p>In the high-level interface, if both levels and max_nbody are provided, they must be consistent.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">{2:</span> <span class="pre">'ccsd(t)/cc-pvdz',</span> <span class="pre">3:</span> <span class="pre">'mp2'}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_nbody=3</span></code> and <code class="docutils literal notranslate"><span class="pre">levels={1:</span> <span class="pre">'ccsd(t)',</span> <span class="pre">2:</span> <span class="pre">'mp2',</span> <span class="pre">'supersystem':</span> <span class="pre">'scf'}</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="id1">
+<h2>Keywords and Options<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="return-total-data">
+<h3>return_total_data<a class="headerlink" href="#return-total-data" title="Link to this heading"></a></h3>
+<p>When set to true, the manybody calculation will return the total data (energy/gradient/hessian/property) of the system.
+If not, the return will only contain interaction data.</p>
+<p>Note that the calculation of counterpoise corrected total properties implies the calculation of the energies of monomers
+in the monomer basis, hence specifying <code class="docutils literal notranslate"><span class="pre">return_total_data</span> <span class="pre">=</span> <span class="pre">True</span></code> may carry out more computations than.
+For some properties such as gradients and hessians, <code class="docutils literal notranslate"><span class="pre">return_total_data</span> <span class="pre">=</span> <span class="pre">False</span></code> is rarely useful.</p>
+</section>
+<section id="supersystem-ie-only">
+<h3>supersystem_ie_only<a class="headerlink" href="#supersystem-ie-only" title="Link to this heading"></a></h3>
+<p>Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE)
+analysis, thereby omitting intermediate-body calculations. When false, each n-body level
+in the MBE up through <code class="docutils literal notranslate"><span class="pre">max_nbody</span></code> will be computed. When true (only allowed for <code class="docutils literal notranslate"><span class="pre">max_nbody</span> <span class="pre">=</span> <span class="pre">nfragments</span></code>),
+only compute enough for the overall interaction/total energy: max_nbody-body and 1-body.</p>
+<p>When true, properties <code class="docutils literal notranslate"><span class="pre">INTERACTION</span> <span class="pre">{driver}</span> <span class="pre">THROUGH</span> <span class="pre">{max_nbody}-BODY</span></code> will always be available;
+<code class="docutils literal notranslate"><span class="pre">TOTAL</span> <span class="pre">{driver}</span> <span class="pre">THROUGH</span> <span class="pre">{max_nbody}-BODY</span></code> will be available depending on <code class="docutils literal notranslate"><span class="pre">return_total_data</span></code>; and
+<code class="docutils literal notranslate"><span class="pre">{max_nbody}-BODY</span> <span class="pre">CONTRIBUTION</span> <span class="pre">TO</span> <span class="pre">{driver}</span></code> won’t be available (except for dimers).</p>
+<p>This keyword produces no savings for a two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body
+subsystems can be skipped with <code class="docutils literal notranslate"><span class="pre">supersystem_ie_only=True</span></code> Do not use with <code class="docutils literal notranslate"><span class="pre">vmfc</span></code> in <code class="docutils literal notranslate"><span class="pre">bsse_type</span></code>
+as it cannot produce savings.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api/qcmanybody.models.ManyBodySpecification.html" class="btn btn-neutral float-left" title="ManyBodySpecification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="results.html" class="btn btn-neutral float-right" title="Results" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

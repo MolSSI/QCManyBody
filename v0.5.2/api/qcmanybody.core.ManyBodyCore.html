@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManyBodyCore &mdash; QCManyBody 0.5.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8e576371"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/version-switcher.js?v=55f02482"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ManyBodyComputer" href="qcmanybody.computer.ManyBodyComputer.html" />
+    <link rel="prev" title="ManyBodyCalculator" href="qcmanybody.core.ManyBodyCalculator.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            QCManyBody
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../qcschema.html">QCSchema</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">QCManyBody API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody">qcmanybody Package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-qcmanybody.core">qcmanybody.core Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#id1">Classes</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.core.ManyBodyCalculator.html">ManyBodyCalculator</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ManyBodyCore</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.computer">qcmanybody.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.builder">qcmanybody.builder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.utils">qcmanybody.utils Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models">qcmanybody.models Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">QCManyBody API</a></li>
+      <li class="breadcrumb-item active">ManyBodyCore</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/qcmanybody.core.ManyBodyCore.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="manybodycore">
+<h1>ManyBodyCore<a class="headerlink" href="#manybodycore" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcmanybody.core.</span></span><span class="sig-name descname"><span class="pre">ManyBodyCore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsse_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_total_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supersystem_ie_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_charges</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p class="rubric">Attributes Summary</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.compute_map" title="qcmanybody.core.ManyBodyCore.compute_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_map</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.has_supersystem" title="qcmanybody.core.ManyBodyCore.has_supersystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_supersystem</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.analyze" title="qcmanybody.core.ManyBodyCore.analyze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyze</span></code></a>(component_results)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.format_calc_plan" title="qcmanybody.core.ManyBodyCore.format_calc_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_calc_plan</span></code></a>([sset])</p></td>
+<td><p>Formulate per-modelchem and per-body job count data and summary text.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.iterate_molecules" title="qcmanybody.core.ManyBodyCore.iterate_molecules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterate_molecules</span></code></a>()</p></td>
+<td><p>Iterate over all the molecules needed for the computation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.resize_gradient" title="qcmanybody.core.ManyBodyCore.resize_gradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize_gradient</span></code></a>(grad, bas, *[, reverse])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.resize_hessian" title="qcmanybody.core.ManyBodyCore.resize_hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize_hessian</span></code></a>(hess, bas, *[, reverse])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>molecule</strong> (<em>Molecule</em>)</p></li>
+<li><p><strong>bsse_type</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.BsseEnum"><em>BsseEnum</em></a><em>]</em>)</p></li>
+<li><p><strong>levels</strong> (<em>Mapping</em><em>[</em><em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>Literal</em><em>[</em><em>'supersystem'</em><em>]</em><em>]</em><em>, </em><em>str</em><em>]</em>)</p></li>
+<li><p><strong>return_total_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+<li><p><strong>supersystem_ie_only</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+<li><p><strong>embedding_charges</strong> (<em>Mapping</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>]</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.compute_map">
+<span class="sig-name descname"><span class="pre">compute_map</span></span><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.compute_map" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.has_supersystem">
+<span class="sig-name descname"><span class="pre">has_supersystem</span></span><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.has_supersystem" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.analyze">
+<span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore.analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.analyze" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>component_results</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]]</span>) – <p>Nested dictionary with results from all individual molecular system
+calculations, including all subsystem/basis combinations, all model
+chemistries, and all properties (e.g., e/g/h).</p>
+<p>For example, the below is the format for a nocp gradient run on a
+helium dimer with 1-body at CCSD and 2-body at MP2. The outer string
+key can be generated with the <code class="docutils literal notranslate"><span class="pre">qcmanybody.utils.labeler</span></code> function.
+The inner string key is any property; QCManyBody presently knows how
+to process energy/gradient/Hessian.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;[&quot;ccsd&quot;, [1], [1]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.87</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">&#39;[&quot;ccsd&quot;, [2], [2]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.87</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">&#39;[&quot;mp2&quot;, [1], [1]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.86</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">&#39;[&quot;mp2&quot;, [2], [2]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.86</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">&#39;[&quot;mp2&quot;, [1, 2], [1, 2]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.73</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.0053</span><span class="p">],</span> <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0053</span><span class="p">]])},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.format_calc_plan">
+<span class="sig-name descname"><span class="pre">format_calc_plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore.format_calc_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.format_calc_plan" title="Link to this definition"></a></dt>
+<dd><p>Formulate per-modelchem and per-body job count data and summary text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sset</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Among {“all”, “nocp”, “cp”, “vmfc_compute”}, which data structure to return.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul>
+<li><p><em>info</em> –</p>
+<p>A text summary with per- model chemistry and per- n-body-level job counts.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Model chemistry &quot;c4-ccsd&quot; (§A):         22
+     Number of 1-body computations:     16 (nocp: 0, cp: 0, vmfc_compute: 16)
+     Number of 2-body computations:      6 (nocp: 0, cp: 0, vmfc_compute: 6)
+
+Model chemistry &quot;c4-mp2&quot; (§B):          28
+     Number of 1-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
+     Number of 2-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
+     Number of 3-body computations:      4 (nocp: 0, cp: 0, vmfc_compute: 4)
+</pre></div>
+</div>
+</li>
+<li><p><em>Dict[str, Dict[int, int]]</em> – Data structure with outer key mc-label, inner key 1-indexed n-body, and value job count.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.iterate_molecules">
+<span class="sig-name descname"><span class="pre">iterate_molecules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore.iterate_molecules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.iterate_molecules" title="Link to this definition"></a></dt>
+<dd><p>Iterate over all the molecules needed for the computation.</p>
+<p>Yields model chemistry, label, and molecule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Iterable" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://molssi.github.io/QCElemental/dev/api/qcelemental.models.Molecule.html#qcelemental.models.Molecule" title="(in QCElemental v0.30.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Molecule</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.resize_gradient">
+<span class="sig-name descname"><span class="pre">resize_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bas</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore.resize_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.resize_gradient" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>grad</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>bas</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.resize_hessian">
+<span class="sig-name descname"><span class="pre">resize_hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bas</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore.resize_hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.resize_hessian" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>hess</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>bas</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qcmanybody.core.ManyBodyCalculator.html" class="btn btn-neutral float-left" title="ManyBodyCalculator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="qcmanybody.computer.ManyBodyComputer.html" class="btn btn-neutral float-right" title="ManyBodyComputer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+translate_qcvariables
+=====================
+
+.. currentmodule:: qcmanybody.utils
+
+.. autofunction:: translate_qcvariables

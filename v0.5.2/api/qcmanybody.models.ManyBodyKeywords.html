@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManyBodyKeywords &mdash; QCManyBody 0.5.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8e576371"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/version-switcher.js?v=55f02482"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ManyBodyProtocols" href="qcmanybody.models.ManyBodyProtocols.html" />
+    <link rel="prev" title="ManyBodyInput" href="qcmanybody.models.ManyBodyInput.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            QCManyBody
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../qcschema.html">QCSchema</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">QCManyBody API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody">qcmanybody Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.core">qcmanybody.core Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.computer">qcmanybody.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.builder">qcmanybody.builder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.utils">qcmanybody.utils Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-qcmanybody.models">qcmanybody.models Package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#id6">Classes</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.models.AtomicSpecification.html">AtomicSpecification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.models.BsseEnum.html">BsseEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.models.ManyBodyInput.html">ManyBodyInput</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ManyBodyKeywords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.models.ManyBodyProtocols.html">ManyBodyProtocols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.models.ManyBodyResult.html">ManyBodyResult</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.models.ManyBodySpecification.html">ManyBodySpecification</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#id7">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">QCManyBody API</a></li>
+      <li class="breadcrumb-item active">ManyBodyKeywords</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/qcmanybody.models.ManyBodyKeywords.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="manybodykeywords">
+<h1>ManyBodyKeywords<a class="headerlink" href="#manybodykeywords" title="Link to this heading"></a></h1>
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcmanybody.models.</span></span><span class="sig-name descname"><span class="pre">ManyBodyKeywords</span></span><a class="reference internal" href="../_modules/qcmanybody/models/v1/manybody_input_pydv1.html#ManyBodyKeywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords" title="Link to this definition"></a></dt>
+<dd><p>The many-body-specific keywords for user control.</p>
+<p><details  class="autodoc_pydantic_collapsable_json">
+<summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ManyBodyKeywords&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The many-body-specific keywords for user control.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Schema Name&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;qcschema_manybodykeywords&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;qcschema_manybodykeywords&quot;</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Schema Version&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The version number of ``schema_name`` to which this model conforms.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="mi">1</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;bsse_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Requested BSSE treatments. First in list determines which interaction or total energy/gradient/Hessian returned.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;cp&quot;</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/BsseEnum&quot;</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;embedding_charges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Embedding Charges&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Atom-centered point charges to be used on molecule fragments whose basis sets are not included in the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment. At present, QCManyBody will only accept non-None values of this keyword if environment variable QCMANYBODY_EMBEDDING_CHARGES is set.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;json_schema_extra&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;shape&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">               </span><span class="s2">&quot;nfr&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="s2">&quot;&lt;varies: nat in ifr&gt;&quot;</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">         </span><span class="p">},</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;return_total_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Return Total Data&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;When True, returns the total data (energy/gradient/Hessian) of the system, otherwise returns interaction data. Default is False for energies, True for gradients and Hessians. Note that the calculation of counterpoise corrected total energies implies the calculation of the energies of monomers in the monomer basis, hence specifying ``return_total_data = True`` may carry out more computations than ``return_total_data = False``. For gradients and Hessians, ``return_total_data = False`` is rarely useful.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;validate_default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;levels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Levels&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Dictionary of different levels of theory for different levels of expansion. Note that the primary method_string is not used when this keyword is given. ``supersystem`` computes all higher order n-body effects up to the number of fragments; this higher-order correction uses the nocp basis, regardless of bsse_type. A method fills in for any lower unlisted nbody levels. Note that if both this and max_nbody are provided, they must be consistent. Examples: SUPERSYSTEM definition suspect* {1: &#39;ccsd(t)&#39;, 2: &#39;mp2&#39;, &#39;supersystem&#39;: &#39;scf&#39;} * {2: &#39;ccsd(t)/cc-pvdz&#39;, 3: &#39;mp2&#39;} * Now invalid: {1: 2, 2: &#39;ccsd(t)/cc-pvdz&#39;, 3: &#39;mp2&#39;} &quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;max_nbody&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Max Nbody&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Maximum number of bodies to include in the many-body treatment. Possible: max_nbody &lt;= nfragments. Default: max_nbody = nfragments.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;validate_default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;supersystem_ie_only&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Supersystem Ie Only&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) analysis, thereby omitting intermediate-body calculations. When False (default), compute each n-body level in the MBE up through ``max_nbody``. When True (only allowed for ``max_nbody = nfragments`` ), only compute enough for the overall interaction/total energy: max_nbody-body and 1-body. When True, properties ``INTERACTION {driver} THROUGH {max_nbody}-BODY`` will always be available; ``TOTAL {driver} THROUGH {max_nbody}-BODY`` will be available depending on ``return_total_data`` ; and ``{max_nbody}-BODY CONTRIBUTION TO {driver}`` won&#39;t be available (except for dimers). This keyword produces no savings for a two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body subsystems can be skipped with ``supersystem_ie_only=True``. Do not use with ``vmfc`` in ``bsse_type`` as it cannot produce savings.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;validate_default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;definitions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;BsseEnum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BsseEnum&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Available basis-set superposition error (BSSE) treatments.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;nocp&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;cp&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;vmfc&quot;</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</details></p><dl class="field-list simple">
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsse_type</span> <span class="pre">(List[qcmanybody.models.v1.manybody_input_pydv1.BsseEnum])</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">embedding_charges</span> <span class="pre">(Dict[int,</span> <span class="pre">List[float]]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">levels</span> <span class="pre">(Dict[int</span> <span class="pre">|</span> <span class="pre">Literal['supersystem'],</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_nbody</span> <span class="pre">(int</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_total_data</span> <span class="pre">(bool</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">schema_name</span> <span class="pre">(Literal['qcschema_manybodykeywords'])</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">schema_version</span> <span class="pre">(Literal[1])</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">supersystem_ie_only</span> <span class="pre">(bool</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Validators<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_bsse_type</span></code> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">bsse_type</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.bsse_type">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bsse_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List[BsseEnum]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[BsseEnum.cp]</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.bsse_type" title="Link to this definition"></a></dt>
+<dd><p>Requested BSSE treatments. First in list determines which interaction or total energy/gradient/Hessian returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_bsse_type</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.embedding_charges">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">embedding_charges</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional[Dict[int,</span> <span class="pre">List[float]]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.embedding_charges" title="Link to this definition"></a></dt>
+<dd><p>Atom-centered point charges to be used on molecule fragments whose basis sets are not included in the computation. Keys: 1-based index of fragment. Values: list of atom charges for that fragment. At present, QCManyBody will only accept non-None values of this keyword if environment variable QCMANYBODY_EMBEDDING_CHARGES is set.</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.levels">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">levels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional[Dict[Union[int,</span> <span class="pre">Literal['supersystem']],</span> <span class="pre">str]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.levels" title="Link to this definition"></a></dt>
+<dd><p>Dictionary of different levels of theory for different levels of expansion. Note that the primary method_string is not used when this keyword is given. <code class="docutils literal notranslate"><span class="pre">supersystem</span></code> computes all higher order n-body effects up to the number of fragments; this higher-order correction uses the nocp basis, regardless of bsse_type. A method fills in for any lower unlisted nbody levels. Note that if both this and max_nbody are provided, they must be consistent. Examples: SUPERSYSTEM definition suspect* {1: ‘ccsd(t)’, 2: ‘mp2’, ‘supersystem’: ‘scf’} * {2: ‘ccsd(t)/cc-pvdz’, 3: ‘mp2’} * Now invalid: {1: 2, 2: ‘ccsd(t)/cc-pvdz’, 3: ‘mp2’}</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.max_nbody">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_nbody</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional[int]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.max_nbody" title="Link to this definition"></a></dt>
+<dd><p>Maximum number of bodies to include in the many-body treatment. Possible: max_nbody &lt;= nfragments. Default: max_nbody = nfragments.</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.return_total_data">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">return_total_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional[bool]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.return_total_data" title="Link to this definition"></a></dt>
+<dd><p>When True, returns the total data (energy/gradient/Hessian) of the system, otherwise returns interaction data. Default is False for energies, True for gradients and Hessians. Note that the calculation of counterpoise corrected total energies implies the calculation of the energies of monomers in the monomer basis, hence specifying <code class="docutils literal notranslate"><span class="pre">return_total_data</span> <span class="pre">=</span> <span class="pre">True</span></code> may carry out more computations than <code class="docutils literal notranslate"><span class="pre">return_total_data</span> <span class="pre">=</span> <span class="pre">False</span></code>. For gradients and Hessians, <code class="docutils literal notranslate"><span class="pre">return_total_data</span> <span class="pre">=</span> <span class="pre">False</span></code> is rarely useful.</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.schema_name">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal['qcschema_manybodykeywords']</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'qcschema_manybodykeywords'</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.schema_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.schema_version">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal[1]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.schema_version" title="Link to this definition"></a></dt>
+<dd><p>The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.supersystem_ie_only">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supersystem_ie_only</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional[bool]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.supersystem_ie_only" title="Link to this definition"></a></dt>
+<dd><p>Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) analysis, thereby omitting intermediate-body calculations. When False (default), compute each n-body level in the MBE up through <code class="docutils literal notranslate"><span class="pre">max_nbody</span></code>. When True (only allowed for <code class="docutils literal notranslate"><span class="pre">max_nbody</span> <span class="pre">=</span> <span class="pre">nfragments</span></code> ), only compute enough for the overall interaction/total energy: max_nbody-body and 1-body. When True, properties <code class="docutils literal notranslate"><span class="pre">INTERACTION</span> <span class="pre">{driver}</span> <span class="pre">THROUGH</span> <span class="pre">{max_nbody}-BODY</span></code> will always be available; <code class="docutils literal notranslate"><span class="pre">TOTAL</span> <span class="pre">{driver}</span> <span class="pre">THROUGH</span> <span class="pre">{max_nbody}-BODY</span></code> will be available depending on <code class="docutils literal notranslate"><span class="pre">return_total_data</span></code> ; and <code class="docutils literal notranslate"><span class="pre">{max_nbody}-BODY</span> <span class="pre">CONTRIBUTION</span> <span class="pre">TO</span> <span class="pre">{driver}</span></code> won’t be available (except for dimers). This keyword produces no savings for a two-fragment molecule. But for the interaction energy of a three-fragment molecule, for example, 2-body subsystems can be skipped with <code class="docutils literal notranslate"><span class="pre">supersystem_ie_only=True</span></code>. Do not use with <code class="docutils literal notranslate"><span class="pre">vmfc</span></code> in <code class="docutils literal notranslate"><span class="pre">bsse_type</span></code> as it cannot produce savings.</p>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="qcmanybody.models.ManyBodyKeywords.set_bsse_type">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_bsse_type</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">bsse_type</span></em><a class="reference internal" href="../_modules/qcmanybody/models/v1/manybody_input_pydv1.html#ManyBodyKeywords.set_bsse_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.models.ManyBodyKeywords.set_bsse_type" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference internal" href="qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.models.v1.manybody_input_pydv1.BsseEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">BsseEnum</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qcmanybody.models.ManyBodyInput.html" class="btn btn-neutral float-left" title="ManyBodyInput" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="qcmanybody.models.ManyBodyProtocols.html" class="btn btn-neutral float-right" title="ManyBodyProtocols" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

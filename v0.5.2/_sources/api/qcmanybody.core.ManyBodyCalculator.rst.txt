@@ -1,0 +1,8 @@
+ManyBodyCalculator
+==================
+
+.. currentmodule:: qcmanybody.core
+
+.. autoclass:: ManyBodyCalculator
+   :show-inheritance:
+   :noindex:
