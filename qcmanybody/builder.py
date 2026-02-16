@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import itertools
-from typing import Dict, Iterable, List, Literal, Optional, Set, Union
+from typing import Dict, Iterable, List, Literal, Optional, Set, Tuple, Union
 
 from qcmanybody.models.v1 import BsseEnum
 
 __all__ = ["build_nbody_compute_list"]
+
+FragBasIndex = Tuple[Tuple[int], Tuple[int]]
 
 
 def build_nbody_compute_list(

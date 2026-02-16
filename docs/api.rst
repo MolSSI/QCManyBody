@@ -6,6 +6,7 @@ QCManyBody API
    :no-inheritance-diagram:
 
 .. automodapi:: qcmanybody.core
+   :noindex:
 
 .. automodapi:: qcmanybody.computer
 

@@ -33,6 +33,9 @@ logger = logging.getLogger(__name__)
 __all__ = ["ManyBodyCalculator", "ManyBodyCore"]
 
 
+FragBasIndex = Tuple[Tuple[int], Tuple[int]]
+
+
 class ManyBodyCore:
     def __init__(
         self,
