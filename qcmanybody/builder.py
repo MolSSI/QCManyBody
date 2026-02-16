@@ -42,7 +42,7 @@ def build_nbody_compute_list(
         Dictionary containing subdicts enumerating compute lists for each possible BSSE treatment.
         Subdict keys are n-body levels and values are sets of all the `mc_(frag, bas)` indices
         needed to compute that n-body level. A given index can appear multiple times within a
-        subdict and among subdicts.
+        subdict and among subdicts. ::
 
             compute_dict["cp"] = {
                 1: set(),

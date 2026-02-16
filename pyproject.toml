@@ -39,10 +39,16 @@ tests = [
     # qcengine & psi4 needed to regenerate test reference data
 ]
 docs = [
-    "mkdocs",
-    "mkdocs-material",
-    "mkdocstrings[python]",
-    "tabulate",
+    "numpydoc",
+    "docutils",
+    "sphinx >=7.0.0,<8",  # <8 for autodoc-pydantic=1
+    "sphinxcontrib-napoleon",
+    "sphinx-rtd-theme",
+    "autodoc-pydantic=1",
+    "sphinx-automodapi",
+    "sphinx-autodoc-typehints",
+    "pydantic",
+    "pydantic-settings",
 ]
 dev = [
     "pre-commit",
