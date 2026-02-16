@@ -8,7 +8,7 @@ the QC computations through QCEngine.
 The high-level interface uses the core-interface under the hood.
 See the :class:`~qcmanybody.models.v2.ManyBodyInput` QCSchema class for the input options :class:`~qcmanybody.models.v2.ManyBodyKeywords`.
 Details on forming fragmented ``Molecule`` s are at
-:ref:`molecule input <keywords:molecule>`
+:ref:`molecule input <sec:keywords_molecule>`
 
 The high-level interface defines a :class:`~qcmanybody.computer.ManyBodyComputer` class in
 computer.py whose input is :class:`~qcmanybody.models.v2.ManyBodyInput` schema and whose output is

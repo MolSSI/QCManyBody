@@ -32,7 +32,7 @@ Changelog
 .. _`sec:cl060`:
 
 v0.6.0 / 2026-MM-DD (Unreleased)
-===================
+================================
 
 `Docs <https://MolSSI/github.io/QCManyBody/v0.6.0/>`_
 

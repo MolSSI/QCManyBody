@@ -5,6 +5,8 @@ Keywords and Options
 Required
 ========
 
+.. _`sec:keywords_molecule`:
+
 Molecule
 --------
 

@@ -20,7 +20,7 @@ class.
 
 The first step is to create a molecule. This molecule is a
 `QCElemental molecule object <https://molssi.github.io/QCElemental/dev/model_molecule.html>`_, and must contain fragments.
-(see also: :ref:`molecule input <keywords:molecule>`)
+(see also: :ref:`molecule input <sec:keywords_molecule>`)
 
 .. code-block:: python
 

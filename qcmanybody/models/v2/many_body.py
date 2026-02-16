@@ -27,6 +27,10 @@ from qcelemental.models.v2.types import Array  # return to above once qcel corre
 
 from ...utils import provenance_stamp
 
+if TYPE_CHECKING:
+    import qcmanybody
+
+
 # ====  Misplaced & Next Models  ================================================
 
 
