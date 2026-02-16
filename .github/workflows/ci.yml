@@ -69,22 +69,24 @@ jobs:
             # Testing CMS
             #- dummy1
             #- dummy2
+            #- dummy3
             #- nwchem  # lands on different he4 soln
           EOF
           if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
               sed -i "s;pydantic;pydantic=1;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "Py-max" ]]; then
-              sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy1;- psi4;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "Demo" ]]; then
             :
               sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy3;- libint=2.9.0=*_4;g" export.yaml
               sed -i "s;#- dummy2;- nwchem;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "QCSk-next" ]]; then
               sed -i "s;pydantic;pydantic=2;g" export.yaml
-              sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy1;- psi4;g" export.yaml
               sed -i "s;#- dummy2;- pydantic-settings;g" export.yaml
           fi
           # model sed for L/W
