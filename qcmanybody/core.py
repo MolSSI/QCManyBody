@@ -33,6 +33,9 @@ logger = logging.getLogger(__name__)
 __all__ = ["ManyBodyCalculator", "ManyBodyCore"]
 
 
+FragBasIndex = Tuple[Tuple[int], Tuple[int]]
+
+
 class ManyBodyCore:
     def __init__(
         self,
@@ -181,17 +184,17 @@ class ManyBodyCore:
         Returns
         -------
         info
-            A text summary with per- model chemistry and per- n-body-level job counts.
-            ```
-            Model chemistry "c4-ccsd" (§A):         22
-                 Number of 1-body computations:     16 (nocp: 0, cp: 0, vmfc_compute: 16)
-                 Number of 2-body computations:      6 (nocp: 0, cp: 0, vmfc_compute: 6)
+            A text summary with per- model chemistry and per- n-body-level job counts. ::
 
-            Model chemistry "c4-mp2" (§B):          28
-                 Number of 1-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
-                 Number of 2-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
-                 Number of 3-body computations:      4 (nocp: 0, cp: 0, vmfc_compute: 4)
-            ```
+              Model chemistry "c4-ccsd" (§A):         22
+                   Number of 1-body computations:     16 (nocp: 0, cp: 0, vmfc_compute: 16)
+                   Number of 2-body computations:      6 (nocp: 0, cp: 0, vmfc_compute: 6)
+
+              Model chemistry "c4-mp2" (§B):          28
+                   Number of 1-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
+                   Number of 2-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
+                   Number of 3-body computations:      4 (nocp: 0, cp: 0, vmfc_compute: 4)
+
         Dict[str, Dict[int, int]]
             Data structure with outer key mc-label, inner key 1-indexed n-body, and value job count.
         """
@@ -531,15 +534,15 @@ class ManyBodyCore:
             helium dimer with 1-body at CCSD and 2-body at MP2. The outer string
             key can be generated with the ``qcmanybody.utils.labeler`` function.
             The inner string key is any property; QCManyBody presently knows how
-            to process energy/gradient/Hessian.
-            ```
-            {'["ccsd", [1], [1]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
-             '["ccsd", [2], [2]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
-             '["mp2", [1], [1]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
-             '["mp2", [2], [2]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
-             '["mp2", [1, 2], [1, 2]]': {'energy': -5.73, 'gradient': array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},
-            }
-            ```
+            to process energy/gradient/Hessian. ::
+
+              {'["ccsd", [1], [1]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
+               '["ccsd", [2], [2]]': {'energy': -2.87, 'gradient': array([[0., 0., 0.]])},
+               '["mp2", [1], [1]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
+               '["mp2", [2], [2]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
+               '["mp2", [1, 2], [1, 2]]': {'energy': -5.73, 'gradient': array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},
+              }
+
         """
 
         # All properties that were passed to us

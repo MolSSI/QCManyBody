@@ -11,6 +11,9 @@ from qcelemental.models.types import Array
 
 from .manybody_input_pydv1 import ManyBodyInput, SuccessfulResultBase
 
+if TYPE_CHECKING:
+    import qcmanybody
+
 # ====  Properties  =============================================================
 
 # class ManyBodyResultProperties defined through create_model

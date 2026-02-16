@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import itertools
-from typing import Dict, Iterable, List, Literal, Optional, Set, Union
+from typing import Dict, Iterable, List, Literal, Optional, Set, Tuple, Union
 
 from qcmanybody.models.v1 import BsseEnum
 
 __all__ = ["build_nbody_compute_list"]
+
+FragBasIndex = Tuple[Tuple[int], Tuple[int]]
 
 
 def build_nbody_compute_list(
@@ -42,7 +44,7 @@ def build_nbody_compute_list(
         Dictionary containing subdicts enumerating compute lists for each possible BSSE treatment.
         Subdict keys are n-body levels and values are sets of all the `mc_(frag, bas)` indices
         needed to compute that n-body level. A given index can appear multiple times within a
-        subdict and among subdicts.
+        subdict and among subdicts. ::
 
             compute_dict["cp"] = {
                 1: set(),

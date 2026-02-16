@@ -69,22 +69,24 @@ jobs:
             # Testing CMS
             #- dummy1
             #- dummy2
+            #- dummy3
             #- nwchem  # lands on different he4 soln
           EOF
           if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
               sed -i "s;pydantic;pydantic=1;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "Py-max" ]]; then
-              sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy1;- psi4;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "Demo" ]]; then
             :
               sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy3;- libint=2.9.0=*_4;g" export.yaml
               sed -i "s;#- dummy2;- nwchem;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "QCSk-next" ]]; then
               sed -i "s;pydantic;pydantic=2;g" export.yaml
-              sed -i "s;#- dummy1;- psi4=1.9.1;g" export.yaml
+              sed -i "s;#- dummy1;- psi4;g" export.yaml
               sed -i "s;#- dummy2;- pydantic-settings;g" export.yaml
           fi
           # model sed for L/W
@@ -121,8 +123,8 @@ jobs:
       if: "(startsWith(matrix.cfg.label, 'QCSk-next'))"
       run: |
         conda remove qcelemental qcengine --force
-        python -m pip install 'git+https://github.com/MolSSI/QCElemental.git@next2025' --no-deps
-        python -m pip install 'git+https://github.com/MolSSI/QCEngine.git@next2025' --no-deps
+        python -m pip install 'git+https://github.com/MolSSI/QCElemental.git@next2026' --no-deps
+        python -m pip install 'git+https://github.com/MolSSI/QCEngine.git@next2026' --no-deps
 
     - name: Environment Information
       run: |
@@ -167,7 +169,7 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-          - label: MkDocs
+          - label: Sphinx
             python-version: "3.10"
             runs-on: ubuntu-latest
 
@@ -191,10 +193,15 @@ jobs:
             - python
             - qcelemental
             # Docs
-            - mkdocs
-            - mkdocs-material
-            - mkdocstrings-python
-            - tabulate
+            - numpydoc
+            - docutils
+            - sphinx >=7.0.0,<8
+            - sphinxcontrib-napoleon
+            - sphinx-rtd-theme
+            - autodoc-pydantic <2
+            - sphinx-automodapi
+            - sphinx-autodoc-typehints
+            - pydantic <2
           EOF
           cat export.yaml
 
@@ -218,12 +225,81 @@ jobs:
     - name: Build Documentation
       run: |
         python -m pip install . --no-deps
-        QCMANYBODY_MAX_NBODY=5 PYTHONPATH=docs/extensions mkdocs build --strict
-        cd docs
+        QCMANYBODY_MAX_NBODY=5 sphinx-build docs/ build/docs
+
+    - name: Compute docs deploy target
+      id: target
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        echo GITHUB_REF_TYPE ${GITHUB_REF_TYPE}
+        echo GITHUB_REF_NAME ${GITHUB_REF_NAME}
+        echo GITHUB_REF ${GITHUB_REF}
+        if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+          echo "target_folder=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          echo "version_label=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+        elif [[ "${GITHUB_REF_NAME}" == "master" ]]; then
+          echo "target_folder=dev" >> "$GITHUB_OUTPUT"
+          echo "version_label=dev" >> "$GITHUB_OUTPUT"
+
+        else
+          echo "target_folder=" >> "$GITHUB_OUTPUT"
+          echo "version_label=" >> "$GITHUB_OUTPUT"
+        fi
+        echo GITHUB_OUTPUT ${GITHUB_OUTPUT}
 
     - name: GitHub Pages Deploy
       uses: JamesIves/github-pages-deploy-action@v4
       if: github.event_name == 'push' && github.repository == 'MolSSI/QCManyBody' && ( startsWith( github.ref, 'refs/tags/' ) || github.ref == 'refs/heads/main' )
       with:
         branch: gh-pages
-        folder: site
+        folder: build/docs/
+        target-folder: ${{ steps.target.outputs.target_folder }}
+        clean: false
+
+    - name: Update versions.json
+      if: github.event_name == 'push' && github.repository == 'MolSSI/QCManyBody' && ( startsWith( github.ref, 'refs/tags/' ) || github.ref == 'refs/heads/main' )
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION_LABEL: ${{ steps.target.outputs.version_label }}
+        TARGET_FOLDER: ${{ steps.target.outputs.target_folder }}
+      run: |
+        set -euo pipefail
+        rm -rf _ghp
+        git clone --depth 1 --branch gh-pages "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" _ghp
+        cd _ghp
+        # Create versions.json if it doesn't exist yet
+        if [[ ! -f versions.json ]]; then
+          cat > versions.json <<'JSON'
+        [
+          {"label": "dev", "path": "dev/"},
+          {"label": "v0.5.1", "path": "v0.5.1"},
+          {"label": "v0.5.2", "path": "v0.5.2/"}
+        ]
+        JSON
+        fi
+        python - <<'PY'
+        import json, pathlib, os
+        p = pathlib.Path("versions.json")
+        data = json.loads(p.read_text())
+        pinned = [
+            {"label": "dev", "path": "dev/"},
+            {"label": "v0.5.1", "path": "0.5.1/"},
+            {"label": "v0.5.2", "path": "v0.5.2/"},
+        ]
+        lbl = os.environ.get("VERSION_LABEL", "")
+        tgt = os.environ.get("TARGET_FOLDER", "")
+        if lbl and lbl not in ("dev",) and tgt:
+            pinned.insert(1, {"label": lbl, "path": tgt.rstrip("/") + "/"})
+        p.write_text(json.dumps(pinned, indent=2) + "\n")
+        PY
+        if ! git diff --quiet; then
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add versions.json
+          git commit -m "docs: update versions.json (${GITHUB_REF})"
+          git push origin gh-pages
+        fi

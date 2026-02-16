@@ -15,6 +15,7 @@ __all__ = [
     "delabeler",
     "labeler",
     # "print_nbody_energy",
+    "modelchem_labels",
     "provenance_stamp",
     "resize_gradient",
     "resize_hessian",
@@ -267,14 +268,12 @@ def labeler(
     Returns
     -------
     str
-        JSON string from inputs:
+        JSON string from inputs::
 
-        ```python
-        labeler("mp2", 1, (1, 2))
-        #> '["mp2", [1], [1, 2]]'
-        labeler("mp2", 1, (1, 2), opaque=False)
-        #> '§mp2_(1)@(1, 2)'
-        ```
+          labeler("mp2", 1, (1, 2))
+          #> '["mp2", [1], [1, 2]]'
+          labeler("mp2", 1, (1, 2), opaque=False)
+          #> '§mp2_(1)@(1, 2)'
     """
     if isinstance(frag, int):
         frag = (frag,)
@@ -295,14 +294,13 @@ def delabeler(item: str) -> Tuple[str, Tuple[int, ...], Tuple[int, ...]]:
     -------
     mcfragbas
         Tuple of opaque or pretty-print model chemistry (may be None for latter),
-        fragments and bases (1-indexed by convention).
+        fragments and bases (1-indexed by convention). ::
 
-        ```python
-        delabeler('["mp2", [1], [1, 2]]')
-        #> ('mp2', [1], [1, 2])
-        delabeler("§mp2_(1)@(1, 2)")
-        #> ('mp2', [1], [1, 2])
-        ```
+          delabeler('["mp2", [1], [1, 2]]')
+          #> ('mp2', [1], [1, 2])
+          delabeler("§mp2_(1)@(1, 2)")
+          #> ('mp2', [1], [1, 2])
+
     """
 
     if "@" not in item:
@@ -506,12 +504,11 @@ def provenance_stamp(routine: str) -> Dict[str, str]:
     """Return dictionary satisfying QCSchema,
     https://github.com/MolSSI/QCSchema/blob/master/qcschema/dev/definitions.py#L23-L41
     with QCManyBody's credentials for creator and version. The
-    generating routine's name is passed in through `routine`.
+    generating routine's name is passed in through `routine`. ::
 
-    ```python
-    qcmb.utils.provenance_stamp(__name__)
-    #> {'creator': 'QCManyBody', 'version': '0.2.2', 'routine': '__main__'}
-    ```
+      qcmb.utils.provenance_stamp(__name__)
+      #> {'creator': 'QCManyBody', 'version': '0.2.2', 'routine': '__main__'}
+
     """
     import qcmanybody
 
@@ -560,18 +557,17 @@ def modelchem_labels(
     -------
     mc_per_nb
         Dictionary mapping n-body levels to a tuple of full model chemistry label,
-        single-letter ordinal label, and n-body-levels-covered label.
+        single-letter ordinal label, and n-body-levels-covered label. ::
 
-        ```python
-        modelchem_labels({'ccsd': [1], 'mp2': [2, 3], 'hf': [4]})
-        #> {1: ('ccsd', '§A', '§1'), 2: ('mp2', '§B', '§23'), 3: ('mp2', '§B', '§23'), 4: ('hf', '§C', '§4')}
+          modelchem_labels({'ccsd': [1], 'mp2': [2, 3], 'hf': [4]})
+          #> {1: ('ccsd', '§A', '§1'), 2: ('mp2', '§B', '§23'), 3: ('mp2', '§B', '§23'), 4: ('hf', '§C', '§4')}
 
-        modelchem_labels({'hi': [1, 2, 3], 'md': [4], 'md2': [5, 6, 7, 8, 9, 10], 'lo': ['supersystem']})
-        #> {1: ('hi', '§A', '§123'), 2: ('hi', '§A', '§123'), 3: ('hi', '§A', '§123'),
-        #   4: ('md', '§B', '§4'),
-        #   5: ('md2', '§C', '§<10'), 6: ('md2', '§C', '§<10'), 7: ('md2', '§C', '§<10'), 8: ('md2', '§C', '§<10'), 9: ('md2', '§C', '§<10'), 10: ('md2', '§C', '§<10'),
-        #   "supersystem": ('lo', '§D', '§SS')}
-        ```
+          modelchem_labels({'hi': [1, 2, 3], 'md': [4], 'md2': [5, 6, 7, 8, 9, 10], 'lo': ['supersystem']})
+          #> {1: ('hi', '§A', '§123'), 2: ('hi', '§A', '§123'), 3: ('hi', '§A', '§123'),
+          #   4: ('md', '§B', '§4'),
+          #   5: ('md2', '§C', '§<10'), 6: ('md2', '§C', '§<10'), 7: ('md2', '§C', '§<10'), 8: ('md2', '§C', '§<10'), 9: ('md2', '§C', '§<10'), 10: ('md2', '§C', '§<10'),
+          #   "supersystem": ('lo', '§D', '§SS')}
+
     """
     sorted_nb_per_mc = {
         k: sorted(v)

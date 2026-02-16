@@ -1,1 +1,1 @@
-See [changelog in docs](docs/changelog.md).
+See [changelog in docs](docs/changelog.rst).

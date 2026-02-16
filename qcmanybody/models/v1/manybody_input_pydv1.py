@@ -17,6 +17,8 @@ with warnings.catch_warnings():
     from qcelemental.models.results import AtomicResultProperties, AtomicResultProtocols
     from qcelemental.models.types import Array
 
+if TYPE_CHECKING:
+    import qcmanybody
 
 # ====  Misplaced & Next Models  ================================================
 
