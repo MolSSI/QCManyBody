@@ -16,6 +16,8 @@ import datetime
 import os
 import sys
 
+os.environ["SPHINX_BUILD"] = "1"
+
 sys.path.insert(0, os.path.abspath("../../"))
 import qcmanybody
 
@@ -224,8 +226,8 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
-    "qcelemental": ("https://molssi.github.io/QCElemental/dev/", None),
-    "qcengine": ("https://molssi.github.io/QCEngine/dev/", None),
+    "qcelemental": ("https://molssi.github.io/QCElemental/next/", None),
+    "qcengine": ("https://molssi.github.io/QCEngine/next/", None),
     "qcfractal": ("https://molssi.github.io/QCFractal/", None),
 }
 
