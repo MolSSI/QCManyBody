@@ -197,13 +197,13 @@ jobs:
             # Docs
             - numpydoc
             - docutils
-            - sphinx >=7.0.0,<8
+            - sphinx >=7.0.0
             - sphinxcontrib-napoleon
             - sphinx-rtd-theme
-            - autodoc-pydantic <2
+            - autodoc-pydantic >=2
             - sphinx-automodapi
             - sphinx-autodoc-typehints
-            - pydantic <2
+            - pydantic >=2
           EOF
           cat export.yaml
 
