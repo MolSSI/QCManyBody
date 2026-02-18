@@ -5,7 +5,7 @@ Changelog
 .. v0.x.0 / 2026-MM-DD (Unreleased)
 .. ===================
 ..
-.. `Docs <https://MolSSI/github.io/QCManyBody/v0.x.0/>`_
+.. :docs:`v0.x.0`
 ..
 .. Breaking Changes
 .. ----------------
@@ -34,7 +34,7 @@ Changelog
 v0.6.0 / 2026-MM-DD (Unreleased)
 ================================
 
-`Docs <https://MolSSI/github.io/QCManyBody/v0.6.0/>`_
+:docs:`dev` for current. :docs:`v0.5.2` for QCSchema v1.
 
 Breaking Changes
 ----------------
@@ -52,7 +52,7 @@ Enhancements
 v0.5.2 / 2026-02-16
 ===================
 
-`Docs <https://MolSSI.github.io/QCManyBody/v0.5.2/>`_
+:docs:`v0.5.2` (Sphinx)
 
 Enhancements
 ------------
@@ -61,6 +61,8 @@ Enhancements
 
 v0.5.1 / 2025-06-14
 ===================
+
+:docs:`v0.5.1` (Mkdocs)
 
 Bug Fixes
 ---------

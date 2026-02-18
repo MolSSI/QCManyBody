@@ -90,9 +90,9 @@ def resize_gradient(
 
     Returns
     -------
-    np.ndarray
+    numpy.ndarray
         Gradient array padded with zeros to supersystem size, (3 * _<nat of supersystem\>_, 3).
-        If reverse=True, gradient array extracted to natural size, (3 * _<nat in bas\>_, 3).
+        If reverse=True, gradient array extracted to natural size, `(3 * _<nat in bas\>_, 3)`.
 
     """
     if reverse:
@@ -126,27 +126,27 @@ def resize_hessian(
     Parameters
     ----------
     hess
-        Hessian matrix of natural size for *bas*, (3 * _<nat in bas\>_, 3 * _<nat in bas\>_).
-        If `reverse=True`, Hessian matrix of supersystem size, (3 * _<nat of all fragments\>_,
-        3 * _<nat of all fragments\>_).
+        Hessian matrix of natural size for *bas*, ``(3 * <nat in bas>, 3 * <nat in bas>)``.
+        If `reverse=True`, Hessian matrix of supersystem size, ``(3 * <nat of all fragments>,
+        3 * <nat of all fragments>)``.
     bas
         1-indexed fragments active in *hess*.
         If `reverse=True`, 1-indexed fragments to be extracted from *hess*.
     fragment_size_dict
         Dictionary containing the number of atoms of each 1-indexed fragment.
-        For He--HOOH--Me cluster, `{1: 1, 2: 4, 3: 5}`.
+        For He--HOOH--Me cluster, ``{1: 1, 2: 4, 3: 5}``.
     fragment_slice_dict
         Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.
-        For He--HOOH--Me cluster, `{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}`.
+        For He--HOOH--Me cluster, ``{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}``.
     reverse
         If True, contract *hess* from supersystem size and shape to that which is natural for *bas*.
 
     Returns
     -------
-    ndarray
-        Hessian array padded with zeros to supersystem size, (3 * _<nat of supersystem\>_,
-        3 * _<nat of supersystem\>_). If reverse=True, Hessian array extracted to natural size,
-        (3 * _<nat in bas\>_, 3 * _<nat in bas\>_).
+    numpy.ndarray
+        Hessian array padded with zeros to supersystem size, ``(3 * <nat of supersystem>,
+        3 * <nat of supersystem>)``. If *reverse=True*, Hessian array extracted to natural size,
+        ``(3 * <nat in bas>, 3 * <nat in bas>)``.
 
     """
     if reverse:
