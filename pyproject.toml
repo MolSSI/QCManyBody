@@ -24,7 +24,7 @@ classifiers = [
 dependencies = [
     "numpy",
     "pydantic >=2.12",
-    "qcelemental>=0.50.0rc1,<0.70.0",
+    "qcelemental>=0.50.0rc2,<0.70.0",
 ]
 
 [project.optional-dependencies]
