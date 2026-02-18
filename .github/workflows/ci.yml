@@ -29,12 +29,25 @@ jobs:
             runs-on: ubuntu-latest
             pytest: "-m 'not addon'"
 
+          - label: Py-max
+            python-version: "3.13"
+            runs-on: ubuntu-latest
+            pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
+
           - label: Py-314
             python-version: "3.14"
             runs-on: ubuntu-latest
             pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
 
+          - label: Demo
+            python-version: "3.11"
+            runs-on: ubuntu-latest
+            pytest: "-k 'examples or (121-nwchem_psi4 and 4b)'"
 
+          - label: QCSk-next
+            python-version: "3.12"
+            runs-on: ubuntu-latest
+            pytest: "-k '((not (he4 and (3b or 4b) and not sio)) or supersys) and not vmfc'"
 
     name: "🐍 ${{ matrix.cfg.python-version }} • ${{ matrix.cfg.label }} • ${{ matrix.cfg.runs-on }}"
     runs-on: ${{ matrix.cfg.runs-on }}

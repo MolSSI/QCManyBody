@@ -38,10 +38,23 @@ v0.6.0 / 2026-MM-DD (Unreleased)
 
 Breaking Changes
 ----------------
+ * Depends on QCElemental >=v0.50.0rc2 so PyPI and Conda won't solve for this version w/o allowing prereleases.
+   No longer compatible with pre-next QCElemental.
+ * Demand Pydantic install v2
 
 New Features
 ------------
  * :pr:`43` Schema -- QCSchema v2 compatible and adds QCManyBody schema and Computer interface.
+ * Deps -- allow Python 3.14+ insofar as Pydantic allows.
+ * Models -- QCSchema v1 models are now always importable (even for py314) but may not be instantiable (for py314+)
+ * Testing -- adapt some tests to run with all combinations of v1 and v2 input and output
+ *  from earlier trial versions of v2 changes are
+   * `component_results` and `component_properties` fields become `cluster_results` and `cluster_properties`.
+   * protocol name changes per above also
+   * ManyBodyResultProperties -> ManyBodyProperties
+
+ * Computer moved to v1/computer.py and v2.computer.py generally the former available if not spec
+
 
 Enhancements
 ------------
