@@ -5,8 +5,16 @@ from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
 from pydantic.v1 import Field, create_model, validator
-from qcelemental.models import DriverEnum, ProtoModel, Provenance
-from qcelemental.models.v1 import Array, AtomicResultProperties, AtomicResultProtocols, Model, Molecule
+from qcelemental.models.v1 import (
+    Array,
+    AtomicResultProperties,
+    AtomicResultProtocols,
+    DriverEnum,
+    Model,
+    Molecule,
+    ProtoModel,
+    Provenance,
+)
 
 if TYPE_CHECKING:
     import qcmanybody

@@ -2,6 +2,8 @@
 Tests the DQM compute dispatch module
 """
 
+import warnings
+
 import pydantic
 import pytest
 from qcelemental.models import Molecule
@@ -321,4 +323,7 @@ def test_mbproperties_expansion(kws, ans, schema_versions):
     except AttributeError:
         input_model = _qcmb.ManyBodyProperties(**kws)
 
-    assert len(input_model.dict()) == ans
+    # official leave this as dict(), not model_dump(), to ensure remains operational
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        assert len(input_model.dict()) == ans

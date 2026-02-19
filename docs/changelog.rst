@@ -12,7 +12,6 @@ Changelog
 ..
 .. New Features
 .. ------------
-..  * :pr:`43` Schema -- QCSchema v2 compatible and adds QCManyBody schema and Computer interface.
 ..
 .. Enhancements
 .. ------------
@@ -29,6 +28,7 @@ Changelog
 .. WIP (Unmerged)
 .. --------------
 
+
 .. _`sec:cl060`:
 
 v0.6.0 / 2026-MM-DD (Unreleased)
@@ -36,28 +36,29 @@ v0.6.0 / 2026-MM-DD (Unreleased)
 
 :docs:`dev` for current. :docs:`v0.5.2` for QCSchema v1.
 
+v0.6.0 introduces QCSchema v2 compatibility and requires Pydantic v2.
+
 Breaking Changes
 ----------------
- * Depends on QCElemental >=v0.50.0rc2 so PyPI and Conda won't solve for this version w/o allowing prereleases.
-   No longer compatible with pre-next QCElemental.
- * Demand Pydantic install v2
+* :pr:`43` Deps -- require QCElemental `>=0.50.0rc2`. Package managers will not
+  solve for this version unless prereleases are allowed. No longer compatible
+  with pre-next QCElemental.
+* :pr:`43` Deps -- require Pydantic v2.
+* :pr:`43` Schema -- QCSchema v2 trial field renames updated:
+
+  * `component_results` → `cluster_results`
+  * `component_properties` → `cluster_properties`
+  * corresponding protocol name updates
+  * `ManyBodyResultProperties` → `ManyBodyProperties`
 
 New Features
 ------------
- * :pr:`43` Schema -- QCSchema v2 compatible and adds QCManyBody schema and Computer interface.
- * Deps -- allow Python 3.14+ insofar as Pydantic allows.
- * Models -- QCSchema v1 models are now always importable (even for py314) but may not be instantiable (for py314+)
- * Testing -- adapt some tests to run with all combinations of v1 and v2 input and output
- *  from earlier trial versions of v2 changes are
-   * `component_results` and `component_properties` fields become `cluster_results` and `cluster_properties`.
-   * protocol name changes per above also
-   * ManyBodyResultProperties -> ManyBodyProperties
-
- * Computer moved to v1/computer.py and v2.computer.py generally the former available if not spec
-
-
-Enhancements
-------------
+* :pr:`43` Schema -- add full QCSchema v2 compatibility, including QCManyBody schema and `Computer` interface.
+* :pr:`43` Deps -- allow Python 3.14+ insofar as supported by Pydantic.
+* :pr:`43` Models -- QCSchema v1 models are always importable (including on Python 3.14+), though instantiation will throw errors on 3.14+.
+* :pr:`43` Intf -- `Computer` reorganized into `v1/computer.py` and `v2/computer.py`.
+  The v1 version is used when accessed through ``qcmanybody.compter`` (and <3.14)
+* :pr:`43` Testing -- expand test matrix to run combinations of v1 and v2 input/output models.
 
 
 .. _`sec:cl052`:
