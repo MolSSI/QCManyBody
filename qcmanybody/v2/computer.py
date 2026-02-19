@@ -11,14 +11,13 @@ pp = pprint.PrettyPrinter(width=120, compact=True, indent=1)
 nppp = partial(np.array_str, max_line_width=120, precision=8, suppress_small=True)
 nppp10 = partial(np.array_str, max_line_width=120, precision=10, suppress_small=True)
 
-from ast import literal_eval
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, computed_field, field_validator
-from qcelemental.models.v2 import AtomicInput, AtomicResult, DriverEnum, FailedOperation, Molecule, ProtoModel
+from pydantic import ConfigDict, Field, ValidationInfo, computed_field, field_validator
+from qcelemental.models.v2 import AtomicInput, AtomicResult, DriverEnum, Molecule, ProtoModel
 
 from qcmanybody import ManyBodyCore
-from qcmanybody.models.v2 import BsseEnum, ManyBodyInput, ManyBodyKeywords, ManyBodyProperties, ManyBodyResult
+from qcmanybody.models.v2 import BsseEnum, ManyBodyInput, ManyBodyKeywords, ManyBodyResult
 from qcmanybody.utils import delabeler, provenance_stamp
 
 if TYPE_CHECKING:
@@ -187,7 +186,7 @@ class ManyBodyComputer(BaseComputerQCNG):
         validate_default=True,
         description=ManyBodyKeywords.model_fields["supersystem_ie_only"].description,
     )
-    task_list: Dict[str, Any] = {}  # MBETaskComputers] = {}
+    task_list: Dict[str, Any] = Field(default_factory=dict)  # Dict [str, MBETaskComputers]
     qcmb_core: Optional[Any] = Field(
         None,
         description="Low-level interface",

@@ -179,7 +179,7 @@ class ManyBodyComputer(BaseComputerQCNG):
         validate_default=True,
         description=ManyBodyKeywords.__fields__["supersystem_ie_only"].field_info.description,
     )
-    task_list: Dict[str, Any] = {}  # MBETaskComputers] = {}
+    task_list: Dict[str, Any] = Field(default_factory=dict)  # Dict [str, MBETaskComputers]
     qcmb_core: Optional[Any] = Field(
         None,
         description="Low-level interface",

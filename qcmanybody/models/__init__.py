@@ -1,5 +1,3 @@
-import sys
-
 try:
     import pydantic
 except ImportError:  # pragma: no cover

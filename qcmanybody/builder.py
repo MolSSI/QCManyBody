@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import itertools
-import sys
 from typing import Dict, Iterable, List, Literal, Optional, Set, Tuple, Union
 
 from qcmanybody.models.v2 import BsseEnum
