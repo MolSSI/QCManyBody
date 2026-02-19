@@ -1,24 +1,12 @@
-"""
-Safety shim for QCSchema v1 imports.
-
-This module intentionally avoids importing v1 model internals eagerly. If the
-Pydantic v1 compatibility layer (``pydantic.v1``) is useable, we will try to
-re-export the real classes. Otherwise this module exposes placeholder classes
-that emit a deprecation warning on import and raise a clear RuntimeError when
-an attempt is made to instantiate any v1 model.
-"""
-
-from __future__ import annotations
-
 import importlib
 import sys
 import warnings
 
 _MSG = (
-    "qcmanybody.models.v1 is active but incompatible with Python 3.14+ "
+    "qcmanybody.v1 is active but incompatible with Python 3.14+ "
     "(pydantic.v1 is not available). Imports will provide non-functional placeholders; "
     "instantiating any v1 model will raise a RuntimeError. Please run on Python < 3.14 "
-    "or migrate to qcmanybody.models.v2."
+    "or migrate to qcmanybody.v2."
 )
 
 # Warn on import so users see the incompatibility when they explicitly import v1
@@ -45,20 +33,18 @@ def _make_placeholder(name: str):
     def __repr__(self):
         return f"<Unavailable QCSchema v1 model {name}>"
 
-    return type(name, (), {"__init__": __init__, "__repr__": __repr__})
+    def from_manybodyinput(self, *args, **kwargs):
+        raise RuntimeError(_MSG2)
+
+    if name == "ManyBodyComputer":
+        return type(name, (), {"__init__": __init__, "__repr__": __repr__, "from_manybodyinput": from_manybodyinput})
+    else:
+        return type(name, (), {"__init__": __init__, "__repr__": __repr__})
 
 
 # Names this module should export (keeps parity with the previous file layout)
 _EXPORT_NAMES = [
-    "AtomicSpecification",
-    "FragBasIndex",
-    "ManyBodyInput",
-    "ManyBodyKeywords",
-    "ManyBodyProtocols",
-    "ManyBodySpecification",
-    "MAX_NBODY",
-    "ManyBodyResult",
-    "ManyBodyResultProperties",
+    "ManyBodyComputer",
 ]
 
 
@@ -73,22 +59,14 @@ def _use_real_if_possible():
 
     # Map where names are defined in the original layout. Import cautiously.
     mapping = {
-        "AtomicSpecification": (".manybody_input_pydv1", "AtomicSpecification"),
-        "FragBasIndex": (".manybody_input_pydv1", "FragBasIndex"),
-        "ManyBodyInput": (".manybody_input_pydv1", "ManyBodyInput"),
-        "ManyBodyKeywords": (".manybody_input_pydv1", "ManyBodyKeywords"),
-        "ManyBodyProtocols": (".manybody_input_pydv1", "ManyBodyProtocols"),
-        "ManyBodySpecification": (".manybody_input_pydv1", "ManyBodySpecification"),
-        "MAX_NBODY": (".manybody_output_pydv1", "MAX_NBODY"),
-        "ManyBodyResult": (".manybody_output_pydv1", "ManyBodyResult"),
-        "ManyBodyResultProperties": (".manybody_output_pydv1", "ManyBodyResultProperties"),
+        "ManyBodyComputer": (".computer", "ManyBodyComputer"),
     }
 
     pkg = __name__.rsplit(".", 1)[0]
 
     for name, (submod, attr) in mapping.items():
         try:
-            module = importlib.import_module(submod, package="qcmanybody.models.v1")
+            module = importlib.import_module(submod, package="qcmanybody.v1")
             value = getattr(module, attr)
             globals()[name] = value
         except Exception:
@@ -105,6 +83,3 @@ for _n in _EXPORT_NAMES:
 
 # Then attempt to shadow them with real implementations when available
 _use_real_if_possible()
-
-# This one is pydantic-free and much-used
-from ..v2.many_body import BsseEnum

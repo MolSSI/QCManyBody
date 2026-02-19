@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import re
-from enum import Enum, IntEnum
+from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union
 
 try:
@@ -26,6 +26,10 @@ from qcelemental.models.v2.basemodels import ExtendedConfigDict, ProtoModel, che
 from qcelemental.models.v2.types import Array  # return to above once qcel corrected
 
 from ...utils import provenance_stamp
+
+if TYPE_CHECKING:
+    import qcmanybody
+
 
 # ====  Misplaced & Next Models  ================================================
 

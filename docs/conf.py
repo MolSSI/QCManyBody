@@ -16,6 +16,8 @@ import datetime
 import os
 import sys
 
+os.environ["SPHINX_BUILD"] = "1"
+
 sys.path.insert(0, os.path.abspath("../../"))
 import qcmanybody
 
@@ -70,6 +72,7 @@ napoleon_use_rtype = True
 autodoc_pydantic_model_hide_paramlist = True
 autodoc_pydantic_model_show_config_summary = False
 autodoc_pydantic_field_swap_name_and_alias = True
+typehints_use_signature_return = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -213,6 +216,7 @@ rst_epilog = r"""
 extlinks = {
     "issue": ("https://github.com/MolSSI/QCManyBody/issues/%s", "GH#%s"),
     "pr": ("https://github.com/MolSSI/QCManyBody/pull/%s", "GH#%s"),
+    "docs": ("https://MolSSI.github.io/QCManyBody/%s", "Docs %s"),
 }
 
 
@@ -224,9 +228,9 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
-    "qcelemental": ("https://molssi.github.io/QCElemental/dev/", None),
-    "qcengine": ("https://molssi.github.io/QCEngine/dev/", None),
-    "qcfractal": ("https://molssi.github.io/QCFractal/", None),
+    "qcelemental": ("https://molssi.github.io/QCElemental/next/", None),
+    "qcengine": ("https://molssi.github.io/QCEngine/next/", None),
+    "qcfractal": ("https://docs.qcarchive.molssi.org/", None),
 }
 
 # -- Options for todo extension ----------------------------------------------

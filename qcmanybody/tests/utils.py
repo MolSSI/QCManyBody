@@ -8,7 +8,7 @@ import zstandard
 from qcelemental.models import AtomicInput, Molecule
 
 from qcmanybody import ManyBodyCore, delabeler
-from qcmanybody.models import BsseEnum
+from qcmanybody.models.v2 import BsseEnum  # always available
 from qcmanybody.utils import translate_qcvariables
 
 _my_dir = os.path.dirname(os.path.realpath(__file__))

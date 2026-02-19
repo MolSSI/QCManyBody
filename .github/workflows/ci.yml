@@ -25,12 +25,17 @@ jobs:
       matrix:
         cfg:
           - label: Py-min
-            python-version: "3.8"
+            python-version: "3.10"
             runs-on: ubuntu-latest
             pytest: "-m 'not addon'"
 
           - label: Py-max
             python-version: "3.13"
+            runs-on: ubuntu-latest
+            pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
+
+          - label: Py-314
+            python-version: "3.14"
             runs-on: ubuntu-latest
             pytest: "-k '(not (he4 and (3b or 4b) and not sio)) or supersys'"
 
@@ -58,13 +63,16 @@ jobs:
           name: test
           channels:
             - conda-forge
+            - conda-forge/label/qcelemental_dev
+            - conda-forge/label/qcengine_dev
           dependencies:
             # Build
             - setuptools
             - setuptools-scm
             # Core
             - python
-            - qcelemental
+            - qcelemental >=0.50rc1
+            - qcengine >=0.50rc1  # TODO temp
             - pydantic
             # Testing
             - pytest
@@ -78,7 +86,8 @@ jobs:
             #- nwchem  # lands on different he4 soln
           EOF
           if [[ "${{ matrix.cfg.label }}" == "Py-min" ]]; then
-              sed -i "s;pydantic;pydantic=1;g" export.yaml
+            :
+              #sed -i "s;pydantic;pydantic=1;g" export.yaml
           fi
           if [[ "${{ matrix.cfg.label }}" == "Py-max" ]]; then
               sed -i "s;#- dummy1;- psi4;g" export.yaml
@@ -93,6 +102,11 @@ jobs:
               sed -i "s;pydantic;pydantic=2;g" export.yaml
               sed -i "s;#- dummy1;- psi4;g" export.yaml
               sed -i "s;#- dummy2;- pydantic-settings;g" export.yaml
+          fi
+          if [[ "${{ matrix.cfg.label }}" == "Py-314" ]]; then
+              sed -i "s;#- nwchem;- nwchem;g" export.yaml
+              sed -i "s;#- dummy1;- msgpack-python;g" export.yaml
+              sed -i "s;#- dummy2;- networkx;g" export.yaml
           fi
           # model sed for L/W
           #   sed -i "s;;;g" export.yaml
@@ -160,7 +174,7 @@ jobs:
             --color=yes --durations 50 --durations-min 20
 
     - name: CodeCov
-      uses: codecov/codecov-action@v4.0.1
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: loriab/QCManyBody
@@ -190,23 +204,25 @@ jobs:
           name: test
           channels:
             - conda-forge
+            - conda-forge/label/qcelemental_dev
+            - conda-forge/label/qcengine_dev
           dependencies:
             # Build
             - setuptools
             - setuptools-scm
             # Core
             - python
-            - qcelemental
+            - qcelemental >=0.50.0rc2
             # Docs
             - numpydoc
             - docutils
-            - sphinx >=7.0.0,<8
+            - sphinx >=7.0.0
             - sphinxcontrib-napoleon
             - sphinx-rtd-theme
-            - autodoc-pydantic <2
+            - autodoc-pydantic >=2
             - sphinx-automodapi
             - sphinx-autodoc-typehints
-            - pydantic <2
+            - pydantic >=2
           EOF
           cat export.yaml
 

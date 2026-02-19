@@ -2,12 +2,71 @@
 Changelog
 =========
 
+.. v0.x.0 / 2026-MM-DD (Unreleased)
+.. ===================
+..
+.. :docs:`v0.x.0`
+..
+.. Breaking Changes
+.. ----------------
+..
+.. New Features
+.. ------------
+..
+.. Enhancements
+.. ------------
+..
+.. Bug Fixes
+.. ---------
+..
+.. Misc.
+.. -----
+..
+.. MUST (Unmerged)
+.. ---------------
+..
+.. WIP (Unmerged)
+.. --------------
+
+
+.. _`sec:cl060`:
+
+v0.6.0 / 2026-MM-DD (Unreleased)
+================================
+
+:docs:`dev` for current. :docs:`v0.5.2` for QCSchema v1.
+
+v0.6.0 introduces QCSchema v2 compatibility and requires Pydantic v2.
+
+Breaking Changes
+----------------
+* :pr:`43` Deps -- require QCElemental `>=0.50.0rc2`. Package managers will not
+  solve for this version unless prereleases are allowed. No longer compatible
+  with pre-next QCElemental.
+* :pr:`43` Deps -- require Pydantic v2.
+* :pr:`43` Schema -- QCSchema v2 trial field renames updated:
+
+  * `component_results` → `cluster_results`
+  * `component_properties` → `cluster_properties`
+  * corresponding protocol name updates
+  * `ManyBodyResultProperties` → `ManyBodyProperties`
+
+New Features
+------------
+* :pr:`43` Schema -- add full QCSchema v2 compatibility, including QCManyBody schema and `Computer` interface.
+* :pr:`43` Deps -- allow Python 3.14+ insofar as supported by Pydantic.
+* :pr:`43` Models -- QCSchema v1 models are always importable (including on Python 3.14+), though instantiation will throw errors on 3.14+.
+* :pr:`43` Intf -- `Computer` reorganized into `v1/computer.py` and `v2/computer.py`.
+  The v1 version is used when accessed through ``qcmanybody.compter`` (and <3.14)
+* :pr:`43` Testing -- expand test matrix to run combinations of v1 and v2 input/output models.
+
+
 .. _`sec:cl052`:
 
 v0.5.2 / 2026-02-16
 ===================
 
-`Docs <https://MolSSI.github.io/QCManyBody/v0.5.2/>`_
+:docs:`v0.5.2` (Sphinx)
 
 Enhancements
 ------------
@@ -16,6 +75,8 @@ Enhancements
 
 v0.5.1 / 2025-06-14
 ===================
+
+:docs:`v0.5.1` (Mkdocs)
 
 Bug Fixes
 ---------

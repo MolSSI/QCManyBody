@@ -7,11 +7,9 @@ import pytest
 from qcelemental.models import Molecule
 from qcelemental.testing import compare_values
 
-from qcmanybody.computer import ManyBodyComputer
-from qcmanybody.models import ManyBodyInput, ManyBodyKeywords, ManyBodyResultProperties
 from qcmanybody.utils import translate_qcvariables
 
-from .addons import uusing
+from .addons import schema_versions, uusing
 
 
 @pytest.fixture(scope="function")
@@ -215,12 +213,12 @@ sumdict_grad = {
 
 @pytest.fixture
 def het_tetramer():
-    return Molecule(
-        symbols=["F", "H", "F", "H", "H", "He"],
-        fragments=[[0], [1, 2], [3, 4], [5]],
-        fragment_charges=[-1, 0, 0, 0],
-        geometry=[-2,  0,  0, 0,  0,  0, 4,  0,  0, 0,  3,  0, 0,  3,  2, 0, -3,  0],
-    )
+    return {
+        "symbols": ["F", "H", "F", "H", "H", "He"],
+        "fragments": [[0], [1, 2], [3, 4], [5]],
+        "fragment_charges": [-1, 0, 0, 0],
+        "geometry": [-2,  0,  0, 0,  0,  0, 4,  0,  0, 0,  3,  0, 0,  3,  2, 0, -3,  0],
+    }
 
 
 @uusing("psi4")
@@ -243,9 +241,15 @@ def het_tetramer():
         15,
         id="4b_nocp_rtd_ee"),
 ])
-def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calcinfo_nmbe, het_tetramer, request, mbe_data_grad_dtz, monkeypatch):
+def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calcinfo_nmbe, het_tetramer, request, mbe_data_grad_dtz, monkeypatch, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyKeywords = _qcmb.ManyBodyKeywords
+    ManyBodyInput = _qcmb.ManyBodyInput
+    het_tet = _qcel.Molecule(**het_tetramer)
+
     _inner = request.node.name.split("[")[1].split("]")[0]
     kwdsln, pattern, progln = _inner, "", "psi4"
+    _, kwdsln = kwdsln.split("-", 1)
     monkeypatch.setenv("QCMANYBODY_EMBEDDING_CHARGES", "1")
 
     mbe_keywords = ManyBodyKeywords(**mbe_keywords)
@@ -257,7 +261,7 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
     ret = ManyBodyComputer.from_manybodyinput(mbe_model)
     print(f"MMMMMMM {request.node.name}")
-    pprint.pprint(ret.dict(), width=200)
+    pprint.pprint(ret.model_dump(), width=200)
 
     refs = het4_refs_conv_grad_dtz[kwdsln]
     ansE = refs[anskeyE]
@@ -271,7 +275,10 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
     assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
     qcvars = translate_qcvariables(ret.properties.dict())
 
-    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+    if "v2" in request.node.name:
+        skprop = _qcmb.ManyBodyProperties.to_qcvariables(reverse=True)
+    else:
+        skprop = _qcmb.ManyBodyResultProperties.to_qcvariables(reverse=True)
 
     for qcv, ref in refs.items():
         skp = skprop[qcv]
@@ -320,7 +327,11 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
         "Embedding charges for EE-MBE are still in testing",
         id="4b_nocp_rtd_ee_error"),
 ])
-def test_nbody_ee_error(mbe_keywords, errmsg, het_tetramer, mbe_data_grad_dtz):
+def test_nbody_ee_error(mbe_keywords, errmsg, het_tetramer, mbe_data_grad_dtz, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyKeywords = _qcmb.ManyBodyKeywords
+    ManyBodyInput = _qcmb.ManyBodyInput
+    het_tet = _qcel.Molecule(**het_tetramer)
 
     mbe_keywords = ManyBodyKeywords(**mbe_keywords)
     mbe_data_grad_dtz["molecule"] = het_tetramer
@@ -334,7 +345,11 @@ def test_nbody_ee_error(mbe_keywords, errmsg, het_tetramer, mbe_data_grad_dtz):
     assert errmsg in str(e.value), e.value
 
 
-def test_fragmentless_mol(mbe_data_grad_dtz):
+def test_fragmentless_mol(mbe_data_grad_dtz, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+    Molecule = _qcel.Molecule
+
     het_tetramer_fragmentless = Molecule(
         symbols=["F", "H", "F", "H", "H", "He"],
         geometry=[-2,  0,  0, 0,  0,  0, 4,  0,  0, 0,  3,  0, 0,  3,  2, 0, -3,  0],
