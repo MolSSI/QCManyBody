@@ -24,7 +24,7 @@ to run QC computations. A strategy that Psi4 uses is to define its own
 runs QC computations the way Psi4 wants to while still using all the
 validation and structure provided by the QCSchema I/O classes.
 
-.. note:: QCManyBody imports *without* QCSchema/Pydantic version specification (
-   models vs ``models.v1`` and ``models.v2`` and ``computer`` vs. ``v1.computer`` and ``v2.computer)
-   are *always* pointing to v1 for continuity. This will be true until QCManyBody depends on QCElemental v0.70.0.
-   For technical constraints, these docs always reference v2 forms. See :docs:`v0.5.2` for QCSchema v1-based documentation.
+.. note:: QCManyBody import paths *without* QCSchema/Pydantic version specification (*i.e.*,
+   ``qcmanybody.models`` vs ``models.v1`` and ``models.v2`` and ``qcmanybody.computer`` vs. ``v1.computer`` and ``v2.computer)
+   are *always* pointing to v1 for continuity. This will be true until QCManyBody depends on QCElemental >=v0.70.0.
+   For technical constraints, these docs always reference v2 classes. See :docs:`v0.5.2` for QCSchema v1-based documentation.

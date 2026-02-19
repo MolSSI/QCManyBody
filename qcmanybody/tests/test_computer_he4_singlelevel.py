@@ -624,7 +624,6 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
         subres = "component_results"
         subprop = "component_properties"
     he_tet = _qcel.Molecule(**he_tetramer)
-    he_tet = _qcel.Molecule(**he_tetramer)
 
     atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": basis}, program=program, driver="energy", keywords=keywords, protocols={"stdout": False})
     mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy", "protocols": {subres: "all"}}, molecule=he_tet)

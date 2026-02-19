@@ -2,10 +2,10 @@
 QCSchema
 ========
 
-.. note:: QCManyBody imports *without* QCSchema/Pydantic version specification (
+.. note:: QCManyBody import paths *without* QCSchema/Pydantic version specification (*i.e.*,
    ``qcmanybody.models`` vs ``models.v1`` and ``models.v2`` and ``qcmanybody.computer`` vs. ``v1.computer`` and ``v2.computer)
-   are *always* pointing to v1 for continuity. This will be true until QCManyBody depends on QCElemental v0.70.0.
-   For technical constraints, these docs always reference v2 forms. See :docs:`v0.5.2` for QCSchema v1-based documentation.
+   are *always* pointing to v1 for continuity. This will be true until QCManyBody depends on QCElemental >=v0.70.0.
+   For technical constraints, these docs always reference v2 classes. See :docs:`v0.5.2` for QCSchema v1-based documentation.
 
 Inputs
 ======
