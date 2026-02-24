@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Core Interface &mdash; QCManyBody 0.1.dev1+g1029b5897 documentation</title>
+  <title>Core Interface &mdash; QCManyBody 0.1.dev1+gfafaf3633 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=44dcfa92"></script>
-      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/documentation_options.js?v=4d6ffc5f"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/version-switcher.js?v=55f02482"></script>
     <script src="_static/js/theme.js"></script>
@@ -102,8 +102,8 @@ running the calculations.</p>
 class.</p>
 <p>The first step is to create a molecule. This molecule is a
 <a class="reference external" href="https://molssi.github.io/QCElemental/dev/model_molecule.html">QCElemental molecule object</a>, and must contain fragments.
-(see also: <span class="xref std std-ref">molecule input</span>)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span>
+(see also: <a class="reference internal" href="keywords.html#sec-keywords-molecule"><span class="std std-ref">molecule input</span></a>)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span>
 
 <span class="c1"># Create a molecule with 3 neon atoms, each as its own fragment</span>
 
@@ -171,7 +171,7 @@ for a worked example or the below as a quick example of what <code class="docuti
 <span class="n">basis</span> <span class="o">=</span> <span class="s2">&quot;def2-svp&quot;</span>
 <span class="n">program</span> <span class="o">=</span> <span class="s2">&quot;psi4&quot;</span>
 
-<span class="n">mol</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">p4_string</span><span class="p">)</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">p4_string</span><span class="p">)</span>
 <span class="n">mbc</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">ManyBodyCore</span><span class="p">(</span>
     <span class="n">molecule</span><span class="o">=</span><span class="n">mol</span><span class="p">,</span>
     <span class="n">bsse_type</span><span class="o">=</span><span class="p">[</span><span class="n">bsse_type</span><span class="p">],</span>
@@ -186,8 +186,8 @@ for a worked example or the below as a quick example of what <code class="docuti
 <span class="n">calculation_results</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">chem</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">imol</span> <span class="ow">in</span> <span class="n">mbc</span><span class="o">.</span><span class="n">iterate_molecules</span><span class="p">():</span>
     <span class="n">mc</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">delabeler</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-    <span class="n">atin</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">AtomicInput</span><span class="p">(</span>
-        <span class="n">molecule</span><span class="o">=</span><span class="n">imol</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span> <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="n">basis</span><span class="p">}</span>
+    <span class="n">atin</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">AtomicInput</span><span class="p">(</span>
+        <span class="n">molecule</span><span class="o">=</span><span class="n">imol</span><span class="p">,</span> <span class="n">specification</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span> <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="n">basis</span><span class="p">}}</span>
     <span class="p">)</span>
     <span class="n">atres</span> <span class="o">=</span> <span class="n">qcng</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">atin</span><span class="p">,</span> <span class="n">program</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">calculation_results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>

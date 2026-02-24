@@ -2,10 +2,15 @@
 QCSchema
 ========
 
+.. note:: QCManyBody import paths *without* QCSchema/Pydantic version specification (*i.e.*,
+   ``qcmanybody.models`` vs ``models.v1`` and ``models.v2`` and ``qcmanybody.computer`` vs. ``v1.computer`` and ``v2.computer)
+   are *always* pointing to v1 for continuity. This will be true until QCManyBody depends on QCElemental >=v0.70.0.
+   For technical constraints, these docs always reference v2 classes. See :docs:`v0.5.2` for QCSchema v1-based documentation.
+
 Inputs
 ======
 
-.. automodule:: qcmanybody.models.v1
+.. automodule:: qcmanybody.models.v2
    :members: BsseEnum, ManyBodyKeywords, ManyBodyProtocols, ManyBodySpecification, ManyBodyInput
    :undoc-members:
    :show-inheritance:
@@ -26,15 +31,15 @@ Properties/Outputs
 
     .. code-block:: python
 
-        python -c "import qcmanybody as qcmb;print(qcmb.models.MAX_NBODY)"
+        python -c "import qcmanybody as qcmb;print(qcmb.models.v2.MAX_NBODY)"
         #> 5
         export QCMANYBODY_MAX_NBODY=9  # explicitly enumerates octamer properties
-        python -c "import qcmanybody as qcmb;print(qcmb.models.MAX_NBODY)"
+        python -c "import qcmanybody as qcmb;print(qcmb.models.v2.MAX_NBODY)"
         #> 9
 
 
-.. automodule:: qcmanybody.models.v1
-   :members: ManyBodyResultProperties, ManyBodyResult
+.. automodule:: qcmanybody.models.v2
+   :members: ManyBodyProperties, ManyBodyResult
    :undoc-members:
    :show-inheritance:
    :noindex:

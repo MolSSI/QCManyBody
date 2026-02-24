@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>resize_gradient &mdash; QCManyBody 0.1.dev1+g1029b5897 documentation</title>
+  <title>resize_gradient &mdash; QCManyBody 0.1.dev1+gfafaf3633 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=44dcfa92"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/documentation_options.js?v=4d6ffc5f"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
     <script src="../_static/js/theme.js"></script>
@@ -54,7 +54,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">QCManyBody API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody">qcmanybody Package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.core">qcmanybody.core Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.computer">qcmanybody.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.v2.computer">qcmanybody.v2.computer Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.builder">qcmanybody.builder Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-qcmanybody.utils">qcmanybody.utils Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#id5">Functions</a><ul class="current">
@@ -69,7 +69,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models">qcmanybody.models Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models.v2">qcmanybody.models.v2 Package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../keywords.html">Keywords and Options</a></li>
@@ -106,7 +106,7 @@
 <h1>resize_gradient<a class="headerlink" href="#resize-gradient" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="qcmanybody.utils.resize_gradient">
-<span class="sig-prename descclassname"><span class="pre">qcmanybody.utils.</span></span><span class="sig-name descname"><span class="pre">resize_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_size_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_slice_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/utils.html#resize_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.utils.resize_gradient" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcmanybody.utils.</span></span><span class="sig-name descname"><span class="pre">resize_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_size_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_slice_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/qcmanybody/utils.html#resize_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.utils.resize_gradient" title="Link to this definition"></a></dt>
 <dd><p>Pads or extracts a gradient array between subsystem and full supersystem sizes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -124,10 +124,10 @@ For He–HOOH–Me cluster, <cite>{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 1
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Gradient array padded with zeros to supersystem size, (3 * _&lt;nat of supersystem&gt;_, 3).
-If reverse=True, gradient array extracted to natural size, (3 * _&lt;nat in bas&gt;_, 3).</p>
+If reverse=True, gradient array extracted to natural size, <cite>(3 * _&lt;nat in bas&gt;_, 3)</cite>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>

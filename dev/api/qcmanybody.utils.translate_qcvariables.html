@@ -6,23 +6,23 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>translate_qcvariables &mdash; QCManyBody 0.1.dev1+g1029b5897 documentation</title>
+  <title>translate_qcvariables &mdash; QCManyBody 0.1.dev1+gfafaf3633 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=44dcfa92"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/documentation_options.js?v=4d6ffc5f"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="AtomicSpecification" href="qcmanybody.models.AtomicSpecification.html" />
+    <link rel="next" title="BsseEnum" href="qcmanybody.models.v2.BsseEnum.html" />
     <link rel="prev" title="resize_hessian" href="qcmanybody.utils.resize_hessian.html" /> 
 </head>
 
@@ -54,7 +54,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">QCManyBody API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody">qcmanybody Package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.core">qcmanybody.core Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.computer">qcmanybody.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.v2.computer">qcmanybody.v2.computer Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.builder">qcmanybody.builder Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-qcmanybody.utils">qcmanybody.utils Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#id5">Functions</a><ul class="current">
@@ -69,7 +69,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models">qcmanybody.models Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models.v2">qcmanybody.models.v2 Package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../keywords.html">Keywords and Options</a></li>
@@ -106,11 +106,11 @@
 <h1>translate_qcvariables<a class="headerlink" href="#translate-qcvariables" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="qcmanybody.utils.translate_qcvariables">
-<span class="sig-prename descclassname"><span class="pre">qcmanybody.utils.</span></span><span class="sig-name descname"><span class="pre">translate_qcvariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">varsmap</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/utils.html#translate_qcvariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.utils.translate_qcvariables" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcmanybody.utils.</span></span><span class="sig-name descname"><span class="pre">translate_qcvariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">varsmap</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qcmanybody/utils.html#translate_qcvariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.utils.translate_qcvariables" title="Link to this definition"></a></dt>
 <dd><p>Translate between ManyBody results in Psi4/QCDB terminology (qcvars) and QCSchema terminology (skprops).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>varsmap</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Mapping" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary with keys all members of QCVariables or ManyBodyResultProperties and arbitrary values.</p>
+<dd class="field-odd"><p><strong>varsmap</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Mapping" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary with keys all members of QCVariables or ManyBodyProperties/ManyBodyResultProperties and arbitrary values.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>varsmap with keys swapped to other set. Untranslatable keys are omitted.</p>
@@ -128,7 +128,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="qcmanybody.utils.resize_hessian.html" class="btn btn-neutral float-left" title="resize_hessian" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="qcmanybody.models.AtomicSpecification.html" class="btn btn-neutral float-right" title="AtomicSpecification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="qcmanybody.models.v2.BsseEnum.html" class="btn btn-neutral float-right" title="BsseEnum" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

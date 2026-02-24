@@ -5,17 +5,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qcmanybody.core &mdash; QCManyBody 0.1.dev1+g1029b5897 documentation</title>
+  <title>qcmanybody.core &mdash; QCManyBody 0.1.dev1+gfafaf3633 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=44dcfa92"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/documentation_options.js?v=4d6ffc5f"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/version-switcher.js?v=55f02482"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -89,10 +89,15 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qcelemental</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models.v1</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span> <span class="k">as</span> <span class="n">Molecule_v1</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental.models.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span> <span class="k">as</span> <span class="n">Molecule_v2</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qcmanybody.models.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">BsseEnum</span>
+
+<span class="n">Molecules</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Molecule</span><span class="p">,</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">Molecule</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">qcmanybody.builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_nbody_compute_list</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qcmanybody.models.v1</span><span class="w"> </span><span class="kn">import</span> <span class="n">BsseEnum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qcmanybody.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">all_same_shape</span><span class="p">,</span>
     <span class="n">collect_vars</span><span class="p">,</span>
@@ -122,7 +127,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ManyBodyCore</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecule</span><span class="p">,</span>
+        <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecules</span><span class="p">,</span>
         <span class="n">bsse_type</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">BsseEnum</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]],</span> <span class="nb">str</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
@@ -138,9 +143,10 @@
                 <span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">mol</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="o">**</span><span class="n">molecule</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">):</span>
-            <span class="n">mol</span> <span class="o">=</span> <span class="n">molecule</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">mol</span> <span class="o">=</span> <span class="n">Molecule_v2</span><span class="p">(</span><span class="o">**</span><span class="n">molecule</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="p">(</span><span class="n">Molecule_v1</span><span class="p">,</span> <span class="n">Molecule_v2</span><span class="p">)):</span>
+            <span class="c1"># model_copy aliased to copy for v1</span>
+            <span class="n">mol</span> <span class="o">=</span> <span class="n">molecule</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Molecule input type of </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span><span class="si">}</span><span class="s2"> not understood.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="n">mol</span>
@@ -323,7 +329,7 @@
 
 <div class="viewcode-block" id="ManyBodyCore.iterate_molecules">
 <a class="viewcode-back" href="../../api/qcmanybody.core.ManyBodyCore.html#qcmanybody.ManyBodyCore.iterate_molecules">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_molecules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Molecules</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over all the molecules needed for the computation.</span>
 
 <span class="sd">        Yields model chemistry, label, and molecule.</span>
@@ -350,7 +356,7 @@
                         <span class="c1"># symmetry in the parent usually irrelevant to symmetry in the fragments, but</span>
                         <span class="c1">#   if parent symmetry is cancelled, catch that and pass it along</span>
                         <span class="n">updates</span><span class="p">[</span><span class="s2">&quot;fix_symmetry&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;c1&quot;</span>
-                    <span class="n">mol</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="n">updates</span><span class="p">)</span>
+                    <span class="n">mol</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="n">updates</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_charges</span><span class="p">:</span>
                         <span class="n">embedding_frags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfragments</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">basis_atoms</span><span class="p">))</span>
@@ -728,7 +734,7 @@
     <span class="c1"># retire after a grace period</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecule</span><span class="p">,</span>
+        <span class="n">molecule</span><span class="p">:</span> <span class="n">Molecules</span><span class="p">,</span>
         <span class="n">bsse_type</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">BsseEnum</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]],</span> <span class="nb">str</span><span class="p">],</span>
         <span class="n">return_total_data</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>

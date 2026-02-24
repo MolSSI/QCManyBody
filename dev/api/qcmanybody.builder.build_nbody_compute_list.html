@@ -6,24 +6,24 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>build_nbody_compute_list &mdash; QCManyBody 0.1.dev1+g1029b5897 documentation</title>
+  <title>build_nbody_compute_list &mdash; QCManyBody 0.1.dev1+gfafaf3633 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=44dcfa92"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/documentation_options.js?v=4d6ffc5f"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="delabeler" href="qcmanybody.utils.delabeler.html" />
-    <link rel="prev" title="ManyBodyComputer" href="qcmanybody.computer.ManyBodyComputer.html" /> 
+    <link rel="prev" title="ManyBodyComputer" href="qcmanybody.v2.computer.ManyBodyComputer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,7 +54,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">QCManyBody API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody">qcmanybody Package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.core">qcmanybody.core Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.computer">qcmanybody.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.v2.computer">qcmanybody.v2.computer Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-qcmanybody.builder">qcmanybody.builder Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#id4">Functions</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">build_nbody_compute_list</a></li>
@@ -63,7 +63,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.utils">qcmanybody.utils Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models">qcmanybody.models Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models.v2">qcmanybody.models.v2 Package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../keywords.html">Keywords and Options</a></li>
@@ -100,12 +100,12 @@
 <h1>build_nbody_compute_list<a class="headerlink" href="#build-nbody-compute-list" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="qcmanybody.builder.build_nbody_compute_list">
-<span class="sig-prename descclassname"><span class="pre">qcmanybody.builder.</span></span><span class="sig-name descname"><span class="pre">build_nbody_compute_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bsse_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfragments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbodies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_total_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supersystem_ie_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supersystem_max_nbody</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/builder.html#build_nbody_compute_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.builder.build_nbody_compute_list" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcmanybody.builder.</span></span><span class="sig-name descname"><span class="pre">build_nbody_compute_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bsse_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfragments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbodies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_total_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supersystem_ie_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supersystem_max_nbody</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Set" title="(in Python v3.10)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qcmanybody/builder.html#build_nbody_compute_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.builder.build_nbody_compute_list" title="Link to this definition"></a></dt>
 <dd><p>Generates lists of N-Body computations needed for requested BSSE treatments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bsse_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Iterable" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference internal" href="qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.models.v1.manybody_input_pydv1.BsseEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">BsseEnum</span></code></a>]</span>) – Requested BSSE treatments.</p></li>
+<li><p><strong>bsse_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Iterable" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference internal" href="qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.models.v2.many_body.BsseEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">BsseEnum</span></code></a>]</span>) – Requested BSSE treatments.</p></li>
 <li><p><strong>nfragments</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of distinct fragments comprising the full molecular supersystem.</p></li>
 <li><p><strong>nbodies</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Iterable" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Literal" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'supersystem'</span></code>]]]</span>) – List of n-body levels (e.g., <cite>[2]</cite> or <cite>[1, 2]</cite> or <cite>[“supersystem”]</cite>) for which to generate tasks.
 Note the natural 1-indexing, so <cite>[1]</cite> covers one-body contributions.</p></li>
@@ -151,7 +151,7 @@ subdict and among subdicts.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="qcmanybody.computer.ManyBodyComputer.html" class="btn btn-neutral float-left" title="ManyBodyComputer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="qcmanybody.v2.computer.ManyBodyComputer.html" class="btn btn-neutral float-left" title="ManyBodyComputer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="qcmanybody.utils.delabeler.html" class="btn btn-neutral float-right" title="delabeler" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

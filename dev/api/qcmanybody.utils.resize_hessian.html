@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>resize_hessian &mdash; QCManyBody 0.1.dev1+g1029b5897 documentation</title>
+  <title>resize_hessian &mdash; QCManyBody 0.1.dev1+gfafaf3633 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=44dcfa92"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/documentation_options.js?v=4d6ffc5f"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
     <script src="../_static/js/theme.js"></script>
@@ -54,7 +54,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">QCManyBody API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody">qcmanybody Package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.core">qcmanybody.core Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.computer">qcmanybody.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.v2.computer">qcmanybody.v2.computer Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.builder">qcmanybody.builder Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-qcmanybody.utils">qcmanybody.utils Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#id5">Functions</a><ul class="current">
@@ -69,7 +69,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models">qcmanybody.models Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models.v2">qcmanybody.models.v2 Package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../keywords.html">Keywords and Options</a></li>
@@ -106,30 +106,30 @@
 <h1>resize_hessian<a class="headerlink" href="#resize-hessian" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="qcmanybody.utils.resize_hessian">
-<span class="sig-prename descclassname"><span class="pre">qcmanybody.utils.</span></span><span class="sig-name descname"><span class="pre">resize_hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_size_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_slice_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/utils.html#resize_hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.utils.resize_hessian" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcmanybody.utils.</span></span><span class="sig-name descname"><span class="pre">resize_hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_size_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_slice_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/qcmanybody/utils.html#resize_hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.utils.resize_hessian" title="Link to this definition"></a></dt>
 <dd><p>Pads or extracts a Hessian array between subsystem and full supersystem sizes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>hess</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Hessian matrix of natural size for <em>bas</em>, (3 * _&lt;nat in bas&gt;_, 3 * _&lt;nat in bas&gt;_).
-If <cite>reverse=True</cite>, Hessian matrix of supersystem size, (3 * _&lt;nat of all fragments&gt;_,
-3 * _&lt;nat of all fragments&gt;_).</p></li>
+<li><p><strong>hess</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Hessian matrix of natural size for <em>bas</em>, <code class="docutils literal notranslate"><span class="pre">(3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">in</span> <span class="pre">bas&gt;,</span> <span class="pre">3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">in</span> <span class="pre">bas&gt;)</span></code>.
+If <cite>reverse=True</cite>, Hessian matrix of supersystem size, <code class="docutils literal notranslate"><span class="pre">(3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">of</span> <span class="pre">all</span> <span class="pre">fragments&gt;,</span>
+<span class="pre">3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">of</span> <span class="pre">all</span> <span class="pre">fragments&gt;)</span></code>.</p></li>
 <li><p><strong>bas</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/constants.html#Ellipsis" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – 1-indexed fragments active in <em>hess</em>.
 If <cite>reverse=True</cite>, 1-indexed fragments to be extracted from <em>hess</em>.</p></li>
 <li><p><strong>fragment_size_dict</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – Dictionary containing the number of atoms of each 1-indexed fragment.
-For He–HOOH–Me cluster, <cite>{1: 1, 2: 4, 3: 5}</cite>.</p></li>
+For He–HOOH–Me cluster, <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">1,</span> <span class="pre">2:</span> <span class="pre">4,</span> <span class="pre">3:</span> <span class="pre">5}</span></code>.</p></li>
 <li><p><strong>fragment_slice_dict</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#slice" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">slice</span></code></a>]</span>) – Dictionary containing slices that index the gradient matrix for each of the 1-indexed fragments.
-For He–HOOH–Me cluster, <cite>{1: slice(0, 1), 2: slice(1, 5), 3: slice(5, 10)}</cite>.</p></li>
+For He–HOOH–Me cluster, <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">slice(0,</span> <span class="pre">1),</span> <span class="pre">2:</span> <span class="pre">slice(1,</span> <span class="pre">5),</span> <span class="pre">3:</span> <span class="pre">slice(5,</span> <span class="pre">10)}</span></code>.</p></li>
 <li><p><strong>reverse</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If True, contract <em>hess</em> from supersystem size and shape to that which is natural for <em>bas</em>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Hessian array padded with zeros to supersystem size, (3 * _&lt;nat of supersystem&gt;_,
-3 * _&lt;nat of supersystem&gt;_). If reverse=True, Hessian array extracted to natural size,
-(3 * _&lt;nat in bas&gt;_, 3 * _&lt;nat in bas&gt;_).</p>
+<dd class="field-even"><p>Hessian array padded with zeros to supersystem size, <code class="docutils literal notranslate"><span class="pre">(3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">of</span> <span class="pre">supersystem&gt;,</span>
+<span class="pre">3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">of</span> <span class="pre">supersystem&gt;)</span></code>. If <em>reverse=True</em>, Hessian array extracted to natural size,
+<code class="docutils literal notranslate"><span class="pre">(3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">in</span> <span class="pre">bas&gt;,</span> <span class="pre">3</span> <span class="pre">*</span> <span class="pre">&lt;nat</span> <span class="pre">in</span> <span class="pre">bas&gt;)</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
