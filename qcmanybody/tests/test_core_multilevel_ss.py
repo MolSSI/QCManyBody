@@ -3,8 +3,9 @@ import os
 import pytest
 
 from qcmanybody import ManyBodyCore
-from qcmanybody.models import BsseEnum
+from qcmanybody.models.v2 import BsseEnum  # always available
 
+from .addons import schema_versions
 from .common import mol_h2o_3
 from .utils import compare_results, load_component_data, load_ref_data
 

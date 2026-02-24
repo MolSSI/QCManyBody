@@ -1,4 +1,5 @@
 import pprint
+import sys
 
 from qcelemental.testing import compare_values
 
@@ -11,15 +12,19 @@ except ImportError:
 
 # * for anyone replicating this, note that Psi4 MP2 is density-fitted, and NWChem CCSD is conventional.
 # * Snippets refer to publication J. Chem. Phys. 161, 152501 (2024) https://doi.org/10.1063/5.0231843
-
+# * "core" interface is essentially indifferent to QCSchema versions (only req'd to use Molecule which is essentially unchanged)
+# * note that QCSchema v1 isn't available for Python >=3.14
 
 @uusing("psi4")
 @uusing("nwchem")
 @uusing("qcengine")
-def test_core_interface_example_1_show_running():
+def test_core_interface_example_1_show_running(schver="v2"):
 
     # Snippet 1
-    from qcelemental.models import Molecule
+    if schver == "v2":
+        from qcelemental.models.v2 import Molecule
+    else:
+        from qcelemental.models import Molecule
 
     mol = Molecule(symbols=["ne", "ne", "ne"],
                    geometry=[[0,0,0],[0,0,2],[0,0,4]],
@@ -39,7 +44,10 @@ def test_core_interface_example_1_show_running():
 
     # Running
     import qcengine as qcng
-    from qcelemental.models import AtomicInput
+    if schver == "v2":
+        from qcelemental.models.v2 import AtomicInput
+    else:
+        from qcelemental.models import AtomicInput
 
     from qcmanybody.utils import delabeler
 
@@ -50,12 +58,24 @@ def test_core_interface_example_1_show_running():
 
         if chem == "mp2/cc-pvdz":
             program = "psi4"
-            atin = AtomicInput(molecule=imol,
+            if schver == "v2":
+                atin = AtomicInput(molecule=imol,
+                               specification={"driver": "gradient",
+                                              "model": {"method": "mp2", "basis": "cc-pvdz"}})
+            else:
+                atin = AtomicInput(molecule=imol,
                                driver="gradient",
                                model={"method": "mp2", "basis": "cc-pvdz"})
         elif chem == "ccsd/cc-pvtz":
             program = "nwchem"
-            atin = AtomicInput(molecule=imol,
+            if schver == "v2":
+                atin = AtomicInput(molecule=imol,
+                                specification={
+                               "driver": "gradient",
+                               "model": {"method": "ccsd", "basis": "cc-pvtz"},
+                               "keywords":{"ccsd__thresh": 1.e-7}})
+            else:
+                atin = AtomicInput(molecule=imol,
                                driver="gradient",
                                model={"method": "ccsd", "basis": "cc-pvtz"},
                                keywords={"ccsd__thresh": 1.e-7})
@@ -82,10 +102,13 @@ def test_core_interface_example_1_show_running():
     # assert 0
 
 
-def test_core_interface_example_2_show_processing():
+def test_core_interface_example_2_show_processing(schver="v2"):
 
     # Snippet 1
-    from qcelemental.models import Molecule
+    if schver == "v2":
+        from qcelemental.models.v2 import Molecule
+    else:
+        from qcelemental.models import Molecule
 
     mol = Molecule(symbols=["ne", "ne", "ne"],
                    geometry=[[0,0,0],[0,0,2],[0,0,4]],
@@ -197,38 +220,45 @@ def test_core_interface_example_2_show_processing():
 @uusing("psi4")
 @uusing("nwchem")
 @uusing("qcengine")
-def test_highlevel_interface_example():
+def test_highlevel_interface_example(schver="v2"):
 
     # Snippet 1
-    from qcelemental.models import Molecule
+    if schver == "v2":
+        from qcelemental.models.v2 import Molecule
+    else:
+        from qcelemental.models import Molecule
 
     mol = Molecule(symbols=["ne", "ne", "ne"],
                    geometry=[[0,0,0],[0,0,2],[0,0,4]],
                    fragments=[[0], [1], [2]])
 
     # Snippet 4
-    from qcmanybody import ManyBodyComputer
-    from qcmanybody.models import ManyBodyInput
+    if schver == "v2":
+        from qcmanybody.models.v2 import ManyBodyInput
+        from qcmanybody.v2 import ManyBodyComputer
+    else:
+        from qcmanybody import ManyBodyComputer
+        from qcmanybody.models import ManyBodyInput
 
     manybodyinput = ManyBodyInput(**{
-      "molecule": mol,
-      "specification": {
-        "driver": "gradient",
-        "keywords": {
-          "bsse_type": ["cp", "vmfc"],
-          "levels": {1: "nwc-ccsd/tz", 3: "p4-mp2/dz"},
-        },
-        "specification": {
-          "nwc-ccsd/tz": {
-            "program": "nwchem",
-            "model": {"method": "ccsd", "basis": "cc-pvtz"},
-            "driver": "energy",
-            "keywords": {"ccsd__thresh": 1.e-7}},
-          "p4-mp2/dz": {
-            "program": "psi4",
-            "model": {"method": "mp2", "basis": "cc-pvdz"},
-            "driver": "energy"},
-    }}})
+          "molecule": mol,
+          "specification": {
+            "driver": "gradient",
+            "keywords": {
+              "bsse_type": ["cp", "vmfc"],
+              "levels": {1: "nwc-ccsd/tz", 3: "p4-mp2/dz"},
+            },
+            "specification": {
+              "nwc-ccsd/tz": {
+                "program": "nwchem",
+                "model": {"method": "ccsd", "basis": "cc-pvtz"},
+                "driver": "energy",
+                "keywords": {"ccsd__thresh": 1.e-7}},
+              "p4-mp2/dz": {
+                "program": "psi4",
+                "model": {"method": "mp2", "basis": "cc-pvdz"},
+                "driver": "energy"},
+        }}})
     ret = ManyBodyComputer.from_manybodyinput(manybodyinput)
 
     print(ret.return_result)
@@ -246,6 +276,12 @@ def test_highlevel_interface_example():
 
 
 if __name__ == "__main__":
-    test_core_interface_example_1_show_running()
-    test_core_interface_example_2_show_processing()
-    test_highlevel_interface_example()
+    if sys.version_info < (3, 14):
+        # pydantic.v1 needed for QCSchema v1 not available after Py 3.13
+        test_core_interface_example_1_show_running("v1")
+        test_core_interface_example_2_show_processing("v1")
+        test_highlevel_interface_example("v1")
+
+    test_core_interface_example_1_show_running("v2")
+    test_core_interface_example_2_show_processing("v2")
+    test_highlevel_interface_example("v2")

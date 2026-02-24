@@ -4,16 +4,13 @@ import re
 
 import pytest
 from qcelemental import constants
-from qcelemental.models import Molecule
 
 # v2: from qcelemental.models.procedures_manybody import AtomicSpecification, ManyBodyKeywords, ManyBodyInput
 from qcelemental.testing import compare_recursive, compare_values
 
-from qcmanybody.computer import ManyBodyComputer
-from qcmanybody.models import AtomicSpecification, ManyBodyInput, ManyBodyKeywords, ManyBodyResultProperties
 from qcmanybody.utils import translate_qcvariables
 
-from .addons import using, uusing
+from .addons import schema_versions, using, uusing
 from .test_computer_he4_singlelevel import sumdict as sumdict_single
 
 
@@ -436,7 +433,7 @@ sumdict.update(sumdict_multi)
 @pytest.fixture
 def he_tetramer():
     a2 = 2 / constants.bohr2angstroms
-    return Molecule(symbols=["He", "He", "He", "He"], fragments=[[0], [1], [2], [3]], geometry=[0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2])
+    return {"symbols": ["He", "He", "He", "He"], "fragments": [[0], [1], [2], [3]], "geometry": [0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2]}
 
 
 @uusing("qcengine")
@@ -696,9 +693,14 @@ def he_tetramer():
          "22": 4}, # TODO could be 0
         id="1b_vmfc"),
 ])
-def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcinfo_nmbe, he_tetramer, request, mbe_data_multilevel_631g):
+def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcinfo_nmbe, he_tetramer, request, mbe_data_multilevel_631g, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyKeywords = _qcmb.ManyBodyKeywords
+    ManyBodyInput = _qcmb.ManyBodyInput
+    he_tet = _qcel.Molecule(**he_tetramer)
+
     _inner = request.node.name.split("[")[1].split("]")[0]
-    kwdsln, pattern, progln = _inner.split("-")
+    schver, kwdsln, pattern, progln = _inner.split("-")
 
     levels = copy.deepcopy(levels)
     if pattern == "121":
@@ -725,13 +727,16 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcin
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
     ret = ManyBodyComputer.from_manybodyinput(mbe_model)
     print(f"MMMMMMM {request.node.name}")
-    pprint.pprint(ret.dict(), width=200)
+    pprint.pprint(ret.model_dump(), width=200)
 
     # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
     assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
-    qcvars = translate_qcvariables(ret.properties.dict())
+    qcvars = translate_qcvariables(ret.properties.model_dump())
 
-    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+    if "v2" in request.node.name:
+        skprop = _qcmb.ManyBodyProperties.to_qcvariables(reverse=True)
+    else:
+        skprop = _qcmb.ManyBodyResultProperties.to_qcvariables(reverse=True)
 
     refs = he4_refs_conv_multilevel_631g[pattern]
     ans = refs[anskey]
@@ -796,9 +801,14 @@ def test_nbody_he4_multi(levels, mbe_keywords, anskey, bodykeys, outstrs, calcin
          "ss22": 25},  # cp(10hi) + nocp(4hi + 11lo)
         id="4b_cp_rtd"),
 ])
-def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, calcinfo_nmbe, he_tetramer, request, mbe_data_multilevel_631g):
+def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, calcinfo_nmbe, he_tetramer, request, mbe_data_multilevel_631g, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyKeywords = _qcmb.ManyBodyKeywords
+    ManyBodyInput = _qcmb.ManyBodyInput
+    he_tet = _qcel.Molecule(**he_tetramer)
+
     _inner = request.node.name.split("[")[1].split("]")[0]
-    kwdsln, pattern, progln = _inner.split("-")
+    schver, kwdsln, pattern, progln = _inner.split("-")
 
     levels = copy.deepcopy(levels)
     if pattern == "121":
@@ -831,7 +841,10 @@ def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, cal
     assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
     qcvars = translate_qcvariables(ret.properties.dict())
 
-    skprop = ManyBodyResultProperties.to_qcvariables(reverse=True)
+    if "v2" in request.node.name:
+        skprop = _qcmb.ManyBodyProperties.to_qcvariables(reverse=True)
+    else:
+        skprop = _qcmb.ManyBodyResultProperties.to_qcvariables(reverse=True)
 
     refs = he4_refs_conv_multilevel_631g[pattern]
     ans = refs[anskey]

@@ -2,7 +2,7 @@ import pytest
 import qcelemental
 
 from qcmanybody import ManyBodyCore
-from qcmanybody.models import BsseEnum
+from qcmanybody.models.v2 import BsseEnum  # always available
 
 from .common import mol_h2o_3_dict
 from .utils import compare_results, load_component_data, load_ref_data

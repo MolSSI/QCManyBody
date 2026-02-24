@@ -5,6 +5,8 @@ Keywords and Options
 Required
 ========
 
+.. _`sec:keywords_molecule`:
+
 Molecule
 --------
 
@@ -16,7 +18,7 @@ Examples:
 
 .. code-block:: python
 
-    from qcelemental.models import Molecule
+    from qcelemental.models.v2 import Molecule
 
     # Molecule with 3 neon atoms, each as its own fragment
     ne3 = Molecule(symbols=["ne", "ne", "ne"],

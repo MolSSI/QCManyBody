@@ -1,18 +1,18 @@
 import pytest
 import qcelemental
 from qcelemental import constants
-from qcelemental.models import Molecule
+from qcelemental.models.v2 import Molecule
 from qcelemental.testing import compare_recursive
 
 from qcmanybody import ManyBodyCalculator  # test old name still operational
-from qcmanybody import ManyBodyComputer
-from qcmanybody.models import AtomicSpecification, ManyBodyInput
+
+from .addons import schema_versions
 
 
 @pytest.fixture
 def he_tetramer():
     a2 = 2 / constants.bohr2angstroms
-    return Molecule(symbols=["He", "He", "He", "He"], fragments=[[0], [1], [2], [3]], geometry=[0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2])
+    return {"symbols": ["He", "He", "He", "He"], "fragments": [[0], [1], [2], [3]], "geometry": [0, 0, 0, 0, 0, a2, 0, a2, 0, 0, a2, a2]}
 
 
 def test_noncontiguous_fragments_ordinary():
@@ -83,7 +83,14 @@ def test_noncontiguous_nbody_levels_same_mc(he_tetramer):
         Number of 3-body computations:      4 (nocp: 4, cp: 0, vmfc_compute: 4)""",
         id="3b_vmfc"),
 ])
-def test_count_he4_single(mbe_keywords, ref_count, ref_text, he_tetramer):
+def test_count_he4_single(mbe_keywords, ref_count, ref_text, he_tetramer, request, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+    if "v2" in request.node.name:
+        AtomicSpecification = _qcel.AtomicSpecification
+    else:
+        AtomicSpecification = _qcmb.AtomicSpecification
+
     atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": "mybas"}, program="myqc", driver="energy")
     mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
 
@@ -167,7 +174,14 @@ def test_count_he4_single(mbe_keywords, ref_count, ref_text, he_tetramer):
         id="2b_uncp_ss"
     ),
 ])
-def test_count_he4_multi(mbe_keywords, ref_count, ref_text, he_tetramer, request):
+def test_count_he4_multi(mbe_keywords, ref_count, ref_text, he_tetramer, request, schema_versions):
+    _qcmb, ManyBodyComputer, _qcel = schema_versions
+    ManyBodyInput = _qcmb.ManyBodyInput
+    if "v2" in request.node.name:
+        AtomicSpecification = _qcel.AtomicSpecification
+    else:
+        AtomicSpecification = _qcmb.AtomicSpecification
+
     atomic_spec = AtomicSpecification(model={"method": "mp2", "basis": "mybas"}, program="myqc", driver="energy")
     mbe_model = ManyBodyInput(specification={"specification": atomic_spec, "keywords": mbe_keywords, "driver": "energy"}, molecule=he_tetramer)
 

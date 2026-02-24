@@ -1,4 +1,4 @@
-from qcelemental.models import Molecule
+from qcelemental.models.v2 import Molecule  # always available
 
 mol_ne2 = Molecule(
     symbols=["Ne", "Ne"], fragments=[[0], [1]], geometry=[0.0, 0.0, -2.834589188186742, 0.0, 0.0, 2.834589188186742]

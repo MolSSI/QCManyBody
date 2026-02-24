@@ -1,5 +1,7 @@
 from warnings import warn
 
+import qcmanybody
+
 _qcsk_v2_default_v1_importpathschange = "0.70.0"  # qcelemental.models.common_models
 
 _nonapi_file = "manybody_output_pydv1"

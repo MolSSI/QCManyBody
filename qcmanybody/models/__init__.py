@@ -6,14 +6,7 @@ except ImportError:  # pragma: no cover
         "`conda install pydantic -c conda-forge` or `pip install pydantic`"
     )
 
-from . import v1
-
-# someday, `from . import v1, v2`. for now, this lets qcmb work with pre-next (v0.50) QCElemental
-try:
-    from . import v2
-except (ModuleNotFoundError, ImportError):
-    pass
-
+from . import v1, v2
 from .v1 import *
 
 # Note that changing .v1 as default requires changing the shim classes in this dir, too.
