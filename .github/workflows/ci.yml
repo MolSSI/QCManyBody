@@ -71,7 +71,7 @@ jobs:
             - setuptools-scm
             # Core
             - python
-            - qcelemental >=0.50rc1
+            - qcelemental >=0.50.0rc2
             - qcengine >=0.50rc1  # TODO temp
             - pydantic
             # Testing

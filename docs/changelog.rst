@@ -2,10 +2,12 @@
 Changelog
 =========
 
+.. .. _`sec:cl0x0`:
+..
 .. v0.x.0 / 2026-MM-DD (Unreleased)
 .. ===================
 ..
-.. :docs:`v0.x.0`
+.. :docs:`v0.x.0` for current. :docs:`v0.5.2` for QCSchema v1.
 ..
 .. Breaking Changes
 .. ----------------
@@ -29,12 +31,14 @@ Changelog
 .. --------------
 
 
+:docs:`dev` for latest.
+
 .. _`sec:cl060`:
 
-v0.6.0 / 2026-MM-DD (Unreleased)
-================================
+v0.6.0 / 2026-02-24
+===================
 
-:docs:`dev` for current. :docs:`v0.5.2` for QCSchema v1.
+:docs:`v0.6.0` for current. :docs:`v0.5.2` for QCSchema v1.
 
 v0.6.0 introduces QCSchema v2 compatibility and requires Pydantic v2.
 
