@@ -97,30 +97,30 @@ units ang
     }
 
     if schver == 2:
-      opt_data = {
-        "initial_molecule": initial_molecule,
-        "specification": {
-            "specification": at_spec if (bsse_type == "nil") else mbe_spec,
+        opt_data = {
+            "initial_molecule": initial_molecule,
+            "specification": {
+                "specification": at_spec if (bsse_type == "nil") else mbe_spec,
+                "keywords": {
+                    "g_convergence": "nwchem_loose",
+                },
+                "protocols": {
+                    "trajectory_results": "initial_and_final",
+                },
+            },
+        }
+    else:
+        opt_data = {
+            "initial_molecule": initial_molecule,
+            "input_specification": at_spec if (bsse_type == "nil") else mbe_spec,
             "keywords": {
+                "program": "psi4",
                 "g_convergence": "nwchem_loose",
             },
             "protocols": {
-                "trajectory_results": "initial_and_final",
+                "trajectory": "initial_and_final",
             },
-        },
-      }
-    else:
-      opt_data = {
-        "initial_molecule": initial_molecule,
-        "input_specification": at_spec if (bsse_type == "nil") else mbe_spec,
-        "keywords": {
-            "program": "psi4",
-            "g_convergence": "nwchem_loose",
-        },
-        "protocols": {
-            "trajectory": "initial_and_final",
-        },
-      }
+        }
 
     import qcengine as qcng
     ret = qcng.compute_procedure(opt_data, optimizer, raise_error=True, return_version=schver)
