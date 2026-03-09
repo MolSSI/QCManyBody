@@ -2,7 +2,7 @@ import pprint
 
 import pytest
 from qcelemental import constants
-from qcelemental.testing import compare, compare_values
+from qcelemental.testing import compare_values
 
 from .addons import using, uusing
 

@@ -10,6 +10,7 @@ from .manybody_output_pydv1 import ManyBodyResult
 
 warn(
     f"GeneralizedOptimizationInput and GeneralizedOptimizationResult were experimental and are retired. Use OptimizationInput and OptimizationResult in v2 instead.",
+    stacklevel=2,
     FutureWarning,
 )
 
