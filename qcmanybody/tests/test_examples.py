@@ -270,7 +270,7 @@ def test_highlevel_interface_example(schver="v2"):
     assert compare_values([[0., 0., 2.832], [0., 0., 0.], [0., 0., -2.832]], ret.return_result, atol=1.e-3, label="cp 3b tot G")
     assert compare_values(-384.1286, ret.properties.cp_corrected_total_energy_through_3_body, atol=1.e-4, label="cp 3b tot E")
 
-    pprint.pprint(ret.dict(), width=200)
+    pprint.pprint(ret.model_dump(), width=200)
     # Uncomment below to force fail and see `ret` printing
     # assert 0
 

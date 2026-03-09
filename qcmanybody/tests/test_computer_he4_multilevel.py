@@ -835,11 +835,11 @@ def test_nbody_he4_supersys(levels, mbe_keywords, anskey, bodykeys, outstrs, cal
     # qcng: ret = qcng.compute_procedure(mbe_model, "manybody", raise_error=True)
     ret = ManyBodyComputer.from_manybodyinput(mbe_model)
     print(f"MMMMMMM {request.node.name}")
-    pprint.pprint(ret.dict(), width=200)
+    pprint.pprint(ret.model_dump(), width=200)
 
     # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
     assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
-    qcvars = translate_qcvariables(ret.properties.dict())
+    qcvars = translate_qcvariables(ret.properties.model_dump())
 
     if "v2" in request.node.name:
         skprop = _qcmb.ManyBodyProperties.to_qcvariables(reverse=True)

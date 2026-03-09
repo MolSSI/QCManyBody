@@ -14,7 +14,7 @@ from qcelemental.models.v2 import Molecule as Molecule_v2
 
 from qcmanybody.models.v2 import BsseEnum
 
-Molecules = Union[qcelemental.models.v1.Molecule, qcelemental.models.v2.Molecule]
+Molecules = Union["qcelemental.models.v1.Molecule", "qcelemental.models.v2.Molecule"]
 
 from qcmanybody.builder import build_nbody_compute_list
 from qcmanybody.utils import (

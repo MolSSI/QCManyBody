@@ -8,7 +8,6 @@ import string
 from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, Set, Tuple, Union
 
 import numpy as np
-from qcelemental import constants
 
 __all__ = [
     # "collect_vars",
@@ -360,6 +359,8 @@ def print_nbody_energy(
           FULL/RTN   3     -384.128628718676        2.326980633933     1460.202393089624        0.074525125487       46.765222277490'
         ```
     """
+    from qcelemental import constants
+
     info = f"""\n   ==> N-Body: {header} energies <==\n\n"""
     info += f"""        {"MC n-Body":>15}  Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy\n"""
     info += f"""                         [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]\n"""

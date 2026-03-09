@@ -1,5 +1,6 @@
 import pprint
 import re
+import warnings
 
 import pytest
 from qcelemental import constants
@@ -632,11 +633,14 @@ def test_nbody_he4_single(program, basis, keywords, mbe_keywords, anskey, bodyke
     ret = ManyBodyComputer.from_manybodyinput(mbe_model)
     print(f"SSSSSSS {request.node.name}")
     # v2: pprint.pprint(ret.model_dump(), width=200)
-    pprint.pprint(ret.dict(), width=200)
+    pprint.pprint(ret.model_dump(), width=200)
 
     # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
     assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
-    qcvars = translate_qcvariables(ret.properties.dict())
+    # official leave this as dict(), not model_dump(), to ensure remains operational
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        qcvars = translate_qcvariables(ret.properties.dict())
 
     if "v2" in request.node.name:
         skprop = _qcmb.ManyBodyProperties.to_qcvariables(reverse=True)
