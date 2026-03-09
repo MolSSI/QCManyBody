@@ -23,7 +23,8 @@ classifiers = [
 ]
 dependencies = [
     "numpy",
-    "pydantic >=2.12",
+    "pydantic >=2.11; python_version <'3.14'",
+    "pydantic >=2.12; python_version >='3.14'",
     "qcelemental>=0.50.0rc2,<0.70.0",
 ]
 
@@ -100,5 +101,5 @@ markers = [
     "geometric: tests using GeomeTRIC software; skip if unavailable",
     "geometric_genopt: tests using GeomeTRIC software with new additions; skip if unavailable",
     "optking: tests using OptKing software; skip if unavailable",
-    "optking_genopt: tests using OptKing software with new additions; skip if unavailable",
+    "optking_v2: tests using OptKing software with new additions; skip if unavailable",
 ]

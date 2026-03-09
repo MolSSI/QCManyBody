@@ -45,7 +45,7 @@ def has_program(name):
         return _programs[name]
     elif name in _programs_qcng:
         return _programs_qcng[name]
-    elif name in ["optking_genopt", "geometric_genopt"]:
+    elif name in ["optking_genopt", "geometric_genopt", "optking_v2"]:
         # give up rather than duplicate
         return False
     else:

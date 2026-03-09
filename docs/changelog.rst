@@ -33,6 +33,37 @@ Changelog
 
 :docs:`dev` for latest.
 
+.. _`sec:cl061`:
+
+v0.6.1 / 2026-MM-DD (Unreleased)
+===================
+
+:docs:`v0.6.1` for current. :docs:`v0.5.2` for QCSchema v1.
+
+Breaking Changes
+----------------
+
+New Features
+------------
+* :pr:`46` Deps -- With QCSchema v2 and Optking > 0.5, QCManyBody can be used
+  for MBE geometry optimizations.
+
+Enhancements
+------------
+
+Bug Fixes
+---------
+
+Misc.
+-----
+* :pr:`46` Models -- GeneralizedOptimizationInput/Result are marked as retired,
+  with no change to accessibility.
+* :pr:`46` Intf -- Defer a few QCElemental imports to reduce circular dependency
+  between modules.
+* :pr:`46` Maint -- Update a few `model.dict()` to `model.model_dump()`, which
+  is safe b/c requiring QCElemental 0.50
+
+
 .. _`sec:cl060`:
 
 v0.6.0 / 2026-02-24
