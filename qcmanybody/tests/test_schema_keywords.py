@@ -326,4 +326,4 @@ def test_mbproperties_expansion(kws, ans, schema_versions):
     # official leave this as dict(), not model_dump(), to ensure remains operational
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        assert len(input_model.dict()) == ans
+        assert len(input_model.dict(exclude_unset=True)) == ans
