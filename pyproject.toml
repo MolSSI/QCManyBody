@@ -25,7 +25,7 @@ dependencies = [
     "numpy",
     "pydantic >=2.11; python_version <'3.14'",
     "pydantic >=2.12; python_version >='3.14'",
-    "qcelemental>=0.50.0rc2,<0.70.0",
+    "qcelemental>=0.50.0rc3,<0.70.0",
 ]
 
 [project.optional-dependencies]

@@ -35,7 +35,7 @@ Changelog
 
 .. _`sec:cl061`:
 
-v0.6.1 / 2026-MM-DD (Unreleased)
+v0.6.1 / 2026-03-11
 ===================
 
 :docs:`v0.6.1` for current. :docs:`v0.5.2` for QCSchema v1.
