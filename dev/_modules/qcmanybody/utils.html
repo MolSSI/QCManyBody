@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qcmanybody.utils &mdash; QCManyBody 0.1.dev1+gfafaf3633 documentation</title>
+  <title>qcmanybody.utils &mdash; QCManyBody 0.1.dev1+g9f79fc39f documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=4d6ffc5f"></script>
+      <script src="../../_static/documentation_options.js?v=ef446904"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/version-switcher.js?v=55f02482"></script>
@@ -89,7 +89,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="c1"># &quot;collect_vars&quot;,</span>
@@ -453,6 +452,8 @@
 <span class="sd">          FULL/RTN   3     -384.128628718676        2.326980633933     1460.202393089624        0.074525125487       46.765222277490&#39;</span>
 <span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">qcelemental</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+
     <span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">   ==&gt; N-Body: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s2"> energies &lt;==</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span>
     <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;        </span><span class="si">{</span><span class="s2">&quot;MC n-Body&quot;</span><span class="si">:</span><span class="s2">&gt;15</span><span class="si">}</span><span class="s2">  Total Energy            Interaction Energy                          N-body Contribution to Interaction Energy</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
     <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;                         [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
