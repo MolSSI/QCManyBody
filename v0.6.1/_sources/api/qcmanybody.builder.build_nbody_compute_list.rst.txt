@@ -1,0 +1,6 @@
+build_nbody_compute_list
+========================
+
+.. currentmodule:: qcmanybody.builder
+
+.. autofunction:: build_nbody_compute_list

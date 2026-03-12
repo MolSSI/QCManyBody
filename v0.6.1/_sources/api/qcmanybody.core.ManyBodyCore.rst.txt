@@ -1,0 +1,38 @@
+ManyBodyCore
+============
+
+.. currentmodule:: qcmanybody.core
+
+.. autoclass:: ManyBodyCore
+   :show-inheritance:
+   :noindex:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~ManyBodyCore.compute_map
+      ~ManyBodyCore.has_supersystem
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~ManyBodyCore.analyze
+      ~ManyBodyCore.format_calc_plan
+      ~ManyBodyCore.iterate_molecules
+      ~ManyBodyCore.resize_gradient
+      ~ManyBodyCore.resize_hessian
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: compute_map
+   .. autoattribute:: has_supersystem
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: analyze
+   .. automethod:: format_calc_plan
+   .. automethod:: iterate_molecules
+   .. automethod:: resize_gradient
+   .. automethod:: resize_hessian
