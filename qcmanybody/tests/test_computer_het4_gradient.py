@@ -273,7 +273,7 @@ def test_nbody_het4_grad(mbe_keywords, anskeyE, anskeyG, bodykeys, outstrs, calc
 
     # don't want QCVariables stashed in extras, but prepare the qcvars translation, and check it
     assert ret.extras == {}, f"[w] extras wrongly present: {ret.extras.keys()}"
-    qcvars = translate_qcvariables(ret.properties.dict())
+    qcvars = translate_qcvariables(ret.properties.model_dump())
 
     if "v2" in request.node.name:
         skprop = _qcmb.ManyBodyProperties.to_qcvariables(reverse=True)

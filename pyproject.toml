@@ -23,14 +23,16 @@ classifiers = [
 ]
 dependencies = [
     "numpy",
-    "pydantic >=2.12",
-    "qcelemental>=0.50.0rc2,<0.70.0",
+    "pydantic >=2.11; python_version <'3.14'",
+    "pydantic >=2.12; python_version >='3.14'",
+    "qcelemental==0.50.0rc3",
+    #"qcelemental>=0.50.0rc3,<0.70.0",
 ]
 
 [project.optional-dependencies]
 standard = [
     # needed for continuous hi-lvl interface: `mbres = ManyBodyComputer.from_manybodyinput(mbin)`
-    "qcengine>=0.50.0rc1,<0.70.0",
+    "qcengine>=0.50.0rc1,<0.70.0",  # TODO rc2
 ]
 tests = [
     "pytest",
@@ -100,5 +102,5 @@ markers = [
     "geometric: tests using GeomeTRIC software; skip if unavailable",
     "geometric_genopt: tests using GeomeTRIC software with new additions; skip if unavailable",
     "optking: tests using OptKing software; skip if unavailable",
-    "optking_genopt: tests using OptKing software with new additions; skip if unavailable",
+    "optking_v2: tests using OptKing software with new additions; skip if unavailable",
 ]
