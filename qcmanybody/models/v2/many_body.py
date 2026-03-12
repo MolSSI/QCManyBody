@@ -10,16 +10,19 @@ try:
 except ImportError:
     from pydantic import FieldValidationInfo as ValidationInfo
 
-from pydantic import Field, create_model, ConfigDict, field_validator, model_validator
+from pydantic import Field, create_model, field_validator, model_validator
 from qcelemental.models.v2 import (  # Array,
     AtomicProperties,
+    AtomicProtocols,
     AtomicResult,
     AtomicSpecification,
     DriverEnum,
+    Model,
     Molecule,
+    ProtoModel,
     Provenance,
 )
-from qcelemental.models.v2.basemodels import ProtoModel, check_convertible_version
+from qcelemental.models.v2.basemodels import ExtendedConfigDict, ProtoModel, check_convertible_version
 from qcelemental.models.v2.types import Array  # return to above once qcel corrected
 
 from ...utils import provenance_stamp
@@ -75,6 +78,8 @@ class ManyBodyProtocols(ProtoModel):
     cluster_results: ClusterResultsProtocolEnum = Field(
         ClusterResultsProtocolEnum.none, description=str(ClusterResultsProtocolEnum.__doc__)
     )
+
+    model_config = ExtendedConfigDict(force_skip_defaults=True)
 
     def convert_v(
         self, target_version: int, /
@@ -634,19 +639,21 @@ def _validate_arb_max_nbody_fieldnames(cls, values):
     return values
 
 
-class ProtoModelAllowExtra(ProtoModel):
-    model_config = ConfigDict(extra="allow")
+class ProtoModelSkipDefaults(ProtoModel):
+
+    # fields filtered in model_validator
+    model_config = ExtendedConfigDict(serialize_skip_defaults=True, force_skip_defaults=True, extra="allow")
 
 
 if TYPE_CHECKING:
-    ManyBodyProperties = ProtoModelAllowExtra
+    ManyBodyProperties = ProtoModelSkipDefaults
 else:
     # if/else suppresses a warning about using a dynamically generated class as Field type in ManyBodyResults
     # * deprecated but works: root_validator(skip_on_failure=True)(_validate_arb_max_nbody_fieldnames)
     ManyBodyProperties = create_model(
         "ManyBodyProperties",
         # __doc__=manybodyproperties_doc,  # needs later pydantic
-        __base__=ProtoModelAllowExtra,
+        __base__=ProtoModelSkipDefaults,
         __validators__={"validator1": model_validator(mode="before")(_validate_arb_max_nbody_fieldnames)},
         **mbprop,
     )
