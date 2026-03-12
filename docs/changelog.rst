@@ -40,19 +40,12 @@ v0.6.1 / 2026-03-11
 
 :docs:`v0.6.1` for current. :docs:`v0.5.2` for QCSchema v1.
 
-Breaking Changes
-----------------
-
 New Features
 ------------
 * :pr:`46` Deps -- With QCSchema v2 and Optking > 0.5, QCManyBody can be used
   for MBE geometry optimizations.
-
-Enhancements
-------------
-
-Bug Fixes
----------
+* :pr:`46` Deps -- Requiring exactly QCElemental 0.50.0rc3 (previously >=0.50.0rc2)
+  for caution with fast-moving development.
 
 Misc.
 -----

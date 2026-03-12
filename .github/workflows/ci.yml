@@ -71,7 +71,7 @@ jobs:
             - setuptools-scm
             # Core
             - python
-            - qcelemental >=0.50.0rc2
+            - qcelemental ==0.50.0rc3
             - qcengine >=0.50rc1  # TODO temp
             - pydantic
             # Testing
@@ -212,7 +212,7 @@ jobs:
             - setuptools-scm
             # Core
             - python
-            - qcelemental >=0.50.0rc2
+            - qcelemental ==0.50.0rc3
             # Docs
             - numpydoc
             - docutils
