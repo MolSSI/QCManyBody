@@ -10,7 +10,15 @@ try:
 except ImportError:
     from pydantic import FieldValidationInfo as ValidationInfo
 
-from pydantic import Field, create_model, ConfigDict, field_validator, model_validator
+from pydantic import (
+    ConfigDict,
+    Field,
+    SerializerFunctionWrapHandler,
+    create_model,
+    field_validator,
+    model_serializer,
+    model_validator,
+)
 from qcelemental.models.v2 import (  # Array,
     AtomicProperties,
     AtomicResult,
@@ -639,17 +647,26 @@ class ProtoModelAllowExtra(ProtoModel):
 
 
 if TYPE_CHECKING:
-    ManyBodyProperties = ProtoModelAllowExtra
+    PreManyBodyProperties = ProtoModelAllowExtra
 else:
     # if/else suppresses a warning about using a dynamically generated class as Field type in ManyBodyResults
     # * deprecated but works: root_validator(skip_on_failure=True)(_validate_arb_max_nbody_fieldnames)
-    ManyBodyProperties = create_model(
+    PreManyBodyProperties = create_model(
         "ManyBodyProperties",
-        # __doc__=manybodyproperties_doc,  # needs later pydantic
+        __doc__=manybodyproperties_doc,
         __base__=ProtoModelAllowExtra,
         __validators__={"validator1": model_validator(mode="before")(_validate_arb_max_nbody_fieldnames)},
         **mbprop,
     )
+
+
+class ManyBodyProperties(PreManyBodyProperties):
+    @model_serializer(mode="wrap")
+    def _remove_none(self, handler: SerializerFunctionWrapHandler) -> Dict[str, Any]:
+        # Removes fields with a value of None from the serialized output.
+        # Leaves e.g., schema_name, which is different from v1 model.
+        serialized = handler(self)
+        return {k: v for k, v in serialized.items() if v is not None}
 
 
 def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
