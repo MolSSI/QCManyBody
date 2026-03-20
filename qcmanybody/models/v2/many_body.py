@@ -95,6 +95,7 @@ class ManyBodyProtocols(ProtoModel):
 
         dself = self.model_dump()
         if target_version == 1:
+            dself.pop("schema_name")
             # serialization is compact, so use model to assure value
             dself.pop("cluster_results", None)
             dself["component_results"] = self.cluster_results.value
@@ -277,9 +278,11 @@ class ManyBodySpecification(ProtoModel):
             dself["keywords"].pop("schema_name")
             try:
                 dself["specification"].pop("schema_name")
+                dself["specification"]["specification"]["protocols"].pop("schema_name")
             except KeyError:
                 for spec in dself["specification"].values():
                     spec.pop("schema_name")
+                    spec["protocols"].pop("schema_name")
 
             dself.pop("program")  # not in v1
             dself["protocols"] = self.protocols.convert_v(target_version)
@@ -697,7 +700,28 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
         return {v: k for k, v in qcvars_to_mbprop.items()}
 
 
+def _mbprop_convert_v(
+    self, target_version: int, /
+) -> Union["qcmanybody.models.v1.ManyBodyResultProperties", "qcmanybody.models.v2.ManyBodyProperties"]:
+    """Convert to instance of particular QCSchema version."""
+    import qcmanybody as qcmb
+
+    if check_convertible_version(target_version, error="ManyBodyProperties") == "self":
+        return self
+
+    dself = self.model_dump()
+    if target_version == 1:
+        dself.pop("schema_name", None)
+
+        self_vN = qcmb.models.v1.ManyBodyResultProperties(**dself)
+    else:
+        assert False, target_version
+
+    return self_vN
+
+
 ManyBodyProperties.to_qcvariables = classmethod(_qcvars_translator)
+ManyBodyProperties.convert_v = _mbprop_convert_v
 
 
 # ====  Results  ================================================================
@@ -780,7 +804,11 @@ class ManyBodyResult(SuccessfulResultBase):
             dself.pop("native_files")
             dself.pop("molecule")
 
-            dself["component_properties"] = dself.pop("cluster_properties")
+            dself["properties"] = self.properties.convert_v(target_version)
+            dself["component_properties"] = {
+                k: atprop.convert_v(target_version) for k, atprop in self.cluster_properties.items()
+            }
+            dself.pop("cluster_properties")
             dself["component_results"] = {
                 k: atres.convert_v(target_version) for k, atres in self.cluster_results.items()
             }

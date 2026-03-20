@@ -371,7 +371,28 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
         return {v: k for k, v in qcvars_to_mbprop.items()}
 
 
+def _mbprop_convert_v(
+    self, target_version: int, /
+) -> Union["qcmanybody.models.v1.ManyBodyResultProperties", "qcmanybody.models.v2.ManyBodyProperties"]:
+    """Convert to instance of particular QCSchema version."""
+    from qcelemental.models.v1.basemodels import check_convertible_version
+
+    import qcmanybody as qcmb
+
+    if check_convertible_version(target_version, error="ManyBodyResultProperties") == "self":
+        return self
+
+    dself = self.model_dump()
+    if target_version == 2:
+        self_vN = qcmb.models.v2.ManyBodyProperties(**dself)
+    else:
+        assert False, target_version
+
+    return self_vN
+
+
 ManyBodyResultProperties.to_qcvariables = classmethod(_qcvars_translator)
+ManyBodyResultProperties.convert_v = _mbprop_convert_v
 
 
 # ====  Results  ================================================================
@@ -460,6 +481,7 @@ class ManyBodyResult(SuccessfulResultBase):
 
             dself["molecule"] = self.input_data.molecule.convert_v(target_version)
 
+            dself["properties"] = self.properties.convert_v(target_version)
             dself["cluster_properties"] = dself.pop("component_properties")
             dself["cluster_results"] = {
                 k: atres.convert_v(target_version) for k, atres in self.component_results.items()
