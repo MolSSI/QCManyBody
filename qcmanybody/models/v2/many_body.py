@@ -650,12 +650,12 @@ class ProtoModelAllowExtra(ProtoModel):
 
 
 if TYPE_CHECKING:
-    PreManyBodyProperties = ProtoModelAllowExtra
+    ManyBodyPropertiesBase = ProtoModelAllowExtra
 else:
     # if/else suppresses a warning about using a dynamically generated class as Field type in ManyBodyResults
     # * deprecated but works: root_validator(skip_on_failure=True)(_validate_arb_max_nbody_fieldnames)
-    PreManyBodyProperties = create_model(
-        "ManyBodyProperties",
+    ManyBodyPropertiesBase = create_model(
+        "ManyBodyPropertiesBase",
         __doc__=manybodyproperties_doc,
         __base__=ProtoModelAllowExtra,
         __validators__={"validator1": model_validator(mode="before")(_validate_arb_max_nbody_fieldnames)},
@@ -663,7 +663,7 @@ else:
     )
 
 
-class ManyBodyProperties(PreManyBodyProperties):
+class ManyBodyProperties(ManyBodyPropertiesBase):
     @model_serializer(mode="wrap")
     def _remove_none(self, handler: SerializerFunctionWrapHandler) -> Dict[str, Any]:
         # Removes fields with a value of None from the serialized output.
