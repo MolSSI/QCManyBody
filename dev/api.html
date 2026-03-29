@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QCManyBody API &mdash; QCManyBody 0.1.dev1+g9f79fc39f documentation</title>
+  <title>QCManyBody API &mdash; QCManyBody 0.1.dev1+g77bc56f37 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=ef446904"></script>
+      <script src="_static/documentation_options.js?v=1db122fe"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/version-switcher.js?v=55f02482"></script>
@@ -337,8 +337,10 @@ size=&quot;8.0, 12.0&quot;;
   &quot;ProtoModel&quot; -&gt; &quot;ManyBodyInput&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;ManyBodyKeywords&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyKeywords.html#qcmanybody.models.v2.ManyBodyKeywords&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The many-body-specific keywords for user control.&quot;];
   &quot;ProtoModel&quot; -&gt; &quot;ManyBodyKeywords&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
-  &quot;ManyBodyProperties&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;];
-  &quot;ProtoModelSkipDefaults&quot; -&gt; &quot;ManyBodyProperties&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyProperties&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyProperties.html#qcmanybody.models.v2.ManyBodyProperties&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
+  &quot;ManyBodyPropertiesBase&quot; -&gt; &quot;ManyBodyProperties&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyPropertiesBase&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;Named properties of manybody computations following the MolSSI QCSchema.&quot;];
+  &quot;ProtoModelAllowExtra&quot; -&gt; &quot;ManyBodyPropertiesBase&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;ManyBodyProtocols&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyProtocols.html#qcmanybody.models.v2.ManyBodyProtocols&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Protocols regarding the manipulation of a ManyBody output data.&quot;];
   &quot;ProtoModel&quot; -&gt; &quot;ManyBodyProtocols&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;ManyBodyResult&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyResult.html#qcmanybody.models.v2.ManyBodyResult&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
@@ -347,8 +349,8 @@ size=&quot;8.0, 12.0&quot;;
   &quot;ProtoModel&quot; -&gt; &quot;ManyBodySpecification&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;ProtoModel&quot; [URL=&quot;https://molssi.github.io/QCElemental/next/api/qcelemental.models.v2.ProtoModel.html#qcelemental.models.v2.ProtoModel&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;QCSchema extension of pydantic.BaseModel.&quot;];
   &quot;BaseModel&quot; -&gt; &quot;ProtoModel&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
-  &quot;ProtoModelSkipDefaults&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyProperties.html#qcmanybody.models.v2.ManyBodyProperties&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
-  &quot;ProtoModel&quot; -&gt; &quot;ProtoModelSkipDefaults&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ProtoModelAllowExtra&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;ProtoModelAllowExtra&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;ResultBase&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;Base class for all result classes&quot;];
   &quot;ProtoModel&quot; -&gt; &quot;ResultBase&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;SuccessfulResultBase&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;Base object for any successful result&quot;];

@@ -33,6 +33,27 @@ Changelog
 
 :docs:`dev` for latest.
 
+.. _`sec:cl070`:
+
+v0.7.0 / 2026-03-27
+===================
+
+:docs:`v0.7.0` for current. :docs:`v0.5.2` for QCSchema v1.
+
+Breaking Changes
+----------------
+* :pr:`47` Models -- All models now serialize to containing ``schema_name`` field.
+  ``ManyBodyProperties`` also includes schema_name, but not all the Nones.
+
+Enhancements
+------------
+* :pr:`47` Schema -- Compatibility with https://github.com/MolSSI/QCElemental/pull/393
+  (QCElemental 0.50.0rc4) that replaces early QCElemental routines with native
+  Pydantic serialization.
+* :pr:`47` Models -- Add ``QCManyBody.models.v1.ManyBodyResultProperties.convert_v()``
+  and ``QCManyBody.models.v2.ManyBodyProperties.convert_v()`` to interconvert.
+
+
 .. _`sec:cl061`:
 
 v0.6.1 / 2026-03-11

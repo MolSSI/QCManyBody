@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ManyBodyResult &mdash; QCManyBody 0.1.dev1+g9f79fc39f documentation</title>
+  <title>ManyBodyResult &mdash; QCManyBody 0.1.dev1+g77bc56f37 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=ef446904"></script>
+      <script src="../_static/documentation_options.js?v=1db122fe"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
@@ -1728,7 +1728,7 @@
 <span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Provenance&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                  </span><span class="nt">&quot;creator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QCManyBody&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.dev1+g9f79fc39f&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.dev1+g77bc56f37&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="nt">&quot;routine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;qcmanybody.models.v2.many_body&quot;</span>
 <span class="w">               </span><span class="p">}</span>
 <span class="w">            </span><span class="p">},</span>
@@ -4220,7 +4220,10 @@
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;protocols&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/ManyBodyProtocols&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                  </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;qcschema_many_body_protocols&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;cluster_results&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;none&quot;</span>
+<span class="w">               </span><span class="p">},</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\n    Protocols regarding the manipulation of a ManyBody output data.\n    &quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -5297,7 +5300,7 @@
 <li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.input_data" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_data</span> <span class="pre">(qcmanybody.models.v2.many_body.ManyBodyInput)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.molecule" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">molecule</span> <span class="pre">(qcelemental.models.v2.molecule.Molecule)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.native_files" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">native_files</span> <span class="pre">(Dict[str,</span> <span class="pre">Any])</span></code></a></p></li>
-<li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.properties" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">properties</span> <span class="pre">(qcmanybody.models.v2.many_body.ProtoModelSkipDefaults)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.properties" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">properties</span> <span class="pre">(qcmanybody.models.v2.many_body.ManyBodyProperties)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.provenance" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">provenance</span> <span class="pre">(qcelemental.models.v2.common_models.Provenance)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.return_result" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_result</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">numpy.ndarray[tuple[int,</span> <span class="pre">...],</span> <span class="pre">numpy.dtype[float]]</span> <span class="pre">|</span> <span class="pre">Dict[str,</span> <span class="pre">Any])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#qcmanybody.models.v2.ManyBodyResult.schema_name" title="qcmanybody.models.v2.many_body.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">schema_name</span> <span class="pre">(Literal['qcschema_many_body_result'])</span></code></a></p></li>

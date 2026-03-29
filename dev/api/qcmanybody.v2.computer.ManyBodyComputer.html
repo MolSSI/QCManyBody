@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ManyBodyComputer &mdash; QCManyBody 0.1.dev1+g9f79fc39f documentation</title>
+  <title>ManyBodyComputer &mdash; QCManyBody 0.1.dev1+g77bc56f37 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=ef446904"></script>
+      <script src="../_static/documentation_options.js?v=1db122fe"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
@@ -832,7 +832,7 @@
 <span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Provenance&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                  </span><span class="nt">&quot;creator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QCManyBody&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.dev1+g9f79fc39f&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.dev1+g77bc56f37&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="nt">&quot;routine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;qcmanybody.models.v2.many_body&quot;</span>
 <span class="w">               </span><span class="p">}</span>
 <span class="w">            </span><span class="p">},</span>
@@ -1006,7 +1006,10 @@
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;protocols&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/ManyBodyProtocols&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                  </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;qcschema_many_body_protocols&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;cluster_results&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;none&quot;</span>
+<span class="w">               </span><span class="p">},</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\n    Protocols regarding the manipulation of a ManyBody output data.\n    &quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1619,7 +1622,7 @@
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>client</strong> (<a class="reference external" href="https://docs.qcarchive.molssi.org/user_guide/qcportal_reference/clients.html#qcportal.client.PortalClient" title="(in QCArchive v0.63.post69+gc332ec0ee)"><em>qcportal.client.PortalClient</em></a><em> | </em><em>None</em>)</p>
+<dd class="field-even"><p><strong>client</strong> (<a class="reference external" href="https://docs.qcarchive.molssi.org/user_guide/qcportal_reference/clients.html#qcportal.client.PortalClient" title="(in QCArchive v0.64.post11+g63a1c0666)"><em>qcportal.client.PortalClient</em></a><em> | </em><em>None</em>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1649,7 +1652,7 @@
 <dd class="field-even"><ul class="simple">
 <li><p><strong>external_results</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><em>Dict</em></a>)</p></li>
 <li><p><strong>component_results</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><em>Dict</em></a>)</p></li>
-<li><p><strong>client</strong> (<a class="reference external" href="https://docs.qcarchive.molssi.org/user_guide/qcportal_reference/clients.html#qcportal.client.PortalClient" title="(in QCArchive v0.63.post69+gc332ec0ee)"><em>qcportal.client.PortalClient</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>client</strong> (<a class="reference external" href="https://docs.qcarchive.molssi.org/user_guide/qcportal_reference/clients.html#qcportal.client.PortalClient" title="(in QCArchive v0.64.post11+g63a1c0666)"><em>qcportal.client.PortalClient</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
