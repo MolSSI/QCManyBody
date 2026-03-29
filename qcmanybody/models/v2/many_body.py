@@ -10,19 +10,24 @@ try:
 except ImportError:
     from pydantic import FieldValidationInfo as ValidationInfo
 
-from pydantic import Field, create_model, field_validator, model_validator
+from pydantic import (
+    ConfigDict,
+    Field,
+    SerializerFunctionWrapHandler,
+    create_model,
+    field_validator,
+    model_serializer,
+    model_validator,
+)
 from qcelemental.models.v2 import (  # Array,
     AtomicProperties,
-    AtomicProtocols,
     AtomicResult,
     AtomicSpecification,
     DriverEnum,
-    Model,
     Molecule,
-    ProtoModel,
     Provenance,
 )
-from qcelemental.models.v2.basemodels import ExtendedConfigDict, ProtoModel, check_convertible_version
+from qcelemental.models.v2.basemodels import ProtoModel, check_convertible_version
 from qcelemental.models.v2.types import Array  # return to above once qcel corrected
 
 from ...utils import provenance_stamp
@@ -79,8 +84,6 @@ class ManyBodyProtocols(ProtoModel):
         ClusterResultsProtocolEnum.none, description=str(ClusterResultsProtocolEnum.__doc__)
     )
 
-    model_config = ExtendedConfigDict(force_skip_defaults=True)
-
     def convert_v(
         self, target_version: int, /
     ) -> Union["qcmanybody.models.v1.ManyBodyProtocols", "qcmanybody.models.v2.ManyBodyProtocols"]:
@@ -92,6 +95,7 @@ class ManyBodyProtocols(ProtoModel):
 
         dself = self.model_dump()
         if target_version == 1:
+            dself.pop("schema_name")
             # serialization is compact, so use model to assure value
             dself.pop("cluster_results", None)
             dself["component_results"] = self.cluster_results.value
@@ -274,9 +278,11 @@ class ManyBodySpecification(ProtoModel):
             dself["keywords"].pop("schema_name")
             try:
                 dself["specification"].pop("schema_name")
+                dself["specification"]["specification"]["protocols"].pop("schema_name")
             except KeyError:
                 for spec in dself["specification"].values():
                     spec.pop("schema_name")
+                    spec["protocols"].pop("schema_name")
 
             dself.pop("program")  # not in v1
             dself["protocols"] = self.protocols.convert_v(target_version)
@@ -639,24 +645,31 @@ def _validate_arb_max_nbody_fieldnames(cls, values):
     return values
 
 
-class ProtoModelSkipDefaults(ProtoModel):
-
-    # fields filtered in model_validator
-    model_config = ExtendedConfigDict(serialize_skip_defaults=True, force_skip_defaults=True, extra="allow")
+class ProtoModelAllowExtra(ProtoModel):
+    model_config = ConfigDict(extra="allow")
 
 
 if TYPE_CHECKING:
-    ManyBodyProperties = ProtoModelSkipDefaults
+    ManyBodyPropertiesBase = ProtoModelAllowExtra
 else:
     # if/else suppresses a warning about using a dynamically generated class as Field type in ManyBodyResults
     # * deprecated but works: root_validator(skip_on_failure=True)(_validate_arb_max_nbody_fieldnames)
-    ManyBodyProperties = create_model(
-        "ManyBodyProperties",
-        # __doc__=manybodyproperties_doc,  # needs later pydantic
-        __base__=ProtoModelSkipDefaults,
+    ManyBodyPropertiesBase = create_model(
+        "ManyBodyPropertiesBase",
+        __doc__=manybodyproperties_doc,
+        __base__=ProtoModelAllowExtra,
         __validators__={"validator1": model_validator(mode="before")(_validate_arb_max_nbody_fieldnames)},
         **mbprop,
     )
+
+
+class ManyBodyProperties(ManyBodyPropertiesBase):
+    @model_serializer(mode="wrap")
+    def _remove_none(self, handler: SerializerFunctionWrapHandler) -> Dict[str, Any]:
+        # Removes fields with a value of None from the serialized output.
+        # Leaves e.g., schema_name, which is different from v1 model.
+        serialized = handler(self)
+        return {k: v for k, v in serialized.items() if v is not None}
 
 
 def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
@@ -687,7 +700,28 @@ def _qcvars_translator(cls, reverse: bool = False) -> Dict[str, str]:
         return {v: k for k, v in qcvars_to_mbprop.items()}
 
 
+def _mbprop_convert_v(
+    self, target_version: int, /
+) -> Union["qcmanybody.models.v1.ManyBodyResultProperties", "qcmanybody.models.v2.ManyBodyProperties"]:
+    """Convert to instance of particular QCSchema version."""
+    import qcmanybody as qcmb
+
+    if check_convertible_version(target_version, error="ManyBodyProperties") == "self":
+        return self
+
+    dself = self.model_dump()
+    if target_version == 1:
+        dself.pop("schema_name", None)
+
+        self_vN = qcmb.models.v1.ManyBodyResultProperties(**dself)
+    else:
+        assert False, target_version
+
+    return self_vN
+
+
 ManyBodyProperties.to_qcvariables = classmethod(_qcvars_translator)
+ManyBodyProperties.convert_v = _mbprop_convert_v
 
 
 # ====  Results  ================================================================
@@ -770,7 +804,11 @@ class ManyBodyResult(SuccessfulResultBase):
             dself.pop("native_files")
             dself.pop("molecule")
 
-            dself["component_properties"] = dself.pop("cluster_properties")
+            dself["properties"] = self.properties.convert_v(target_version)
+            dself["component_properties"] = {
+                k: atprop.convert_v(target_version) for k, atprop in self.cluster_properties.items()
+            }
+            dself.pop("cluster_properties")
             dself["component_results"] = {
                 k: atres.convert_v(target_version) for k, atres in self.cluster_results.items()
             }

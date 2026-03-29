@@ -305,7 +305,7 @@ def test_mbe_sie(mbe_data, kws, ans, schema_versions):
         "calcinfo_nfrrrrrrrrrrr": 3,
     }, "Field names not allowed"),
 ])
-def test_mbproperties_expansion(kws, ans, schema_versions):
+def test_mbproperties_expansion(kws, ans, schema_versions, request):
     _qcmb, ManyBodyComputer, _qcel = schema_versions
 
     if isinstance(ans, str):
@@ -326,4 +326,11 @@ def test_mbproperties_expansion(kws, ans, schema_versions):
     # official leave this as dict(), not model_dump(), to ensure remains operational
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        assert len(input_model.dict()) == ans
+        assert len(input_model.dict(exclude_unset=True)) == ans
+
+    if "v2" in request.node.name:
+        assert len(input_model.model_dump()) == ans + 1, list(input_model.model_dump().keys())
+        assert sorted(input_model.model_dump().keys()) == sorted(list(kws.keys()) + ["schema_name"])
+    else:
+        assert len(input_model.model_dump()) == ans, list(input_model.model_dump().keys())
+        assert sorted(input_model.model_dump().keys()) == sorted(kws.keys())
