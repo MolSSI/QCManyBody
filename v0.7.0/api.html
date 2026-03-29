@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QCManyBody API &mdash; QCManyBody 0.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fe7df9b0"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/version-switcher.js?v=55f02482"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="delabeler" href="api/qcmanybody.delabeler.html" />
+    <link rel="prev" title="QCSchema" href="qcschema.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            QCManyBody
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qcschema.html">QCSchema</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">QCManyBody API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-qcmanybody">qcmanybody Package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.delabeler.html">delabeler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.labeler.html">labeler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.resize_gradient.html">resize_gradient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.resize_hessian.html">resize_hessian</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.BsseEnum.html">BsseEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.ManyBodyCalculator.html">ManyBodyCalculator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.ManyBodyComputer.html">ManyBodyComputer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.ManyBodyCore.html">ManyBodyCore</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-qcmanybody.core">qcmanybody.core Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.core.ManyBodyCalculator.html">ManyBodyCalculator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.core.ManyBodyCore.html">ManyBodyCore</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-qcmanybody.v2.computer">qcmanybody.v2.computer Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.v2.computer.ManyBodyComputer.html">ManyBodyComputer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-qcmanybody.builder">qcmanybody.builder Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.builder.build_nbody_compute_list.html">build_nbody_compute_list</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-qcmanybody.utils">qcmanybody.utils Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.utils.delabeler.html">delabeler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.utils.labeler.html">labeler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.utils.modelchem_labels.html">modelchem_labels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.utils.provenance_stamp.html">provenance_stamp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.utils.resize_gradient.html">resize_gradient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.utils.resize_hessian.html">resize_hessian</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.utils.translate_qcvariables.html">translate_qcvariables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-qcmanybody.models.v2">qcmanybody.models.v2 Package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.models.v2.BsseEnum.html">BsseEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyInput.html">ManyBodyInput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyKeywords.html">ManyBodyKeywords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyProperties.html">ManyBodyProperties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyProtocols.html">ManyBodyProtocols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyResult.html">ManyBodyResult</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodySpecification.html">ManyBodySpecification</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">QCManyBody API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="qcmanybody-api">
+<h1>QCManyBody API<a class="headerlink" href="#qcmanybody-api" title="Link to this heading"></a></h1>
+<section id="module-qcmanybody">
+<span id="qcmanybody-package"></span><h2>qcmanybody Package<a class="headerlink" href="#module-qcmanybody" title="Link to this heading"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.delabeler.html#qcmanybody.delabeler" title="qcmanybody.delabeler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delabeler</span></code></a>(item)</p></td>
+<td><p>Back-form from label into tuple.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.labeler.html#qcmanybody.labeler" title="qcmanybody.labeler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">labeler</span></code></a>(mc_level_lbl, frag, bas, *[, opaque])</p></td>
+<td><p>Form label from model chemistry id and fragment and basis indices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.resize_gradient.html#qcmanybody.resize_gradient" title="qcmanybody.resize_gradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize_gradient</span></code></a>(grad, bas, ...[, reverse])</p></td>
+<td><p>Pads or extracts a gradient array between subsystem and full supersystem sizes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.resize_hessian.html#qcmanybody.resize_hessian" title="qcmanybody.resize_hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize_hessian</span></code></a>(hess, bas, ...[, reverse])</p></td>
+<td><p>Pads or extracts a Hessian array between subsystem and full supersystem sizes.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.BsseEnum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BsseEnum</span></code></a>(value)</p></td>
+<td><p>Available basis-set superposition error (BSSE) treatments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.ManyBodyCalculator.html#qcmanybody.ManyBodyCalculator" title="qcmanybody.ManyBodyCalculator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyCalculator</span></code></a>(molecule, bsse_type, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.ManyBodyComputer.html#qcmanybody.ManyBodyComputer" title="qcmanybody.ManyBodyComputer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyComputer</span></code></a>(**data)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.ManyBodyCore.html#qcmanybody.ManyBodyCore" title="qcmanybody.ManyBodyCore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyCore</span></code></a>(molecule, bsse_type, levels, *, ...)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="module-qcmanybody.core">
+<span id="qcmanybody-core-module"></span><h2>qcmanybody.core Module<a class="headerlink" href="#module-qcmanybody.core" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>Classes<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.ManyBodyCalculator.html#qcmanybody.ManyBodyCalculator" title="qcmanybody.core.ManyBodyCalculator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyCalculator</span></code></a>(molecule, bsse_type, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.ManyBodyCore.html#qcmanybody.ManyBodyCore" title="qcmanybody.core.ManyBodyCore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyCore</span></code></a>(molecule, bsse_type, levels, *, ...)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="class-inheritance-diagram">
+<h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Link to this heading"></a></h3>
+digraph inheritancebec9d9bc05 {
+bgcolor=transparent;
+rankdir=LR;
+size=&quot;8.0, 12.0&quot;;
+  &quot;ManyBodyCalculator&quot; [URL=&quot;api/qcmanybody.ManyBodyCalculator.html#qcmanybody.ManyBodyCalculator&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
+  &quot;ManyBodyCore&quot; -&gt; &quot;ManyBodyCalculator&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyCore&quot; [URL=&quot;api/qcmanybody.ManyBodyCore.html#qcmanybody.ManyBodyCore&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
+}
+</section>
+</section>
+<section id="module-qcmanybody.v2.computer">
+<span id="qcmanybody-v2-computer-module"></span><h2>qcmanybody.v2.computer Module<a class="headerlink" href="#module-qcmanybody.v2.computer" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>Classes<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.v2.computer.ManyBodyComputer.html#qcmanybody.v2.computer.ManyBodyComputer" title="qcmanybody.v2.computer.ManyBodyComputer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyComputer</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id3">
+<h3>Class Inheritance Diagram<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+digraph inheritance81da4264ff {
+bgcolor=transparent;
+rankdir=LR;
+size=&quot;8.0, 12.0&quot;;
+  &quot;BaseComputerQCNG&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;Base class for \&quot;computers\&quot; that plan, run, and process QC tasks.&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;BaseComputerQCNG&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseModel&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;!!! abstract \&quot;Usage Documentation\&quot;&quot;];
+  &quot;ManyBodyComputer&quot; [URL=&quot;api/qcmanybody.v2.computer.ManyBodyComputer.html#qcmanybody.v2.computer.ManyBodyComputer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
+  &quot;BaseComputerQCNG&quot; -&gt; &quot;ManyBodyComputer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ProtoModel&quot; [URL=&quot;https://molssi.github.io/QCElemental/next/api/qcelemental.models.v2.ProtoModel.html#qcelemental.models.v2.ProtoModel&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;QCSchema extension of pydantic.BaseModel.&quot;];
+  &quot;BaseModel&quot; -&gt; &quot;ProtoModel&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+}
+</section>
+</section>
+<section id="module-qcmanybody.builder">
+<span id="qcmanybody-builder-module"></span><h2>qcmanybody.builder Module<a class="headerlink" href="#module-qcmanybody.builder" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>Functions<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.builder.build_nbody_compute_list.html#qcmanybody.builder.build_nbody_compute_list" title="qcmanybody.builder.build_nbody_compute_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_nbody_compute_list</span></code></a>(bsse_type, ...[, ...])</p></td>
+<td><p>Generates lists of N-Body computations needed for requested BSSE treatments.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="module-qcmanybody.utils">
+<span id="qcmanybody-utils-module"></span><h2>qcmanybody.utils Module<a class="headerlink" href="#module-qcmanybody.utils" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>Functions<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.utils.delabeler.html#qcmanybody.utils.delabeler" title="qcmanybody.utils.delabeler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delabeler</span></code></a>(item)</p></td>
+<td><p>Back-form from label into tuple.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.utils.labeler.html#qcmanybody.utils.labeler" title="qcmanybody.utils.labeler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">labeler</span></code></a>(mc_level_lbl, frag, bas, *[, opaque])</p></td>
+<td><p>Form label from model chemistry id and fragment and basis indices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.utils.modelchem_labels.html#qcmanybody.utils.modelchem_labels" title="qcmanybody.utils.modelchem_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modelchem_labels</span></code></a>(nb_per_mc[, presorted])</p></td>
+<td><p>Form ordinal and letter labels for model chemistries.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.utils.provenance_stamp.html#qcmanybody.utils.provenance_stamp" title="qcmanybody.utils.provenance_stamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">provenance_stamp</span></code></a>(routine)</p></td>
+<td><p>Return dictionary satisfying QCSchema, <a class="reference external" href="https://github.com/MolSSI/QCSchema/blob/master/qcschema/dev/definitions.py#L23-L41">https://github.com/MolSSI/QCSchema/blob/master/qcschema/dev/definitions.py#L23-L41</a> with QCManyBody's credentials for creator and version. The generating routine's name is passed in through <cite>routine</cite>. ::.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.utils.resize_gradient.html#qcmanybody.utils.resize_gradient" title="qcmanybody.utils.resize_gradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize_gradient</span></code></a>(grad, bas, ...[, reverse])</p></td>
+<td><p>Pads or extracts a gradient array between subsystem and full supersystem sizes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.utils.resize_hessian.html#qcmanybody.utils.resize_hessian" title="qcmanybody.utils.resize_hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize_hessian</span></code></a>(hess, bas, ...[, reverse])</p></td>
+<td><p>Pads or extracts a Hessian array between subsystem and full supersystem sizes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.utils.translate_qcvariables.html#qcmanybody.utils.translate_qcvariables" title="qcmanybody.utils.translate_qcvariables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translate_qcvariables</span></code></a>(varsmap)</p></td>
+<td><p>Translate between ManyBody results in Psi4/QCDB terminology (qcvars) and QCSchema terminology (skprops).</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="module-qcmanybody.models.v2">
+<span id="qcmanybody-models-v2-package"></span><h2>qcmanybody.models.v2 Package<a class="headerlink" href="#module-qcmanybody.models.v2" title="Link to this heading"></a></h2>
+<section id="id6">
+<h3>Classes<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BsseEnum</span></code>(value)</p></td>
+<td><p>Available basis-set superposition error (BSSE) treatments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyInput.html#qcmanybody.models.v2.ManyBodyInput" title="qcmanybody.models.v2.ManyBodyInput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyInput</span></code></a></p></td>
+<td><p>Combining the what and how (ManyBodySpecification) with the who (Molecule).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyKeywords.html#qcmanybody.models.v2.ManyBodyKeywords" title="qcmanybody.models.v2.ManyBodyKeywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyKeywords</span></code></a></p></td>
+<td><p>The many-body-specific keywords for user control.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyProperties.html#qcmanybody.models.v2.ManyBodyProperties" title="qcmanybody.models.v2.ManyBodyProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyProperties</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyProtocols.html#qcmanybody.models.v2.ManyBodyProtocols" title="qcmanybody.models.v2.ManyBodyProtocols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyProtocols</span></code></a></p></td>
+<td><p>Protocols regarding the manipulation of a ManyBody output data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodyResult.html#qcmanybody.models.v2.ManyBodyResult" title="qcmanybody.models.v2.ManyBodyResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodyResult</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/qcmanybody.models.v2.ManyBodySpecification.html#qcmanybody.models.v2.ManyBodySpecification" title="qcmanybody.models.v2.ManyBodySpecification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManyBodySpecification</span></code></a></p></td>
+<td><p>Combining the what (ManyBodyKeywords) with the how (AtomicSpecification).</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id7">
+<h3>Class Inheritance Diagram<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+digraph inheritance296c842477 {
+bgcolor=transparent;
+rankdir=LR;
+size=&quot;8.0, 12.0&quot;;
+  &quot;BaseModel&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;!!! abstract \&quot;Usage Documentation\&quot;&quot;];
+  &quot;BsseEnum&quot; [URL=&quot;api/qcmanybody.BsseEnum.html#qcmanybody.BsseEnum&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Available basis-set superposition error (BSSE) treatments.&quot;];
+  &quot;Enum&quot; -&gt; &quot;BsseEnum&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Enum&quot; [URL=&quot;https://docs.python.org/3.10/library/enum.html#enum.Enum&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Generic enumeration.&quot;];
+  &quot;ManyBodyInput&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyInput.html#qcmanybody.models.v2.ManyBodyInput&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Combining the what and how (ManyBodySpecification) with the who (Molecule).&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;ManyBodyInput&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyKeywords&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyKeywords.html#qcmanybody.models.v2.ManyBodyKeywords&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The many-body-specific keywords for user control.&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;ManyBodyKeywords&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyProperties&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyProperties.html#qcmanybody.models.v2.ManyBodyProperties&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
+  &quot;ManyBodyPropertiesBase&quot; -&gt; &quot;ManyBodyProperties&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyPropertiesBase&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;Named properties of manybody computations following the MolSSI QCSchema.&quot;];
+  &quot;ProtoModelAllowExtra&quot; -&gt; &quot;ManyBodyPropertiesBase&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyProtocols&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyProtocols.html#qcmanybody.models.v2.ManyBodyProtocols&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Protocols regarding the manipulation of a ManyBody output data.&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;ManyBodyProtocols&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodyResult&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodyResult.html#qcmanybody.models.v2.ManyBodyResult&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;];
+  &quot;SuccessfulResultBase&quot; -&gt; &quot;ManyBodyResult&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ManyBodySpecification&quot; [URL=&quot;api/qcmanybody.models.v2.ManyBodySpecification.html#qcmanybody.models.v2.ManyBodySpecification&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Combining the what (ManyBodyKeywords) with the how (AtomicSpecification).&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;ManyBodySpecification&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ProtoModel&quot; [URL=&quot;https://molssi.github.io/QCElemental/next/api/qcelemental.models.v2.ProtoModel.html#qcelemental.models.v2.ProtoModel&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;QCSchema extension of pydantic.BaseModel.&quot;];
+  &quot;BaseModel&quot; -&gt; &quot;ProtoModel&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ProtoModelAllowExtra&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;ProtoModelAllowExtra&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ResultBase&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;Base class for all result classes&quot;];
+  &quot;ProtoModel&quot; -&gt; &quot;ResultBase&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;SuccessfulResultBase&quot; [fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,tooltip=&quot;Base object for any successful result&quot;];
+  &quot;ResultBase&quot; -&gt; &quot;SuccessfulResultBase&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+}
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qcschema.html" class="btn btn-neutral float-left" title="QCSchema" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/qcmanybody.delabeler.html" class="btn btn-neutral float-right" title="delabeler" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

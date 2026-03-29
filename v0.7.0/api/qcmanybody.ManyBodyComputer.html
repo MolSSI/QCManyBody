@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManyBodyComputer &mdash; QCManyBody 0.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fe7df9b0"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/version-switcher.js?v=55f02482"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ManyBodyCore" href="qcmanybody.ManyBodyCore.html" />
+    <link rel="prev" title="ManyBodyCalculator" href="qcmanybody.ManyBodyCalculator.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            QCManyBody
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../high-level-interface.html">High-Level Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core-interface.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../qcschema.html">QCSchema</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">QCManyBody API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-qcmanybody">qcmanybody Package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#functions">Functions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#classes">Classes</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.BsseEnum.html">BsseEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.ManyBodyCalculator.html">ManyBodyCalculator</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ManyBodyComputer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qcmanybody.ManyBodyCore.html">ManyBodyCore</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.core">qcmanybody.core Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.v2.computer">qcmanybody.v2.computer Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.builder">qcmanybody.builder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.utils">qcmanybody.utils Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-qcmanybody.models.v2">qcmanybody.models.v2 Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../keywords.html">Keywords and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">QCManyBody</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">QCManyBody API</a></li>
+      <li class="breadcrumb-item active">ManyBodyComputer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/qcmanybody.ManyBodyComputer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="manybodycomputer">
+<h1>ManyBodyComputer<a class="headerlink" href="#manybodycomputer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcmanybody.</span></span><span class="sig-name descname"><span class="pre">ManyBodyComputer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseComputerQCNG</span></code></p>
+<p class="rubric">Attributes Summary</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.nbodies_per_mc_level" title="qcmanybody.ManyBodyComputer.nbodies_per_mc_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nbodies_per_mc_level</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.nfragments" title="qcmanybody.ManyBodyComputer.nfragments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nfragments</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.compute" title="qcmanybody.ManyBodyComputer.compute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute</span></code></a>([client])</p></td>
+<td><p>Run quantum chemistry.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.from_manybodyinput" title="qcmanybody.ManyBodyComputer.from_manybodyinput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_manybodyinput</span></code></a>(input_model[, build_tasks])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.get_results" title="qcmanybody.ManyBodyComputer.get_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_results</span></code></a>(external_results, component_results)</p></td>
+<td><p>Return results as ManyBody-flavored QCSchema.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.plan" title="qcmanybody.ManyBodyComputer.plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plan</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.set_bsse_type" title="qcmanybody.ManyBodyComputer.set_bsse_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_bsse_type</span></code></a>(v)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.set_embedding_charges" title="qcmanybody.ManyBodyComputer.set_embedding_charges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_embedding_charges</span></code></a>(v, values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.set_levels" title="qcmanybody.ManyBodyComputer.set_levels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_levels</span></code></a>(v, values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.set_max_nbody" title="qcmanybody.ManyBodyComputer.set_max_nbody"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_max_nbody</span></code></a>(v, values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.set_return_total_data" title="qcmanybody.ManyBodyComputer.set_return_total_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_return_total_data</span></code></a>(v, values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.ManyBodyComputer.set_supersystem_ie_only" title="qcmanybody.ManyBodyComputer.set_supersystem_ie_only"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_supersystem_ie_only</span></code></a>(v, values)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>ManyBodyInput</em>)</p></li>
+<li><p><strong>bsse_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><em>List</em></a><em>[</em><a class="reference internal" href="qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.models.v2.many_body.BsseEnum"><em>BsseEnum</em></a><em>]</em>)</p></li>
+<li><p><strong>molecule</strong> (<em>Molecule</em>)</p></li>
+<li><p><strong>driver</strong> (<em>DriverEnum</em>)</p></li>
+<li><p><strong>embedding_charges</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>return_total_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>levels</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Literal" title="(in Python v3.10)"><em>Literal</em></a><em>[</em><em>'supersystem'</em><em>]</em><em>, </em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>max_nbody</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>supersystem_ie_only</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>task_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><em>Any</em></a><em>]</em>)</p></li>
+<li><p><strong>qcmb_core</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><em>Any</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>extra_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><em>Any</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.nbodies_per_mc_level">
+<span class="sig-name descname"><span class="pre">nbodies_per_mc_level</span></span><a class="headerlink" href="#qcmanybody.ManyBodyComputer.nbodies_per_mc_level" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.nfragments">
+<span class="sig-name descname"><span class="pre">nfragments</span></span><a class="headerlink" href="#qcmanybody.ManyBodyComputer.nfragments" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.compute" title="Link to this definition"></a></dt>
+<dd><p>Run quantum chemistry.</p>
+<p>NOTE: client logic removed (compared to psi4.driver.ManyBodyComputer)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>client</strong> (<a class="reference external" href="https://docs.qcarchive.molssi.org/user_guide/qcportal_reference/clients.html#qcportal.client.PortalClient" title="(in QCArchive v0.64.post11+g63a1c0666)"><em>qcportal.client.PortalClient</em></a><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.from_manybodyinput">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_manybodyinput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.from_manybodyinput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.from_manybodyinput" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_model</strong> (<em>ManyBodyInput</em>)</p></li>
+<li><p><strong>build_tasks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.get_results">
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">external_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ManyBodyResult</span></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.get_results" title="Link to this definition"></a></dt>
+<dd><p>Return results as ManyBody-flavored QCSchema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManyBodyResult</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>external_results</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><em>Dict</em></a>)</p></li>
+<li><p><strong>component_results</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><em>Dict</em></a>)</p></li>
+<li><p><strong>client</strong> (<a class="reference external" href="https://docs.qcarchive.molssi.org/user_guide/qcportal_reference/clients.html#qcportal.client.PortalClient" title="(in QCArchive v0.64.post11+g63a1c0666)"><em>qcportal.client.PortalClient</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.plan">
+<span class="sig-name descname"><span class="pre">plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.plan" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.set_bsse_type">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_bsse_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.models.v2.many_body.BsseEnum"><span class="pre">BsseEnum</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.set_bsse_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.set_bsse_type" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference internal" href="qcmanybody.BsseEnum.html#qcmanybody.BsseEnum" title="qcmanybody.models.v2.many_body.BsseEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">BsseEnum</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.set_embedding_charges">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_embedding_charges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.set_embedding_charges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.set_embedding_charges" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.set_levels">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Literal" title="(in Python v3.10)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'supersystem'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.set_levels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.set_levels" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Literal" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'supersystem'</span></code>]], <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.set_max_nbody">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_max_nbody</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.set_max_nbody"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.set_max_nbody" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.set_return_total_data">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_return_total_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.set_return_total_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.set_return_total_data" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcmanybody.ManyBodyComputer.set_supersystem_ie_only">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_supersystem_ie_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/qcmanybody/v1/computer.html#ManyBodyComputer.set_supersystem_ie_only"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.ManyBodyComputer.set_supersystem_ie_only" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qcmanybody.ManyBodyCalculator.html" class="btn btn-neutral float-left" title="ManyBodyCalculator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="qcmanybody.ManyBodyCore.html" class="btn btn-neutral float-right" title="ManyBodyCore" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, QCManyBody Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
