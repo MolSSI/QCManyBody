@@ -42,7 +42,8 @@ v0.7.1 / 2026-04-29
 
 Enhancements
 ------------
-Warning printing throttled, so `import qcmanybody` is clean. Now depends on QCElemental >=0.50.0rc5
+* :pr:`48` Maint -- Warning printing silenced, so `import qcmanybody` is clean.
+  Now depends on QCElemental >=0.50.0rc5
 
 
 .. _`sec:cl070`:

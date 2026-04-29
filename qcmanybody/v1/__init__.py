@@ -1,6 +1,5 @@
 import importlib
 import sys
-import warnings
 
 _MSG = (
     "qcmanybody.v1 is active but incompatible with Python 3.14+ "
