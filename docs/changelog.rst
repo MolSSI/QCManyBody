@@ -33,6 +33,18 @@ Changelog
 
 :docs:`dev` for latest.
 
+.. _`sec:cl071`:
+
+v0.7.1 / 2026-04-29
+===================
+
+:docs:`v0.7.1` for current. :docs:`v0.5.2` for QCSchema v1.
+
+Enhancements
+------------
+Warning printing throttled, so `import qcmanybody` is clean. Now depends on QCElemental >=0.50.0rc5
+
+
 .. _`sec:cl070`:
 
 v0.7.0 / 2026-03-27
