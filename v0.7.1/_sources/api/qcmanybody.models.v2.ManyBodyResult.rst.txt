@@ -1,0 +1,6 @@
+ManyBodyResult
+==============
+
+.. currentmodule:: qcmanybody.models.v2
+
+.. autopydantic_model:: ManyBodyResult

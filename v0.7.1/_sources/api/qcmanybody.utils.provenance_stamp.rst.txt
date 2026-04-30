@@ -1,0 +1,6 @@
+provenance_stamp
+================
+
+.. currentmodule:: qcmanybody.utils
+
+.. autofunction:: provenance_stamp
