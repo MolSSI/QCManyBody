@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qcmanybody.v2.computer &mdash; QCManyBody 0.1.dev1+g77bc56f37 documentation</title>
+  <title>qcmanybody.v2.computer &mdash; QCManyBody 0.1.dev1+g82de02b53 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=1db122fe"></script>
+      <script src="../../../_static/documentation_options.js?v=bd2a09c3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/version-switcher.js?v=55f02482"></script>
@@ -520,8 +520,9 @@
         <span class="n">component_results</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">chem</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">imol</span> <span class="ow">in</span> <span class="n">computer_model</span><span class="o">.</span><span class="n">qcmb_core</span><span class="o">.</span><span class="n">iterate_molecules</span><span class="p">():</span>
-            <span class="n">inp</span> <span class="o">=</span> <span class="n">AtomicInput</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="n">imol</span><span class="p">,</span> <span class="n">specification</span><span class="o">=</span><span class="n">specifications</span><span class="p">[</span><span class="n">chem</span><span class="p">][</span><span class="s2">&quot;specification&quot;</span><span class="p">])</span>
-            <span class="c1"># inp = AtomicInput(molecule=imol, specification=specifications[chem][&quot;specification&quot;], extras={&quot;psiapi&quot;: True})  # faster for p4</span>
+            <span class="c1"># deepcopy so function_kwargs edits are independent between iterations</span>
+            <span class="n">inp</span> <span class="o">=</span> <span class="n">AtomicInput</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="n">imol</span><span class="p">,</span> <span class="n">specification</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">specifications</span><span class="p">[</span><span class="n">chem</span><span class="p">][</span><span class="s2">&quot;specification&quot;</span><span class="p">]))</span>
+            <span class="c1"># inp = AtomicInput(molecule=imol, specification=copy.deepcopy(specifications[chem][&quot;specification&quot;]), extras={&quot;psiapi&quot;: True})  # faster for p4</span>
 
             <span class="k">if</span> <span class="n">imol</span><span class="o">.</span><span class="n">extras</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embedding_charges&quot;</span><span class="p">):</span>  <span class="c1"># or test on self.embedding_charges ?</span>
                 <span class="k">if</span> <span class="n">specifications</span><span class="p">[</span><span class="n">chem</span><span class="p">][</span><span class="s2">&quot;program&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;psi4&quot;</span><span class="p">:</span>
