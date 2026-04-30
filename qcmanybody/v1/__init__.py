@@ -1,6 +1,5 @@
 import importlib
 import sys
-import warnings
 
 _MSG = (
     "qcmanybody.v1 is active but incompatible with Python 3.14+ "
@@ -9,10 +8,10 @@ _MSG = (
     "or migrate to qcmanybody.v2."
 )
 
-# Warn on import so users see the incompatibility when they explicitly import v1
-# Use FutureWarning (visible by default) so users notice the issue during import
-if sys.version_info >= (3, 14):
-    warnings.warn(_MSG, FutureWarning, stacklevel=2)
+# For a while, we used a FutureWarning (visible by default) so users notice the issue during import.
+# Below works, but it interferes with clean `import qcmanybody`. So we'll rely on the instantiation errors.
+# if sys.version_info >= (3, 14):
+#    warnings.warn(_MSG, FutureWarning, stacklevel=2)
 
 
 def _make_placeholder(name: str):

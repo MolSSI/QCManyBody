@@ -33,6 +33,24 @@ Changelog
 
 :docs:`dev` for latest.
 
+.. _`sec:cl071`:
+
+v0.7.1 / 2026-04-30
+===================
+
+:docs:`v0.7.1` for current. :docs:`v0.5.2` for QCSchema v1.
+
+Enhancements
+------------
+* :pr:`48` Maint -- Warning printing silenced, so `import qcmanybody` is clean.
+  Now depends on QCElemental >=0.50.0rc5
+
+Bug Fixes
+---------
+* :pr:`48` EE -- Electrostatic embedding potential bug with Psi4 fixed embedding
+  charges might appear in keywords even when no charges on molecule.
+
+
 .. _`sec:cl070`:
 
 v0.7.0 / 2026-03-27
