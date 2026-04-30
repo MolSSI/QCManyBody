@@ -410,8 +410,9 @@ class ManyBodyComputer(BaseComputerQCNG):
         component_results = {}
 
         for chem, label, imol in computer_model.qcmb_core.iterate_molecules():
-            inp = AtomicInput(molecule=imol, **specifications[chem]["specification"])
-            # inp = AtomicInput(molecule=imol, **specifications[chem]["specification"], extras={"psiapi": True})  # faster for p4
+            # deepcopy so function_kwargs edits are independent between iterations
+            inp = AtomicInput(molecule=imol, **copy.deepcopy(specifications[chem]["specification"]))
+            # inp = AtomicInput(molecule=imol, **copy.deepcopy(specifications[chem]["specification"]), extras={"psiapi": True})
 
             if imol.extras.get("embedding_charges"):  # or test on self.embedding_charges ?
                 if specifications[chem]["program"] == "psi4":
