@@ -154,13 +154,13 @@ jobs:
         slug: loriab/QCManyBody
 
     - name: Install pypa/build & build a binary wheel and a source tarball
-      if: "(matrix.cfg.label != 'Py-min')"
+      if: "(matrix.cfg.label == 'Py-min')"
       run: |
         python -m pip install build --user
         python -m build
 
     - name: Store the distribution packages
-      if: "(matrix.cfg.label != 'Py-min')"
+      if: "(matrix.cfg.label == 'Py-min')"
       uses: actions/upload-artifact@v4
       with:
         name: python-package-distributions
