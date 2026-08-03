@@ -10,8 +10,8 @@ from .manybody_output_pydv1 import ManyBodyResult
 
 warn(
     f"GeneralizedOptimizationInput and GeneralizedOptimizationResult were experimental and are retired. Use OptimizationInput and OptimizationResult in v2 instead.",
+    category=FutureWarning,
     stacklevel=2,
-    FutureWarning,
 )
 
 # note that qcel QCInputSpecification and AtomicResult.schema_name needs editing

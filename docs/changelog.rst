@@ -33,6 +33,31 @@ Changelog
 
 :docs:`dev` for latest.
 
+.. _`sec:cl072`:
+
+v0.7.2 / 2026-MM-DD (Unreleased)
+===================
+
+:docs:`v0.7.2` for current. :docs:`v0.5.2` for QCSchema v1.
+
+Breaking Changes
+----------------
+
+New Features
+------------
+
+Enhancements
+------------
+* :pr:`52`
+
+Bug Fixes
+---------
+* :pr:`50`
+
+Misc.
+-----
+
+
 .. _`sec:cl071`:
 
 v0.7.1 / 2026-04-30

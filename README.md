@@ -11,7 +11,7 @@ QCManyBody
 [![codecov](https://codecov.io/gh/loriab/QCManyBody/graph/badge.svg?token=E4S0706HJ0)](https://codecov.io/gh/loriab/QCManyBody)
 [![Documentation Status](https://img.shields.io/github/actions/workflow/status/MolSSI/QCManyBody/ci.yml?label=docs&logo=readthedocs&logoColor=white)](https://molssi.github.io/QCManyBody/)
 [![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/qcmanybody?color=blue&logo=anaconda&logoColor=white)](https://anaconda.org/conda-forge/qcmanybody)
-![python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![python](https://img.shields.io/badge/python-3.10+-blue.svg)
 
 QCManyBody is a python package for running quantum chemistry many-body expansions and interaction calculations in a
 package-independent way.
