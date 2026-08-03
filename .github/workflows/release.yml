@@ -9,10 +9,6 @@ on:
       - 'v[0-9]*.[0-9]*.[0-9]*a[0-9]*'
       - 'v[0-9]*.[0-9]*.[0-9]*b[0-9]*'
       - 'v[0-9]*.[0-9]*.[0-9]*rc[0-9]*'
-  pull_request:
-    branches:
-      - main
-    # temp
 
 permissions:
   contents: read
@@ -93,6 +89,7 @@ jobs:
 
   publish-to-testpypi:
     name: Publish Python distribution to TestPyPI
+    if: github.repository == 'MolSSI/QCManyBody' && github.ref == 'refs/heads/main'
     needs:
       - build
     runs-on: ubuntu-latest

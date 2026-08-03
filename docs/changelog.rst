@@ -48,11 +48,12 @@ New Features
 
 Enhancements
 ------------
-* :pr:`52`
+* :pr:`52` Maint -- Add automatic publishing to PyPI and GitHub release from
+  main (test.pypi) or tag (pypi).
 
 Bug Fixes
 ---------
-* :pr:`50`
+* :pr:`50` Maint -- Fix a syntax error in https://github.com/MolSSI/QCManyBody/issues/49
 
 Misc.
 -----
