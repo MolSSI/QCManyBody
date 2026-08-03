@@ -93,7 +93,6 @@ jobs:
 
   publish-to-testpypi:
     name: Publish Python distribution to TestPyPI
-    if: github.repository == 'MolSSI/QCManyBody' && github.ref == 'refs/heads/main'
     needs:
       - build
     runs-on: ubuntu-latest
