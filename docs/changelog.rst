@@ -30,33 +30,26 @@ Changelog
 .. WIP (Unmerged)
 .. --------------
 
+.. RELEASE PROCEDURE
+.. * check changelog below is up to date and that the release number and date are in place and that (Unreleased) is removed
+.. * check CITATION for date and release
 
 :docs:`dev` for latest.
 
 .. _`sec:cl072`:
 
-v0.7.2 / 2026-MM-DD (Unreleased)
+v0.7.2 / 2026-08-12
 ===================
 
 :docs:`v0.7.2` for current. :docs:`v0.5.2` for QCSchema v1.
 
-Breaking Changes
-----------------
-
-New Features
-------------
-
 Enhancements
 ------------
-* :pr:`52` Maint -- Add automatic publishing to PyPI and GitHub release from
-  main (test.pypi) or tag (pypi).
+* :pr:`52` Maint -- Add automatic publishing to PyPI and GitHub release from tag.
 
 Bug Fixes
 ---------
 * :pr:`50` Maint -- Fix a syntax error in https://github.com/MolSSI/QCManyBody/issues/49
-
-Misc.
------
 
 
 .. _`sec:cl071`:

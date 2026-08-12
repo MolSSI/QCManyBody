@@ -87,31 +87,6 @@ jobs:
           path: dist/
           if-no-files-found: error
 
-  publish-to-testpypi:
-    name: Publish Python distribution to TestPyPI
-    if: github.repository == 'MolSSI/QCManyBody' && github.ref == 'refs/heads/main'
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/qcmanybody
-    permissions:
-      id-token: write
-
-    steps:
-      - name: Download the distributions
-        uses: actions/download-artifact@v5
-        with:
-          name: python-package-distributions
-          path: dist/
-
-      - name: Publish distributions to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          skip-existing: true
-
   publish-to-pypi:
     name: Publish Python distribution to PyPI
     if: github.repository == 'MolSSI/QCManyBody' && github.ref_type == 'tag'
