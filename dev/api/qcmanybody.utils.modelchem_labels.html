@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>modelchem_labels &mdash; QCManyBody 0.1.dev1+gbc5bdee5e documentation</title>
+  <title>modelchem_labels &mdash; QCManyBody 0.1.dev1+gc48c8d7a7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=82d50044"></script>
+      <script src="../_static/documentation_options.js?v=cbf40052"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
@@ -121,14 +121,14 @@ This is the case when the input is <cite>ManyBodyCore.nbodies_per_mc_level</cite
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Dictionary mapping n-body levels to a tuple of full model chemistry label,
 single-letter ordinal label, and n-body-levels-covered label.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">modelchem_labels</span><span class="p">({</span><span class="s1">&#39;ccsd&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;mp2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;hf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]})</span>
-<span class="c1">#&gt; {1: (&#39;ccsd&#39;, &#39;§A&#39;, &#39;§1&#39;), 2: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 3: (&#39;mp2&#39;, &#39;§B&#39;, &#39;§23&#39;), 4: (&#39;hf&#39;, &#39;§C&#39;, &#39;§4&#39;)}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">modelchem_labels</span><span class="p">({</span><span class="s1">'ccsd'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">'mp2'</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">'hf'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]})</span>
+<span class="c1">#&gt; {1: ('ccsd', '§A', '§1'), 2: ('mp2', '§B', '§23'), 3: ('mp2', '§B', '§23'), 4: ('hf', '§C', '§4')}</span>
 
-<span class="n">modelchem_labels</span><span class="p">({</span><span class="s1">&#39;hi&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;md&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s1">&#39;md2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;lo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;supersystem&#39;</span><span class="p">]})</span>
-<span class="c1">#&gt; {1: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 2: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;), 3: (&#39;hi&#39;, &#39;§A&#39;, &#39;§123&#39;),</span>
-<span class="c1">#   4: (&#39;md&#39;, &#39;§B&#39;, &#39;§4&#39;),</span>
-<span class="c1">#   5: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 6: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 7: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 8: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 9: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;), 10: (&#39;md2&#39;, &#39;§C&#39;, &#39;§&lt;10&#39;),</span>
-<span class="c1">#   &quot;supersystem&quot;: (&#39;lo&#39;, &#39;§D&#39;, &#39;§SS&#39;)}</span>
+<span class="n">modelchem_labels</span><span class="p">({</span><span class="s1">'hi'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">'md'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s1">'md2'</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">'lo'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'supersystem'</span><span class="p">]})</span>
+<span class="c1">#&gt; {1: ('hi', '§A', '§123'), 2: ('hi', '§A', '§123'), 3: ('hi', '§A', '§123'),</span>
+<span class="c1">#   4: ('md', '§B', '§4'),</span>
+<span class="c1">#   5: ('md2', '§C', '§&lt;10'), 6: ('md2', '§C', '§&lt;10'), 7: ('md2', '§C', '§&lt;10'), 8: ('md2', '§C', '§&lt;10'), 9: ('md2', '§C', '§&lt;10'), 10: ('md2', '§C', '§&lt;10'),</span>
+<span class="c1">#   "supersystem": ('lo', '§D', '§SS')}</span>
 </pre></div>
 </div>
 </p>

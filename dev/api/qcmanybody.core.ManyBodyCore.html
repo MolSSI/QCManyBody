@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ManyBodyCore &mdash; QCManyBody 0.1.dev1+gbc5bdee5e documentation</title>
+  <title>ManyBodyCore &mdash; QCManyBody 0.1.dev1+gc48c8d7a7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=82d50044"></script>
+      <script src="../_static/documentation_options.js?v=cbf40052"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/version-switcher.js?v=55f02482"></script>
@@ -118,7 +118,7 @@
 <p class="rubric">Methods Summary</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.analyze" title="qcmanybody.core.ManyBodyCore.analyze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyze</span></code></a>(component_results)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.analyze" title="qcmanybody.core.ManyBodyCore.analyze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyze</span></code></a>(component_results, *[, ...])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#qcmanybody.core.ManyBodyCore.format_calc_plan" title="qcmanybody.core.ManyBodyCore.format_calc_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_calc_plan</span></code></a>([sset])</p></td>
@@ -161,10 +161,11 @@
 <p class="rubric">Methods Documentation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcmanybody.core.ManyBodyCore.analyze">
-<span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore.analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.analyze" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_results</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">external_potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qcmanybody/core.html#ManyBodyCore.analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qcmanybody.core.ManyBodyCore.analyze" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>component_results</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]]</span>) – <p>Nested dictionary with results from all individual molecular system
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component_results</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]]</span>) – <p>Nested dictionary with results from all individual molecular system
 calculations, including all subsystem/basis combinations, all model
 chemistries, and all properties (e.g., e/g/h).</p>
 <p>For example, the below is the format for a nocp gradient run on a
@@ -172,15 +173,19 @@ helium dimer with 1-body at CCSD and 2-body at MP2. The outer string
 key can be generated with the <code class="docutils literal notranslate"><span class="pre">qcmanybody.utils.labeler</span></code> function.
 The inner string key is any property; QCManyBody presently knows how
 to process energy/gradient/Hessian.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;[&quot;ccsd&quot;, [1], [1]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.87</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
- <span class="s1">&#39;[&quot;ccsd&quot;, [2], [2]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.87</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
- <span class="s1">&#39;[&quot;mp2&quot;, [1], [1]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.86</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
- <span class="s1">&#39;[&quot;mp2&quot;, [2], [2]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.86</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
- <span class="s1">&#39;[&quot;mp2&quot;, [1, 2], [1, 2]]&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.73</span><span class="p">,</span> <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.0053</span><span class="p">],</span> <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0053</span><span class="p">]])},</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'["ccsd", [1], [1]]'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.87</span><span class="p">,</span> <span class="s1">'gradient'</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">'["ccsd", [2], [2]]'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.87</span><span class="p">,</span> <span class="s1">'gradient'</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">'["mp2", [1], [1]]'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.86</span><span class="p">,</span> <span class="s1">'gradient'</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">'["mp2", [2], [2]]'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.86</span><span class="p">,</span> <span class="s1">'gradient'</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])},</span>
+ <span class="s1">'["mp2", [1, 2], [1, 2]]'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.73</span><span class="p">,</span> <span class="s1">'gradient'</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.0053</span><span class="p">],</span> <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0053</span><span class="p">]])},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</p>
+</p></li>
+<li><p><strong>external_potential</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether the component calculations use fragment-scoped external potentials. Because the component
+Hamiltonians differ, interaction energies are unavailable in the printed summary and interaction-energy
+properties are omitted from the returned results. This classification is distinct from charge embedding.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -200,11 +205,11 @@ to process energy/gradient/Hessian.</p>
 <dd class="field-odd"><p><ul>
 <li><p><em>info</em> –</p>
 <p>A text summary with per- model chemistry and per- n-body-level job counts.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Model chemistry &quot;c4-ccsd&quot; (§A):         22
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Model chemistry "c4-ccsd" (§A):         22
      Number of 1-body computations:     16 (nocp: 0, cp: 0, vmfc_compute: 16)
      Number of 2-body computations:      6 (nocp: 0, cp: 0, vmfc_compute: 6)
 
-Model chemistry &quot;c4-mp2&quot; (§B):          28
+Model chemistry "c4-mp2" (§B):          28
      Number of 1-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
      Number of 2-body computations:     12 (nocp: 0, cp: 0, vmfc_compute: 12)
      Number of 3-body computations:      4 (nocp: 0, cp: 0, vmfc_compute: 4)

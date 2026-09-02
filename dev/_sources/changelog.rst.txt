@@ -33,6 +33,8 @@ Changelog
 .. RELEASE PROCEDURE
 .. * check changelog below is up to date and that the release number and date are in place and that (Unreleased) is removed
 .. * check CITATION for date and release
+.. * once main is in shape for release, `git tag -a v0.7.2 -m "v0.7.2"`
+.. * `git push upstream --atomic v0.7.2 main`
 
 :docs:`dev` for latest.
 

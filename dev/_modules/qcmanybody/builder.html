@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qcmanybody.builder &mdash; QCManyBody 0.1.dev1+gbc5bdee5e documentation</title>
+  <title>qcmanybody.builder &mdash; QCManyBody 0.1.dev1+gc48c8d7a7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=82d50044"></script>
+      <script src="../../_static/documentation_options.js?v=cbf40052"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/version-switcher.js?v=55f02482"></script>
@@ -86,7 +86,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">qcmanybody.models.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">BsseEnum</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;build_nbody_compute_list&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"build_nbody_compute_list"</span><span class="p">]</span>
 
 <span class="n">FragBasIndex</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
 
@@ -94,14 +94,14 @@
 <div class="viewcode-block" id="build_nbody_compute_list">
 <a class="viewcode-back" href="../../api/qcmanybody.builder.build_nbody_compute_list.html#qcmanybody.builder.build_nbody_compute_list">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_nbody_compute_list</span><span class="p">(</span>
-    <span class="n">bsse_type</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="s2">&quot;BsseEnum&quot;</span><span class="p">],</span>
+    <span class="n">bsse_type</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="s2">"BsseEnum"</span><span class="p">],</span>
     <span class="n">nfragments</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">nbodies</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;supersystem&quot;</span><span class="p">]]],</span>
+    <span class="n">nbodies</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"supersystem"</span><span class="p">]]],</span>
     <span class="n">return_total_data</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">supersystem_ie_only</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">supersystem_max_nbody</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;FragBasIndex&quot;</span><span class="p">]]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generates lists of N-Body computations needed for requested BSSE treatments.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="s2">"FragBasIndex"</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">"""Generates lists of N-Body computations needed for requested BSSE treatments.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -110,16 +110,16 @@
 <span class="sd">    nfragments</span>
 <span class="sd">        Number of distinct fragments comprising the full molecular supersystem.</span>
 <span class="sd">    nbodies</span>
-<span class="sd">        List of n-body levels (e.g., `[2]` or `[1, 2]` or `[&quot;supersystem&quot;]`) for which to generate tasks.</span>
+<span class="sd">        List of n-body levels (e.g., `[2]` or `[1, 2]` or `["supersystem"]`) for which to generate tasks.</span>
 <span class="sd">        Note the natural 1-indexing, so `[1]` covers one-body contributions.</span>
 <span class="sd">    return_total_data</span>
 <span class="sd">        Whether the total data (True; energy/gradient/Hessian) of the molecular system has been requested,</span>
 <span class="sd">        as opposed to interaction data (False).</span>
 <span class="sd">    supersystem_ie_only</span>
-<span class="sd">        Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) &quot;</span>
+<span class="sd">        Target the supersystem total/interaction energy (IE) data over the many-body expansion (MBE) "</span>
 <span class="sd">        analysis, thereby omitting intermediate-body calculations.</span>
 <span class="sd">    supersystem_max_nbody</span>
-<span class="sd">        Maximum n-body to use for a supersystem calculation. Must be specified if &quot;supersystem&quot; is in `nbodies`</span>
+<span class="sd">        Maximum n-body to use for a supersystem calculation. Must be specified if "supersystem" is in `nbodies`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -129,7 +129,7 @@
 <span class="sd">        needed to compute that n-body level. A given index can appear multiple times within a</span>
 <span class="sd">        subdict and among subdicts. ::</span>
 
-<span class="sd">            compute_dict[&quot;cp&quot;] = {</span>
+<span class="sd">            compute_dict["cp"] = {</span>
 <span class="sd">                1: set(),</span>
 <span class="sd">                2: {((1,), (1, 2)),</span>
 <span class="sd">                    ((2,), (1, 2)),</span>
@@ -138,22 +138,22 @@
 
 <span class="sd">        Subdicts below are always returned. Any may be empty if not requested through *bsse_type*.</span>
 
-<span class="sd">        * ``&#39;all&#39;`` |w---w| full list of computations required</span>
-<span class="sd">        * ``&#39;cp&#39;`` |w---w| list of computations required for CP procedure</span>
-<span class="sd">        * ``&#39;nocp&#39;`` |w---w| list of computations required for non-CP procedure</span>
-<span class="sd">        * ``&#39;vmfc_compute&#39;`` |w---w| list of computations required for VMFC procedure</span>
-<span class="sd">        * ``&#39;vmfc_levels&#39;`` |w---w| list of levels required for VMFC procedure</span>
+<span class="sd">        * ``'all'`` |w---w| full list of computations required</span>
+<span class="sd">        * ``'cp'`` |w---w| list of computations required for CP procedure</span>
+<span class="sd">        * ``'nocp'`` |w---w| list of computations required for non-CP procedure</span>
+<span class="sd">        * ``'vmfc_compute'`` |w---w| list of computations required for VMFC procedure</span>
+<span class="sd">        * ``'vmfc_levels'`` |w---w| list of levels required for VMFC procedure</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">include_supersystem</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="s2">&quot;supersystem&quot;</span> <span class="ow">in</span> <span class="n">nbodies</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"supersystem"</span> <span class="ow">in</span> <span class="n">nbodies</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">supersystem_max_nbody</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;supersystem_max_nbody must be provided if &#39;supersystem&#39; contains nbodies&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"supersystem_max_nbody must be provided if 'supersystem' contains nbodies"</span><span class="p">)</span>
 
         <span class="n">include_supersystem</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="n">nbodies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nbodies</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;supersystem&quot;</span><span class="p">]</span>
+    <span class="n">nbodies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nbodies</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">"supersystem"</span><span class="p">]</span>
 
     <span class="c1"># What levels do we need?</span>
     <span class="n">fragment_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nfragments</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -167,10 +167,10 @@
     <span class="c1"># Verify proper passing of bsse_type. already validated in Computer</span>
     <span class="n">bsse_type_remainder</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">bsse_type</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">BsseEnum</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">bsse_type_remainder</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognized BSSE type(s): </span><span class="si">{</span><span class="n">bsse_type_remainder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unrecognized BSSE type(s): </span><span class="si">{</span><span class="n">bsse_type_remainder</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Build up compute sets</span>
-    <span class="k">if</span> <span class="s2">&quot;cp&quot;</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"cp"</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">:</span>
         <span class="c1"># Everything is in counterpoise/nfr-mer basis</span>
         <span class="n">basis_tuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">fragment_range</span><span class="p">)</span>
 
@@ -190,7 +190,7 @@
                         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">fragment_range</span><span class="p">,</span> <span class="n">sublevel</span><span class="p">):</span>
                             <span class="n">cp_compute_list</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">basis_tuple</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="s2">&quot;nocp&quot;</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"nocp"</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">:</span>
         <span class="c1"># Everything in natural/n-mer basis</span>
         <span class="k">if</span> <span class="n">supersystem_ie_only</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">sublevel</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">nfragments</span><span class="p">]:</span>
@@ -202,7 +202,7 @@
                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">fragment_range</span><span class="p">,</span> <span class="n">sublevel</span><span class="p">):</span>
                         <span class="n">nocp_compute_list</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="s2">&quot;vmfc&quot;</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"vmfc"</span> <span class="ow">in</span> <span class="n">bsse_type</span><span class="p">:</span>
         <span class="c1"># Like a CP for all combinations of pairs or greater</span>
         <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">nbodies</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">cp_combos</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">fragment_range</span><span class="p">,</span> <span class="n">nb</span><span class="p">):</span>
@@ -248,11 +248,11 @@
             <span class="n">compute_list</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span> <span class="o">|=</span> <span class="n">lst</span>
 
     <span class="n">compute_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">compute_list</span><span class="p">,</span>
-        <span class="s2">&quot;cp&quot;</span><span class="p">:</span> <span class="n">cp_compute_list</span><span class="p">,</span>
-        <span class="s2">&quot;nocp&quot;</span><span class="p">:</span> <span class="n">nocp_compute_list</span><span class="p">,</span>
-        <span class="s2">&quot;vmfc_compute&quot;</span><span class="p">:</span> <span class="n">vmfc_compute_list</span><span class="p">,</span>
-        <span class="s2">&quot;vmfc_levels&quot;</span><span class="p">:</span> <span class="n">vmfc_level_list</span><span class="p">,</span>
+        <span class="s2">"all"</span><span class="p">:</span> <span class="n">compute_list</span><span class="p">,</span>
+        <span class="s2">"cp"</span><span class="p">:</span> <span class="n">cp_compute_list</span><span class="p">,</span>
+        <span class="s2">"nocp"</span><span class="p">:</span> <span class="n">nocp_compute_list</span><span class="p">,</span>
+        <span class="s2">"vmfc_compute"</span><span class="p">:</span> <span class="n">vmfc_compute_list</span><span class="p">,</span>
+        <span class="s2">"vmfc_levels"</span><span class="p">:</span> <span class="n">vmfc_level_list</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">compute_dict</span></div>
 

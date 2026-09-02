@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Core Interface &mdash; QCManyBody 0.1.dev1+gbc5bdee5e documentation</title>
+  <title>Core Interface &mdash; QCManyBody 0.1.dev1+gc48c8d7a7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=82d50044"></script>
+      <script src="_static/documentation_options.js?v=cbf40052"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/version-switcher.js?v=55f02482"></script>
@@ -107,7 +107,7 @@ class.</p>
 
 <span class="c1"># Create a molecule with 3 neon atoms, each as its own fragment</span>
 
-<span class="n">mol</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">],</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">"ne"</span><span class="p">,</span> <span class="s2">"ne"</span><span class="p">,</span> <span class="s2">"ne"</span><span class="p">],</span>
                <span class="n">geometry</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span>
                <span class="n">fragments</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
 </pre></div>
@@ -117,10 +117,10 @@ the desired BSSE correction, levels of MBE, and other options of the MBE.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qcmanybody</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManyBodyCore</span>
 
 <span class="n">mbc</span> <span class="o">=</span> <span class="n">ManyBodyCore</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="n">mol</span><span class="p">,</span>
-                   <span class="n">bsse_type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cp&quot;</span><span class="p">],</span>
-                   <span class="n">levels</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;ccsd/cc-pvtz&quot;</span><span class="p">,</span>
-                           <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;mp2/cc-pvdz&quot;</span><span class="p">,</span>
-                           <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;mp2/cc-pvdz&quot;</span><span class="p">},</span>
+                   <span class="n">bsse_type</span><span class="o">=</span><span class="p">[</span><span class="s2">"cp"</span><span class="p">],</span>
+                   <span class="n">levels</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">"ccsd/cc-pvtz"</span><span class="p">,</span>
+                           <span class="mi">2</span><span class="p">:</span> <span class="s2">"mp2/cc-pvdz"</span><span class="p">,</span>
+                           <span class="mi">3</span><span class="p">:</span> <span class="s2">"mp2/cc-pvdz"</span><span class="p">},</span>
                    <span class="n">return_total_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                    <span class="n">supersystem_ie_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">embedding_charges</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -161,23 +161,23 @@ for a worked example or the below as a quick example of what <code class="docuti
 <span class="kn">import</span><span class="w"> </span><span class="nn">qcengine</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qcng</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">qcmanybody</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qcmb</span>
 
-<span class="n">p4_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">p4_string</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">He 0 0 0</span>
 <span class="s2">--</span>
 <span class="s2">Ne 1 0 0</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="n">bsse_type</span> <span class="o">=</span> <span class="s2">&quot;cp&quot;</span>
-<span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;mp2&quot;</span>
-<span class="n">basis</span> <span class="o">=</span> <span class="s2">&quot;def2-svp&quot;</span>
-<span class="n">program</span> <span class="o">=</span> <span class="s2">&quot;psi4&quot;</span>
+<span class="s2">"""</span>
+<span class="n">bsse_type</span> <span class="o">=</span> <span class="s2">"cp"</span>
+<span class="n">method</span> <span class="o">=</span> <span class="s2">"mp2"</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="s2">"def2-svp"</span>
+<span class="n">program</span> <span class="o">=</span> <span class="s2">"psi4"</span>
 
 <span class="n">mol</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">p4_string</span><span class="p">)</span>
 <span class="n">mbc</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">ManyBodyCore</span><span class="p">(</span>
     <span class="n">molecule</span><span class="o">=</span><span class="n">mol</span><span class="p">,</span>
     <span class="n">bsse_type</span><span class="o">=</span><span class="p">[</span><span class="n">bsse_type</span><span class="p">],</span>
     <span class="n">levels</span><span class="o">=</span><span class="p">{</span>
-        <span class="mi">1</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="mi">2</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">return_total_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">supersystem_ie_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -187,15 +187,15 @@ for a worked example or the below as a quick example of what <code class="docuti
 <span class="k">for</span> <span class="n">chem</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">imol</span> <span class="ow">in</span> <span class="n">mbc</span><span class="o">.</span><span class="n">iterate_molecules</span><span class="p">():</span>
     <span class="n">mc</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">bas</span> <span class="o">=</span> <span class="n">qcmb</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">delabeler</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
     <span class="n">atin</span> <span class="o">=</span> <span class="n">qcel</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">AtomicInput</span><span class="p">(</span>
-        <span class="n">molecule</span><span class="o">=</span><span class="n">imol</span><span class="p">,</span> <span class="n">specification</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span> <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="n">basis</span><span class="p">}}</span>
+        <span class="n">molecule</span><span class="o">=</span><span class="n">imol</span><span class="p">,</span> <span class="n">specification</span><span class="o">=</span><span class="p">{</span><span class="s2">"driver"</span><span class="p">:</span> <span class="s2">"energy"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span> <span class="s2">"basis"</span><span class="p">:</span> <span class="n">basis</span><span class="p">}}</span>
     <span class="p">)</span>
     <span class="n">atres</span> <span class="o">=</span> <span class="n">qcng</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">atin</span><span class="p">,</span> <span class="n">program</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">calculation_results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="n">atres</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">return_energy</span><span class="p">,</span>
+        <span class="s2">"energy"</span><span class="p">:</span> <span class="n">atres</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">return_energy</span><span class="p">,</span>
     <span class="p">}</span>
 
 <span class="n">final_results</span> <span class="o">=</span> <span class="n">mbc</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">calculation_results</span><span class="p">)</span>
-<span class="n">IE</span> <span class="o">=</span> <span class="n">final_results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bsse_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_corrected_interaction_energy&quot;</span><span class="p">]</span>
+<span class="n">IE</span> <span class="o">=</span> <span class="n">final_results</span><span class="p">[</span><span class="s2">"results"</span><span class="p">][</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">bsse_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_corrected_interaction_energy"</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">IE</span><span class="p">)</span>
 <span class="c1">#&gt; 0.409787</span>
 </pre></div>
@@ -207,17 +207,17 @@ for a worked example or the below as a quick example of what <code class="docuti
 The level is the opaque label as given from the <a class="reference internal" href="api/qcmanybody.ManyBodyCore.html#qcmanybody.ManyBodyCore" title="qcmanybody.core.ManyBodyCore"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManyBodyCore</span></code></a> .
 The second level is the name of the property.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">calculation_results</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;label1&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]],</span>
+    <span class="s1">'label1'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="s1">'gradient'</span><span class="p">:</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]],</span>
     <span class="p">},</span>
-    <span class="s1">&#39;label2&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span>
-        <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">]],</span>
+    <span class="s1">'label2'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span>
+        <span class="s1">'gradient'</span><span class="p">:</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">]],</span>
     <span class="p">},</span>
-    <span class="s1">&#39;label3&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">,</span>
-        <span class="s1">&#39;gradient&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">]],</span>
+    <span class="s1">'label3'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'energy'</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="s1">'gradient'</span><span class="p">:</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">]],</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
