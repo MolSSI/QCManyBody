@@ -38,6 +38,19 @@ Changelog
 
 :docs:`dev` for latest.
 
+.. _`sec:cl080`:
+
+v0.8.0 / 2026-09-02
+===================
+
+:docs:`v0.8.0` for current. :docs:`v0.5.2` for QCSchema v1.
+
+Enhancements
+------------
+* :pr:`53` Utils -- Function ``analyze`` (``core._analyze``) learned a new ``external_potential``
+  argument to signal uneven charge fields around different frags so printing should be N/A. @Awallace3
+
+
 .. _`sec:cl072`:
 
 v0.7.2 / 2026-08-12
