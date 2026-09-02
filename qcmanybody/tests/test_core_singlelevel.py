@@ -33,6 +33,26 @@ def test_h2o_trimer_single(levels, component_file, ref_file):
     compare_results(nbody_results, ref_data, levels)
 
 
+def test_external_potential_reporting():
+    levels = {1: "e_scf", 2: "e_scf", 3: "e_scf"}
+    component_results = load_component_data("h2o_trimer_single_energy_1")
+    mc = ManyBodyCore(
+        mol_h2o_3_dict,
+        [BsseEnum.cp],
+        levels,
+        embedding_charges=None,
+        supersystem_ie_only=False,
+        return_total_data=True,
+    )
+
+    nbody_results = mc.analyze(component_results, external_potential=True)
+
+    assert "cp_corrected_2_body_contribution_to_energy" in nbody_results["results"]
+    assert not any("interaction" in name for name in nbody_results["results"])
+    assert "N/A" in nbody_results["stdout"]
+    assert "nan" not in nbody_results["stdout"].lower()
+
+
 def test_core_mol_error():
     # check sensible error from internal Molecule construction
     odd_mol = mol_h2o_3_dict.copy()

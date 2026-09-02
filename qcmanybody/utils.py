@@ -322,6 +322,7 @@ def print_nbody_energy(
     embedding: bool,
     supersystem_ie_only: bool,
     supersystem_beyond: Optional[int],
+    external_potential: bool = False,
 ) -> str:
     """Format summary string for energies of a single bsse_type. Logs and returns output.
 
@@ -338,11 +339,13 @@ def print_nbody_energy(
         full model chemistry key and second element a short label. A suitable
         dictionary is `modelchem_labels(manybodycore_instance.nbodies_per_mc_level)`.
     embedding
-        Whether charge embedding present suppress printing, usually False
+        Whether charge embedding is present and suppresses interaction energies, usually False.
     supersystem_ie_only
         Whether only 1-body and nfragments-body levels are available, usually False.
     supersystem_beyond
         If not None, the number of nbody-levels computed by MBE explicitly. Beyond this gets supersystem SS label.
+    external_potential
+        Whether fragment-scoped external potentials are present and suppress interaction energies, usually False.
 
     Returns
     -------
@@ -366,6 +369,10 @@ def print_nbody_energy(
     info += f"""                         [Eh]                    [Eh]                  [kcal/mol]            [Eh]                  [kcal/mol]\n"""
     previous_e = energy_body_dict[1]
     tot_e = previous_e != 0.0
+    interaction_data_unavailable = embedding or external_potential
+    # Preserve the historical numeric-field offsets while replacing only the
+    # literal unavailable ``nan`` token with ``N/A``.
+    unavailable_interaction = f"{np.nan:20.12f}".replace("nan", "N/A")
     nbody_range = list(energy_body_dict)
     if supersystem_ie_only:
         nbody_range = [1, nfragments]
@@ -385,25 +392,31 @@ def print_nbody_energy(
         if nb in nbody_range:
             delta_e = energy_body_dict[nb] - previous_e
             delta_e_kcal = delta_e * constants.hartree2kcalmol
-            if embedding:
-                int_e = np.nan
-                int_e_kcal = np.nan
-            else:
+            if not interaction_data_unavailable:
                 int_e = energy_body_dict[nb] - energy_body_dict[1]
                 int_e_kcal = int_e * constants.hartree2kcalmol
             if supersystem_ie_only and nb == nfragments:
                 if tot_e:
-                    info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
+                    if interaction_data_unavailable:
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}  {unavailable_interaction}  {unavailable_interaction}        {"N/A":20}  {"N/A":20}\n"""
+                    else:
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
                 else:
-                    info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
+                    if interaction_data_unavailable:
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {unavailable_interaction}  {unavailable_interaction}        {"N/A":20}  {"N/A":20}\n"""
+                    else:
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}        {"N/A":20}  {"N/A":20}\n"""
             else:
                 if tot_e:
-                    if embedding:
+                    if interaction_data_unavailable:
                         info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}        {"N/A":20}  {"N/A":14}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
                     else:
                         info += f"""  {lbl:>11} {mclbl:2} {nb:2}  {energy_body_dict[nb]:20.12f}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
                 else:
-                    info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                    if interaction_data_unavailable:
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {unavailable_interaction}  {unavailable_interaction}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
+                    else:
+                        info += f"""  {lbl:>11} {mclbl:2} {nb:2}        {"N/A":14}  {int_e:20.12f}  {int_e_kcal:20.12f}  {delta_e:20.12f}  {delta_e_kcal:20.12f}\n"""
             previous_e = energy_body_dict[nb]
         else:
             info += f"""  {lbl:>11} {"":2} {nb:2}        {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}  {"N/A":20}\n"""
@@ -422,6 +435,7 @@ def collect_vars(
     embedding: bool = False,
     supersystem_ie_only: bool = False,
     has_supersystem: bool = False,
+    external_potential: bool = False,
 ) -> Dict:
     """From *body_dict*, construct data for ManyBodyResultProperties/ManyBodyProperties.
 
@@ -445,11 +459,15 @@ def collect_vars(
         By default False: data is available for consecutive levels, up to max_nbody-body.
     has_supersystem
         Whether contributions higher than max_nbody are a summary correction.
+    external_potential
+        Whether fragment-scoped external potentials are present. Interaction properties are unavailable because the
+        component Hamiltonians differ.
 
     Returns
     -------
     dict
-        _description_. Empty return if *embedding* enabled.
+        Many-body result properties. Interaction properties are omitted when *embedding* or *external_potential* is
+        enabled; valid total and n-body contribution properties remain.
     """
     bsse = bsse.lower()
     prop = prop.lower()
@@ -495,7 +513,7 @@ def collect_vars(
             for nb in nbody_range:
                 res[f"{bsse}_corrected_total_{prop}_through_{nb}_body"] = body_dict[nb]
 
-    if embedding:
+    if embedding or external_potential:
         res = {k: v for k, v in res.items() if "interaction" not in k}
 
     return res

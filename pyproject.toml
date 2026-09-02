@@ -86,10 +86,10 @@ default-tag = "0.0.99" # useful for CI/shallow clones
 minversion = "7.0"
 addopts = "--import-mode=importlib"
 pythonpath = [
-    "tests",
+    "qcmanybody/tests",
 ]
 testpaths = [
-    "tests",
+    "qcmanybody/tests",
 ]
 markers = [
     "addon: tests require external non-required software",

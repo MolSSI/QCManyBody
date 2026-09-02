@@ -526,6 +526,8 @@ class ManyBodyCore:
     def analyze(
         self,
         component_results: Dict[str, Dict[str, Union[float, np.ndarray]]],
+        *,
+        external_potential: bool = False,
     ):
         """
 
@@ -548,6 +550,10 @@ class ManyBodyCore:
                '["mp2", [2], [2]]': {'energy': -2.86, 'gradient': array([[0., 0., 0.]])},
                '["mp2", [1, 2], [1, 2]]': {'energy': -5.73, 'gradient': array([[ 0., 0., 0.0053], [ 0., 0., -0.0053]])},
               }
+        external_potential
+            Whether the component calculations use fragment-scoped external potentials. Because the component
+            Hamiltonians differ, interaction energies are unavailable in the printed summary and interaction-energy
+            properties are omitted from the returned results. This classification is distinct from charge embedding.
 
         """
 
@@ -602,6 +608,7 @@ class ManyBodyCore:
                 is_embedded,
                 self.supersystem_ie_only,
                 self.max_nbody if self.has_supersystem else None,
+                external_potential=external_potential,
             )
 
         for property_label in available_properties:
@@ -615,6 +622,7 @@ class ManyBodyCore:
                         is_embedded,
                         self.supersystem_ie_only,
                         self.has_supersystem,
+                        external_potential=external_potential,
                     )
                 )
 
