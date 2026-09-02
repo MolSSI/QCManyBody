@@ -1,0 +1,6 @@
+resize_gradient
+===============
+
+.. currentmodule:: qcmanybody.utils
+
+.. autofunction:: resize_gradient

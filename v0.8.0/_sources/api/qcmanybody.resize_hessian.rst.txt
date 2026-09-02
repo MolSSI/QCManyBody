@@ -1,0 +1,6 @@
+resize_hessian
+==============
+
+.. currentmodule:: qcmanybody
+
+.. autofunction:: resize_hessian

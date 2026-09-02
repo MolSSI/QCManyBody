@@ -1,0 +1,6 @@
+ManyBodyComputer
+================
+
+.. currentmodule:: qcmanybody.v2.computer
+
+.. autopydantic_model:: ManyBodyComputer

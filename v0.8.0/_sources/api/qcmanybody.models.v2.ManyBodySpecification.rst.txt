@@ -1,0 +1,6 @@
+ManyBodySpecification
+=====================
+
+.. currentmodule:: qcmanybody.models.v2
+
+.. autopydantic_model:: ManyBodySpecification

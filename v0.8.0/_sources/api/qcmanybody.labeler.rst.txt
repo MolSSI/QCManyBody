@@ -1,0 +1,6 @@
+labeler
+=======
+
+.. currentmodule:: qcmanybody
+
+.. autofunction:: labeler

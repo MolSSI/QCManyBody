@@ -1,0 +1,39 @@
+BsseEnum
+========
+
+.. currentmodule:: qcmanybody
+
+.. autoclass:: BsseEnum
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~BsseEnum.cp
+      ~BsseEnum.mbe
+      ~BsseEnum.nocp
+      ~BsseEnum.none
+      ~BsseEnum.ssfc
+      ~BsseEnum.vmfc
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~BsseEnum.abbr
+      ~BsseEnum.formal
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: cp
+   .. autoattribute:: mbe
+   .. autoattribute:: nocp
+   .. autoattribute:: none
+   .. autoattribute:: ssfc
+   .. autoattribute:: vmfc
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: abbr
+   .. automethod:: formal

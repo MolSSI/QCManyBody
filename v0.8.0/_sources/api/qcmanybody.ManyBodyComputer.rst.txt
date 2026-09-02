@@ -1,0 +1,47 @@
+ManyBodyComputer
+================
+
+.. currentmodule:: qcmanybody
+
+.. autoclass:: ManyBodyComputer
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~ManyBodyComputer.nbodies_per_mc_level
+      ~ManyBodyComputer.nfragments
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~ManyBodyComputer.compute
+      ~ManyBodyComputer.from_manybodyinput
+      ~ManyBodyComputer.get_results
+      ~ManyBodyComputer.plan
+      ~ManyBodyComputer.set_bsse_type
+      ~ManyBodyComputer.set_embedding_charges
+      ~ManyBodyComputer.set_levels
+      ~ManyBodyComputer.set_max_nbody
+      ~ManyBodyComputer.set_return_total_data
+      ~ManyBodyComputer.set_supersystem_ie_only
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: nbodies_per_mc_level
+   .. autoattribute:: nfragments
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: compute
+   .. automethod:: from_manybodyinput
+   .. automethod:: get_results
+   .. automethod:: plan
+   .. automethod:: set_bsse_type
+   .. automethod:: set_embedding_charges
+   .. automethod:: set_levels
+   .. automethod:: set_max_nbody
+   .. automethod:: set_return_total_data
+   .. automethod:: set_supersystem_ie_only

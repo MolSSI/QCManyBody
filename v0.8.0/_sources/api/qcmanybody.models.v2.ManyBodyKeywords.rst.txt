@@ -1,0 +1,6 @@
+ManyBodyKeywords
+================
+
+.. currentmodule:: qcmanybody.models.v2
+
+.. autopydantic_model:: ManyBodyKeywords
